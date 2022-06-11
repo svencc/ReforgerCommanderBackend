@@ -1,0 +1,61 @@
+spring:
+  application:
+    name: Reforger-Commander-Backend
+  #datasource:
+  #  url: ${ENV}
+  #  hikari:
+  #    maximumPoolSize: 40
+  cache:
+    jcache:
+      config: classpath:ehcache.xml
+#  jpa:
+#    open-in-view: false
+#    show-sql: false
+#    hibernate:
+#      ddl-auto: none
+#    properties:
+#      hibernate:
+#        generate_statistics: ${JPA_GENERATE_STATS:false}
+#        format_sql: false
+#        order_inserts: true
+#        order_updates: true
+#        cache:
+#          use_query_cache: true
+#          use_second_level_cache: true
+#          region:
+#            factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
+#        query:
+#          in_clause_parameter_padding: true
+#          fail_on_pagination_over_collection_fetch: true
+#          plan_cache_max_size: 4096
+#        jdbc:
+#          batch_size: 100
+#          fetch_size: 100
+#          batch_versioned_data: true
+#        javax:
+#          cache:
+#            missing_cache_strategy: create
+#      javax:
+#        persistence:
+#          sharedCache:
+#            mode: ENABLE_SELECTIVE
+
+server:
+  port: 80
+
+logging:
+  level:
+    root: ${LOG_LEVEL:INFO}
+    org:
+#      hibernate:
+#        type: warn
+      ehcache:
+        core:
+          EhcacheManager: WARN
+#    com:
+#      vladmihalcea:
+#        hibernate:
+#          type:
+#            util:
+#              LogUtils: WARN
+
