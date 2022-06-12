@@ -3,6 +3,7 @@ package com.rcb.api;
 import com.rcb.dto.test.NestedTestDataDto;
 import com.rcb.dto.test.TestDataDto;
 import com.rcb.util.JSNumber;
+import com.rcb.util.ReforgerPayload;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -11,12 +12,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -26,15 +32,15 @@ import java.util.List;
 public class TestController {
 
     @Operation(
-            summary = "Provides a health indicator",
-            description = "Returns 200 if alive",
-            tags = "health"
+            summary = "Test JSON-GET call",
+            description = "Returns a static JSON demo structure.",
+            tags = "test"
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "O.K.")
     })
-    @GetMapping(path = "/json-test-data")
-    public ResponseEntity<TestDataDto> getHealth() {
+    @GetMapping(path = "/json-test-data", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<TestDataDto> getJsonTestData() {
         log.info("Requested GET /api/v1/test/json-test-data");
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -52,6 +58,28 @@ public class TestController {
                                         .build()
                         ))
                         .build());
+    }
+
+    @Operation(
+            summary = "Test JSON-POST call",
+            description = "Receives a String and converts it into a JSON structure.",
+            tags = "test"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "O.K.")
+    })
+    @PostMapping(path = "/json-test-data", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public ResponseEntity<Void> postJsonTestData(
+            @RequestParam Map<String, String> payload
+    ) {
+        log.info("Requested POST /api/v1/test/json-test-data");
+
+        final Optional<TestDataDto> testDataDtoOpt = ReforgerPayload.parse(payload, TestDataDto.class);
+        log.info(" -> Received: {}", testDataDtoOpt);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .cacheControl(CacheControl.noCache())
+                .build();
     }
 
 }
