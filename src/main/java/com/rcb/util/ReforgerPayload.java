@@ -23,6 +23,7 @@ public class ReforgerPayload {
             @NonNull Class<T> clazz
     ) {
         try {
+            log.info("parse {}", payload.keySet().stream().findFirst().get());
             return Optional.of(
                     objectMapper.readValue(
                             payload.keySet().stream().findFirst().get(),
@@ -30,7 +31,7 @@ public class ReforgerPayload {
                     )
             );
         } catch (NoSuchElementException | JsonProcessingException e) {
-            log.info("Cannot parse Reforger DTO", e);
+            log.info("Cannot parse a Reforger JSON DTO", e);
             return Optional.empty();
         }
     }
