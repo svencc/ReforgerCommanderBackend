@@ -19,7 +19,7 @@ public class Application {
     }
 
     // Uncomment to log all requests to console
-    // SET in application.yml -> logging.level.org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
+    // SET in application.properties -> logging.level.org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
 //    @Bean
 //    @Profile("local")
 //    public CommonsRequestLoggingFilter requestLoggingFilter() {

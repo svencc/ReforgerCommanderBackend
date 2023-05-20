@@ -1,0 +1,18 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="ReforgerCommanderBackend" type="Application" factoryName="Application">
+    <option name="ALTERNATIVE_JRE_PATH" value="temurin-17 17.0.7" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <option name="MAIN_CLASS_NAME" value="com.rcb.Application" />
+    <module name="reforger-commander-backend" />
+    <option name="VM_PARAMETERS" value="-XX:+UseShenandoahGC -Xms256m -Xmx512m -Dspring.profiles.active=local" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="com.rcb.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
