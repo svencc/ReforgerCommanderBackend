@@ -36,7 +36,7 @@ public class MapScannerController {
             @ApiResponse(responseCode = "200", description = "O.K.")
     })
     @PostMapping(path = "/map-entity", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity<Void> postJsonTestData(
+    public ResponseEntity<Void> startMapScanner(
             @RequestParam Map<String, String> payload
     ) {
         log.debug("Requested POST /api/v1/test/map-entity");
