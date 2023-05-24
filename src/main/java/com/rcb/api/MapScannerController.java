@@ -1,6 +1,9 @@
 package com.rcb.api;
 
+import com.rcb.api.commons.HttpCommons;
+import com.rcb.dto.mapScanner.MapScannerEntitiesDto;
 import com.rcb.dto.mapScanner.MapScannerEntityDto;
+import com.rcb.dto.mapScanner.TransactionIdentifierDto;
 import com.rcb.util.ReforgerPayload;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -28,21 +32,88 @@ import java.util.Optional;
 public class MapScannerController {
 
     @Operation(
-            summary = "POST map-entity call",
-            description = "Receives a scanned map-entity.",
-            tags = "test"
+            summary = "Starts a map-scanner transaction",
+            description = "Starts a map-scanner session."
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "O.K.")
+            @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
     })
-    @PostMapping(path = "/map-entity", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity<Void> startMapScanner(
+    @PostMapping(path = "/transaction/open", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public ResponseEntity<Void> startTransaction(
             @RequestParam Map<String, String> payload
     ) {
-        log.debug("Requested POST /api/v1/test/map-entity");
+        log.info("Requested POST /api/v1/map-scanner/transaction/open");
+
+        final Optional<TransactionIdentifierDto> transactionIdentifierDto = ReforgerPayload.parse(payload, TransactionIdentifierDto.class);
+        log.info(" -> Received: {}", transactionIdentifierDto);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .cacheControl(CacheControl.noCache())
+                .build();
+    }
+
+    @Operation(
+            summary = "Ends a map-scanner transaction",
+            description = "Ends a map-scanner session."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
+    })
+    @PostMapping(path = "/transaction/commit", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public ResponseEntity<Void> commitTransaction(
+            @RequestParam Map<String, String> payload
+    ) {
+        log.info("Requested POST /api/v1/map-scanner/transaction/commit");
+
+        final Optional<TransactionIdentifierDto> transactionIdentifierDto = ReforgerPayload.parse(payload, TransactionIdentifierDto.class);
+        log.info(" -> Received: {}", transactionIdentifierDto);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .cacheControl(CacheControl.noCache())
+                .build();
+    }
+
+
+
+
+
+    @Operation(
+            summary = "POST map-entity call",
+            description = "Receives a scanned map-entity."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
+    })
+    @PostMapping(path = "/map-entity", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public ResponseEntity<Void> transmitEntity(
+            @RequestParam Map<String, String> payload
+    ) {
+        log.info("Requested POST /api/v1/test/map-entity");
 
         final Optional<MapScannerEntityDto> mapScannerEntityDtoOpt = ReforgerPayload.parse(payload, MapScannerEntityDto.class);
-        log.debug(" -> Received: {}", mapScannerEntityDtoOpt);
+        log.info(" -> Received: {}", mapScannerEntityDtoOpt);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .cacheControl(CacheControl.noCache())
+                .build();
+    }
+
+    @Operation(
+            summary = "Transfer map-entities list.",
+            description = "Receives a scanned list of map-entities."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
+    })
+    @PostMapping(path = "/map-entities", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public ResponseEntity<Void> transmitEntities(
+            @RequestParam Map<String, String> payload
+    ) {
+        HttpStatus.OK.value();
+        log.info("Requested POST /api/v1/test/map-entity");
+
+        final Optional<MapScannerEntitiesDto> mapScannerEntitiesOpt = ReforgerPayload.parse(payload, MapScannerEntitiesDto.class);
+        log.info(" -> Received: {}", mapScannerEntitiesOpt);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
