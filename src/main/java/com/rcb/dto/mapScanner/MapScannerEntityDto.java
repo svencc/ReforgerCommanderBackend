@@ -22,6 +22,10 @@ public class MapScannerEntityDto {
 
     @Schema
     @JsonProperty()
+    private String entityId;
+
+    @Schema
+    @JsonProperty()
     private String className;
 
     @Schema
