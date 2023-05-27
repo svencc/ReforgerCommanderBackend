@@ -35,7 +35,6 @@ public class ReforgerPayload {
                     )
             );
         } catch (NoSuchElementException | JsonProcessingException e) {
-            log.info("Cannot parse a Reforger JSON DTO", e);
             log.error("Cannot parse a Reforger JSON DTO {}", String.join(";\n", payload.keySet()), e);
             return Optional.empty();
         }

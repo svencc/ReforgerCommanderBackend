@@ -88,10 +88,10 @@ public class MapScannerController {
     public ResponseEntity<Void> transmitEntity(
             @RequestParam Map<String, String> payload
     ) {
-        log.info("Requested POST /api/v1/test/map-entity");
+        log.debug("Requested POST /api/v1/test/map-entity");
 
         final Optional<MapScannerEntityDto> mapScannerEntityDtoOpt = ReforgerPayload.parse(payload, MapScannerEntityDto.class);
-        log.info(" -> Received: {}", mapScannerEntityDtoOpt);
+        log.debug(" -> Received: {}", mapScannerEntityDtoOpt);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
@@ -110,10 +110,10 @@ public class MapScannerController {
             @RequestParam Map<String, String> payload
     ) {
         HttpStatus.OK.value();
-        log.info("Requested POST /api/v1/test/map-entity");
+        log.debug("Requested POST /api/v1/test/map-entity");
 
         final Optional<MapScannerEntitiesDto> mapScannerEntitiesOpt = ReforgerPayload.parse(payload, MapScannerEntitiesDto.class);
-        log.info(" -> Received: {}", mapScannerEntitiesOpt);
+        log.debug(" -> Received: {}", mapScannerEntitiesOpt);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
