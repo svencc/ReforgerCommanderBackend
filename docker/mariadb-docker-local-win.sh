@@ -36,5 +36,4 @@ else
   winpty docker run --name $MARIADB_CONTAINER_NAME-cli -it --rm mariadb mysql -hhost.docker.internal --port=$MARIADB_PORT -uroot -p$MARIADB_ROOT_PASSWORD -e "CREATE DATABASE $PROJECT_DB_NAME;"
   # run mariadb-docker-local cli, connected to running
   winpty docker run --name $MARIADB_CONTAINER_NAME-cli -it --rm mariadb mysql -hhost.docker.internal --port=$MARIADB_PORT -uroot -p$MARIADB_ROOT_PASSWORD
-  sleep 999
 fi
