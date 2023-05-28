@@ -1,5 +1,13 @@
 #!/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -File
 
+# Setup or starts a docker container with mariadb database; preconfigured for the application server
+# Requirement: you need to have docker installed. Just execute the script for:
+# - setup the container from zero
+# - startup the container if it exists and it is not running yet
+#
+# Just run and done ...
+
+
 # variables
 $MARIADB_CONTAINER_NAME = "refCom-mariadb"
 $MARIADB_PORT = "8033"
