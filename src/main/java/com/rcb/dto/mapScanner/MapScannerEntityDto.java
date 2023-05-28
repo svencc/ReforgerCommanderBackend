@@ -34,22 +34,18 @@ public class MapScannerEntityDto {
 
     @Schema
     @JsonProperty()
-    @Builder.Default
-    private List<BigDecimal> rotationX = new ArrayList<>();
+    private List<BigDecimal> rotationX;
 
     @Schema
     @JsonProperty()
-    @Builder.Default
-    private List<BigDecimal> rotationY = new ArrayList<>();
+    private List<BigDecimal> rotationY;
 
     @Schema
     @JsonProperty()
-    @Builder.Default
-    private List<BigDecimal> rotationZ = new ArrayList<>();
+    private List<BigDecimal> rotationZ;
 
     @Schema
     @JsonProperty()
-    @Builder.Default
-    private List<BigDecimal> coords = new ArrayList<>();
+    private List<BigDecimal> coords;
 
 }

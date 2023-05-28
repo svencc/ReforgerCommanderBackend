@@ -107,9 +107,10 @@ public class MapScannerController {
     public ResponseEntity<Void> transmitEntities(
             @RequestParam Map<String, String> payload
     ) {
-        log.info("Requested POST /api/v1/test/map-entities");
+        log.debug("Requested POST /api/v1/test/map-entities");
         final Optional<MapScannerEntityPackageDto> mapScannerEntitiesOpt = ReforgerPayload.parse(payload, MapScannerEntityPackageDto.class);
 
+        mapScannerEntitiesOpt.ifPresent(mapEntityPersistenceLayer::persistMapEntityPackage);
 
 
         return ResponseEntity.status(HttpStatus.OK)

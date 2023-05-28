@@ -21,17 +21,17 @@ public class MapEntity implements Persistable<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(insertable = true, updatable = false, nullable = false)
-    private Long entityId;
-
-    @Override
-    public Long getId() {
-        return entityId;
-    }
+    private Long id;
 
     @Nationalized
     @Column(insertable = true, updatable = false, nullable = true)
     private String className;
 
+    @Nationalized
+    @Column(insertable = true, length = 255, updatable = false, nullable = true)
+    private String entityId;
+
+    @Lob
     @Nationalized
     @Column(insertable = true, updatable = false, nullable = true)
     private String resourceName;
@@ -53,11 +53,6 @@ public class MapEntity implements Persistable<Long> {
     private String coords;
 
     @Override
-    public boolean isNew() {
-        return getId() != null;
-    }
-
-    @Override
     public int hashCode() {
         return MapEntity.class.hashCode();
     }
@@ -76,6 +71,16 @@ public class MapEntity implements Persistable<Long> {
                 return false;
             } else return getId().equals(other.getId());
         }
+    }
+
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public boolean isNew() {
+        return getId() != null;
     }
 
 }

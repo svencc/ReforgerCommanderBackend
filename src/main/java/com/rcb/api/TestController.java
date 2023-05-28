@@ -41,7 +41,7 @@ public class TestController {
     })
     @GetMapping(path = "/json-test-data", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TestDataDto> getJsonTestData() {
-        log.info("Requested GET /api/v1/test/json-test-data");
+        log.debug("Requested GET /api/v1/test/json-test-data");
 
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
@@ -72,7 +72,7 @@ public class TestController {
     public ResponseEntity<Void> postJsonTestData(
             @RequestParam Map<String, String> payload
     ) {
-        log.info("Requested POST /api/v1/test/json-test-data");
+        log.debug("Requested POST /api/v1/test/json-test-data");
 
         final Optional<TestDataDto> testDataDtoOpt = ReforgerPayload.parse(payload, TestDataDto.class);
         log.info(" -> Received: {}", testDataDtoOpt);

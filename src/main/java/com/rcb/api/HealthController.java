@@ -28,7 +28,7 @@ public class HealthController {
     })
     @GetMapping(path = "")
     public ResponseEntity<Void> getHealth() {
-        log.info("Requested GET /api/v1/health");
+        log.debug("Requested GET /api/v1/health");
 
         return ResponseEntity.ok().build();
     }
