@@ -1,9 +1,9 @@
 package com.rcb.api;
 
 import com.rcb.api.commons.HttpCommons;
-import com.rcb.dto.mapScanner.MapScannerEntityPackageDto;
-import com.rcb.dto.mapScanner.TransactionIdentifierDto;
-import com.rcb.service.persitence.MapEntityPersistenceLayer;
+import com.rcb.dto.map.scanner.EntityPackageDto;
+import com.rcb.dto.map.scanner.TransactionIdentifierDto;
+import com.rcb.service.MapEntityTransactionService;
 import com.rcb.util.ReforgerPayload;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -32,7 +32,8 @@ import java.util.Optional;
 public class MapScannerController {
 
     @NonNull
-    private final MapEntityPersistenceLayer mapEntityPersistenceLayer;
+    private final MapEntityTransactionService mapEntityTransactionService;
+
 
     @Operation(
             summary = "Starts a map-scanner transaction",
@@ -43,15 +44,21 @@ public class MapScannerController {
     })
     @PostMapping(path = "/transaction/open", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity<Void> startTransaction(
-            @RequestParam Map<String, String> payload
+            @RequestParam
+            @NonNull final Map<String, String> payload
     ) {
-        log.info("Requested POST /api/v1/map-scanner/transaction/open");
+        log.debug("Requested POST /api/v1/map-scanner/transaction/open");
 
-        final Optional<TransactionIdentifierDto> transactionIdentifierDto = ReforgerPayload.parse(payload, TransactionIdentifierDto.class);
-
-        return ResponseEntity.status(HttpStatus.OK)
-                .cacheControl(CacheControl.noCache())
-                .build();
+        return ReforgerPayload.parse(payload, TransactionIdentifierDto.class)
+                .map(openTransactionIdentifier -> {
+                    mapEntityTransactionService.openTransaction(openTransactionIdentifier);
+                    return ResponseEntity.status(HttpStatus.OK)
+                            .cacheControl(CacheControl.noCache())
+                            .<Void>build();
+                })
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .cacheControl(CacheControl.noCache())
+                        .<Void>build());
     }
 
     @Operation(
@@ -63,38 +70,23 @@ public class MapScannerController {
     })
     @PostMapping(path = "/transaction/commit", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity<Void> commitTransaction(
-            @RequestParam Map<String, String> payload
+            @RequestParam
+            @NonNull final Map<String, String> payload
     ) {
-        log.info("Requested POST /api/v1/map-scanner/transaction/commit");
+        log.debug("Requested POST /api/v1/map-scanner/transaction/commit");
         final Optional<TransactionIdentifierDto> transactionIdentifierDto = ReforgerPayload.parse(payload, TransactionIdentifierDto.class);
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .cacheControl(CacheControl.noCache())
-                .build();
+        return ReforgerPayload.parse(payload, TransactionIdentifierDto.class)
+                .map(openTransactionIdentifier -> {
+                    mapEntityTransactionService.commitTransaction(openTransactionIdentifier);
+                    return ResponseEntity.status(HttpStatus.OK)
+                            .cacheControl(CacheControl.noCache())
+                            .<Void>build();
+                })
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .cacheControl(CacheControl.noCache())
+                        .<Void>build());
     }
-
-//
-//
-//    @Operation(
-//            summary = "POST map-entity call",
-//            description = "Receives a scanned map-entity."
-//    )
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
-//    })
-//    @PostMapping(path = "/map-entity", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-//    public ResponseEntity<Void> transmitEntity(
-//            @RequestParam Map<String, String> payload
-//    ) {
-//        log.debug("Requested POST /api/v1/test/map-entity");
-//
-//        final Optional<MapScannerEntityDto> mapScannerEntityDtoOpt = ReforgerPayload.parse(payload, MapScannerEntityDto.class);
-//        log.debug(" -> Received: {}", mapScannerEntityDtoOpt);
-//
-//        return ResponseEntity.status(HttpStatus.OK)
-//                .cacheControl(CacheControl.noCache())
-//                .build();
-//    }
 
     @Operation(
             summary = "Transfer map-entities-package.",
@@ -104,18 +96,23 @@ public class MapScannerController {
             @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
     })
     @PostMapping(path = "/map-entities", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity<Void> transmitEntities(
-            @RequestParam Map<String, String> payload
+    public ResponseEntity<Void> transmitEntityPackage(
+            @RequestParam
+            @NonNull final Map<String, String> payload
     ) {
         log.debug("Requested POST /api/v1/test/map-entities");
-        final Optional<MapScannerEntityPackageDto> mapScannerEntitiesOpt = ReforgerPayload.parse(payload, MapScannerEntityPackageDto.class);
+        final Optional<EntityPackageDto> mapScannerEntitiesOpt = ReforgerPayload.parse(payload, EntityPackageDto.class);
 
-        mapScannerEntitiesOpt.ifPresent(mapEntityPersistenceLayer::persistMapEntityPackage);
-
-
-        return ResponseEntity.status(HttpStatus.OK)
-                .cacheControl(CacheControl.noCache())
-                .build();
+        return ReforgerPayload.parse(payload, EntityPackageDto.class)
+                .map(entityPackageDto -> {
+                    mapEntityTransactionService.addMapEntitiesPackage(entityPackageDto);
+                    return ResponseEntity.status(HttpStatus.OK)
+                            .cacheControl(CacheControl.noCache())
+                            .<Void>build();
+                })
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .cacheControl(CacheControl.noCache())
+                        .<Void>build());
     }
 
 }

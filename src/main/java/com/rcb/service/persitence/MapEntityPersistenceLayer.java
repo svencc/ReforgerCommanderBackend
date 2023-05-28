@@ -1,6 +1,6 @@
 package com.rcb.service.persitence;
 
-import com.rcb.dto.mapScanner.MapScannerEntityPackageDto;
+import com.rcb.dto.map.scanner.EntityPackageDto;
 import com.rcb.entity.MapEntity;
 import com.rcb.mapper.MapEntityMapper;
 import com.rcb.repository.MapEntityRepository;
@@ -19,7 +19,7 @@ public class MapEntityPersistenceLayer {
 
     @Deprecated
     @Transactional
-    public void persistMapEntityPackage(@NonNull MapScannerEntityPackageDto packageDto) {
+    public void persistMapEntityPackage(@NonNull EntityPackageDto packageDto) {
         List<MapEntity> mappedEntities = packageDto.getEntities().stream()
                 .map(MapEntityMapper.INSTANCE::toEntity)
                 .distinct()

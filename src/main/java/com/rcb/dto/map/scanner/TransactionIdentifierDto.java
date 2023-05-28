@@ -1,4 +1,4 @@
-package com.rcb.dto.mapScanner;
+package com.rcb.dto.map.scanner;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,6 +19,10 @@ import java.util.List;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TransactionIdentifierDto {
+
+    @Schema
+    @JsonProperty()
+    private Integer packageOrder;
 
     @Schema
     @JsonProperty()

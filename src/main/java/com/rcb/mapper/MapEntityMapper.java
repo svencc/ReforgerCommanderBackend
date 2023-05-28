@@ -1,7 +1,7 @@
 package com.rcb.mapper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.rcb.dto.mapScanner.MapScannerEntityDto;
+import com.rcb.dto.map.scanner.EntityDto;
 import com.rcb.entity.MapEntity;
 import com.rcb.service.provider.MapStructStaticProvider;
 import lombok.NonNull;
@@ -39,6 +39,6 @@ public interface MapEntityMapper {
     @Mapping(source = "rotationY", target = "rotationY", qualifiedByName = "encodeVectorToJsonString")
     @Mapping(source = "rotationZ", target = "rotationZ", qualifiedByName = "encodeVectorToJsonString")
     @Mapping(source = "coords", target = "coords", qualifiedByName = "encodeVectorToJsonString")
-    MapEntity toEntity(@NonNull MapScannerEntityDto entityDto);
+    MapEntity toEntity(@NonNull EntityDto entityDto);
 
 }

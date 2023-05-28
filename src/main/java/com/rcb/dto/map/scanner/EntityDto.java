@@ -1,4 +1,4 @@
-package com.rcb.dto.mapScanner;
+package com.rcb.dto.map.scanner;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,14 +17,34 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MapScannerEntityPackageDto {
+public class EntityDto {
 
     @Schema
     @JsonProperty()
-    private BigDecimal packageOrder;
+    private String entityId;
 
     @Schema
     @JsonProperty()
-    private List<MapScannerEntityDto> entities;
+    private String className;
+
+    @Schema
+    @JsonProperty()
+    private String resourceName;
+
+    @Schema
+    @JsonProperty()
+    private List<BigDecimal> rotationX;
+
+    @Schema
+    @JsonProperty()
+    private List<BigDecimal> rotationY;
+
+    @Schema
+    @JsonProperty()
+    private List<BigDecimal> rotationZ;
+
+    @Schema
+    @JsonProperty()
+    private List<BigDecimal> coords;
 
 }

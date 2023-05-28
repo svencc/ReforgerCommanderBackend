@@ -1,4 +1,4 @@
-package com.rcb.dto.test;
+package com.rcb.dto.map.scanner;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -8,7 +8,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -17,16 +16,18 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class TestDataDto {
-
-
-    @Schema
-    @JsonProperty()
-    private String stringValue;
+public class EntityPackageDto {
 
     @Schema
     @JsonProperty()
-    @Builder.Default
-    private List<NestedTestDataDto> nestedDataList = new ArrayList<>();
+    private String sessionIdentifier; // <<< der fehlt noch auf client seite
+
+    @Schema
+    @JsonProperty()
+    private Integer packageOrder;
+
+    @Schema
+    @JsonProperty()
+    private List<EntityDto> entities;
 
 }
