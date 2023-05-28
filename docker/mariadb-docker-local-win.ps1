@@ -32,3 +32,5 @@ if ($DOCKER_DBCONTAINER_FILTER_STRING.endsWith($MARIADB_CONTAINER_NAME)) {
   iex "docker run -p ${MARIADB_PORT}:3306 -v ${PROJECT_FOLDER}/../${MARIADB_DATA_DIRECTORY}:/var/lib/mysql -v ${PROJECT_FOLDER}/sql-init:/docker-entrypoint-initdb.d --detach --name ${MARIADB_CONTAINER_NAME} --env MARIADB_USER=${MARIADB_USER} --env MARIADB_PASSWORD=${MARIADB_PASSWORD} --env MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD} mariadb:latest"
   iex "docker start ${MARIADB_CONTAINER_NAME}"
 }
+
+# https://hub.docker.com/_/mariadb -> See "Initializing a fresh instance": you have to mount the init sql scripts to /docker-entrypoint-initdb.d
