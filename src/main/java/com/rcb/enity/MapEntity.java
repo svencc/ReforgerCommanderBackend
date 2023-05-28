@@ -1,8 +1,15 @@
 package com.rcb.enity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Nationalized;
 import org.springframework.data.domain.Persistable;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,12 +27,36 @@ public class MapEntity implements Persistable<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(insertable = true, updatable = false, nullable = false)
-    private Long id;
+    private Long entityId;
 
     @Override
     public Long getId() {
-        return id;
+        return entityId;
     }
+
+    @Nationalized
+    @Column(insertable = true, updatable = false, nullable = true)
+    private String className;
+
+    @Nationalized
+    @Column(insertable = true, updatable = false, nullable = true)
+    private String resourceName;
+
+    @Lob
+    @Column(insertable = true, updatable = false, nullable = true)
+    private String rotationX;
+
+    @Lob
+    @Column(insertable = true, updatable = false, nullable = true)
+    private String rotationY;
+
+    @Lob
+    @Column(insertable = true, updatable = false, nullable = true)
+    private String rotationZ;
+
+    @Lob
+    @Column(insertable = true, updatable = false, nullable = true)
+    private String coords;
 
     @Override
     public boolean isNew() {

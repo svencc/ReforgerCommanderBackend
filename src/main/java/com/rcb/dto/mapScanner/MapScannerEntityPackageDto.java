@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -17,6 +18,10 @@ import java.util.List;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MapScannerEntityPackageDto {
+
+    @Schema
+    @JsonProperty()
+    private BigDecimal packageOrder;
 
     @Schema
     @JsonProperty()

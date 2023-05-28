@@ -44,7 +44,6 @@ public class MapScannerController {
         log.info("Requested POST /api/v1/map-scanner/transaction/open");
 
         final Optional<TransactionIdentifierDto> transactionIdentifierDto = ReforgerPayload.parse(payload, TransactionIdentifierDto.class);
-        log.info(" -> Received: {}", transactionIdentifierDto);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
@@ -63,43 +62,39 @@ public class MapScannerController {
             @RequestParam Map<String, String> payload
     ) {
         log.info("Requested POST /api/v1/map-scanner/transaction/commit");
-
         final Optional<TransactionIdentifierDto> transactionIdentifierDto = ReforgerPayload.parse(payload, TransactionIdentifierDto.class);
-        log.info(" -> Received: {}", transactionIdentifierDto);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
                 .build();
     }
 
-
-
-
-
-    @Operation(
-            summary = "POST map-entity call",
-            description = "Receives a scanned map-entity."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
-    })
-    @PostMapping(path = "/map-entity", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity<Void> transmitEntity(
-            @RequestParam Map<String, String> payload
-    ) {
-        log.debug("Requested POST /api/v1/test/map-entity");
-
-        final Optional<MapScannerEntityDto> mapScannerEntityDtoOpt = ReforgerPayload.parse(payload, MapScannerEntityDto.class);
-        log.debug(" -> Received: {}", mapScannerEntityDtoOpt);
-
-        return ResponseEntity.status(HttpStatus.OK)
-                .cacheControl(CacheControl.noCache())
-                .build();
-    }
+//
+//
+//    @Operation(
+//            summary = "POST map-entity call",
+//            description = "Receives a scanned map-entity."
+//    )
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
+//    })
+//    @PostMapping(path = "/map-entity", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+//    public ResponseEntity<Void> transmitEntity(
+//            @RequestParam Map<String, String> payload
+//    ) {
+//        log.debug("Requested POST /api/v1/test/map-entity");
+//
+//        final Optional<MapScannerEntityDto> mapScannerEntityDtoOpt = ReforgerPayload.parse(payload, MapScannerEntityDto.class);
+//        log.debug(" -> Received: {}", mapScannerEntityDtoOpt);
+//
+//        return ResponseEntity.status(HttpStatus.OK)
+//                .cacheControl(CacheControl.noCache())
+//                .build();
+//    }
 
     @Operation(
-            summary = "Transfer map-entities list.",
-            description = "Receives a scanned list of map-entities."
+            summary = "Transfer map-entities-package.",
+            description = "Receives a scanned package of map-entities."
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
@@ -108,11 +103,8 @@ public class MapScannerController {
     public ResponseEntity<Void> transmitEntities(
             @RequestParam Map<String, String> payload
     ) {
-        HttpStatus.OK.value();
-        log.debug("Requested POST /api/v1/test/map-entity");
-
+        log.info("Requested POST /api/v1/test/map-entities");
         final Optional<MapScannerEntityPackageDto> mapScannerEntitiesOpt = ReforgerPayload.parse(payload, MapScannerEntityPackageDto.class);
-        log.debug(" -> Received: {}", mapScannerEntitiesOpt);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
