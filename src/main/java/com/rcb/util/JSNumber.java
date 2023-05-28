@@ -9,21 +9,21 @@ import java.math.BigDecimal;
 public class JSNumber {
 
     @NonNull
-    public BigDecimal of(@NonNull long number) {
+    public BigDecimal of(long number) {
         final BigDecimal decimal = BigDecimal.valueOf(number);
 
         return scale(decimal);
     }
 
     @NonNull
-    public BigDecimal of(@NonNull float number) {
+    public BigDecimal of(float number) {
         final BigDecimal decimal = BigDecimal.valueOf(number);
 
         return scale(decimal);
     }
 
     @NonNull
-    public BigDecimal of(@NonNull double number) {
+    public BigDecimal of(double number) {
         final BigDecimal decimal = BigDecimal.valueOf(number);
 
         return scale(decimal);

@@ -27,7 +27,7 @@ public class ReforgerPayload {
             @NonNull final Class<T> clazz
     ) {
         try {
-            log.debug("parse {}", payload.keySet().stream().findFirst().get());
+            log.info("parse {}", payload.keySet().stream().findFirst().get());
             return Optional.of(
                     objectMapper.readValue(
                             payload.keySet().stream().findFirst().get(),

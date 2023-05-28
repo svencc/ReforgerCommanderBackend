@@ -2,13 +2,14 @@ package com.rcb.api;
 
 import com.rcb.api.commons.HttpCommons;
 import com.rcb.dto.mapScanner.MapScannerEntityPackageDto;
-import com.rcb.dto.mapScanner.MapScannerEntityDto;
 import com.rcb.dto.mapScanner.TransactionIdentifierDto;
+import com.rcb.service.persitence.MapEntityPersistenceLayer;
 import com.rcb.util.ReforgerPayload;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.CacheControl;
@@ -29,6 +30,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/map-scanner")
 public class MapScannerController {
+
+    @NonNull
+    private final MapEntityPersistenceLayer mapEntityPersistenceLayer;
 
     @Operation(
             summary = "Starts a map-scanner transaction",
@@ -105,6 +109,8 @@ public class MapScannerController {
     ) {
         log.info("Requested POST /api/v1/test/map-entities");
         final Optional<MapScannerEntityPackageDto> mapScannerEntitiesOpt = ReforgerPayload.parse(payload, MapScannerEntityPackageDto.class);
+
+
 
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
