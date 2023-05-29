@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="refComBackend [jib:build]" type="MavenRunConfiguration" factoryName="Maven">
+  <configuration default="false" name="refComBackend [jib:build] template" type="MavenRunConfiguration" factoryName="Maven">
     <MavenSettings>
       <option name="myGeneralSettings" />
       <option name="myRunnerSettings">
