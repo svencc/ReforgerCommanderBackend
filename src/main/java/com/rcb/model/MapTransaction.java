@@ -16,9 +16,12 @@ public class MapTransaction {
     private TransactionIdentifierDto openTransactionIdentifier;
 
     private TransactionIdentifierDto commitTransactionIdentifier;
-
     @NonNull
     @Builder.Default
     private List<TransactionalEntityPackageDto> packages = new ArrayList<>();
+
+    public boolean isCommited() {
+        return commitTransactionIdentifier != null;
+    }
 
 }

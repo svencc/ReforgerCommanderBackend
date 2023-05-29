@@ -1,25 +1,12 @@
 package com.rcb.service.map;
 
 import com.rcb.dto.map.scanner.TransactionalEntityPackageDto;
-import com.rcb.entity.MapEntity;
-import com.rcb.event.event.async.RefComAsyncEvent;
-import com.rcb.event.event.async.map.AddMapPackageAsyncEvent;
-import com.rcb.event.event.async.map.CommitMapTransactionAsyncEvent;
-import com.rcb.event.event.async.map.OpenMapTransactionAsyncEvent;
-import com.rcb.mapper.MapEntityMapper;
 import com.rcb.model.MapTransaction;
-import com.rcb.repository.MapEntityRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.event.EventListener;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Slf4j
@@ -51,11 +38,11 @@ public class MapTransactionValidatorService {
 
         // Get commitPackageNumber - should be the highest/last number!
         final Integer commitPackageNumber = transaction.getCommitTransactionIdentifier().getPackageOrder();
-//        final Integer lastPackageNumber = commitPackageNumber - 1;
+        final Integer lastPackageNumber = commitPackageNumber - 1;
 
         // Number of submitted packages must be: (commitPackageNumber - 1)
-        if (transaction.getPackages().size() != (commitPackageNumber - 1)) {
-            log.warn("At least, there has to be 1 data MapEntity package! => {}", transaction.getPackages().size());
+        if (transaction.getPackages().size() != lastPackageNumber) {
+            log.warn("Package size does not match required size {} => {}", transaction.getPackages().size(), lastPackageNumber);
             return false;
         }
 
@@ -70,9 +57,23 @@ public class MapTransactionValidatorService {
                 .mapToInt(packageOrder -> packageOrder)
                 .sum();
 
-        return expectedPackageOrderChecksum.equals(calculatedPackageOrderChecksum);
+        boolean isChecksumValid = expectedPackageOrderChecksum.equals(calculatedPackageOrderChecksum);
+
+        if (isChecksumValid) {
+            log.info(
+                    "Expected sum {} vs. actual sum {} => valid",
+                    expectedPackageOrderChecksum,
+                    calculatedPackageOrderChecksum
+            );
+        } else {
+            log.error(
+                    "Expected sum {} vs. actual sum {} => invalid",
+                    expectedPackageOrderChecksum,
+                    calculatedPackageOrderChecksum
+            );
+        }
+
+        return isChecksumValid;
     }
-
-
 
 }

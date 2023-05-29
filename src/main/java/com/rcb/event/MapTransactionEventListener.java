@@ -56,7 +56,7 @@ public class MapTransactionEventListener {
     }
 
     private void logEvent(@NonNull final RefComAsyncEvent event) {
-        log.info("****** handle {} {} ", event, event.getCreationDate());
+        log.debug("****** handle {} {} ", event, event.getCreationDate());
     }
 
     private static void resetSession(@NonNull final MapTransaction transaction) {
@@ -71,11 +71,14 @@ public class MapTransactionEventListener {
         logEvent(event);
         final String sessionIdentifier = event.getTransactionalEntityPackageDto().getSessionIdentifier();
         if (transactions.containsKey(sessionIdentifier)) {
-            transactions.get(sessionIdentifier).getPackages().add(event.getTransactionalEntityPackageDto());
-            log.warn("Added map entitiy package to transaction named {}!", sessionIdentifier);
+            final MapTransaction existingTransaction = transactions.get(sessionIdentifier);
+            existingTransaction.getPackages().add(event.getTransactionalEntityPackageDto());
+            log.debug("Added map entitiy package to transaction named {}!", sessionIdentifier);
 
-            log.warn("Try to process transaction {}, in case that transaction-commit-message took over a data package!", sessionIdentifier);
-            processTransaction(sessionIdentifier);
+            if (existingTransaction.isCommited()) {
+                log.debug("Try to process transaction {}, in case that transaction-commit-message took over a data package!", sessionIdentifier);
+                processTransaction(sessionIdentifier);
+            }
         } else {
             log.warn("No transaction named {} found to append data!", sessionIdentifier);
         }
@@ -85,7 +88,25 @@ public class MapTransactionEventListener {
         if (transactions.containsKey(sessionIdentifier)) {
             final MapTransaction existingTransaction = transactions.get(sessionIdentifier);
             if (mapTransactionValidator.isValidTransaction(existingTransaction)) {
-                log.warn("Process transaction named {}!", sessionIdentifier);
+                log.info("Process transaction named {}!", sessionIdentifier);
+
+//                List<EntityDto> distinctDtos = existingTransaction.getPackages().stream()
+//                        .flatMap(packageDto -> packageDto.getEntities().stream())
+//                        .distinct()
+//                        .collect(Collectors.toList());
+//
+//                Flux.fromIterable(distinctDtos)
+//                        .window(1000)
+//                        .flatMap(Function.identity())
+//                        .collectList()
+//                        .doOnNext(entityDtoSlice -> mapEntityRepository.saveAll(
+//                                entityDtoSlice.stream()
+//                                        .map(MapEntityMapper.INSTANCE::toEntity)
+//                                        .peek(mapEntity -> mapEntity.setMapName(sessionIdentifier))
+//                                        .toList()
+//                        ))
+//                        .block();
+
                 final List<MapEntity> distinctEntities = existingTransaction.getPackages().stream()
                         .flatMap(packageDto -> packageDto.getEntities().stream())
                         .distinct()
@@ -94,6 +115,7 @@ public class MapTransactionEventListener {
                         .collect(Collectors.toList());
 
                 mapEntityRepository.saveAll(distinctEntities);
+                log.info("Transaction named {} persisted!", sessionIdentifier);
 
                 return true;
             }
