@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+@Deprecated
 @Slf4j
 @UtilityClass
 public class ReforgerPayload {
@@ -18,6 +19,7 @@ public class ReforgerPayload {
     @NonNull
     private final static ObjectMapper objectMapper = new ObjectMapper();
 
+    @Deprecated
     @NonNull
     public <T> Optional<T> parse(
             @NonNull final Map<String, String> payload,
@@ -37,6 +39,7 @@ public class ReforgerPayload {
         }
     }
 
+    @Deprecated
     @NonNull
     public <T> Optional<List<T>> parseList(
             @NonNull final Map<String, String> payload,

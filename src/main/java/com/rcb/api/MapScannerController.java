@@ -1,10 +1,10 @@
 package com.rcb.api;
 
 import com.rcb.api.commons.HttpCommons;
-import com.rcb.dto.map.scanner.TransactionalEntityPackageDto;
 import com.rcb.dto.map.scanner.TransactionIdentifierDto;
+import com.rcb.dto.map.scanner.TransactionalEntityPackageDto;
+import com.rcb.service.ReforgerPayloadParserService;
 import com.rcb.service.map.MapEntityTransactionService;
-import com.rcb.util.ReforgerPayload;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -33,6 +32,8 @@ public class MapScannerController {
 
     @NonNull
     private final MapEntityTransactionService mapEntityTransactionService;
+    @NonNull
+    private final ReforgerPayloadParserService payloadParser;
 
 
     @Operation(
@@ -49,6 +50,12 @@ public class MapScannerController {
     ) {
         log.debug("Requested POST /api/v1/map-scanner/transaction/open");
 
+        mapEntityTransactionService.openTransaction(payloadParser.parseValidated(payload, TransactionIdentifierDto.class));
+        return ResponseEntity.status(HttpStatus.OK)
+                .cacheControl(CacheControl.noCache())
+                .build();
+
+/*
         return ReforgerPayload.parse(payload, TransactionIdentifierDto.class)
                 .map(openTransactionIdentifier -> {
                     mapEntityTransactionService.openTransaction(openTransactionIdentifier);
@@ -59,6 +66,7 @@ public class MapScannerController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .cacheControl(CacheControl.noCache())
                         .<Void>build());
+ */
     }
 
     @Operation(
@@ -74,8 +82,12 @@ public class MapScannerController {
             @NonNull final Map<String, String> payload
     ) {
         log.debug("Requested POST /api/v1/map-scanner/transaction/commit");
-        final Optional<TransactionIdentifierDto> transactionIdentifierDto = ReforgerPayload.parse(payload, TransactionIdentifierDto.class);
 
+        mapEntityTransactionService.commitTransaction(payloadParser.parseValidated(payload, TransactionIdentifierDto.class));
+        return ResponseEntity.status(HttpStatus.OK)
+                .cacheControl(CacheControl.noCache())
+                .build();
+        /*
         return ReforgerPayload.parse(payload, TransactionIdentifierDto.class)
                 .map(openTransactionIdentifier -> {
                     mapEntityTransactionService.commitTransaction(openTransactionIdentifier);
@@ -86,6 +98,7 @@ public class MapScannerController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .cacheControl(CacheControl.noCache())
                         .<Void>build());
+         */
     }
 
     @Operation(
@@ -101,8 +114,12 @@ public class MapScannerController {
             @NonNull final Map<String, String> payload
     ) {
         log.debug("Requested POST /api/v1/test/map-entities");
-        final Optional<TransactionalEntityPackageDto> mapScannerEntitiesOpt = ReforgerPayload.parse(payload, TransactionalEntityPackageDto.class);
 
+        mapEntityTransactionService.addMapEntitiesPackage(payloadParser.parseValidated(payload, TransactionalEntityPackageDto.class));
+        return ResponseEntity.status(HttpStatus.OK)
+                .cacheControl(CacheControl.noCache())
+                .build();
+        /*
         return ReforgerPayload.parse(payload, TransactionalEntityPackageDto.class)
                 .map(entityPackageDto -> {
                     mapEntityTransactionService.addMapEntitiesPackage(entityPackageDto);
@@ -113,6 +130,7 @@ public class MapScannerController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .cacheControl(CacheControl.noCache())
                         .<Void>build());
+         */
     }
 
 }

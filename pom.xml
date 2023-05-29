@@ -13,8 +13,8 @@
     <groupId>com.rcb</groupId>
     <artifactId>reforger-commander-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>rcb</name>
-    <description>Reforger Commander Backend</description>
+    <name>RefCom Backend</name>
+    <description>Reforger Commander Backend Application Server</description>
 
     <properties>
         <java.version>17</java.version>
@@ -48,6 +48,13 @@
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
         <!-- SPRING BOOT WEB  -->
+
+        <!-- SPRING BOOT VALIDATION  -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <!-- SPRING BOOT VALIDATION  -->
 
         <!-- DATA LAYER / DATABASE  -->
         <dependency>
@@ -159,7 +166,9 @@
                 <version>3.3.2</version>
                 <configuration>
                     <from>
-                        <image>${docker.source.base-image.registry}/${docker.source.base-image.name}:${docker.source.base-image.tag}</image>
+                        <image>
+                            ${docker.source.base-image.registry}/${docker.source.base-image.name}:${docker.source.base-image.tag}
+                        </image>
                         <auth>
                             <username>${docker.registry.username}</username>
                             <password>${docker.registry.password}</password>
