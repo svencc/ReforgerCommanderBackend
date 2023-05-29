@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# 0
+echo "BOOTSTRAPPING CONTAINER ..."
+
+# 1 start sshd
+echo "(1/2) START sshd ..."
+/usr/bin/ssh-keygen -A
+/usr/sbin/sshd -e -D &
+
+# 2 call application starter
+echo "(2/2) START service ..."
+chmod +x /app/resources/servicestart
+/app/resources/servicestart

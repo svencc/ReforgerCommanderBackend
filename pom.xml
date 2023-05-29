@@ -20,6 +20,20 @@
         <java.version>17</java.version>
         <org.projectlombok.version>1.18.28</org.projectlombok.version>
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
+        <org.hibernate.orm.hibernate-jcache.version>6.2.3.Final</org.hibernate.orm.hibernate-jcache.version>
+        <org.ehcache.ehcache.version>3.10.8</org.ehcache.ehcache.version>
+        <spring-boot-maven-plugin.version>3.11.0</spring-boot-maven-plugin.version>
+
+        <!-- JIB from source -->
+        <docker.source.base-image.registry>svencc</docker.source.base-image.registry>
+        <docker.source.base-image.name>ref-com-base</docker.source.base-image.name>
+        <docker.source.base-image.tag>0.0.1</docker.source.base-image.tag>
+        <!-- JIB to target -->
+        <docker.target.image.registry>svencc</docker.target.image.registry>
+        <docker.target.image.name>ref-com-backend</docker.target.image.name>
+        <docker.target.image.tag>${project.version}</docker.target.image.tag>
+        <docker.target.registry.username>${env.REGISTRY_USER}</docker.target.registry.username>
+        <docker.target.registry.password>${env.REGISTRY_PASSWORD}</docker.target.registry.password>
     </properties>
 
     <dependencies>
@@ -51,6 +65,17 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-jcache</artifactId>
+            <version>${org.hibernate.orm.hibernate-jcache.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ehcache</groupId>
+            <artifactId>ehcache</artifactId>
+            <version>${org.ehcache.ehcache.version}</version>
+            <scope>runtime</scope>
         </dependency>
         <!-- CACHE  -->
 
@@ -110,7 +135,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>${spring-boot-maven-plugin.version}</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -128,7 +153,34 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>3.3.2</version>
+                <configuration>
+                    <from>
+                        <image>${docker.source.base-image.registry}/${docker.source.base-image.name}:${docker.source.base-image.tag}</image>
+                        <auth>
+                            <username>${docker.target.registry.username}</username>
+                            <password>${docker.target.registry.password}</password>
+                        </auth>
+                    </from>
 
+                    <to>
+                        <image>${docker.target.image.registry}/${docker.target.image.name}</image>
+                        <tags>
+                            <tag>${docker.target.image.tag}</tag>
+                        </tags>
+                        <auth>
+                            <username>${docker.target.registry.username}</username>
+                            <password>${docker.target.registry.password}</password>
+                        </auth>
+                    </to>
+                    <container>
+                        <entrypoint>./bootstrap</entrypoint>
+                    </container>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
