@@ -32,8 +32,8 @@
         <docker.target.image.registry>svencc</docker.target.image.registry>
         <docker.target.image.name>ref-com-backend</docker.target.image.name>
         <docker.target.image.tag>${project.version}</docker.target.image.tag>
-        <docker.target.registry.username>${env.REGISTRY_USER}</docker.target.registry.username>
-        <docker.target.registry.password>${env.REGISTRY_PASSWORD}</docker.target.registry.password>
+        <docker.registry.username>${env.REGISTRY_USER}</docker.registry.username>
+        <docker.registry.password>${env.REGISTRY_PASSWORD}</docker.registry.password>
     </properties>
 
     <dependencies>
@@ -161,8 +161,8 @@
                     <from>
                         <image>${docker.source.base-image.registry}/${docker.source.base-image.name}:${docker.source.base-image.tag}</image>
                         <auth>
-                            <username>${docker.target.registry.username}</username>
-                            <password>${docker.target.registry.password}</password>
+                            <username>${docker.registry.username}</username>
+                            <password>${docker.registry.password}</password>
                         </auth>
                     </from>
 
@@ -172,8 +172,8 @@
                             <tag>${docker.target.image.tag}</tag>
                         </tags>
                         <auth>
-                            <username>${docker.target.registry.username}</username>
-                            <password>${docker.target.registry.password}</password>
+                            <username>${docker.registry.username}</username>
+                            <password>${docker.registry.password}</password>
                         </auth>
                     </to>
                     <container>
