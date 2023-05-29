@@ -16,6 +16,11 @@ public class JSNumber {
     }
 
     @NonNull
+    private BigDecimal scale(@NonNull final BigDecimal decimal) {
+        return decimal.setScale(Math.max(2, decimal.scale()));
+    }
+
+    @NonNull
     public BigDecimal of(float number) {
         final BigDecimal decimal = BigDecimal.valueOf(number);
 
@@ -30,15 +35,10 @@ public class JSNumber {
     }
 
     @NonNull
-    public BigDecimal of(@NonNull String number) {
+    public BigDecimal of(@NonNull final String number) {
         final BigDecimal decimal = new BigDecimal(number);
 
         return scale(decimal);
-    }
-
-    @NonNull
-    private BigDecimal scale(@NonNull BigDecimal decimal) {
-        return decimal.setScale(Math.max(2, decimal.scale()));
     }
 
 }
