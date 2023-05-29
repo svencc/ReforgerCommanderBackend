@@ -44,7 +44,7 @@ public class MapScannerController {
     })
     @PostMapping(path = "/transaction/open", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity<Void> startTransaction(
-            @RequestParam
+            @RequestParam(required = true)
             @NonNull final Map<String, String> payload
     ) {
         log.debug("Requested POST /api/v1/map-scanner/transaction/open");
@@ -70,7 +70,7 @@ public class MapScannerController {
     })
     @PostMapping(path = "/transaction/commit", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity<Void> commitTransaction(
-            @RequestParam
+            @RequestParam(required = true)
             @NonNull final Map<String, String> payload
     ) {
         log.debug("Requested POST /api/v1/map-scanner/transaction/commit");
@@ -97,7 +97,7 @@ public class MapScannerController {
     })
     @PostMapping(path = "/map-entities", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity<Void> transmitEntityPackage(
-            @RequestParam
+            @RequestParam(required = true)
             @NonNull final Map<String, String> payload
     ) {
         log.debug("Requested POST /api/v1/test/map-entities");

@@ -20,7 +20,7 @@ public class EntityPackageDto {
 
     @Schema
     @JsonProperty()
-    private String sessionIdentifier; // <<< der fehlt noch auf client seite
+    private String sessionIdentifier; // <<< der fehlt noch auf client seite @TODO
 
     @Schema
     @JsonProperty()

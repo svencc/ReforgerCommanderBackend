@@ -8,7 +8,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -22,15 +21,21 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-
     @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+            final MethodArgumentNotValidException ex,
+            final HttpHeaders headers,
+            final HttpStatusCode status,
+            final WebRequest request
+    ) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ValidationFailedDto.builder()
                         .validatedObject(ex.getParameter().getParameterName())
                         .message(ex.getMessage())
                         .build());
     }
+
+    // I think there is one validation-related handler missing! @TODO
 
     @ExceptionHandler(value = {Exception.class})
     public ResponseEntity<List<Void>> handleException(@NonNull final Exception exception) {

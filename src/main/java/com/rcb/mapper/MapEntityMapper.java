@@ -22,7 +22,7 @@ public interface MapEntityMapper {
 
     @Nullable
     @Named("encodeVectorToJsonString")
-    static String encodeVectorToJsonString(@Nullable List<BigDecimal> vectorXYZ) throws JsonProcessingException {
+    static String encodeVectorToJsonString(@Nullable final List<BigDecimal> vectorXYZ) throws JsonProcessingException {
         if (vectorXYZ == null) {
             return null;
         } else {
@@ -39,6 +39,6 @@ public interface MapEntityMapper {
     @Mapping(source = "rotationY", target = "rotationY", qualifiedByName = "encodeVectorToJsonString")
     @Mapping(source = "rotationZ", target = "rotationZ", qualifiedByName = "encodeVectorToJsonString")
     @Mapping(source = "coords", target = "coords", qualifiedByName = "encodeVectorToJsonString")
-    MapEntity toEntity(@NonNull EntityDto entityDto);
+    MapEntity toEntity(final EntityDto entityDto);
 
 }

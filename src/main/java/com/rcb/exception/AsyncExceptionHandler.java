@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
 public class AsyncExceptionHandler implements AsyncUncaughtExceptionHandler {
 
     @Override
-    public void handleUncaughtException(Throwable throwable, Method method, Object... obj) {
+    public void handleUncaughtException(final Throwable throwable, final Method method, Object... obj) {
         log.error("Error during async execution", throwable);
     }
 
