@@ -7,8 +7,9 @@ import com.rcb.event.event.async.map.CommitMapTransactionAsyncEvent;
 import com.rcb.event.event.async.map.OpenMapTransactionAsyncEvent;
 import com.rcb.mapper.MapEntityMapper;
 import com.rcb.model.MapTransaction;
-import com.rcb.repository.MapEntityRepository;
+import com.rcb.repository.MapEntityPersistenceLayer;
 import com.rcb.service.map.MapTransactionValidatorService;
+import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +31,7 @@ import java.util.stream.Collectors;
 public class MapTransactionEventListener {
 
     @NonNull
-    private final MapEntityRepository mapEntityRepository;
+    private final MapEntityPersistenceLayer mapEntityPersistenceLayer;
     @NonNull
     private final MapTransactionValidatorService mapTransactionValidator;
     @NonNull
@@ -84,29 +85,12 @@ public class MapTransactionEventListener {
         }
     }
 
+    @Transactional()
     boolean processTransaction(@NonNull final String sessionIdentifier) {
         if (transactions.containsKey(sessionIdentifier)) {
             final MapTransaction existingTransaction = transactions.get(sessionIdentifier);
             if (mapTransactionValidator.isValidTransaction(existingTransaction)) {
                 log.info("Process transaction named {}!", sessionIdentifier);
-
-//                List<EntityDto> distinctDtos = existingTransaction.getPackages().stream()
-//                        .flatMap(packageDto -> packageDto.getEntities().stream())
-//                        .distinct()
-//                        .collect(Collectors.toList());
-//
-//                Flux.fromIterable(distinctDtos)
-//                        .window(1000)
-//                        .flatMap(Function.identity())
-//                        .collectList()
-//                        .doOnNext(entityDtoSlice -> mapEntityRepository.saveAll(
-//                                entityDtoSlice.stream()
-//                                        .map(MapEntityMapper.INSTANCE::toEntity)
-//                                        .peek(mapEntity -> mapEntity.setMapName(sessionIdentifier))
-//                                        .toList()
-//                        ))
-//                        .block();
-
                 final List<MapEntity> distinctEntities = existingTransaction.getPackages().stream()
                         .flatMap(packageDto -> packageDto.getEntities().stream())
                         .distinct()
@@ -114,7 +98,7 @@ public class MapTransactionEventListener {
                         .peek(mapEntity -> mapEntity.setMapName(sessionIdentifier))
                         .collect(Collectors.toList());
 
-                mapEntityRepository.saveAll(distinctEntities);
+                mapEntityPersistenceLayer.saveAll(distinctEntities);
                 log.info("Transaction named {} persisted!", sessionIdentifier);
 
                 return true;

@@ -53,6 +53,8 @@ public class ReforgerPayloadParserService {
     <T> void validateInput(@NonNull final T input) {
         final Set<ConstraintViolation<T>> violations = validator.validate(input);
         if (!violations.isEmpty()) {
+            violations.forEach(violation-> log.error("Validate Input failed"));
+            // @TODO error to db
             throw new ConstraintViolationException(violations);
         }
     }

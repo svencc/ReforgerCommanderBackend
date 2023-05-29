@@ -54,19 +54,6 @@ public class MapScannerController {
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
                 .build();
-
-/*
-        return ReforgerPayload.parse(payload, TransactionIdentifierDto.class)
-                .map(openTransactionIdentifier -> {
-                    mapEntityTransactionService.openTransaction(openTransactionIdentifier);
-                    return ResponseEntity.status(HttpStatus.OK)
-                            .cacheControl(CacheControl.noCache())
-                            .<Void>build();
-                })
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .cacheControl(CacheControl.noCache())
-                        .<Void>build());
- */
     }
 
     @Operation(
@@ -87,18 +74,6 @@ public class MapScannerController {
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
                 .build();
-        /*
-        return ReforgerPayload.parse(payload, TransactionIdentifierDto.class)
-                .map(openTransactionIdentifier -> {
-                    mapEntityTransactionService.commitTransaction(openTransactionIdentifier);
-                    return ResponseEntity.status(HttpStatus.OK)
-                            .cacheControl(CacheControl.noCache())
-                            .<Void>build();
-                })
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .cacheControl(CacheControl.noCache())
-                        .<Void>build());
-         */
     }
 
     @Operation(
@@ -119,18 +94,6 @@ public class MapScannerController {
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
                 .build();
-        /*
-        return ReforgerPayload.parse(payload, TransactionalEntityPackageDto.class)
-                .map(entityPackageDto -> {
-                    mapEntityTransactionService.addMapEntitiesPackage(entityPackageDto);
-                    return ResponseEntity.status(HttpStatus.OK)
-                            .cacheControl(CacheControl.noCache())
-                            .<Void>build();
-                })
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .cacheControl(CacheControl.noCache())
-                        .<Void>build());
-         */
     }
 
 }

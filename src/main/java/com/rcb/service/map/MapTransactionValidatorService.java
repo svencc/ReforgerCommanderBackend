@@ -38,12 +38,14 @@ public class MapTransactionValidatorService {
 
         // Get commitPackageNumber - should be the highest/last number!
         final Integer commitPackageNumber = transaction.getCommitTransactionIdentifier().getPackageOrder();
-        final Integer lastPackageNumber = commitPackageNumber - 1;
+        final Integer expectedPackageSize = commitPackageNumber - 1;
 
         // Number of submitted packages must be: (commitPackageNumber - 1)
-        if (transaction.getPackages().size() != lastPackageNumber) {
-            log.warn("Package size does not match required size {} => {}", transaction.getPackages().size(), lastPackageNumber);
+        if (transaction.getPackages().size() != expectedPackageSize) {
+            log.warn("Package size does not match expected size {} != {}", transaction.getPackages().size(), expectedPackageSize);
             return false;
+        } else {
+            log.warn("Package size does match expected size {}", transaction.getPackages().size());
         }
 
         // Predict expected package order checksum
@@ -61,13 +63,13 @@ public class MapTransactionValidatorService {
 
         if (isChecksumValid) {
             log.info(
-                    "Expected sum {} vs. actual sum {} => valid",
+                    "Expected checksum {} vs. actual sum {} => valid",
                     expectedPackageOrderChecksum,
                     calculatedPackageOrderChecksum
             );
         } else {
             log.error(
-                    "Expected sum {} vs. actual sum {} => invalid",
+                    "Expected checksum {} vs. actual sum {} => invalid",
                     expectedPackageOrderChecksum,
                     calculatedPackageOrderChecksum
             );
