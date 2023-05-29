@@ -31,7 +31,7 @@ if ($DOCKER_DBCONTAINER_FILTER_STRING.endsWith($MARIADB_CONTAINER_NAME)) {
   # wait until db is startet and initialized
   sleep 10
   # run mariadb-docker-local cli, connected to running
-  iex "docker run --name ${MARIADB_CONTAINER_NAME}-cli -it --rm mariadb mysql -hhost.docker.internal --port=${MARIADB_PORT} -uroot -p${MARIADB_ROOT_PASSWORD}"
+  echo "Container $MARIADB_CONTAINER_NAME up and running!"
 } else {
   # create container:
   echo "Container $MARIADB_CONTAINER_NAME is missing!"
