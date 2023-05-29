@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="reforger-commander-backend [jib:build]" type="MavenRunConfiguration" factoryName="Maven">
+  <configuration default="false" name="refComBackend [jib:build]" type="MavenRunConfiguration" factoryName="Maven">
     <MavenSettings>
       <option name="myGeneralSettings" />
       <option name="myRunnerSettings">
@@ -7,8 +7,8 @@
           <option name="delegateBuildToMaven" value="false" />
           <option name="environmentProperties">
             <map>
-              <entry key="env.REGISTRY_PASSWORD" value="<to-be-set>" />
-              <entry key="env.REGISTRY_USER" value="<to-be-set>" />
+              <entry key="env.REGISTRY_PASSWORD" value="to-be-set" />
+              <entry key="env.REGISTRY_USER" value="to-be-set" />
             </map>
           </option>
           <option name="jreName" value="#USE_PROJECT_JDK" />
