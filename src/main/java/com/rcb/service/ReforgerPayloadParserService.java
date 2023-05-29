@@ -50,7 +50,7 @@ public class ReforgerPayloadParserService {
         }
     }
 
-    <T> void validateInput(T input) {
+    <T> void validateInput(@NonNull final T input) {
         final Set<ConstraintViolation<T>> violations = validator.validate(input);
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
