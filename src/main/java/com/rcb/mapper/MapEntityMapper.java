@@ -3,7 +3,7 @@ package com.rcb.mapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.rcb.dto.map.scanner.EntityDto;
 import com.rcb.entity.MapEntity;
-import com.rcb.service.provider.MapStructStaticProvider;
+import com.rcb.service.provider.StaticObjectMapperProvider;
 import lombok.NonNull;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
@@ -26,7 +26,7 @@ public interface MapEntityMapper {
         if (vectorXYZ == null) {
             return null;
         } else {
-            return MapStructStaticProvider.provide().writeValueAsString(vectorXYZ);
+            return StaticObjectMapperProvider.provide().writeValueAsString(vectorXYZ);
         }
     }
 

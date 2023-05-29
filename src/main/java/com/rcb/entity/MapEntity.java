@@ -11,11 +11,13 @@ import org.springframework.data.domain.Persistable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-//@Table(
-//        indexes = {
-//                @Index(name = "recipient", columnList = "recipient", unique = false),
-//                @Index(name = "created", columnList = "created", unique = false),
-//        })
+@Table(indexes = {
+        @Index(name = "IDX_mapName", columnList = "mapName", unique = false),
+        @Index(name = "IDX_className", columnList = "className", unique = false),
+        @Index(name = "IDX_resourceName", columnList = "resourceName", unique = false),
+        @Index(name = "IDX_mapName_className", columnList = "mapName, className", unique = false),
+        @Index(name = "IDX_mapName_resourceName", columnList = "mapName, resourceName", unique = false)
+})
 public class MapEntity implements Persistable<Long> {
 
     @Id
@@ -24,17 +26,21 @@ public class MapEntity implements Persistable<Long> {
     private Long id;
 
     @Nationalized
-    @Column(insertable = true, updatable = false, nullable = true)
-    private String className;
+    @Column(insertable = true, updatable = false, nullable = false, length = 255)
+    private String mapName;
 
     @Nationalized
-    @Column(insertable = true, length = 255, updatable = false, nullable = true)
+    @Column(insertable = true, updatable = false, nullable = true, length = 255)
     private String entityId;
+
+    @Nationalized
+    @Column(insertable = true, updatable = false, nullable = true, length = 255)
+    private String className;
 
     @Lob
     @Nationalized
     @Column(insertable = true, updatable = false, nullable = true)
-    private String resourceName;
+    private String resourceName; // -> @ TODO add reference to classification table?
 
     @Lob
     @Column(insertable = true, updatable = false, nullable = true)
@@ -66,7 +72,7 @@ public class MapEntity implements Persistable<Long> {
         } else if (getClass() != obj.getClass()) {
             return false;
         } else {
-            MapEntity other = (MapEntity) obj;
+            final MapEntity other = (MapEntity) obj;
             if (getId() == null) {
                 return false;
             } else return getId().equals(other.getId());

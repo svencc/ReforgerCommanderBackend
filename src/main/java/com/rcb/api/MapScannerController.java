@@ -1,9 +1,9 @@
 package com.rcb.api;
 
 import com.rcb.api.commons.HttpCommons;
-import com.rcb.dto.map.scanner.EntityPackageDto;
+import com.rcb.dto.map.scanner.TransactionalEntityPackageDto;
 import com.rcb.dto.map.scanner.TransactionIdentifierDto;
-import com.rcb.service.MapEntityTransactionService;
+import com.rcb.service.map.MapEntityTransactionService;
 import com.rcb.util.ReforgerPayload;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -101,9 +101,9 @@ public class MapScannerController {
             @NonNull final Map<String, String> payload
     ) {
         log.debug("Requested POST /api/v1/test/map-entities");
-        final Optional<EntityPackageDto> mapScannerEntitiesOpt = ReforgerPayload.parse(payload, EntityPackageDto.class);
+        final Optional<TransactionalEntityPackageDto> mapScannerEntitiesOpt = ReforgerPayload.parse(payload, TransactionalEntityPackageDto.class);
 
-        return ReforgerPayload.parse(payload, EntityPackageDto.class)
+        return ReforgerPayload.parse(payload, TransactionalEntityPackageDto.class)
                 .map(entityPackageDto -> {
                     mapEntityTransactionService.addMapEntitiesPackage(entityPackageDto);
                     return ResponseEntity.status(HttpStatus.OK)

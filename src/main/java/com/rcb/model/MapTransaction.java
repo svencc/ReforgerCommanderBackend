@@ -1,9 +1,10 @@
 package com.rcb.model;
 
-import com.rcb.dto.map.scanner.EntityPackageDto;
 import com.rcb.dto.map.scanner.TransactionIdentifierDto;
+import com.rcb.dto.map.scanner.TransactionalEntityPackageDto;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +14,11 @@ import java.util.List;
 public class MapTransaction {
 
     private TransactionIdentifierDto openTransactionIdentifier;
-    
+
     private TransactionIdentifierDto commitTransactionIdentifier;
+
+    @NonNull
     @Builder.Default
-    private List<EntityPackageDto> packages = new ArrayList<>();
+    private List<TransactionalEntityPackageDto> packages = new ArrayList<>();
 
 }

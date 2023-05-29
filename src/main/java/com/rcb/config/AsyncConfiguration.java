@@ -25,8 +25,8 @@ public class AsyncConfiguration implements AsyncConfigurer {
     }
 
     // Additional Async Executor(s)
-    @Bean("AsyncMapExecutor")
-    @Qualifier(value = "AsyncMapExecutor")
+    @Bean("AsyncMapTransactionExecutor")
+    @Qualifier(value = "AsyncMapTransactionExecutor")
     public ThreadPoolTaskExecutor getAsyncMapExecutor() {
         final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(1);

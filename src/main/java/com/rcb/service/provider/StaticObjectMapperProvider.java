@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class MapStructStaticProvider {
+public class StaticObjectMapperProvider {
 
     private static ObjectMapper staticObjectMapperSingletonInstance;
     @NonNull
