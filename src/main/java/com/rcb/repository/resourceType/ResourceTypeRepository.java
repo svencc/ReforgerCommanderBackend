@@ -1,12 +1,14 @@
-package com.rcb.repository;
+package com.rcb.repository.resourceType;
 
 import com.rcb.entity.MapEntity;
-import lombok.NonNull;
+import com.rcb.entity.ResourceType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import javax.lang.model.type.ReferenceType;
+
 @Repository
-interface MapEntityRepository extends JpaRepository<MapEntity, Long> {
+interface ResourceTypeRepository extends JpaRepository<ResourceType, String> {
 
 //    @NonNull
 //    List<MapEntity> findAllBy(@NonNull String recipient);

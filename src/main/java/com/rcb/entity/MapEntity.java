@@ -41,10 +41,18 @@ public class MapEntity implements Persistable<Long> {
     @Column(insertable = true, updatable = false, nullable = true, length = 255)
     private String className;
 
+    @Nationalized
+    @Column(insertable = true, updatable = false, nullable = true, length = 255)
+    private String prefabName;
+
     @Lob
     @Nationalized
     @Column(insertable = true, updatable = false, nullable = true)
     private String resourceName; // -> @ TODO add reference to classification table?
+
+//    @ManyToOne
+//    @JoinColumn(name="resourceType", nullable=true)
+//    private ResourceType resourceType;
 
     @Lob
     @Column(insertable = true, updatable = false, nullable = true)

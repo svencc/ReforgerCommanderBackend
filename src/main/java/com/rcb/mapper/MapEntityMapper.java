@@ -48,6 +48,7 @@ public interface MapEntityMapper {
     @BeanMapping(ignoreByDefault = true)
     @Mapping(source = "entityId", target = "entityId")
     @Mapping(source = "className", target = "className")
+    @Mapping(source = "prefabName", target = "prefabName", qualifiedByName = "blankStringToNull")
     @Mapping(source = "resourceName", target = "resourceName", qualifiedByName = "blankStringToNull")
     @Mapping(source = "rotationX", target = "rotationX", qualifiedByName = "encodeVectorToJsonString")
     @Mapping(source = "rotationY", target = "rotationY", qualifiedByName = "encodeVectorToJsonString")

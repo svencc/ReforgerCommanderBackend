@@ -1,4 +1,4 @@
-package com.rcb.repository;
+package com.rcb.repository.mapEntity;
 
 import com.rcb.entity.MapEntity;
 import jakarta.transaction.Transactional;

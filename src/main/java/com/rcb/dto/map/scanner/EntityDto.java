@@ -34,6 +34,10 @@ public class EntityDto {
 
     @Schema
     @JsonProperty()
+    private String prefabName;
+
+    @Schema
+    @JsonProperty()
     private String resourceName;
 
     @Schema
