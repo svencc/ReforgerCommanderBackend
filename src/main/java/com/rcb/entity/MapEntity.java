@@ -35,6 +35,10 @@ public class MapEntity implements Persistable<Long> {
 
     @Nationalized
     @Column(insertable = true, updatable = false, nullable = true, length = 255)
+    private String name;
+
+    @Nationalized
+    @Column(insertable = true, updatable = false, nullable = true, length = 255)
     private String className;
 
     @Lob
@@ -56,7 +60,7 @@ public class MapEntity implements Persistable<Long> {
 
     @Lob
     @Column(insertable = true, updatable = false, nullable = true)
-    private String coords;
+    private String coordinates;
 
     @Override
     public int hashCode() {

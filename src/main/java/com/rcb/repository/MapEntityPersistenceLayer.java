@@ -15,7 +15,7 @@ public class MapEntityPersistenceLayer {
     @NonNull
     private final MapEntityRepository mapEntityRepository;
 
-    @Transactional
+    @Transactional()
     public List<MapEntity> saveAll(List<MapEntity> distinctEntities) {
         return mapEntityRepository.saveAll(distinctEntities);
     }

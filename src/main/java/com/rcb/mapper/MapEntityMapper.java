@@ -30,15 +30,29 @@ public interface MapEntityMapper {
         }
     }
 
+    @Nullable
+    @Named("blankStringToNull")
+    static String blankStringToNull(@Nullable final String blankableString) throws JsonProcessingException {
+        if (blankableString == null) {
+            return null;
+        } else {
+            if (blankableString.isBlank()) {
+                return null;
+            } else {
+                return blankableString;
+            }
+        }
+    }
+
     @NonNull
     @BeanMapping(ignoreByDefault = true)
     @Mapping(source = "entityId", target = "entityId")
     @Mapping(source = "className", target = "className")
-    @Mapping(source = "resourceName", target = "resourceName")
+    @Mapping(source = "resourceName", target = "resourceName", qualifiedByName = "blankStringToNull")
     @Mapping(source = "rotationX", target = "rotationX", qualifiedByName = "encodeVectorToJsonString")
     @Mapping(source = "rotationY", target = "rotationY", qualifiedByName = "encodeVectorToJsonString")
     @Mapping(source = "rotationZ", target = "rotationZ", qualifiedByName = "encodeVectorToJsonString")
-    @Mapping(source = "coords", target = "coords", qualifiedByName = "encodeVectorToJsonString")
+    @Mapping(source = "coordinates", target = "coordinates", qualifiedByName = "encodeVectorToJsonString")
     MapEntity toEntity(final EntityDto entityDto);
 
 }

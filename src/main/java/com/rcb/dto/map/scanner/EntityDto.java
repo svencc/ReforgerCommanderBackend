@@ -26,6 +26,10 @@ public class EntityDto {
 
     @Schema
     @JsonProperty()
+    private String name;
+
+    @Schema
+    @JsonProperty()
     private String className;
 
     @Schema
@@ -46,6 +50,6 @@ public class EntityDto {
 
     @Schema
     @JsonProperty()
-    private List<BigDecimal> coords;
+    private List<BigDecimal> coordinates;
 
 }

@@ -9,7 +9,6 @@ import com.rcb.mapper.MapEntityMapper;
 import com.rcb.model.MapTransaction;
 import com.rcb.repository.MapEntityPersistenceLayer;
 import com.rcb.service.map.MapTransactionValidatorService;
-import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -85,8 +84,7 @@ public class MapTransactionEventListener {
         }
     }
 
-    @Transactional()
-    boolean processTransaction(@NonNull final String sessionIdentifier) {
+    private boolean processTransaction(@NonNull final String sessionIdentifier) {
         if (transactions.containsKey(sessionIdentifier)) {
             final MapTransaction existingTransaction = transactions.get(sessionIdentifier);
             if (mapTransactionValidator.isValidTransaction(existingTransaction)) {
