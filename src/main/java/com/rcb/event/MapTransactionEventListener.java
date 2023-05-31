@@ -75,7 +75,7 @@ public class MapTransactionEventListener {
             existingTransaction.getPackages().add(event.getTransactionalEntityPackageDto());
             log.debug("Added map entitiy package to transaction named {}!", sessionIdentifier);
 
-            if (existingTransaction.isCommited()) {
+            if (existingTransaction.isCommitted()) {
                 log.debug("Try to process transaction {}, in case that transaction-commit-message took over a data package!", sessionIdentifier);
                 processTransaction(sessionIdentifier);
             }

@@ -20,7 +20,7 @@ public class MapTransaction {
     @Builder.Default
     private List<TransactionalEntityPackageDto> packages = new ArrayList<>();
 
-    public boolean isCommited() {
+    public boolean isCommitted() {
         return commitTransactionIdentifier != null;
     }
 
