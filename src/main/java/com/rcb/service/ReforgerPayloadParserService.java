@@ -35,7 +35,6 @@ public class ReforgerPayloadParserService {
             @NonNull final Class<T> clazz
     ) {
         try {
-            log.debug("parse {}", payload.keySet().stream().findFirst().get());
             T parsed = objectMapper.readValue(
                     payload.keySet().stream().findFirst().get(),
                     clazz
