@@ -12,7 +12,7 @@ public class AsyncExceptionHandler implements AsyncUncaughtExceptionHandler {
 
     @Override
     public void handleUncaughtException(final Throwable throwable, final Method method, Object... obj) {
-        log.error("Error during async execution", throwable);
+        log.error("AsyncExceptionHandler: Error during async execution", throwable);
     }
 
 }

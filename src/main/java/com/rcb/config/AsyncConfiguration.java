@@ -21,6 +21,7 @@ public class AsyncConfiguration implements AsyncConfigurer {
     @Override
     public SimpleAsyncTaskExecutor getAsyncExecutor() {
         final SimpleAsyncTaskExecutor executor = new SimpleAsyncTaskExecutor("Async-Executor");
+
         return executor;
     }
 

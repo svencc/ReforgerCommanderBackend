@@ -6,7 +6,7 @@ import lombok.experimental.UtilityClass;
 import java.math.BigDecimal;
 
 @UtilityClass
-public class JSNumber {
+public class JSNumberUtil {
 
     @NonNull
     public BigDecimal of(long number) {

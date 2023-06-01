@@ -1,10 +1,10 @@
 package com.rcb.mapper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.rcb.dto.map.scanner.EntityDto;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.rcb.dto.map.scanner.MapEntityDto;
 import com.rcb.entity.MapEntity;
 import com.rcb.service.provider.StaticObjectMapperProvider;
-import lombok.NonNull;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -31,6 +31,17 @@ public interface MapEntityMapper {
     }
 
     @Nullable
+    @Named("decodeJsonStringToVector")
+    static List<BigDecimal> decodeJsonStringToVector(@Nullable final String vectorXYZString) throws JsonProcessingException {
+        if (vectorXYZString == null) {
+            return null;
+        } else {
+            return StaticObjectMapperProvider.provide().readValue(vectorXYZString, new TypeReference<List<BigDecimal>>() {
+            });
+        }
+    }
+
+    @Nullable
     @Named("blankStringToNull")
     static String blankStringToNull(@Nullable final String blankableString) throws JsonProcessingException {
         if (blankableString == null) {
@@ -44,7 +55,6 @@ public interface MapEntityMapper {
         }
     }
 
-    @NonNull
     @BeanMapping(ignoreByDefault = true)
     @Mapping(source = "entityId", target = "entityId")
     @Mapping(source = "name", target = "name")
@@ -56,6 +66,19 @@ public interface MapEntityMapper {
     @Mapping(source = "rotationY", target = "rotationY", qualifiedByName = "encodeVectorToJsonString")
     @Mapping(source = "rotationZ", target = "rotationZ", qualifiedByName = "encodeVectorToJsonString")
     @Mapping(source = "coordinates", target = "coordinates", qualifiedByName = "encodeVectorToJsonString")
-    MapEntity toEntity(@NonNull final EntityDto entityDto);
+    MapEntity toEntity(final MapEntityDto mapEntityDto);
+
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(source = "entityId", target = "entityId")
+    @Mapping(source = "name", target = "name")
+    @Mapping(source = "className", target = "className")
+    @Mapping(source = "prefabName", target = "prefabName")
+    @Mapping(source = "resourceName", target = "resourceName")
+    @Mapping(source = "mapDescriptorType", target = "mapDescriptorType")
+    @Mapping(source = "rotationX", target = "rotationX", qualifiedByName = "decodeJsonStringToVector")
+    @Mapping(source = "rotationY", target = "rotationY", qualifiedByName = "decodeJsonStringToVector")
+    @Mapping(source = "rotationZ", target = "rotationZ", qualifiedByName = "decodeJsonStringToVector")
+    @Mapping(source = "coordinates", target = "coordinates", qualifiedByName = "decodeJsonStringToVector")
+    MapEntityDto toDto(final MapEntity entity);
 
 }

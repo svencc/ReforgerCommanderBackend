@@ -34,6 +34,6 @@ public class TransactionalEntityPackageDto {
     @Schema
     @JsonProperty()
     @Builder.Default
-    private List<EntityDto> entities = new ArrayList<>();
+    private List<MapEntityDto> entities = new ArrayList<>();
 
 }

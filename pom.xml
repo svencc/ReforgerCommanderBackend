@@ -49,6 +49,15 @@
         </dependency>
         <!-- SPRING BOOT WEB  -->
 
+        <!-- APACHE MATH  -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math3</artifactId>
+            <version>3.6.1</version>
+        </dependency>
+        <!-- APACHE MATH  -->
+
+
         <!-- SPRING BOOT VALIDATION  -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
