@@ -2,6 +2,7 @@ package com.rcb.dto.map.scanner;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.rcb.model.EnumMapDescriptorType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -39,6 +40,10 @@ public class EntityDto {
     @Schema
     @JsonProperty()
     private String resourceName;
+
+    @Schema
+    @JsonProperty()
+    private String mapDescriptorType;
 
     @Schema
     @JsonProperty()

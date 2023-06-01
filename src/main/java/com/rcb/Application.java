@@ -20,6 +20,7 @@ public class Application {
         context.start();
     }
 
+
     // Uncomment to log all requests to console
     // SET in application.properties -> logging.level.org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
 //    @Bean

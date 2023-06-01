@@ -16,7 +16,9 @@ import org.springframework.data.domain.Persistable;
         @Index(name = "IDX_className", columnList = "className", unique = false),
         @Index(name = "IDX_resourceName", columnList = "resourceName", unique = false),
         @Index(name = "IDX_mapName_className", columnList = "mapName, className", unique = false),
-        @Index(name = "IDX_mapName_resourceName", columnList = "mapName, resourceName", unique = false)
+        @Index(name = "IDX_mapName_resourceName", columnList = "mapName, resourceName", unique = false),
+        @Index(name = "IDX_mapName_mapDescriptorType", columnList = "mapName, mapDescriptorType", unique = false),
+        @Index(name = "IDX_mapName_name", columnList = "mapName, name", unique = false)
 })
 public class MapEntity implements Persistable<Long> {
 
@@ -53,6 +55,9 @@ public class MapEntity implements Persistable<Long> {
 //    @ManyToOne
 //    @JoinColumn(name="resourceType", nullable=true)
 //    private ResourceType resourceType;
+
+    @Column(insertable = true, updatable = false, nullable = true)
+    private String mapDescriptorType;
 
     @Lob
     @Column(insertable = true, updatable = false, nullable = true)

@@ -47,13 +47,15 @@ public interface MapEntityMapper {
     @NonNull
     @BeanMapping(ignoreByDefault = true)
     @Mapping(source = "entityId", target = "entityId")
+    @Mapping(source = "name", target = "name")
     @Mapping(source = "className", target = "className")
     @Mapping(source = "prefabName", target = "prefabName", qualifiedByName = "blankStringToNull")
     @Mapping(source = "resourceName", target = "resourceName", qualifiedByName = "blankStringToNull")
+    @Mapping(source = "mapDescriptorType", target = "mapDescriptorType", qualifiedByName = "blankStringToNull")
     @Mapping(source = "rotationX", target = "rotationX", qualifiedByName = "encodeVectorToJsonString")
     @Mapping(source = "rotationY", target = "rotationY", qualifiedByName = "encodeVectorToJsonString")
     @Mapping(source = "rotationZ", target = "rotationZ", qualifiedByName = "encodeVectorToJsonString")
     @Mapping(source = "coordinates", target = "coordinates", qualifiedByName = "encodeVectorToJsonString")
-    MapEntity toEntity(final EntityDto entityDto);
+    MapEntity toEntity(@NonNull final EntityDto entityDto);
 
 }
