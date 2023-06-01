@@ -9,6 +9,6 @@ import java.util.Date;
 
 @Getter
 @NoArgsConstructor
-public class RefComSyncEvent extends RefComBaseEvent {
+public abstract class RefComSyncEvent extends RefComBaseEvent {
 
 }

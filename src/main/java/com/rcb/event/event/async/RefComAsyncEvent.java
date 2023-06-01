@@ -9,9 +9,6 @@ import java.util.Date;
 
 @Getter
 @NoArgsConstructor
-public class RefComAsyncEvent extends RefComBaseEvent {
-
-    @NonNull
-    private final Date creationDate = new Date();
+public abstract class RefComAsyncEvent extends RefComBaseEvent {
 
 }
