@@ -14,6 +14,8 @@ application-local.properties is preconfigured to work with the docker-mariaDb in
 - https://github.com/svencc/ReforgerCommanderBackend
 
 ## TODO
-[ ] DB based error logging with route, payload, timestamp, request-ip in error logging table!
-- controller/controller advice
-- async error handler
+* Error Handling
+    * DB based error logging with route, payload, timestamp, request-ip in error logging table!
+    * controller/controller advice
+    * async error handler
+* dependant license generator
