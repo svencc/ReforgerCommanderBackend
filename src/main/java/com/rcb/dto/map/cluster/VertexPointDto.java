@@ -8,6 +8,6 @@ import lombok.experimental.SuperBuilder;
 @Schema
 @SuperBuilder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ClusterPointDto extends Point2DBaseDto {
+public class VertexPointDto extends Point2DBaseDto {
 
 }

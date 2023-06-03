@@ -1,26 +1,27 @@
-package com.rcb.dto.map.cluster;
+package com.rcb.dto.map;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.SuperBuilder;
 
-import java.util.List;
+import java.math.BigDecimal;
 
 @Data
-@Builder
 @Schema
+@SuperBuilder
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ClusterDto {
+abstract public class Point2DBaseDto {
 
     @Schema
     @JsonProperty()
-    private List<ClusterPointDto> points;
+    private BigDecimal x;
+
     @Schema
     @JsonProperty()
-    private ConvexHullDto convexHull;
+    private BigDecimal y;
 
 }

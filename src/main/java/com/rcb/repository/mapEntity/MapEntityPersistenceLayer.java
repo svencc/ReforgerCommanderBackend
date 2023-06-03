@@ -2,10 +2,11 @@ package com.rcb.repository.mapEntity;
 
 import com.rcb.entity.MapEntity;
 import com.rcb.model.EnumMapDescriptorType;
-import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -17,13 +18,14 @@ public class MapEntityPersistenceLayer {
     @NonNull
     private final MapEntityRepository mapEntityRepository;
 
-    @Transactional()
+    @Transactional(readOnly = false)
     public List<MapEntity> saveAll(List<MapEntity> distinctEntities) {
         return mapEntityRepository.saveAll(distinctEntities);
     }
 
-    @Transactional()
-    public List<MapEntity> findAllBuildings(@NonNull final String mapName) {
+    @Transactional(readOnly = true)
+    @Cacheable(cacheNames = {"MapEntityPersistenceLayer.findAllTownBuildingEntities"})
+    public List<MapEntity> findAllTownBuildingEntities(@NonNull final String mapName) {
         return mapEntityRepository.findAllByMapNameAndClassNameContaining(mapName, "building");
 //        return mapEntityRepository.findAllByMapNameAndMapDescriptorTypeIn(mapName, Stream.of(
 //                        EnumMapDescriptorType.MDT_HOUSE,
@@ -42,8 +44,9 @@ public class MapEntityPersistenceLayer {
 //                .toList());
     }
 
-    @Transactional()
-    public List<MapEntity> findAllTowns(@NonNull final String mapName) {
+    @Transactional(readOnly = true)
+    @Cacheable(cacheNames = {"MapEntityPersistenceLayer.findAllTownEntities"})
+    public List<MapEntity> findAllTownEntities(@NonNull final String mapName) {
         return mapEntityRepository.findAllByMapNameAndMapDescriptorTypeIn(mapName, Stream.of(
                         EnumMapDescriptorType.MDT_NAME_SETTLEMENT,
                         EnumMapDescriptorType.MDT_NAME_CITY,
