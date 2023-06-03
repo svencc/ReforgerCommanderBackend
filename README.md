@@ -18,4 +18,4 @@ application-local.properties is preconfigured to work with the docker-mariaDb in
     * DB based error logging with route, payload, timestamp, request-ip in error logging table!
     * controller/controller advice
     * async error handler
-* dependant license generator
+* dependent license generator
