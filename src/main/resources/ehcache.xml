@@ -22,4 +22,7 @@
     <cache alias="MapEntityPersistenceLayer.findAllTownEntities" uses-template="refComDefaultCache">
     </cache>
 
+    <cache alias="MapEntityPersistenceLayer.generateClusters" uses-template="refComDefaultCache">
+    </cache>
+
 </config>

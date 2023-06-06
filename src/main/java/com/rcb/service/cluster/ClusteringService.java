@@ -17,6 +17,7 @@ import org.apache.commons.math3.geometry.euclidean.twod.hull.MonotoneChain;
 import org.apache.commons.math3.ml.clustering.Cluster;
 import org.apache.commons.math3.ml.clustering.DBSCANClusterer;
 import org.apache.commons.math3.ml.clustering.DoublePoint;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +43,7 @@ public class ClusteringService {
 
     @NonNull
     @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "MapEntityPersistenceLayer.generateClusters")
     public List<ClusterDto> generateClusters() {
         final List<DoublePoint> buildings = mapEntityPersistenceLayer.findAllTownBuildingEntities("$ReforgerCommanderClient:worlds/Everon.ent").stream()
                 .map(MapEntityMapper.INSTANCE::toDto)

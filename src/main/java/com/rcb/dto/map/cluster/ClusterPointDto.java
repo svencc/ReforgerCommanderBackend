@@ -5,9 +5,11 @@ import com.rcb.dto.map.Point2DBaseDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.experimental.SuperBuilder;
 
+import java.io.Serializable;
+
 @Schema
 @SuperBuilder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ClusterPointDto extends Point2DBaseDto {
+public class ClusterPointDto extends Point2DBaseDto implements Serializable {
 
 }
