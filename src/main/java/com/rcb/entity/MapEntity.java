@@ -2,8 +2,12 @@ package com.rcb.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Nationalized;
 import org.springframework.data.domain.Persistable;
+
+import java.io.Serializable;
 
 @Getter
 @Setter
@@ -20,7 +24,9 @@ import org.springframework.data.domain.Persistable;
         @Index(name = "IDX_mapName_mapDescriptorType", columnList = "mapName, mapDescriptorType", unique = false),
         @Index(name = "IDX_mapName_name", columnList = "mapName, name", unique = false)
 })
-public class MapEntity implements Persistable<Long> {
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+public class MapEntity implements Persistable<Long>, Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

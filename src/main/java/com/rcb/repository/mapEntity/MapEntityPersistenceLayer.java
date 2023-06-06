@@ -24,7 +24,7 @@ public class MapEntityPersistenceLayer {
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(cacheNames = {"MapEntityPersistenceLayer.findAllTownBuildingEntities"})
+    @Cacheable(cacheNames = "MapEntityPersistenceLayer.findAllTownBuildingEntities", key = "#mapName")
     public List<MapEntity> findAllTownBuildingEntities(@NonNull final String mapName) {
         return mapEntityRepository.findAllByMapNameAndClassNameContaining(mapName, "building");
 //        return mapEntityRepository.findAllByMapNameAndMapDescriptorTypeIn(mapName, Stream.of(
@@ -45,7 +45,7 @@ public class MapEntityPersistenceLayer {
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(cacheNames = {"MapEntityPersistenceLayer.findAllTownEntities"})
+    @Cacheable(cacheNames = "MapEntityPersistenceLayer.findAllTownEntities", key = "#mapName")
     public List<MapEntity> findAllTownEntities(@NonNull final String mapName) {
         return mapEntityRepository.findAllByMapNameAndMapDescriptorTypeIn(mapName, Stream.of(
                         EnumMapDescriptorType.MDT_NAME_SETTLEMENT,
