@@ -19,3 +19,4 @@ application-local.properties is preconfigured to work with the docker-mariaDb in
     * controller/controller advice
     * async error handler
 * dependent license generator
+* Add Docker Compose
