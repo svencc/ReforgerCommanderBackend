@@ -1,4 +1,4 @@
-package com.rcb.api;
+package com.rcb.api.map;
 
 import com.rcb.api.commons.HttpCommons;
 import com.rcb.dto.map.scanner.TransactionIdentifierDto;
@@ -27,7 +27,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "MapScanner")
-@RequestMapping("/api/v1/map-scanner")
+@RequestMapping("/api/v1/map/scanner")
 public class MapScannerController {
 
     @NonNull
@@ -48,7 +48,7 @@ public class MapScannerController {
             @RequestParam(required = true)
             @NonNull final Map<String, String> payload
     ) {
-        log.debug("Requested POST /api/v1/map-scanner/transaction/open");
+        log.debug("Requested POST /api/v1/map/scanner/transaction/open");
 
         mapEntityTransactionService.openTransaction(payloadParser.parseValidated(payload, TransactionIdentifierDto.class));
         return ResponseEntity.status(HttpStatus.OK)
@@ -68,7 +68,7 @@ public class MapScannerController {
             @RequestParam(required = true)
             @NonNull final Map<String, String> payload
     ) {
-        log.debug("Requested POST /api/v1/map-scanner/transaction/commit");
+        log.debug("Requested POST /api/v1/map/scanner/transaction/commit");
 
         mapEntityTransactionService.commitTransaction(payloadParser.parseValidated(payload, TransactionIdentifierDto.class));
         return ResponseEntity.status(HttpStatus.OK)
@@ -83,12 +83,12 @@ public class MapScannerController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
     })
-    @PostMapping(path = "/map-entities", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @PostMapping(path = "/transaction/entities", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity<Void> transmitEntityPackage(
             @RequestParam(required = true)
             @NonNull final Map<String, String> payload
     ) {
-        log.debug("Requested POST /api/v1/test/map-entities");
+        log.debug("Requested POST /api/v1/map/scanner/transaction/entities");
 
         mapEntityTransactionService.addMapEntitiesPackage(payloadParser.parseValidated(payload, TransactionalEntityPackageDto.class));
         return ResponseEntity.status(HttpStatus.OK)

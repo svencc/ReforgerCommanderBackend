@@ -1,4 +1,4 @@
-package com.rcb.api;
+package com.rcb.api.map;
 
 import com.rcb.api.commons.HttpCommons;
 import com.rcb.dto.map.cluster.ClusterListDto;
@@ -16,10 +16,7 @@ import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -27,7 +24,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "Clustering")
-@RequestMapping("/api/v1/clusters")
+@RequestMapping("/api/v1/map/clusters")
 public class ClustersController {
 
     @NonNull
@@ -43,22 +40,37 @@ public class ClustersController {
             @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
     })
     @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity<ClusterListDto> generateClusters(
+    public ResponseEntity<ClusterListDto> generateClustersForm(
             @RequestParam(required = true)
             @NonNull final Map<String, String> payload
     ) {
-        log.debug("Requested POST /api/v1/clusters");
+        log.debug("Requested POST /api/v1/clusters (FORM)");
 
-        final MapClusterRequestDto mapClusterRequestDto = payloadParser.parseValidated(payload, MapClusterRequestDto.class);
+        return generateClustersJSON(payloadParser.parseValidated(payload, MapClusterRequestDto.class));
+    }
+
+    @Operation(
+            summary = "Determines clusters of Town/City/Village and military relevant targets.",
+            description = "Calculates city clusters. WIP - other cluster have to be added; db-based-config system is needed (per map)."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
+    })
+    @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ClusterListDto> generateClustersJSON(
+            @RequestBody(required = true)
+            @NonNull final MapClusterRequestDto mapCluster
+    ) {
+        log.debug("Requested POST /api/v1/clusters (JSON)");
 
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
                 .body(ClusterListDto.builder()
                         .clusterList(
                                 clusteringService.generateClusters(
-                                        mapClusterRequestDto.getMapName(),
-                                        mapClusterRequestDto.getMaximumRadiusOfTheNeighborhoodEpsilon().doubleValue(),
-                                        mapClusterRequestDto.getMinimumNumberOfPointsNeededForCluster()
+                                        mapCluster.getMapName(),
+                                        mapCluster.getMaximumRadiusOfTheNeighborhoodEpsilon().doubleValue(),
+                                        mapCluster.getMinimumNumberOfPointsNeededForCluster()
                                 )
                         )
                         .build()

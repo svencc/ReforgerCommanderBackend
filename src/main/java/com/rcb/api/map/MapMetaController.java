@@ -1,4 +1,4 @@
-package com.rcb.api;
+package com.rcb.api.map;
 
 import com.rcb.api.commons.HttpCommons;
 import com.rcb.dto.map.meta.MapMetaListDto;
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Tag(name = "MapMeta")
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/map-meta")
+@RequestMapping("/api/v1/map/meta")
 public class MapMetaController {
 
     @NonNull
@@ -41,7 +41,7 @@ public class MapMetaController {
     })
     @GetMapping(path = "/maps", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MapMetaListDto> mapMeta() {
-        log.debug("Requested POST /api/v1/map-meta/maps");
+        log.debug("Requested POST /api/v1/map/meta/maps");
 
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
