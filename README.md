@@ -20,3 +20,9 @@ application-local.properties is preconfigured to work with the provided docker-m
     * async error handler
 * dependent license generator
 * Add Docker Compose
+* Transactions have to time out via scheduler after one hour
+* Command Framework
+* Transactional Controller Template?
+* map entity query/filter controller
+* settings READ/WRITE REST API
+* authentication
