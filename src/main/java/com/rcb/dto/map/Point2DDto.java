@@ -1,13 +1,13 @@
-package com.rcb.dto.map.cluster;
+package com.rcb.dto.map;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -18,21 +18,14 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MapClusterRequestDto implements Serializable {
-
-    @NotBlank
-    @Schema
-    @JsonProperty()
-    private String mapName;
+public class Point2DDto implements Serializable {
 
     @Schema
     @JsonProperty()
-    @Builder.Default
-    private BigDecimal maximumRadiusOfTheNeighborhoodEpsilon = BigDecimal.valueOf(10);
+    private BigDecimal x;
 
     @Schema
     @JsonProperty()
-    @Builder.Default
-    private Integer minimumNumberOfPointsNeededForCluster = 6;
+    private BigDecimal y;
 
 }

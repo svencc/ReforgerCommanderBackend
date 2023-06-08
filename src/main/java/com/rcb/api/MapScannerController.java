@@ -25,8 +25,8 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@Tag(name = "MapScanner")
 @RequiredArgsConstructor
+@Tag(name = "MapScanner")
 @RequestMapping("/api/v1/map-scanner")
 public class MapScannerController {
 

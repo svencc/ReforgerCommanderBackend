@@ -2,6 +2,7 @@ package com.rcb.dto.map.cluster;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.rcb.dto.map.Point2DDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +20,7 @@ public class ClusterDto implements Serializable {
 
     @Schema
     @JsonProperty()
-    private List<ClusterPointDto> points;
+    private List<Point2DDto> points;
     @Schema
     @JsonProperty()
     private ConvexHullDto convexHull;

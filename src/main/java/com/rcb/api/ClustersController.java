@@ -25,8 +25,8 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@Tag(name = "Clustering")
 @RequiredArgsConstructor
+@Tag(name = "Clustering")
 @RequestMapping("/api/v1/clusters")
 public class ClustersController {
 
@@ -54,7 +54,13 @@ public class ClustersController {
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
                 .body(ClusterListDto.builder()
-                        .clusterList(clusteringService.generateClusters(mapClusterRequestDto.getMapName()))
+                        .clusterList(
+                                clusteringService.generateClusters(
+                                        mapClusterRequestDto.getMapName(),
+                                        mapClusterRequestDto.getMaximumRadiusOfTheNeighborhoodEpsilon().doubleValue(),
+                                        mapClusterRequestDto.getMinimumNumberOfPointsNeededForCluster()
+                                )
+                        )
                         .build()
                 );
     }

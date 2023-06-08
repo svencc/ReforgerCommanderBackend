@@ -1,9 +1,9 @@
 package com.rcb.service.map.cluster;
 
+import com.rcb.dto.map.Line2DDto;
+import com.rcb.dto.map.Point2DDto;
 import com.rcb.dto.map.cluster.ClusterDto;
-import com.rcb.dto.map.cluster.ClusterPointDto;
 import com.rcb.dto.map.cluster.ConvexHullDto;
-import com.rcb.dto.map.cluster.VertexPointDto;
 import com.rcb.dto.map.scanner.MapEntityDto;
 import com.rcb.mapper.MapEntityMapper;
 import com.rcb.repository.mapEntity.MapEntityPersistenceLayer;
@@ -22,9 +22,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
 @Service
@@ -43,8 +45,12 @@ public class ClusteringService {
 
     @NonNull
     @Transactional(readOnly = true)
-    @Cacheable(cacheNames = "MapEntityPersistenceLayer.generateClusters", key = "#mapName")
-    public List<ClusterDto> generateClusters(@NonNull final String mapName) {
+    @Cacheable(cacheNames = "MapEntityPersistenceLayer.generateClusters", key = "{#root.methodName, #mapName, #epsilon_maximumRadiusOfTheNeighborhood, #minPts_minimumNumberOfPointsNeededForCluster}")
+    public List<ClusterDto> generateClusters(
+            @NonNull final String mapName,
+            final double epsilon_maximumRadiusOfTheNeighborhood,
+            final int minPts_minimumNumberOfPointsNeededForCluster
+    ) {
         final List<DoublePoint> buildings = mapEntityPersistenceLayer.findAllTownBuildingEntities(mapName).stream()
                 .map(MapEntityMapper.INSTANCE::toDto)
                 .map(MapEntityDto::getCoordinates)
@@ -67,11 +73,11 @@ public class ClusteringService {
                 })
                 .toList();
 
-        final double eps_maximumRadiusOfTheNeighborhood = towns.size();
-        final int minPts_minimumNumberOfPointsNeededForCluster = 6;
+//        final double eps_maximumRadiusOfTheNeighborhood = 50;
+//        final int minPts_minimumNumberOfPointsNeededForCluster = 6;
 
         final DBSCANClusterer<DoublePoint> dbscanClusterer = new DBSCANClusterer<>(
-                eps_maximumRadiusOfTheNeighborhood,
+                epsilon_maximumRadiusOfTheNeighborhood,
                 minPts_minimumNumberOfPointsNeededForCluster
         );
 
@@ -87,9 +93,9 @@ public class ClusteringService {
     }
 
     @NonNull
-    private static List<ClusterPointDto> toPointList(@NonNull final Cluster<DoublePoint> cluster) {
+    private static List<Point2DDto> toPointList(@NonNull final Cluster<DoublePoint> cluster) {
         return cluster.getPoints().stream()
-                .<ClusterPointDto>map((final DoublePoint doublePoint) -> ClusterPointDto.builder()
+                .<Point2DDto>map((final DoublePoint doublePoint) -> Point2DDto.builder()
                         .x(JSNumberUtil.of(doublePoint.getPoint()[0]))
                         .y(JSNumberUtil.of(doublePoint.getPoint()[1]))
                         .build()
@@ -101,10 +107,10 @@ public class ClusteringService {
     private ConvexHullDto provideConvexHull(@NonNull final Cluster<DoublePoint> cluster) {
         final List<Vector2D> vectorList = toVector2DList(cluster);
         final Collection<Vector2D> hullVertices = hullGenerator.findHullVertices(vectorList);
-        final List<VertexPointDto> verticeDtoList = toVertexPointDtoList(hullVertices);
+        final List<Line2DDto> lines = toLineList(hullVertices);
 
         return ConvexHullDto.builder()
-                .vertices(verticeDtoList)
+                .lines(lines)
                 .build();
     }
 
@@ -116,14 +122,37 @@ public class ClusteringService {
     }
 
     @NonNull
-    private static List<VertexPointDto> toVertexPointDtoList(@NonNull final Collection<Vector2D> hullVertices) {
-        return hullVertices.stream()
-                .<VertexPointDto>map((@NonNull final Vector2D vector2D) -> VertexPointDto.builder()
-                        .x(BigDecimal.valueOf(vector2D.getX()))
-                        .y(BigDecimal.valueOf(vector2D.getY()))
-                        .build()
-                )
-                .toList();
+    private static List<Line2DDto> toLineList(@NonNull final Collection<Vector2D> hullVertices) {
+        final List<Line2DDto> lines = new ArrayList<>();
+        final AtomicReference<Point2DDto> startPoint = new AtomicReference<>();
+        hullVertices.forEach((final Vector2D vector2D) -> {
+            final Point2DDto currentPoint = Point2DDto.builder()
+                    .x(BigDecimal.valueOf(vector2D.getX()))
+                    .y(BigDecimal.valueOf(vector2D.getY()))
+                    .build();
+
+            if (startPoint.get() == null) {
+                // first iteration: set starting point of line
+                startPoint.set(currentPoint);
+            } else {
+                // close line: set endpoint
+                lines.add(Line2DDto.builder()
+                        .start(startPoint.get())
+                        .end(currentPoint)
+                        .build());
+
+                // unset start point for next line:
+                startPoint.set(currentPoint);
+            }
+        });
+
+        // create last line to close convex hull!:
+        lines.add(Line2DDto.builder()
+                .start(lines.get(lines.size() - 1).getEnd())
+                .end(lines.get(0).getStart())
+                .build());
+
+        return lines;
     }
 
 }
