@@ -29,3 +29,5 @@ application-local.properties is preconfigured to work with the provided docker-m
 * authentication
 * documentation / wiki
 * project page
+* docker compose
+* build pipeline / cd
