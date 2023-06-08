@@ -1,7 +1,7 @@
 package com.rcb.service.map;
 
-import com.rcb.dto.map.meta.MapMetaListDto;
 import com.rcb.dto.map.meta.MapMetaDto;
+import com.rcb.dto.map.meta.MapMetaListDto;
 import com.rcb.repository.mapEntity.MapEntityPersistenceLayer;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +28,7 @@ public class MapMetaDataService {
                                 .utilizedClasses(mapEntityPersistenceLayer.utilizedClassesByMapName(mapName))
                                 .utilizedResources(mapEntityPersistenceLayer.utilizedResourcesByMapName(mapName))
                                 .utilizedPrefabs(mapEntityPersistenceLayer.utilizedPrefabsByMapName(mapName))
+                                .utilizedMapMetaTypes(mapEntityPersistenceLayer.utilizedMapMetaTypeByMapName(mapName))
                                 .namedEntities(mapEntityPersistenceLayer.utilizedNamedEntitiesByMapName(mapName))
                                 .build()
                         )

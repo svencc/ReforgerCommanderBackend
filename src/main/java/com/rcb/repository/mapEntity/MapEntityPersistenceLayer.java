@@ -103,4 +103,9 @@ public class MapEntityPersistenceLayer {
         // @TODO use this!
     }
 
+    @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "MapEntityPersistenceLayer.utilizedMapMetaTypeByMapName", key = "#mapName")
+    public List<String> utilizedMapMetaTypeByMapName(@NonNull final String mapName) {
+        return mapEntityRepository.projectMapMetaTypesByMapName(mapName);
+    }
 }

@@ -37,5 +37,7 @@
     </cache>
     <cache alias="MapEntityPersistenceLayer.utilizedNamedEntitiesByMapName" uses-template="refComDefaultCache">
     </cache>
+    <cache alias="MapEntityPersistenceLayer.utilizedMapMetaTypeByMapName" uses-template="refComDefaultCache">
+    </cache>
 
 </config>

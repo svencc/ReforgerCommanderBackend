@@ -41,6 +41,10 @@ public class MapMetaDto implements Serializable {
 
     @Schema
     @JsonProperty()
+    private List<String> utilizedMapMetaTypes;
+
+    @Schema
+    @JsonProperty()
     private List<String> namedEntities;
 
 }
