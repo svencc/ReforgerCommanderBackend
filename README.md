@@ -1,5 +1,5 @@
 # Reforger Commander Backend Project
-![Logo](logo.png)
+![Logo](md-media/logo.png)
 
 ## Setup or run mariaDb docker container
 Just execute the docker/mariadb-docker-setup-or-start-win.ps1 script from the docker directory!
