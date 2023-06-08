@@ -14,6 +14,7 @@ application-local.properties is preconfigured to work with the provided docker-m
 - https://github.com/svencc/ReforgerCommanderBackend
 
 ## TODO
+* add real JSON endpoints in addition to the necessary consuming = MediaType.APPLICATION_FORM_URLENCODED_VALUE" Endpoints ...
 * Error Handling
     * DB based error logging with route, payload, timestamp, request-ip in error logging table!
     * controller/controller advice
