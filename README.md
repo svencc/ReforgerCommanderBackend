@@ -7,7 +7,7 @@ Database is ready configured for application-server connection.
 
 ## Run application server
 Run com.rcb.Application with "local" profile. 
-application-local.properties is preconfigured to work with the docker-mariaDb instance.
+application-local.properties is preconfigured to work with the provided docker-mariaDb instance.
 
 ## Project Pages:
 - https://github.com/svencc/ReforgerCommanderClient
