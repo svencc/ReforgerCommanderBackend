@@ -27,3 +27,5 @@ application-local.properties is preconfigured to work with the provided docker-m
 * map entity query/filter controller
 * settings READ/WRITE REST API
 * authentication
+* documentation / wiki
+* project page
