@@ -37,7 +37,7 @@ public class ClustersController {
 
     @Operation(
             summary = "Determines clusters of Town/City/Village and military relevant targets.",
-            description = "Calculates city clusters (wip test)"
+            description = "Calculates city clusters. WIP - other cluster have to be added; db-based-config system is needed (per map)."
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)

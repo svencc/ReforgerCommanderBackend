@@ -37,7 +37,7 @@ public class MapScannerController {
 
 
     @Operation(
-            summary = "Starts a map-scanner transaction",
+            summary = "Starts a map-scanner transaction.",
             description = "Starts a map-scanner session."
     )
     @ApiResponses(value = {
@@ -57,7 +57,7 @@ public class MapScannerController {
     }
 
     @Operation(
-            summary = "Ends a map-scanner transaction",
+            summary = "Ends a map-scanner transaction.",
             description = "Ends a map-scanner session."
     )
     @ApiResponses(value = {
