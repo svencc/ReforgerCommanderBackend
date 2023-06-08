@@ -7,7 +7,7 @@
 
     <cache-template name="refComDefaultCache">
         <expiry>
-            <ttl unit="hours">1</ttl>
+            <ttl unit="hours">24</ttl>
         </expiry>
         <resources>
             <heap unit="entries">2000</heap>
@@ -16,13 +16,26 @@
         </resources>
     </cache-template>
 
+    <cache alias="MapMetaDataService.provideMapList" uses-template="refComDefaultCache">
+    </cache>
+
     <cache alias="MapEntityPersistenceLayer.findAllTownBuildingEntities" uses-template="refComDefaultCache">
     </cache>
-
     <cache alias="MapEntityPersistenceLayer.findAllTownEntities" uses-template="refComDefaultCache">
     </cache>
-
     <cache alias="MapEntityPersistenceLayer.generateClusters" uses-template="refComDefaultCache">
+    </cache>
+    <cache alias="MapEntityPersistenceLayer.findAllMapNames" uses-template="refComDefaultCache">
+    </cache>
+    <cache alias="MapEntityPersistenceLayer.countEntitiesByMapName" uses-template="refComDefaultCache">
+    </cache>
+    <cache alias="MapEntityPersistenceLayer.utilizedClassesByMapName" uses-template="refComDefaultCache">
+    </cache>
+    <cache alias="MapEntityPersistenceLayer.utilizedResourcesByMapName" uses-template="refComDefaultCache">
+    </cache>
+    <cache alias="MapEntityPersistenceLayer.utilizedPrefabsByMapName" uses-template="refComDefaultCache">
+    </cache>
+    <cache alias="MapEntityPersistenceLayer.utilizedNamedEntitiesByMapName" uses-template="refComDefaultCache">
     </cache>
 
 </config>

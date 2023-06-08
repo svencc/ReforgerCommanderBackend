@@ -57,7 +57,7 @@ public interface MapEntityMapper {
 
     @BeanMapping(ignoreByDefault = true)
     @Mapping(source = "entityId", target = "entityId")
-    @Mapping(source = "name", target = "name")
+    @Mapping(source = "name", target = "name", qualifiedByName = "blankStringToNull")
     @Mapping(source = "className", target = "className")
     @Mapping(source = "prefabName", target = "prefabName", qualifiedByName = "blankStringToNull")
     @Mapping(source = "resourceName", target = "resourceName", qualifiedByName = "blankStringToNull")

@@ -1,4 +1,4 @@
-package com.rcb.service.map;
+package com.rcb.service.map.scanner;
 
 import com.rcb.dto.map.scanner.TransactionalEntityPackageDto;
 import com.rcb.dto.map.scanner.TransactionIdentifierDto;
@@ -17,13 +17,13 @@ public class MapEntityTransactionService {
     @NonNull
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    public void openTransaction(@NonNull TransactionIdentifierDto transactionIdentifierDto) {
+    public void openTransaction(@NonNull final TransactionIdentifierDto transactionIdentifierDto) {
         applicationEventPublisher.publishEvent(new OpenMapTransactionAsyncEvent(transactionIdentifierDto));
     }
-    public void addMapEntitiesPackage(@NonNull TransactionalEntityPackageDto transactionalEntityPackageDto) {
+    public void addMapEntitiesPackage(@NonNull final TransactionalEntityPackageDto transactionalEntityPackageDto) {
         applicationEventPublisher.publishEvent(new AddMapPackageAsyncEvent(transactionalEntityPackageDto));
     }
-    public void commitTransaction(@NonNull TransactionIdentifierDto transactionIdentifierDto) {
+    public void commitTransaction(@NonNull final TransactionIdentifierDto transactionIdentifierDto) {
         applicationEventPublisher.publishEvent(new CommitMapTransactionAsyncEvent(transactionIdentifierDto));
     }
 

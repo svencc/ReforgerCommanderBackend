@@ -17,9 +17,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Table(indexes = {
         @Index(name = "IDX_mapName", columnList = "mapName", unique = false),
-        @Index(name = "IDX_className", columnList = "className", unique = false),
-        @Index(name = "IDX_resourceName", columnList = "resourceName", unique = false),
         @Index(name = "IDX_mapName_className", columnList = "mapName, className", unique = false),
+        @Index(name = "IDX_mapName_prefabName", columnList = "mapName, prefabName", unique = false),
         @Index(name = "IDX_mapName_resourceName", columnList = "mapName, resourceName", unique = false),
         @Index(name = "IDX_mapName_mapDescriptorType", columnList = "mapName, mapDescriptorType", unique = false),
         @Index(name = "IDX_mapName_name", columnList = "mapName, name", unique = false)

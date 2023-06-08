@@ -4,7 +4,7 @@ import com.rcb.api.commons.HttpCommons;
 import com.rcb.dto.map.scanner.TransactionIdentifierDto;
 import com.rcb.dto.map.scanner.TransactionalEntityPackageDto;
 import com.rcb.service.ReforgerPayloadParserService;
-import com.rcb.service.map.MapEntityTransactionService;
+import com.rcb.service.map.scanner.MapEntityTransactionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

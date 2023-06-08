@@ -4,6 +4,7 @@ import com.rcb.entity.MapEntity;
 import com.rcb.model.EnumMapDescriptorType;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,6 +56,51 @@ public class MapEntityPersistenceLayer {
                 )
                 .map(Enum::name)
                 .toList());
+    }
+
+    @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "MapEntityPersistenceLayer.findAllMapNames")
+    public List<String> findAllMapNames() {
+        return mapEntityRepository.projectMapNames();
+    }
+
+    @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "MapEntityPersistenceLayer.utilizedClassesByMapName", key = "#mapName")
+    public List<String> utilizedClassesByMapName(@NonNull final String mapName) {
+        return mapEntityRepository.projectUtilizedClassNamesByMapName(mapName);
+    }
+
+    @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "MapEntityPersistenceLayer.utilizedResourcesByMapName", key = "#mapName")
+    public List<String> utilizedResourcesByMapName(@NonNull final String mapName) {
+        return mapEntityRepository.projectUtilizedResourceNamesByMapName(mapName);
+    }
+
+    @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "MapEntityPersistenceLayer.utilizedPrefabsByMapName", key = "#mapName")
+    public List<String> utilizedPrefabsByMapName(@NonNull final String mapName) {
+        return mapEntityRepository.projectUtilizedPrefabNameByMapName(mapName);
+    }
+
+    @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "MapEntityPersistenceLayer.utilizedNamedEntitiesByMapName", key = "#mapName")
+    public List<String> utilizedNamedEntitiesByMapName(@NonNull final String mapName) {
+        return mapEntityRepository.projectNamedEntitiesByMapName(mapName);
+    }
+
+    @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "MapEntityPersistenceLayer.countEntitiesByMapName", key = "#mapName")
+    public Integer countEntitiesByMapName(@NonNull final String mapName) {
+        return mapEntityRepository.countByMapName(mapName);
+    }
+
+    @CacheEvict(cacheNames = {
+            "MapEntityPersistenceLayer.findAllDistinctMapNames",
+            "MapEntityPersistenceLayer.countEntitiesByMapName",
+            "MapEntityPersistenceLayer.utilizedClassesByMapName"
+    }, allEntries = true)
+    public void evictMapMetaCaches() {
+        // @TODO use this!
     }
 
 }

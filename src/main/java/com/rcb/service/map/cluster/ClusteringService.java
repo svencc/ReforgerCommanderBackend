@@ -1,4 +1,4 @@
-package com.rcb.service.cluster;
+package com.rcb.service.map.cluster;
 
 import com.rcb.dto.map.cluster.ClusterDto;
 import com.rcb.dto.map.cluster.ClusterPointDto;
@@ -34,18 +34,18 @@ public class ClusteringService {
     @NonNull
     private final MapEntityPersistenceLayer mapEntityPersistenceLayer;
 
-    private MonotoneChain generator;
+    private MonotoneChain hullGenerator;
 
     @PostConstruct
     public void postConstruct() {
-        generator = new MonotoneChain();
+        hullGenerator = new MonotoneChain();
     }
 
     @NonNull
     @Transactional(readOnly = true)
-    @Cacheable(cacheNames = "MapEntityPersistenceLayer.generateClusters")
-    public List<ClusterDto> generateClusters() {
-        final List<DoublePoint> buildings = mapEntityPersistenceLayer.findAllTownBuildingEntities("$ReforgerCommanderClient:worlds/Everon.ent").stream()
+    @Cacheable(cacheNames = "MapEntityPersistenceLayer.generateClusters", key = "#mapName")
+    public List<ClusterDto> generateClusters(@NonNull final String mapName) {
+        final List<DoublePoint> buildings = mapEntityPersistenceLayer.findAllTownBuildingEntities(mapName).stream()
                 .map(MapEntityMapper.INSTANCE::toDto)
                 .map(MapEntityDto::getCoordinates)
                 .filter(Objects::nonNull)
@@ -56,7 +56,7 @@ public class ClusteringService {
                 })
                 .toList();
 
-        final List<DoublePoint> towns = mapEntityPersistenceLayer.findAllTownEntities("$ReforgerCommanderClient:worlds/Everon.ent").stream()
+        final List<DoublePoint> towns = mapEntityPersistenceLayer.findAllTownEntities(mapName).stream()
                 .map(MapEntityMapper.INSTANCE::toDto)
                 .map(MapEntityDto::getCoordinates)
                 .filter(Objects::nonNull)
@@ -100,7 +100,7 @@ public class ClusteringService {
     @NonNull
     private ConvexHullDto provideConvexHull(@NonNull final Cluster<DoublePoint> cluster) {
         final List<Vector2D> vectorList = toVector2DList(cluster);
-        final Collection<Vector2D> hullVertices = generator.findHullVertices(vectorList);
+        final Collection<Vector2D> hullVertices = hullGenerator.findHullVertices(vectorList);
         final List<VertexPointDto> verticeDtoList = toVertexPointDtoList(hullVertices);
 
         return ConvexHullDto.builder()

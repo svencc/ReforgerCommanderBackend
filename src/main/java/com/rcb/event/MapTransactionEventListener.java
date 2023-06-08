@@ -8,7 +8,7 @@ import com.rcb.event.event.async.map.OpenMapTransactionAsyncEvent;
 import com.rcb.mapper.MapEntityMapper;
 import com.rcb.model.MapTransaction;
 import com.rcb.repository.mapEntity.MapEntityPersistenceLayer;
-import com.rcb.service.map.MapTransactionValidatorService;
+import com.rcb.service.map.scanner.MapTransactionValidatorService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

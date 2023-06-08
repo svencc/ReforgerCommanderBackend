@@ -1,4 +1,4 @@
-package com.rcb.service.map;
+package com.rcb.service.map.scanner;
 
 import com.rcb.dto.map.scanner.TransactionalEntityPackageDto;
 import com.rcb.model.MapTransaction;
