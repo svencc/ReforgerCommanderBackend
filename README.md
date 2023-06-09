@@ -20,7 +20,7 @@ application-local.properties is preconfigured to work with the provided docker-m
     * DB based error logging with route, payload, timestamp, request-ip in error logging table!
     * controller/controller advice
     * async error handler
-* dependent license generator
+* add dependency license generator
 * Add Docker Compose
 * Transactions have to time out via scheduler after one hour
 * Command Framework
