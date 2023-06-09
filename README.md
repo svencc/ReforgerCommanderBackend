@@ -15,10 +15,10 @@ application-local.properties is preconfigured to work with the provided docker-m
 
 ## TODO
 * DB-based Configuration System
-** Default-Global
-** Default-Map-specific-Conf
-** User-specific-Conf (Global + Map)
-** (with inheritance in above order)
+  * Default-Global
+  * Default-Map-specific-Conf
+  * User-specific-Conf (Global + Map)
+  * (with inheritance in above order)
 * Command Framework
 * add real JSON endpoints in addition to the necessary "consuming = MediaType.APPLICATION_FORM_URLENCODED_VALUE" Endpoints ...
 * save map size to map data and add output to map meta data
