@@ -14,8 +14,14 @@ application-local.properties is preconfigured to work with the provided docker-m
 - https://github.com/svencc/ReforgerCommanderBackend
 
 ## TODO
-* save map size to map data and add output to map meta data
+* DB-based Configuration System
+** Default-Global
+** Default-Map-specific-Conf
+** User-specific-Conf (Global + Map)
+** (with inheritance in above order)
+* Command Framework
 * add real JSON endpoints in addition to the necessary "consuming = MediaType.APPLICATION_FORM_URLENCODED_VALUE" Endpoints ...
+* save map size to map data and add output to map meta data
 * Error Handling
     * DB based error logging with route, payload, timestamp, request-ip in error logging table!
     * controller/controller advice
@@ -23,7 +29,6 @@ application-local.properties is preconfigured to work with the provided docker-m
 * add dependency license generator
 * Add Docker Compose
 * Transactions have to time out via scheduler after one hour
-* Command Framework
 * Transactional Controller Template?
 * map entity query/filter controller
 * settings READ/WRITE REST API
