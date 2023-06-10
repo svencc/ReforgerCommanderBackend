@@ -14,6 +14,7 @@ application-local.properties is preconfigured to work with the provided docker-m
 - https://github.com/svencc/ReforgerCommanderBackend
 
 ## TODO
+* Implement concave hull generator (besides existing convex hull)
 * DB-based Configuration System
   * Default-Global
   * Default-Map-specific-Conf
