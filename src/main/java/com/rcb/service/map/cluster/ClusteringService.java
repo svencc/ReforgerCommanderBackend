@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -37,6 +38,40 @@ public class ClusteringService {
     private final MapEntityPersistenceLayer mapEntityPersistenceLayer;
 
     private MonotoneChain hullGenerator;
+
+    @NonNull
+    private static List<Line2DDto> toLineList(@NonNull final Collection<Vector2D> hullVertices) {
+        final List<Line2DDto> lines = new ArrayList<>();
+        final AtomicReference<Point2DDto> startPoint = new AtomicReference<>();
+        hullVertices.forEach((final Vector2D vector2D) -> {
+            final Point2DDto currentPoint = Point2DDto.builder()
+                    .x(BigDecimal.valueOf(vector2D.getX()))
+                    .y(BigDecimal.valueOf(vector2D.getY()))
+                    .build();
+
+            if (startPoint.get() == null) {
+                // first iteration: set starting point of line
+                startPoint.set(currentPoint);
+            } else {
+                // close line: set endpoint
+                lines.add(Line2DDto.builder()
+                        .start(startPoint.get())
+                        .end(currentPoint)
+                        .build());
+
+                // unset start point for next line:
+                startPoint.set(currentPoint);
+            }
+        });
+
+        // create last line to close convex hull!:
+        lines.add(Line2DDto.builder()
+                .start(lines.get(lines.size() - 1).getEnd())
+                .end(lines.get(0).getStart())
+                .build());
+
+        return lines;
+    }
 
     @PostConstruct
     public void postConstruct() {
@@ -73,9 +108,6 @@ public class ClusteringService {
                 })
                 .toList();
 
-//        final double eps_maximumRadiusOfTheNeighborhood = 50;
-//        final int minPts_minimumNumberOfPointsNeededForCluster = 6;
-
         final DBSCANClusterer<DoublePoint> dbscanClusterer = new DBSCANClusterer<>(
                 epsilon_maximumRadiusOfTheNeighborhood,
                 minPts_minimumNumberOfPointsNeededForCluster
@@ -107,10 +139,12 @@ public class ClusteringService {
     private ConvexHullDto provideConvexHull(@NonNull final Cluster<DoublePoint> cluster) {
         final List<Vector2D> vectorList = toVector2DList(cluster);
         final Collection<Vector2D> hullVertices = hullGenerator.findHullVertices(vectorList);
-        final List<Line2DDto> lines = toLineList(hullVertices);
+//        final List<Line2DDto> lines = toLineList(hullVertices);
+        final List<Point2DDto> polygon = toPolygon(hullVertices);
 
         return ConvexHullDto.builder()
-                .lines(lines)
+//                .lines(lines)
+                .points(polygon)
                 .build();
     }
 
@@ -122,37 +156,13 @@ public class ClusteringService {
     }
 
     @NonNull
-    private static List<Line2DDto> toLineList(@NonNull final Collection<Vector2D> hullVertices) {
-        final List<Line2DDto> lines = new ArrayList<>();
-        final AtomicReference<Point2DDto> startPoint = new AtomicReference<>();
-        hullVertices.forEach((final Vector2D vector2D) -> {
-            final Point2DDto currentPoint = Point2DDto.builder()
-                    .x(BigDecimal.valueOf(vector2D.getX()))
-                    .y(BigDecimal.valueOf(vector2D.getY()))
-                    .build();
-
-            if (startPoint.get() == null) {
-                // first iteration: set starting point of line
-                startPoint.set(currentPoint);
-            } else {
-                // close line: set endpoint
-                lines.add(Line2DDto.builder()
-                        .start(startPoint.get())
-                        .end(currentPoint)
-                        .build());
-
-                // unset start point for next line:
-                startPoint.set(currentPoint);
-            }
-        });
-
-        // create last line to close convex hull!:
-        lines.add(Line2DDto.builder()
-                .start(lines.get(lines.size() - 1).getEnd())
-                .end(lines.get(0).getStart())
-                .build());
-
-        return lines;
+    private static List<Point2DDto> toPolygon(@NonNull final Collection<Vector2D> hullVertices) {
+        return hullVertices.stream()
+                .map((final Vector2D vector2D) -> Point2DDto.builder()
+                        .x(BigDecimal.valueOf(vector2D.getX()))
+                        .y(BigDecimal.valueOf(vector2D.getY()))
+                        .build())
+                .collect(Collectors.toList());
     }
 
 }

@@ -1,30 +1,31 @@
-package com.rcb.dto.map.cluster;
+package com.rcb.dto.test;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.rcb.dto.map.Line2DDto;
-import com.rcb.dto.map.Point2DDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.experimental.SuperBuilder;
+import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @Schema
-@SuperBuilder
+@Builder
+@NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ConvexHullDto implements Serializable {
-
-//    @Schema
-//    @JsonProperty()
-//    private List<Line2DDto> lines;
+public class TestDataDto {
 
     @Schema
     @JsonProperty()
-    private List<Point2DDto> points;
+    private String stringValue;
+
+    @Schema
+    @JsonProperty()
+    @Builder.Default
+    private List<NestedTestDataDto> nestedDataList = new ArrayList<>();
 
 }
