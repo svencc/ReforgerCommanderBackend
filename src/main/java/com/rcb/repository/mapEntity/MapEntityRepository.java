@@ -17,6 +17,11 @@ interface MapEntityRepository extends JpaRepository<MapEntity, Long> {
     );
 
     @NonNull
+    Integer deleteByMapName(
+            @NonNull final String mapName
+    );
+
+    @NonNull
     @Query(value = "SELECT DISTINCT me.mapName" +
             "         FROM MapEntity me" +
             "     ORDER BY me.mapName ASC")

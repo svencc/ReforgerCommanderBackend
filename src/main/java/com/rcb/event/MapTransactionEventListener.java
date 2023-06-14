@@ -77,7 +77,11 @@ public class MapTransactionEventListener {
 
             if (existingTransaction.isCommitted()) {
                 log.debug("Try to process transaction {}, in case that transaction-commit-message took over a data package!", sessionIdentifier);
-                processTransaction(sessionIdentifier);
+                boolean isProcessed = processTransaction(sessionIdentifier);
+                if (isProcessed) {
+                    transactions.remove(sessionIdentifier);
+                    log.info("Transaction named {} committed and removed from stack!", sessionIdentifier);
+                }
             }
         } else {
             log.warn("No transaction named {} found to append data!", sessionIdentifier);
@@ -96,6 +100,7 @@ public class MapTransactionEventListener {
                         .peek(mapEntity -> mapEntity.setMapName(sessionIdentifier))
                         .collect(Collectors.toList());
 
+                mapEntityPersistenceLayer.deleteMapEntities(sessionIdentifier);
                 mapEntityPersistenceLayer.saveAll(distinctEntities);
                 log.info("Transaction named {} persisted!", sessionIdentifier);
 

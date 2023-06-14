@@ -3,6 +3,7 @@ package com.rcb.service.map.cluster;
 import com.rcb.dto.map.Line2DDto;
 import com.rcb.dto.map.Point2DDto;
 import com.rcb.dto.map.cluster.ClusterDto;
+import com.rcb.dto.map.cluster.ConcaveHullDto;
 import com.rcb.dto.map.cluster.ConvexHullDto;
 import com.rcb.dto.map.scanner.MapEntityDto;
 import com.rcb.mapper.MapEntityMapper;
@@ -140,11 +141,11 @@ public class ClusteringService {
         final List<Vector2D> vectorList = toVector2DList(cluster);
         final Collection<Vector2D> hullVertices = hullGenerator.findHullVertices(vectorList);
 //        final List<Line2DDto> lines = toLineList(hullVertices);
-        final List<Point2DDto> polygon = toPolygon(hullVertices);
+        final List<Point2DDto> vertices = toPolygon(hullVertices);
 
         return ConvexHullDto.builder()
 //                .lines(lines)
-                .points(polygon)
+                .vertices(vertices)
                 .build();
     }
 
@@ -163,6 +164,15 @@ public class ClusteringService {
                         .y(BigDecimal.valueOf(vector2D.getY()))
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    private ConcaveHullDto provideConcaveHull(@NonNull final Cluster<DoublePoint> cluster) {
+        return ConcaveHullDto.builder()
+//                .vertices()
+                .build();
+        https://rosettacode.org/wiki/Convex_hull#Java
+        //https://commons.apache.org/proper/commons-geometry/commons-geometry-core/apidocs/org/apache/commons/geometry/core/partitioning/HyperplaneSubset.html
+
     }
 
 }

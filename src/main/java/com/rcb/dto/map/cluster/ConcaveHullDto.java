@@ -16,7 +16,7 @@ import java.util.List;
 @SuperBuilder
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ConvexHullDto implements Serializable {
+public class ConcaveHullDto implements Serializable {
 
 //    @Schema
 //    @JsonProperty()

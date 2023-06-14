@@ -24,6 +24,11 @@ public class MapEntityPersistenceLayer {
         return mapEntityRepository.saveAll(distinctEntities);
     }
 
+    @Transactional(readOnly = false)
+    public Integer deleteMapEntities(@NonNull final String mapName) {
+        return mapEntityRepository.deleteByMapName(mapName);
+    }
+
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = "MapEntityPersistenceLayer.findAllTownBuildingEntities", key = "#mapName")
     public List<MapEntity> findAllTownBuildingEntities(@NonNull final String mapName) {

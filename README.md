@@ -20,6 +20,8 @@ application-local.properties is preconfigured to work with the provided docker-m
   * Default-Map-specific-Conf
   * User-specific-Conf (Global + Map)
   * (with inheritance in above order)
+  * Polygon/Point Color
+  * Enable/Disable data-classes rendering
 * Command Framework
 * add real JSON endpoints in addition to the necessary "consuming = MediaType.APPLICATION_FORM_URLENCODED_VALUE" Endpoints ...
 * save map size to map data and add output to map meta data
