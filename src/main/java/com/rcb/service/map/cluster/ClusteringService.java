@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -147,20 +148,24 @@ public class ClusteringService {
         final Collection<Vector2D> hullVertices = convexHullGenerator.findHullVertices(vectorList);
 //        final List<Line2DDto> lines = toLineList(hullVertices);
         final List<Point2DDto> vertices = toPolygon(hullVertices);
+        final List<Point2DDto> reducedVertices = reduce(vertices);
 
+        // @TODO: Set vertices empty if lower than 3 edges!
         return ConvexHullDto.builder()
 //                .lines(lines)
-                .vertices(vertices)
+                .vertices(reducedVertices)
                 .build();
     }
 
     private ConcaveHullDto provideConcaveHull(@NonNull final Cluster<DoublePoint> cluster) {
         final List<Point> vectorList = toPointList(cluster);
-        final List<Point> hullVertices = concaveHullGenerator.calculateConcaveHull(vectorList, 5);
+        final List<Point> hullVertices = concaveHullGenerator.calculateConcaveHull(vectorList, (vectorList.size()-2));
         final List<Point2DDto> vertices = toPolygon(hullVertices);
+        final List<Point2DDto> reducedVertices = reduce(vertices);
 
+        // @TODO: Set vertices empty if lower than 3 edges!
         return ConcaveHullDto.builder()
-                .vertices(vertices)
+                .vertices(reducedVertices)
                 .build();
         //https://commons.apache.org/proper/commons-geometry/commons-geometry-core/apidocs/org/apache/commons/geometry/core/partitioning/HyperplaneSubset.html
 
@@ -202,6 +207,19 @@ public class ClusteringService {
                         .y(BigDecimal.valueOf(point.getY()))
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    @NonNull
+    private List<Point2DDto> reduce(@NonNull final List<Point2DDto> vertices) {
+        return vertices.stream()
+                .peek((final Point2DDto point2D) -> {
+//                    point2D.setX(point2D.getX().setScale(1, RoundingMode.DOWN));
+//                    point2D.setY(point2D.getY().setScale(1, RoundingMode.DOWN));
+                    point2D.setX(point2D.getX().setScale(0, RoundingMode.DOWN).setScale(1));
+                    point2D.setY(point2D.getY().setScale(0, RoundingMode.DOWN).setScale(1));
+                })
+                .distinct()
+                .toList();
     }
 
 }
