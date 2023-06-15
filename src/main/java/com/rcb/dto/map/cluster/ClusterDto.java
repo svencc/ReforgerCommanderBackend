@@ -21,8 +21,13 @@ public class ClusterDto implements Serializable {
     @Schema
     @JsonProperty()
     private List<Point2DDto> points;
+
     @Schema
     @JsonProperty()
     private ConvexHullDto convexHull;
+
+    @Schema
+    @JsonProperty()
+    private ConcaveHullDto concaveHull;
 
 }

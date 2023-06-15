@@ -10,6 +10,8 @@ import com.rcb.mapper.MapEntityMapper;
 import com.rcb.repository.mapEntity.MapEntityPersistenceLayer;
 import com.rcb.util.JSNumberUtil;
 import jakarta.annotation.PostConstruct;
+import lib.javaconcavehull.main.clustering.ConcaveHull;
+import lib.javaconcavehull.main.clustering.Point;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +40,8 @@ public class ClusteringService {
     @NonNull
     private final MapEntityPersistenceLayer mapEntityPersistenceLayer;
 
-    private MonotoneChain hullGenerator;
+    private MonotoneChain convexHullGenerator;
+    private ConcaveHull concaveHullGenerator;
 
     @NonNull
     private static List<Line2DDto> toLineList(@NonNull final Collection<Vector2D> hullVertices) {
@@ -76,7 +79,8 @@ public class ClusteringService {
 
     @PostConstruct
     public void postConstruct() {
-        hullGenerator = new MonotoneChain();
+        convexHullGenerator = new MonotoneChain();
+        concaveHullGenerator = new ConcaveHull();
     }
 
     @NonNull
@@ -117,8 +121,9 @@ public class ClusteringService {
         final List<Cluster<DoublePoint>> clusters = dbscanClusterer.cluster(buildings);
         final List<ClusterDto> clusterDtoList = clusters.stream()
                 .map((final Cluster<DoublePoint> cluster) -> ClusterDto.builder()
-                        .points(toPointList(cluster))
+                        .points(toPoint2DList(cluster))
                         .convexHull(provideConvexHull(cluster))
+                        .concaveHull(provideConcaveHull(cluster))
                         .build())
                 .toList();
 
@@ -126,7 +131,7 @@ public class ClusteringService {
     }
 
     @NonNull
-    private static List<Point2DDto> toPointList(@NonNull final Cluster<DoublePoint> cluster) {
+    private static List<Point2DDto> toPoint2DList(@NonNull final Cluster<DoublePoint> cluster) {
         return cluster.getPoints().stream()
                 .<Point2DDto>map((final DoublePoint doublePoint) -> Point2DDto.builder()
                         .x(JSNumberUtil.of(doublePoint.getPoint()[0]))
@@ -139,7 +144,7 @@ public class ClusteringService {
     @NonNull
     private ConvexHullDto provideConvexHull(@NonNull final Cluster<DoublePoint> cluster) {
         final List<Vector2D> vectorList = toVector2DList(cluster);
-        final Collection<Vector2D> hullVertices = hullGenerator.findHullVertices(vectorList);
+        final Collection<Vector2D> hullVertices = convexHullGenerator.findHullVertices(vectorList);
 //        final List<Line2DDto> lines = toLineList(hullVertices);
         final List<Point2DDto> vertices = toPolygon(hullVertices);
 
@@ -147,6 +152,18 @@ public class ClusteringService {
 //                .lines(lines)
                 .vertices(vertices)
                 .build();
+    }
+
+    private ConcaveHullDto provideConcaveHull(@NonNull final Cluster<DoublePoint> cluster) {
+        final List<Point> vectorList = toPointList(cluster);
+        final List<Point> hullVertices = concaveHullGenerator.calculateConcaveHull(vectorList, 5);
+        final List<Point2DDto> vertices = toPolygon(hullVertices);
+
+        return ConcaveHullDto.builder()
+                .vertices(vertices)
+                .build();
+        //https://commons.apache.org/proper/commons-geometry/commons-geometry-core/apidocs/org/apache/commons/geometry/core/partitioning/HyperplaneSubset.html
+
     }
 
     @NonNull
@@ -166,13 +183,25 @@ public class ClusteringService {
                 .collect(Collectors.toList());
     }
 
-    private ConcaveHullDto provideConcaveHull(@NonNull final Cluster<DoublePoint> cluster) {
-        return ConcaveHullDto.builder()
-//                .vertices()
-                .build();
-        https://rosettacode.org/wiki/Convex_hull#Java
-        //https://commons.apache.org/proper/commons-geometry/commons-geometry-core/apidocs/org/apache/commons/geometry/core/partitioning/HyperplaneSubset.html
+    @NonNull
+    private List<Point> toPointList(@NonNull final Cluster<DoublePoint> cluster) {
+        return cluster.getPoints().stream()
+                .map((point) -> Point.builder()
+                        .x(point.getPoint()[0])
+                        .y(point.getPoint()[1])
+                        .build()
+                )
+                .toList();
+    }
 
+    @NonNull
+    private List<Point2DDto> toPolygon(@NonNull final List<Point> hullVertices) {
+        return hullVertices.stream()
+                .map((final Point point) -> Point2DDto.builder()
+                        .x(BigDecimal.valueOf(point.getX()))
+                        .y(BigDecimal.valueOf(point.getY()))
+                        .build())
+                .collect(Collectors.toList());
     }
 
 }
