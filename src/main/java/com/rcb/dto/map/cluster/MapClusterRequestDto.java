@@ -25,14 +25,4 @@ public class MapClusterRequestDto implements Serializable {
     @JsonProperty()
     private String mapName;
 
-    @Schema
-    @JsonProperty()
-    @Builder.Default
-    private BigDecimal maximumRadiusOfTheNeighborhoodEpsilon = BigDecimal.valueOf(10);
-
-    @Schema
-    @JsonProperty()
-    @Builder.Default
-    private Integer minimumNumberOfPointsNeededForCluster = 6;
-
 }

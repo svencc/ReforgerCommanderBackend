@@ -38,6 +38,19 @@ public class AsyncConfiguration implements AsyncConfigurer {
         return executor;
     }
 
+    // Additional Async Executor(s)
+    @Bean("ConfigurationSystemExecutor")
+    @Qualifier(value = "ConfigurationSystemExecutor")
+    public ThreadPoolTaskExecutor getAsyncConfigurationSystemExecutor() {
+        final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(1);
+        executor.setMaxPoolSize(1);
+        executor.setThreadNamePrefix("CnfEvnt-Exec");
+        executor.initialize();
+
+        return executor;
+    }
+
     @Override
     public AsyncExceptionHandler getAsyncUncaughtExceptionHandler() {
         return new AsyncExceptionHandler();

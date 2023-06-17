@@ -1,7 +1,7 @@
 package com.rcb.repository.mapEntity;
 
 import com.rcb.entity.MapEntity;
-import com.rcb.model.EnumMapDescriptorType;
+import com.rcb.model.map.EnumMapDescriptorType;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -29,7 +29,6 @@ public class MapEntityPersistenceLayer {
         return mapEntityRepository.deleteByMapName(mapName);
     }
 
-    @Transactional(readOnly = true)
     @Cacheable(cacheNames = "MapEntityPersistenceLayer.findAllTownBuildingEntities", key = "#mapName")
     public List<MapEntity> findAllTownBuildingEntities(@NonNull final String mapName) {
         return mapEntityRepository.findAllByMapNameAndClassNameContaining(mapName, "building");
@@ -50,7 +49,6 @@ public class MapEntityPersistenceLayer {
 //                .toList());
     }
 
-    @Transactional(readOnly = true)
     @Cacheable(cacheNames = "MapEntityPersistenceLayer.findAllTownEntities", key = "#mapName")
     public List<MapEntity> findAllTownEntities(@NonNull final String mapName) {
         return mapEntityRepository.findAllByMapNameAndMapDescriptorTypeIn(mapName, Stream.of(
@@ -63,37 +61,31 @@ public class MapEntityPersistenceLayer {
                 .toList());
     }
 
-    @Transactional(readOnly = true)
     @Cacheable(cacheNames = "MapEntityPersistenceLayer.findAllMapNames")
     public List<String> findAllMapNames() {
         return mapEntityRepository.projectMapNames();
     }
 
-    @Transactional(readOnly = true)
     @Cacheable(cacheNames = "MapEntityPersistenceLayer.utilizedClassesByMapName", key = "#mapName")
     public List<String> utilizedClassesByMapName(@NonNull final String mapName) {
         return mapEntityRepository.projectUtilizedClassNamesByMapName(mapName);
     }
 
-    @Transactional(readOnly = true)
     @Cacheable(cacheNames = "MapEntityPersistenceLayer.utilizedResourcesByMapName", key = "#mapName")
     public List<String> utilizedResourcesByMapName(@NonNull final String mapName) {
         return mapEntityRepository.projectUtilizedResourceNamesByMapName(mapName);
     }
 
-    @Transactional(readOnly = true)
     @Cacheable(cacheNames = "MapEntityPersistenceLayer.utilizedPrefabsByMapName", key = "#mapName")
     public List<String> utilizedPrefabsByMapName(@NonNull final String mapName) {
         return mapEntityRepository.projectUtilizedPrefabNameByMapName(mapName);
     }
 
-    @Transactional(readOnly = true)
     @Cacheable(cacheNames = "MapEntityPersistenceLayer.utilizedNamedEntitiesByMapName", key = "#mapName")
     public List<String> utilizedNamedEntitiesByMapName(@NonNull final String mapName) {
         return mapEntityRepository.projectNamedEntitiesByMapName(mapName);
     }
 
-    @Transactional(readOnly = true)
     @Cacheable(cacheNames = "MapEntityPersistenceLayer.countEntitiesByMapName", key = "#mapName")
     public Integer countEntitiesByMapName(@NonNull final String mapName) {
         return mapEntityRepository.countByMapName(mapName);
@@ -108,9 +100,9 @@ public class MapEntityPersistenceLayer {
         // @TODO use this!
     }
 
-    @Transactional(readOnly = true)
     @Cacheable(cacheNames = "MapEntityPersistenceLayer.utilizedMapMetaTypeByMapName", key = "#mapName")
     public List<String> utilizedMapMetaTypeByMapName(@NonNull final String mapName) {
         return mapEntityRepository.projectMapMetaTypesByMapName(mapName);
     }
+    
 }

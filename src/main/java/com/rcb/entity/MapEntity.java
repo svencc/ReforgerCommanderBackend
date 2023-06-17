@@ -108,7 +108,7 @@ public class MapEntity implements Persistable<Long>, Serializable {
 
     @Override
     public boolean isNew() {
-        return getId() != null;
+        return getId() == null;
     }
 
 }

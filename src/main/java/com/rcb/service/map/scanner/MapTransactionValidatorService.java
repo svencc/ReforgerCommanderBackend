@@ -1,7 +1,7 @@
 package com.rcb.service.map.scanner;
 
 import com.rcb.dto.map.scanner.TransactionalEntityPackageDto;
-import com.rcb.model.MapTransaction;
+import com.rcb.model.map.MapTransaction;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

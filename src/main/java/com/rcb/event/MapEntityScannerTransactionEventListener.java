@@ -1,12 +1,11 @@
 package com.rcb.event;
 
 import com.rcb.entity.MapEntity;
-import com.rcb.event.event.async.RefComAsyncEvent;
 import com.rcb.event.event.async.map.AddMapPackageAsyncEvent;
 import com.rcb.event.event.async.map.CommitMapTransactionAsyncEvent;
 import com.rcb.event.event.async.map.OpenMapTransactionAsyncEvent;
 import com.rcb.mapper.MapEntityMapper;
-import com.rcb.model.MapTransaction;
+import com.rcb.model.map.MapTransaction;
 import com.rcb.repository.mapEntity.MapEntityPersistenceLayer;
 import com.rcb.service.map.scanner.MapTransactionValidatorService;
 import lombok.NonNull;
@@ -27,7 +26,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class MapTransactionEventListener {
+public class MapEntityScannerTransactionEventListener extends BaseEventListener {
 
     @NonNull
     private final MapEntityPersistenceLayer mapEntityPersistenceLayer;
@@ -53,10 +52,6 @@ public class MapTransactionEventListener {
             transactions.put(sessionIdentifier, newTransaction);
             log.info("Open new transaction named {}!", event.getTransactionIdentifierDto().getSessionIdentifier());
         }
-    }
-
-    private void logEvent(@NonNull final RefComAsyncEvent event) {
-        log.debug("****** handle {} {} ", event, event.getCreationDate());
     }
 
     private static void resetSession(@NonNull final MapTransaction transaction) {

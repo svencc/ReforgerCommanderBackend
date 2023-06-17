@@ -18,10 +18,6 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ConvexHullDto implements Serializable {
 
-//    @Schema
-//    @JsonProperty()
-//    private List<Line2DDto> lines;
-
     @Schema
     @JsonProperty()
     private List<Point2DDto> vertices;

@@ -1,4 +1,4 @@
-package lib.javaconcavehull.main.clustering;
+package lib.javaconcavehull.main.concavehull;
 
 import lombok.Builder;
 import lombok.Data;

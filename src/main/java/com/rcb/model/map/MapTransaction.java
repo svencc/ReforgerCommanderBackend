@@ -1,4 +1,4 @@
-package com.rcb.model;
+package com.rcb.model.map;
 
 import com.rcb.dto.map.scanner.TransactionIdentifierDto;
 import com.rcb.dto.map.scanner.TransactionalEntityPackageDto;
@@ -16,6 +16,7 @@ public class MapTransaction {
     private TransactionIdentifierDto openTransactionIdentifier;
 
     private TransactionIdentifierDto commitTransactionIdentifier;
+    
     @NonNull
     @Builder.Default
     private List<TransactionalEntityPackageDto> packages = new ArrayList<>();

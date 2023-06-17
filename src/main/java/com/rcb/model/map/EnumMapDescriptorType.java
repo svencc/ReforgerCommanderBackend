@@ -1,4 +1,4 @@
-package com.rcb.model;
+package com.rcb.model.map;
 
 /*
     Taken from Reforger EMapDescriptorType

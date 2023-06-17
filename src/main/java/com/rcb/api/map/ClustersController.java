@@ -66,13 +66,7 @@ public class ClustersController {
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
                 .body(ClusterListDto.builder()
-                        .clusterList(
-                                clusteringService.generateClusters(
-                                        mapCluster.getMapName(),
-                                        mapCluster.getMaximumRadiusOfTheNeighborhoodEpsilon().doubleValue(),
-                                        mapCluster.getMinimumNumberOfPointsNeededForCluster()
-                                )
-                        )
+                        .clusterList(clusteringService.generateClusters(mapCluster.getMapName()))
                         .build()
                 );
     }

@@ -14,7 +14,6 @@ application-local.properties is preconfigured to work with the provided docker-m
 - https://github.com/svencc/ReforgerCommanderBackend
 
 ## TODO
-* Implement concave hull generator (besides existing convex hull)
 * DB-based Configuration System
   * Default-Global
   * Default-Map-specific-Conf
@@ -22,9 +21,11 @@ application-local.properties is preconfigured to work with the provided docker-m
   * (with inheritance in above order)
   * Polygon/Point Color
   * Enable/Disable data-classes rendering
+* map size is not necessarily square! -> fix scanner!
+* save map size to map data and add output to map meta data
 * Command Framework
 * add real JSON endpoints in addition to the necessary "consuming = MediaType.APPLICATION_FORM_URLENCODED_VALUE" Endpoints ...
-* save map size to map data and add output to map meta data
+* Implement concave hull generator (besides existing convex hull)
 * Error Handling
     * DB based error logging with route, payload, timestamp, request-ip in error logging table!
     * controller/controller advice

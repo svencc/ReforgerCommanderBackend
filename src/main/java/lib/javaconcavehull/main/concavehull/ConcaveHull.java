@@ -1,4 +1,4 @@
-package lib.javaconcavehull.main.clustering;
+package lib.javaconcavehull.main.concavehull;
 
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -258,7 +258,7 @@ public class ConcaveHull {
             if (its) {
                 // unless we've exhausted the points
                 if (kk >= (pointArrayList.size() - 1)) {
-                    return null;
+                    return Collections.emptyList();
                 }
                 return calculateConcaveHull(pointArrayList, k + 1);
             }
