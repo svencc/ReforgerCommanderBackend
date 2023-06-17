@@ -59,14 +59,14 @@ public class ClustersController {
     @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ClusterListDto> generateClustersJSON(
             @RequestBody(required = true)
-            @NonNull final MapClusterRequestDto mapCluster
+            @NonNull final MapClusterRequestDto clusterRequestDto
     ) {
         log.debug("Requested POST /api/v1/clusters (JSON)");
 
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
                 .body(ClusterListDto.builder()
-                        .clusterList(clusteringService.generateClusters(mapCluster.getMapName()))
+                        .clusterList(clusteringService.generateClusters(clusterRequestDto.getMapName()))
                         .build()
                 );
     }

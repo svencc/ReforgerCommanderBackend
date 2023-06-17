@@ -28,8 +28,6 @@ public class MapMetaController {
 
     @NonNull
     private final MapMetaDataService mapMetaDataService;
-    @NonNull
-    private final ReforgerPayloadParserService payloadParser;
 
 
     @Operation(
