@@ -23,7 +23,7 @@ public class MapMetaDataService {
         return MapMetaListDto.builder()
                 .maps(mapEntityPersistenceLayer.findAllMapNames().stream()
                         .map((@NonNull final String mapName) -> MapMetaDto.builder()
-                                .name(mapName)
+                                .mapName(mapName)
                                 .entitiesCount(mapEntityPersistenceLayer.countEntitiesByMapName(mapName))
                                 .utilizedClasses(mapEntityPersistenceLayer.utilizedClassesByMapName(mapName))
                                 .utilizedResources(mapEntityPersistenceLayer.utilizedResourcesByMapName(mapName))

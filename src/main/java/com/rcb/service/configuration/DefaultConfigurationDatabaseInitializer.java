@@ -4,7 +4,6 @@ import com.rcb.PostStartupExecutor;
 import com.rcb.entity.Configuration;
 import com.rcb.model.configuration.configurationvaluedescriptor.BaseRegisteredConfigurationValueDescripable;
 import com.rcb.repository.configuration.ConfigurationPersistenceLayer;
-import com.rcb.service.DefaultConfigurationProvidable;
 import com.rcb.service.PostStartExecutable;
 import jakarta.annotation.PostConstruct;
 import lombok.NonNull;
@@ -20,7 +19,7 @@ import java.util.stream.Stream;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class DefaultConfigurationService implements PostStartExecutable {
+public class DefaultConfigurationDatabaseInitializer implements PostStartExecutable {
 
     @NonNull
     private final PostStartupExecutor postStartupExecutor;

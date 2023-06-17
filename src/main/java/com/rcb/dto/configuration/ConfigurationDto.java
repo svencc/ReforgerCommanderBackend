@@ -1,23 +1,29 @@
-package com.rcb.dto.map.meta;
+package com.rcb.dto.configuration;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.rcb.dto.map.Point2DDto;
+import com.rcb.dto.map.cluster.ConcaveHullDto;
+import com.rcb.dto.map.cluster.ConvexHullDto;
+import com.rcb.model.configuration.ConfigurationType;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Nationalized;
 
 import java.io.Serializable;
 import java.util.List;
 
 @Data
-@Schema
 @Builder
-@NoArgsConstructor
+@Schema
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MapMetaDto implements Serializable {
+public class ConfigurationDto implements Serializable {
 
     @Schema
     @JsonProperty()
@@ -25,26 +31,14 @@ public class MapMetaDto implements Serializable {
 
     @Schema
     @JsonProperty()
-    private Integer entitiesCount;
+    private String namespace;
 
     @Schema
     @JsonProperty()
-    private List<String> utilizedClasses;
+    private String name;
 
     @Schema
     @JsonProperty()
-    private List<String> utilizedResources;
-
-    @Schema
-    @JsonProperty()
-    private List<String> utilizedPrefabs;
-
-    @Schema
-    @JsonProperty()
-    private List<String> utilizedMapMetaTypes;
-
-    @Schema
-    @JsonProperty()
-    private List<String> namedEntities;
+    private ConfigurationType type;
 
 }

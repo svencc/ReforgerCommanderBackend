@@ -1,11 +1,9 @@
 package com.rcb.service.configuration;
 
+import com.rcb.dto.configuration.ConfigurationListDto;
 import com.rcb.entity.Configuration;
 import com.rcb.model.configuration.ConfigurationType;
-import com.rcb.model.configuration.configurationvaluedescriptor.RegisteredBooleanConfigurationValueDescriptor;
-import com.rcb.model.configuration.configurationvaluedescriptor.RegisteredDoubleConfigurationValueDescriptor;
-import com.rcb.model.configuration.configurationvaluedescriptor.RegisteredIntegerConfigurationValueDescriptor;
-import com.rcb.model.configuration.configurationvaluedescriptor.RegisteredStringConfigurationValueDescriptor;
+import com.rcb.model.configuration.configurationvaluedescriptor.*;
 import com.rcb.repository.configuration.ConfigurationPersistenceLayer;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -44,14 +42,24 @@ public class ConfigurationValueProvider {
             @NonNull final String mapName,
             @NonNull final RegisteredBooleanConfigurationValueDescriptor descriptor
     ) {
-        final Optional<Configuration> mostConcrete = queryValue(mapName, descriptor.getNamespace(), descriptor.getName()).stream()
-                .min(Comparator.nullsLast(Comparator.comparing(Configuration::getMapName)));
+        final Optional<Configuration> mostConcrete = getMostConcreteConfiguration(mapName, descriptor);
 
         if (mostConcrete.isPresent() && mostConcrete.get().getType().equals(ConfigurationType.BOOLEAN)) {
             return Boolean.valueOf(mostConcrete.get().getValue());
         } else {
             throw new InvalidParameterException();
         }
+    }
+
+    @NonNull
+    private Optional<Configuration> getMostConcreteConfiguration(
+            @NonNull final String mapName,
+            @NonNull final BaseRegisteredConfigurationValueDescripable descriptor
+    ) {
+        return queryValue(mapName, descriptor.getNamespace(), descriptor.getName()).stream()
+                .min(Comparator.nullsLast(
+                        Comparator.comparing(Configuration::getMapName, Comparator.nullsLast(String::compareTo))
+                ));
     }
 
     @NonNull
@@ -68,8 +76,7 @@ public class ConfigurationValueProvider {
             @NonNull final String mapName,
             @NonNull final RegisteredStringConfigurationValueDescriptor descriptor
     ) {
-        final Optional<Configuration> mostConcrete = queryValue(mapName, descriptor.getNamespace(), descriptor.getName()).stream()
-                .min(Comparator.nullsLast(Comparator.comparing(Configuration::getMapName)));
+        final Optional<Configuration> mostConcrete = getMostConcreteConfiguration(mapName, descriptor);
 
         if (mostConcrete.isPresent() && mostConcrete.get().getType().equals(ConfigurationType.STRING)) {
             return mostConcrete.get().getValue();
@@ -83,8 +90,7 @@ public class ConfigurationValueProvider {
             @NonNull final String mapName,
             @NonNull final RegisteredIntegerConfigurationValueDescriptor descriptor
     ) {
-        final Optional<Configuration> mostConcrete = queryValue(mapName, descriptor.getNamespace(), descriptor.getName()).stream()
-                .min(Comparator.nullsLast(Comparator.comparing(Configuration::getMapName)));
+        final Optional<Configuration> mostConcrete = getMostConcreteConfiguration(mapName, descriptor);
 
         if (mostConcrete.isPresent() && mostConcrete.get().getType().equals(ConfigurationType.INTEGER)) {
             return Integer.valueOf(mostConcrete.get().getValue());
@@ -97,8 +103,7 @@ public class ConfigurationValueProvider {
             @NonNull final String mapName,
             @NonNull final RegisteredDoubleConfigurationValueDescriptor descriptor
     ) {
-        final Optional<Configuration> mostConcrete = queryValue(mapName, descriptor.getNamespace(), descriptor.getName()).stream()
-                .min(Comparator.nullsLast(Comparator.comparing(Configuration::getMapName)));
+        final Optional<Configuration> mostConcrete = getMostConcreteConfiguration(mapName, descriptor);
 
         if (mostConcrete.isPresent() && mostConcrete.get().getType().equals(ConfigurationType.DOUBLE)) {
             return Double.valueOf(mostConcrete.get().getValue());
@@ -107,4 +112,13 @@ public class ConfigurationValueProvider {
         }
     }
 
+    @NonNull
+    public ConfigurationListDto provideAllExistingValueEntities(@NonNull final String mapName) {
+        return ConfigurationListDto.builder().build();
+    }
+
+    @NonNull
+    public ConfigurationListDto provideAllExistingValueEntities() {
+        return ConfigurationListDto.builder().build();
+    }
 }

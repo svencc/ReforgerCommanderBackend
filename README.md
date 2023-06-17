@@ -14,30 +14,29 @@ application-local.properties is preconfigured to work with the provided docker-m
 - https://github.com/svencc/ReforgerCommanderBackend
 
 ## TODO
-* DB-based Configuration System
-  * Default-Global
-  * Default-Map-specific-Conf
-  * User-specific-Conf (Global + Map)
-  * (with inheritance in above order)
-  * Polygon/Point Color
-  * Enable/Disable data-classes rendering
+* DB-based Configuration System4
+  * Control Map Rendering (color, points)
+  * rework cluster rendering to direct polygon rendering; controlled by server?
 * map size is not necessarily square! -> fix scanner!
 * save map size to map data and add output to map meta data
+* add db entity types to config (for cluster detection) - replace hardcoded approach
+* woods detection
+* mil detection
+* industrial detection
 * Command Framework
 * add real JSON endpoints in addition to the necessary "consuming = MediaType.APPLICATION_FORM_URLENCODED_VALUE" Endpoints ...
-* Implement concave hull generator (besides existing convex hull)
+* Transactions have to time out via scheduler after one hour
 * Error Handling
     * DB based error logging with route, payload, timestamp, request-ip in error logging table!
     * controller/controller advice
     * async error handler
+* Implement concave hull generator (besides existing convex hull)
 * add dependency license generator
 * Add Docker Compose
-* Transactions have to time out via scheduler after one hour
 * Transactional Controller Template?
 * map entity query/filter controller
 * settings READ/WRITE REST API
-* authentication
+* authentication / user-token acces and tenant-based-db-table-fields?
 * documentation / wiki
 * project page
-* docker compose
 * build pipeline / cd

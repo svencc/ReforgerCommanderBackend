@@ -7,7 +7,7 @@ public class ClusterConfigurationDescriptors {
 
     public static final RegisteredDoubleConfigurationValueDescriptor EPSILON_MAXIMUM_RADIUS_OF_THE_NEIGHBORHOOD = RegisteredDoubleConfigurationValueDescriptor.builder()
             .namespace("map.clustering.convex-hull")
-            .name("maximumRadiusOfTheNeighborhoodEpsilon")
+            .name("epsilonMaximumRadiusOfTheNeighborhood")
             .defaultValue("10")
             .build();
 

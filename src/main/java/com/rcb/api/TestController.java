@@ -1,4 +1,4 @@
-package com.rcb.api.map;
+package com.rcb.api;
 
 import com.rcb.dto.test.NestedTestDataDto;
 import com.rcb.dto.test.TestDataDto;
@@ -22,14 +22,13 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "Testing")
+@Tag(name = "Test")
 @RequestMapping("/api/v1/test")
 public class TestController {
 
     @Operation(
             summary = "Test JSON-GET call",
-            description = "Returns a static JSON demo structure.",
-            tags = "test"
+            description = "Returns a static JSON demo structure."
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "O.K.")

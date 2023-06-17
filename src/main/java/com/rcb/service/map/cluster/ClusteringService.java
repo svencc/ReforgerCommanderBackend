@@ -8,9 +8,9 @@ import com.rcb.dto.map.scanner.MapEntityDto;
 import com.rcb.mapper.MapEntityMapper;
 import com.rcb.model.configuration.configurationvaluedescriptor.BaseRegisteredConfigurationValueDescripable;
 import com.rcb.repository.mapEntity.MapEntityPersistenceLayer;
-import com.rcb.service.DefaultConfigurationProvidable;
+import com.rcb.service.configuration.DefaultConfigurationProvidable;
 import com.rcb.service.configuration.ConfigurationValueProvider;
-import com.rcb.service.configuration.DefaultConfigurationService;
+import com.rcb.service.configuration.DefaultConfigurationDatabaseInitializer;
 import com.rcb.util.JSNumberUtil;
 import jakarta.annotation.PostConstruct;
 import lib.javaconcavehull.main.concavehull.ConcaveHull;
@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 public class ClusteringService implements DefaultConfigurationProvidable {
 
     @NonNull
-    private final DefaultConfigurationService defaultConfigurationService;
+    private final DefaultConfigurationDatabaseInitializer defaultConfigurationDatabaseInitializer;
     @NonNull
     private final ConfigurationValueProvider configurationValueProvider;
     @NonNull
@@ -53,7 +53,7 @@ public class ClusteringService implements DefaultConfigurationProvidable {
     public void postConstruct() {
         convexHullGenerator = new MonotoneChain();
         concaveHullGenerator = new ConcaveHull();
-        defaultConfigurationService.registerDefaultConfigurationProvider(this);
+        defaultConfigurationDatabaseInitializer.registerDefaultConfigurationProvider(this);
     }
 
     @NonNull
