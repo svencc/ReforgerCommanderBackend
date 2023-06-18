@@ -1,5 +1,5 @@
 # RECOM
-## ARMA Reforger+ Commander Backend Project
+## ARMA Reforger+ AI Commander Backend Project
 ![Logo](md-media/logo.png)
 
 ## Setup or run mariaDb docker container
