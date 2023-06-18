@@ -24,6 +24,7 @@ application-local.properties is preconfigured to work with the provided docker-m
 * read/write config via JSON/Postman -> cache reset
 * after map transaction finishes -> cache reset
 * delete map via POST and corresponding configs -> cache reset
+* trigger and handle spring event to indicate that map related data/configuration caches needs to be reset or deleted; tidy up
 *
 * add db entity types to config (for cluster detection) - replace hardcoded approach
 *
