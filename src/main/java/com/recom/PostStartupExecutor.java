@@ -27,13 +27,13 @@ public class PostStartupExecutor implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        log.info("PostStartupExecutor: Application started; execute registered PostStartExecutables now:");
+        log.info("* PostStartupExecutor: Application started; execute registered PostStartExecutables now:");
 
         if (registeredPostStarters.isEmpty()) {
-            log.info(" +-- No PostStartExecutables are registered.");
+            log.info("+--- No PostStartExecutables are registered.");
         } else {
             for (PostStartExecutable runner : registeredPostStarters) {
-                log.info("|+-- execute: {}: {}.", runner.getClass().getSimpleName(), runner.identifyPostStartRunner());
+                log.info("| +- execute: {}: {}.", runner.getClass().getSimpleName(), runner.identifyPostStartRunner());
                 runner.executePostStartRunner();
             }
             log.info("+--- all PostStartExecutables have been executed.");

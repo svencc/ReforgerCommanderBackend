@@ -51,7 +51,7 @@ public class ConfigurationValueProvider {
     }
 
     @NonNull
-    protected List<Configuration> queryValue(
+    private List<Configuration> queryValue(
             @NonNull final String mapName,
             @NonNull final String namespace,
             @NonNull final String name

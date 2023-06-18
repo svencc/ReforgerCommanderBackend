@@ -48,10 +48,10 @@ public class DefaultConfigurationDatabaseInitializer implements PostStartExecuta
     @Override
     @Transactional(readOnly = false)
     public void executePostStartRunner() {
-        applyRegisteredDefaultSettings();
+        applyRegisteredDefaultSettingsToDatabase();
     }
 
-    protected void applyRegisteredDefaultSettings() {
+    private void applyRegisteredDefaultSettingsToDatabase() {
         final List<BaseRegisteredConfigurationValueDescripable> allRegisteredDefaultValues = defaultConfigurationProviderRegister.stream()
                 .flatMap((provider) -> provider.provideDefaultConfigurationValues().stream())
                 .toList();
@@ -106,7 +106,7 @@ public class DefaultConfigurationDatabaseInitializer implements PostStartExecuta
     }
 
     @NonNull
-    protected Optional<Configuration> findConfigurationInIndexedMap(
+    private Optional<Configuration> findConfigurationInIndexedMap(
             @NonNull final Map<String, Map<String, List<Configuration>>> preIndexedConfigurationList,
             @NonNull final String namespace,
             @NonNull final String name

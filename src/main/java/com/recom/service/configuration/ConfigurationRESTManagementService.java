@@ -94,7 +94,7 @@ public class ConfigurationRESTManagementService {
         overrideList.getConfigurationList().forEach(override -> findConfigurationInIndexedMap(indexedDefaultConfigurationList, override.getNamespace(), override.getName())
                 .ifPresentOrElse(
                         handleOverrideWithCorrespondingDefaultConfiguration(overrideList, indexedExistingOverrideConfigurationList, configurationsToCreate, configurationsToUpdate, override),
-                        otherwiseIgnoreOrRemoveOldExistingOverride(indexedExistingOverrideConfigurationList, configurationsToDelete, override)
+                        otherwiseTidyUpOldOverrideEntries(indexedExistingOverrideConfigurationList, configurationsToDelete, override)
                 ));
 
         configurationPersistenceLayer.saveAll(configurationsToCreate);
@@ -132,7 +132,7 @@ public class ConfigurationRESTManagementService {
     }
 
     @NonNull
-    private Runnable otherwiseIgnoreOrRemoveOldExistingOverride(
+    private Runnable otherwiseTidyUpOldOverrideEntries(
             @NonNull final Map<String, Map<String, List<Configuration>>> indexedExistingOverrideConfigurationList,
             @NonNull final List<Configuration> configurationsToDelete,
             @NonNull final OverrideConfigurationDto override
