@@ -14,6 +14,7 @@ application-local.properties is preconfigured to work with the provided docker-m
 - https://github.com/svencc/ReforgerCommanderBackend
 
 ## TODO
+* read/write config via JSON/Postman -> cache reset
 * add db entity types to config (for cluster detection) - replace hardcoded approach
 * DB-based Configuration System
   * Control Map Rendering (color, points)
