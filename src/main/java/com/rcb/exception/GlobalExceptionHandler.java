@@ -2,6 +2,7 @@ package com.rcb.exception;
 
 import com.rcb.dto.BadRequestDto;
 import com.rcb.dto.ConstraintViolationEntryDto;
+import com.rcb.dto.ServerErrorDto;
 import jakarta.validation.ConstraintViolationException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -64,6 +65,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = {HttpUnprocessableEntityException.class})
     public ResponseEntity<List<Void>> handleHttpUnprocessableEntityException(@NonNull final HttpUnprocessableEntityException exception) {
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+    }
+
+    @ExceptionHandler(value = {ConfigurationNotReadableException.class})
+    public ResponseEntity<ServerErrorDto> handleConfigurationNotReadableException(@NonNull final ConfigurationNotReadableException exception) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ServerErrorDto.builder()
+                        .message(String.format("There is an issue with a configuration entry in the database! ConfigurationNotReadableException: %s", exception.getMessage()))
+                        .build()
+                );
     }
 
     @ExceptionHandler(value = {HttpBadRequestException.class})

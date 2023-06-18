@@ -2,6 +2,7 @@ package com.rcb.service.configuration;
 
 import com.rcb.dto.configuration.ConfigurationListDto;
 import com.rcb.entity.Configuration;
+import com.rcb.exception.ConfigurationNotReadableException;
 import com.rcb.model.configuration.ConfigurationType;
 import com.rcb.model.configuration.configurationvaluedescriptor.*;
 import com.rcb.repository.configuration.ConfigurationPersistenceLayer;
@@ -80,9 +81,30 @@ public class ConfigurationValueProvider {
 
         if (mostConcrete.isPresent() && mostConcrete.get().getType().equals(ConfigurationType.STRING)) {
             return mostConcrete.get().getValue();
-        } else {
-            throw new InvalidParameterException();
         }
+
+        throw generateConfigurationNotReadableException(descriptor, Optional.empty());
+    }
+
+    @NonNull
+    private ConfigurationNotReadableException generateConfigurationNotReadableException(
+            @NonNull final BaseRegisteredConfigurationValueDescripable descriptor,
+            @NonNull final Optional<Configuration> mostConcrete
+    ) {
+        return mostConcrete.map(configuration -> new ConfigurationNotReadableException(
+                String.format("queryValue %s : %s type '%s' is not readable or value '%s' is not convertible!",
+                        descriptor.getNamespace(),
+                        descriptor.getName(),
+                        descriptor.getType(),
+                        configuration.getValue()
+                ))).orElseGet(
+                () -> new ConfigurationNotReadableException(
+                        String.format("queryValue %s : %s type '%s' is not readable!",
+                                descriptor.getNamespace(),
+                                descriptor.getName(),
+                                descriptor.getType()
+                        ))
+        );
     }
 
     @NonNull
@@ -93,12 +115,17 @@ public class ConfigurationValueProvider {
         final Optional<Configuration> mostConcrete = getMostConcreteConfiguration(mapName, descriptor);
 
         if (mostConcrete.isPresent() && mostConcrete.get().getType().equals(ConfigurationType.INTEGER)) {
-            return Integer.valueOf(mostConcrete.get().getValue());
-        } else {
-            throw new InvalidParameterException();
+            try {
+                return Integer.valueOf(mostConcrete.get().getValue());
+            } catch (final NumberFormatException ignore) {
+                // we throw an error at the end of function
+            }
         }
+
+        throw generateConfigurationNotReadableException(descriptor, mostConcrete);
     }
 
+    @NonNull
     public Double queryValue(
             @NonNull final String mapName,
             @NonNull final RegisteredDoubleConfigurationValueDescriptor descriptor
@@ -106,19 +133,25 @@ public class ConfigurationValueProvider {
         final Optional<Configuration> mostConcrete = getMostConcreteConfiguration(mapName, descriptor);
 
         if (mostConcrete.isPresent() && mostConcrete.get().getType().equals(ConfigurationType.DOUBLE)) {
-            return Double.valueOf(mostConcrete.get().getValue());
-        } else {
-            throw new InvalidParameterException();
+            try {
+                return Double.valueOf(mostConcrete.get().getValue());
+            } catch (final NumberFormatException ignore) {
+                // we throw an error at the end of function
+            }
         }
+
+        throw generateConfigurationNotReadableException(descriptor, mostConcrete);
     }
 
     @NonNull
     public ConfigurationListDto provideAllExistingValueEntities(@NonNull final String mapName) {
+        // @TODO to implement
         return ConfigurationListDto.builder().build();
     }
 
     @NonNull
     public ConfigurationListDto provideAllExistingValueEntities() {
+        // @TODO to implement
         return ConfigurationListDto.builder().build();
     }
 }

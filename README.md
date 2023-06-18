@@ -14,7 +14,7 @@ application-local.properties is preconfigured to work with the provided docker-m
 - https://github.com/svencc/ReforgerCommanderBackend
 
 ## TODO
-* DB-based Configuration System4
+* DB-based Configuration System
   * Control Map Rendering (color, points)
   * rework cluster rendering to direct polygon rendering; controlled by server?
 * map size is not necessarily square! -> fix scanner!
@@ -30,6 +30,8 @@ application-local.properties is preconfigured to work with the provided docker-m
     * DB based error logging with route, payload, timestamp, request-ip in error logging table!
     * controller/controller advice
     * async error handler
+    * Should error responses give more information? also important for the error logging in db....
+    * ServerErrorDto & BadRequestDto are equal in structure ...
 * Implement concave hull generator (besides existing convex hull)
 * add dependency license generator
 * Add Docker Compose
@@ -40,3 +42,5 @@ application-local.properties is preconfigured to work with the provided docker-m
 * documentation / wiki
 * project page
 * build pipeline / cd
+
+
