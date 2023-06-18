@@ -1,4 +1,4 @@
-# Reforger Commander Backend Project
+# Reforger Commander Backend Project (RECOM)
 ![Logo](md-media/logo.png)
 
 ## Setup or run mariaDb docker container
