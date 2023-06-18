@@ -48,10 +48,10 @@ public class ConfigurationController {
 
         return mapNameOpt.map((final String mapName) -> ResponseEntity.status(HttpStatus.OK)
                         .cacheControl(CacheControl.noCache())
-                        .body(configurationRESTManagementService.provideAllExistingDefaultConfigurationValues(mapName)))
+                        .body(configurationRESTManagementService.provideAllExistingConfigurationValues(mapName)))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.OK)
                         .cacheControl(CacheControl.noCache())
-                        .body(configurationRESTManagementService.provideAllExistingDefaultConfigurationValues())
+                        .body(configurationRESTManagementService.provideAllExistingConfigurationValues())
                 );
     }
 
@@ -69,10 +69,11 @@ public class ConfigurationController {
     ) {
         log.debug("Requested POST /api/v1/map/configuration");
 
+        configurationRESTManagementService.updateOverrides(overrideList);
 
         return ResponseEntity.status(HttpStatus.OK)
                         .cacheControl(CacheControl.noCache())
-                        .body(configurationRESTManagementService.provideAllExistingDefaultConfigurationValues(overrideList.getMapName()));
+                        .body(configurationRESTManagementService.provideAllExistingConfigurationValues(overrideList.getMapName()));
 
     }
 

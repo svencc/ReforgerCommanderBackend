@@ -37,6 +37,6 @@ public class OverrideConfigurationDto implements Serializable {
     @NotBlank
     @Schema
     @JsonProperty()
-    private String mapOverriddenValue;
+    private String mapOverrideValue;
 
 }

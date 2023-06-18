@@ -25,15 +25,6 @@ public class ConfigurationValueProvider {
     @NonNull
     private final ConfigurationPersistenceLayer configurationPersistenceLayer;
 
-//    @NonNull
-//    protected List<Configuration> queryNamespace(
-//            @NonNull final String mapName,
-//            @NonNull final String namespace
-//    ) {
-//        // TODO ....
-//        return configurationPersistenceLayer.findNamespace(mapName, namespace);
-//    }
-
     @NonNull
     public Boolean queryValue(
             @NonNull final String mapName,
@@ -148,7 +139,7 @@ public class ConfigurationValueProvider {
     }
 
     @NonNull
-    public List<Configuration> provideAllExistingDefaultValueEntities() {
+    public List<Configuration> provideAllExistingDefaultValues() {
         return configurationPersistenceLayer.findAllDefaultValueEntities();
     }
 }

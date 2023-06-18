@@ -19,12 +19,10 @@ public class MapEntityPersistenceLayer {
     @NonNull
     private final MapEntityRepository mapEntityRepository;
 
-    @Transactional(readOnly = false)
     public List<MapEntity> saveAll(List<MapEntity> distinctEntities) {
         return mapEntityRepository.saveAll(distinctEntities);
     }
 
-    @Transactional(readOnly = false)
     public Integer deleteMapEntities(@NonNull final String mapName) {
         return mapEntityRepository.deleteByMapName(mapName);
     }

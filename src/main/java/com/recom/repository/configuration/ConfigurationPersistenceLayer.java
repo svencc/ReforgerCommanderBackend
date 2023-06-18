@@ -23,14 +23,6 @@ public class ConfigurationPersistenceLayer {
         return configurationRepository.findAllByMapNameAndNamespaceAndName(mapName, namespace, name);
     }
 
-//    @NonNull
-//    public List<Configuration> findNamespace(
-//            @NonNull final String mapName,
-//            @NonNull final String namespace
-//    ) {
-//        return configurationRepository.findAllByMapNameInAndNamespace(Arrays.asList(null, mapName), namespace);
-//    }
-
     @NonNull
     public List<Configuration> findAllDefaultValueEntities() {
         return configurationRepository.findAllByMapNameIsNull();

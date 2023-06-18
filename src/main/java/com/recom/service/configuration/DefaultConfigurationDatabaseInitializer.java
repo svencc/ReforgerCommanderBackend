@@ -56,7 +56,7 @@ public class DefaultConfigurationDatabaseInitializer implements PostStartExecuta
                 .flatMap((provider) -> provider.provideDefaultConfigurationValues().stream())
                 .toList();
 
-        final Map<String, Map<String, List<Configuration>>> allExistingDefaultValues = configurationValueProvider.provideAllExistingDefaultValueEntities().stream()
+        final Map<String, Map<String, List<Configuration>>> indexedExistingConfigurationList = configurationValueProvider.provideAllExistingDefaultValues().stream()
                 .collect(Collectors.groupingBy(Configuration::getNamespace, Collectors.groupingBy(Configuration::getName)));
 
         final List<Configuration> configurationsToCreate = new ArrayList<>();
@@ -67,7 +67,7 @@ public class DefaultConfigurationDatabaseInitializer implements PostStartExecuta
             final String namespace = registeredDefaultValue.getNamespace();
             final String name = registeredDefaultValue.getName();
 
-            final Optional<Configuration> existingConfigurationOpt = findExistingValue(allExistingDefaultValues, namespace, name);
+            final Optional<Configuration> existingConfigurationOpt = findConfigurationInIndexedMap(indexedExistingConfigurationList, namespace, name);
             if (existingConfigurationOpt.isPresent()) {
                 existingConfigurationOpt.get().setValue(registeredDefaultValue.getDefaultValue());
                 existingConfigurationOpt.get().setType(registeredDefaultValue.getType());
@@ -87,9 +87,9 @@ public class DefaultConfigurationDatabaseInitializer implements PostStartExecuta
         final Map<String, Map<String, List<Configuration>>> configurationsToKeepOrCreate = Stream.concat(configurationsToCreate.stream(), configurationsToUpdate.stream())
                 .collect(Collectors.groupingBy(Configuration::getNamespace, Collectors.groupingBy(Configuration::getName)));
 
-        configurationValueProvider.provideAllExistingDefaultValueEntities().forEach(
+        configurationValueProvider.provideAllExistingDefaultValues().forEach(
                 (final Configuration existingDefaultValue) -> {
-                    findExistingValue(configurationsToKeepOrCreate, existingDefaultValue.getNamespace(), existingDefaultValue.getName())
+                    findConfigurationInIndexedMap(configurationsToKeepOrCreate, existingDefaultValue.getNamespace(), existingDefaultValue.getName())
                             .ifPresentOrElse(
                                     (configuration) -> {
                                         // do nothing
@@ -106,25 +106,15 @@ public class DefaultConfigurationDatabaseInitializer implements PostStartExecuta
     }
 
     @NonNull
-    protected Optional<Configuration> findExistingValue(
-            @NonNull final Map<String, Map<String, List<Configuration>>> allExistingDefaultValues,
+    protected Optional<Configuration> findConfigurationInIndexedMap(
+            @NonNull final Map<String, Map<String, List<Configuration>>> preIndexedConfigurationList,
             @NonNull final String namespace,
             @NonNull final String name
     ) {
-        return allExistingDefaultValues.getOrDefault(namespace, Collections.emptyMap())
+        // @TODO: probably doubled code; see ConfigurationRESTManagementService.findConfigurationInIndexedMap  -> check, test and refactor
+        return preIndexedConfigurationList.getOrDefault(namespace, Collections.emptyMap())
                 .getOrDefault(name, Collections.emptyList()).stream()
                 .findFirst();
-    }
-
-    @NonNull
-    protected List<Configuration> findExistingValues(
-            @NonNull final Map<String, Map<String, List<Configuration>>> allExistingDefaultValues,
-            @NonNull final String namespace
-    ) {
-        return allExistingDefaultValues.getOrDefault(namespace, Collections.emptyMap())
-                .values().stream()
-                .flatMap(Collection::stream)
-                .toList();
     }
 
 }
