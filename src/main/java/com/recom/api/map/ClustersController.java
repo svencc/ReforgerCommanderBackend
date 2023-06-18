@@ -32,6 +32,7 @@ public class ClustersController {
     @NonNull
     private final ReforgerPayloadParserService payloadParser;
 
+
     @Operation(
             summary = "Determines clusters of Town/City/Village and military relevant targets.",
             description = "Calculates city clusters. WIP - other cluster have to be added; db-based-config system is needed (per map)."

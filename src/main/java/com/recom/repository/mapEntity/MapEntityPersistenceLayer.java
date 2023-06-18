@@ -29,7 +29,7 @@ public class MapEntityPersistenceLayer {
         return mapEntityRepository.deleteByMapName(mapName);
     }
 
-    @Cacheable(cacheNames = "MapEntityPersistenceLayer.findAllTownBuildingEntities", key = "#mapName")
+    @Cacheable(cacheNames = "MapEntityPersistenceLayer.findAllTownBuildingEntities")
     public List<MapEntity> findAllTownBuildingEntities(@NonNull final String mapName) {
         return mapEntityRepository.findAllByMapNameAndClassNameContaining(mapName, "building");
 //        return mapEntityRepository.findAllByMapNameAndMapDescriptorTypeIn(mapName, Stream.of(
@@ -49,7 +49,7 @@ public class MapEntityPersistenceLayer {
 //                .toList());
     }
 
-    @Cacheable(cacheNames = "MapEntityPersistenceLayer.findAllTownEntities", key = "#mapName")
+    @Cacheable(cacheNames = "MapEntityPersistenceLayer.findAllTownEntities")
     public List<MapEntity> findAllTownEntities(@NonNull final String mapName) {
         return mapEntityRepository.findAllByMapNameAndMapDescriptorTypeIn(mapName, Stream.of(
                         EnumMapDescriptorType.MDT_NAME_SETTLEMENT,
@@ -66,27 +66,27 @@ public class MapEntityPersistenceLayer {
         return mapEntityRepository.projectMapNames();
     }
 
-    @Cacheable(cacheNames = "MapEntityPersistenceLayer.utilizedClassesByMapName", key = "#mapName")
+    @Cacheable(cacheNames = "MapEntityPersistenceLayer.utilizedClassesByMapName")
     public List<String> utilizedClassesByMapName(@NonNull final String mapName) {
         return mapEntityRepository.projectUtilizedClassNamesByMapName(mapName);
     }
 
-    @Cacheable(cacheNames = "MapEntityPersistenceLayer.utilizedResourcesByMapName", key = "#mapName")
+    @Cacheable(cacheNames = "MapEntityPersistenceLayer.utilizedResourcesByMapName")
     public List<String> utilizedResourcesByMapName(@NonNull final String mapName) {
         return mapEntityRepository.projectUtilizedResourceNamesByMapName(mapName);
     }
 
-    @Cacheable(cacheNames = "MapEntityPersistenceLayer.utilizedPrefabsByMapName", key = "#mapName")
+    @Cacheable(cacheNames = "MapEntityPersistenceLayer.utilizedPrefabsByMapName")
     public List<String> utilizedPrefabsByMapName(@NonNull final String mapName) {
         return mapEntityRepository.projectUtilizedPrefabNameByMapName(mapName);
     }
 
-    @Cacheable(cacheNames = "MapEntityPersistenceLayer.utilizedNamedEntitiesByMapName", key = "#mapName")
+    @Cacheable(cacheNames = "MapEntityPersistenceLayer.utilizedNamedEntitiesByMapName")
     public List<String> utilizedNamedEntitiesByMapName(@NonNull final String mapName) {
         return mapEntityRepository.projectNamedEntitiesByMapName(mapName);
     }
 
-    @Cacheable(cacheNames = "MapEntityPersistenceLayer.countEntitiesByMapName", key = "#mapName")
+    @Cacheable(cacheNames = "MapEntityPersistenceLayer.countEntitiesByMapName")
     public Integer countEntitiesByMapName(@NonNull final String mapName) {
         return mapEntityRepository.countByMapName(mapName);
     }
@@ -100,7 +100,7 @@ public class MapEntityPersistenceLayer {
         // @TODO use this!
     }
 
-    @Cacheable(cacheNames = "MapEntityPersistenceLayer.utilizedMapMetaTypeByMapName", key = "#mapName")
+    @Cacheable(cacheNames = "MapEntityPersistenceLayer.utilizedMapMetaTypeByMapName")
     public List<String> utilizedMapMetaTypeByMapName(@NonNull final String mapName) {
         return mapEntityRepository.projectMapMetaTypesByMapName(mapName);
     }

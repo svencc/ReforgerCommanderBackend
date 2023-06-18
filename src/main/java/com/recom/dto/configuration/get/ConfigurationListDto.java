@@ -1,4 +1,4 @@
-package com.recom.dto.configuration;
+package com.recom.dto.configuration.get;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

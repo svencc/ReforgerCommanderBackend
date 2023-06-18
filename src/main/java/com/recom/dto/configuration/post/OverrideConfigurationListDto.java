@@ -1,40 +1,33 @@
-package com.recom.dto.configuration;
+package com.recom.dto.configuration.post;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.recom.model.configuration.ConfigurationType;
+import com.recom.dto.configuration.get.OverridableConfigurationDto;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @Builder
 @Schema
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class OverridableConfigurationDto implements Serializable {
+public class OverrideConfigurationListDto implements Serializable {
 
+    @NotBlank
     @Schema
     @JsonProperty()
-    private String namespace;
+    private String mapName;
 
+    @Valid
     @Schema
     @JsonProperty()
-    private String name;
-
-    @Schema
-    @JsonProperty()
-    private ConfigurationType type;
-
-    @Schema
-    @JsonProperty()
-    private String defaultValue;
-
-    @Schema
-    @JsonProperty()
-    private String mapOverriddenValue;
+    private List<OverrideConfigurationDto> configurationList;
 
 }

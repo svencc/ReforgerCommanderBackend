@@ -1,7 +1,7 @@
 package com.recom.service.configuration;
 
-import com.recom.dto.configuration.OverridableConfigurationDto;
-import com.recom.dto.configuration.ConfigurationListDto;
+import com.recom.dto.configuration.get.OverridableConfigurationDto;
+import com.recom.dto.configuration.get.ConfigurationListDto;
 import com.recom.entity.Configuration;
 import com.recom.mapper.ConfigurationMapper;
 import com.recom.repository.configuration.ConfigurationPersistenceLayer;

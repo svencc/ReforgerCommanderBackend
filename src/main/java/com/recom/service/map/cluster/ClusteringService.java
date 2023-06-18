@@ -52,7 +52,7 @@ public class ClusteringService {
     }
 
     @NonNull
-    @Cacheable(cacheNames = "MapEntityPersistenceLayer.generateClusters", key = "{#root.methodName, #mapName, #epsilon_maximumRadiusOfTheNeighborhood, #minPts_minimumNumberOfPointsNeededForCluster}")
+    @Cacheable(cacheNames = "MapEntityPersistenceLayer.generateClusters")
     public List<ClusterDto> generateClusters(@NonNull final String mapName) {
         final List<DoublePoint> buildings = mapEntityPersistenceLayer.findAllTownBuildingEntities(mapName).stream()
                 .map(MapEntityMapper.INSTANCE::toDto)
