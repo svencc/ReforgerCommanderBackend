@@ -22,6 +22,7 @@ application-local.properties is preconfigured to work with the provided docker-m
 ## TODO
 
 * read/write config via JSON/Postman -> cache reset
+  * check if provided map name exists before saving config!
 * after map transaction finishes -> cache reset
 * delete map via POST and corresponding configs -> cache reset
 * trigger and handle spring event to indicate that map related data/configuration caches needs to be reset or deleted; tidy up
@@ -45,7 +46,7 @@ application-local.properties is preconfigured to work with the provided docker-m
     * first time: only once at startup time
     * advanced: reindex also if index is suddenly deleted from server (work with http codes if you query for clusters)
     *
-* move from POST-get http methods to real GET Methods. we only need to pass MapName (and eventuall token name) so we can
+* move from POST-get http methods to real GET Methods. we only need to pass MapName (and eventual token name) so we can
   get rid of the POST-Request-DTOs
 *
 * Unit Tests!
