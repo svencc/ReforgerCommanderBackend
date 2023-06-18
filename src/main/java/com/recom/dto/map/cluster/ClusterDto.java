@@ -1,0 +1,33 @@
+package com.recom.dto.map.cluster;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.recom.dto.map.Point2DDto;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+
+import java.io.Serializable;
+import java.util.List;
+
+@Data
+@Builder
+@Schema
+@AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class ClusterDto implements Serializable {
+
+    @Schema
+    @JsonProperty()
+    private List<Point2DDto> points;
+
+    @Schema
+    @JsonProperty()
+    private ConvexHullDto convexHull;
+
+    @Schema
+    @JsonProperty()
+    private ConcaveHullDto concaveHull;
+
+}

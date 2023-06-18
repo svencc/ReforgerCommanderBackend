@@ -1,4 +1,5 @@
-# RECOM - Reforger Commander Backend Project 
+# RECOM
+## ARMA Reforger+ Commander Backend Project
 ![Logo](md-media/logo.png)
 
 ## Setup or run mariaDb docker container
@@ -6,7 +7,7 @@ Just execute the docker/mariadb-docker-setup-or-start-win.ps1 script from the do
 Database is ready configured for application-server connection.
 
 ## Run application server
-Run com.rcb.Application with "local" profile. 
+Run com.recom.Application with "local" profile. 
 application-local.properties is preconfigured to work with the provided docker-mariaDb instance.
 
 ## Project Pages:
@@ -15,6 +16,7 @@ application-local.properties is preconfigured to work with the provided docker-m
 
 ## TODO
 * read/write config via JSON/Postman -> cache reset
+* after map transaction finishes -> cache reset
 * add db entity types to config (for cluster detection) - replace hardcoded approach
 * DB-based Configuration System
   * Control Map Rendering (color, points)

@@ -5,7 +5,7 @@
 
     <!--<persistence directory="${java.io.tmpdir}" />-->
 
-    <cache-template name="refComDefaultCache">
+    <cache-template name="recomDefaultCache">
         <expiry>
             <ttl unit="hours">24</ttl>
         </expiry>
@@ -16,28 +16,28 @@
         </resources>
     </cache-template>
 
-    <cache alias="MapMetaDataService.provideMapList" uses-template="refComDefaultCache">
+    <cache alias="MapMetaDataService.provideMapList" uses-template="recomDefaultCache">
     </cache>
 
-    <cache alias="MapEntityPersistenceLayer.findAllTownBuildingEntities" uses-template="refComDefaultCache">
+    <cache alias="MapEntityPersistenceLayer.findAllTownBuildingEntities" uses-template="recomDefaultCache">
     </cache>
-    <cache alias="MapEntityPersistenceLayer.findAllTownEntities" uses-template="refComDefaultCache">
+    <cache alias="MapEntityPersistenceLayer.findAllTownEntities" uses-template="recomDefaultCache">
     </cache>
-    <cache alias="MapEntityPersistenceLayer.generateClusters" uses-template="refComDefaultCache">
+    <cache alias="MapEntityPersistenceLayer.generateClusters" uses-template="recomDefaultCache">
     </cache>
-    <cache alias="MapEntityPersistenceLayer.findAllMapNames" uses-template="refComDefaultCache">
+    <cache alias="MapEntityPersistenceLayer.findAllMapNames" uses-template="recomDefaultCache">
     </cache>
-    <cache alias="MapEntityPersistenceLayer.countEntitiesByMapName" uses-template="refComDefaultCache">
+    <cache alias="MapEntityPersistenceLayer.countEntitiesByMapName" uses-template="recomDefaultCache">
     </cache>
-    <cache alias="MapEntityPersistenceLayer.utilizedClassesByMapName" uses-template="refComDefaultCache">
+    <cache alias="MapEntityPersistenceLayer.utilizedClassesByMapName" uses-template="recomDefaultCache">
     </cache>
-    <cache alias="MapEntityPersistenceLayer.utilizedResourcesByMapName" uses-template="refComDefaultCache">
+    <cache alias="MapEntityPersistenceLayer.utilizedResourcesByMapName" uses-template="recomDefaultCache">
     </cache>
-    <cache alias="MapEntityPersistenceLayer.utilizedPrefabsByMapName" uses-template="refComDefaultCache">
+    <cache alias="MapEntityPersistenceLayer.utilizedPrefabsByMapName" uses-template="recomDefaultCache">
     </cache>
-    <cache alias="MapEntityPersistenceLayer.utilizedNamedEntitiesByMapName" uses-template="refComDefaultCache">
+    <cache alias="MapEntityPersistenceLayer.utilizedNamedEntitiesByMapName" uses-template="recomDefaultCache">
     </cache>
-    <cache alias="MapEntityPersistenceLayer.utilizedMapMetaTypeByMapName" uses-template="refComDefaultCache">
+    <cache alias="MapEntityPersistenceLayer.utilizedMapMetaTypeByMapName" uses-template="recomDefaultCache">
     </cache>
 
 </config>

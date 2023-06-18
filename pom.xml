@@ -11,10 +11,10 @@
     </parent>
 
     <groupId>com.rcb</groupId>
-    <artifactId>reforger-commander-backend</artifactId>
+    <artifactId>recom-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>RefCom Backend</name>
-    <description>Reforger Commander Backend Application Server</description>
+    <name>RECOM Backend</name>
+    <description>RECOM Application Server</description>
 
     <properties>
         <java.version>17</java.version>
@@ -27,11 +27,11 @@
 
         <!-- JIB from source -->
         <docker.source.base-image.registry>svencc</docker.source.base-image.registry>
-        <docker.source.base-image.name>ref-com-base</docker.source.base-image.name>
+        <docker.source.base-image.name>recom-base</docker.source.base-image.name>
         <docker.source.base-image.tag>0.0.1</docker.source.base-image.tag>
         <!-- JIB to target -->
         <docker.target.image.registry>svencc</docker.target.image.registry>
-        <docker.target.image.name>ref-com-backend</docker.target.image.name>
+        <docker.target.image.name>recom-backend</docker.target.image.name>
         <docker.target.image.tag>${project.version}</docker.target.image.tag>
         <docker.registry.username>${env.REGISTRY_USER}</docker.registry.username>
         <docker.registry.password>${env.REGISTRY_PASSWORD}</docker.registry.password>

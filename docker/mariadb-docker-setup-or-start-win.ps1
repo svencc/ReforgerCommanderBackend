@@ -9,14 +9,14 @@
 
 
 # variables
-$MARIADB_CONTAINER_NAME = "refCom-mariadb"
+$MARIADB_CONTAINER_NAME = "recom-mariadb"
 $MARIADB_PORT = "8033"
 $MARIADB_DATA_DIRECTORY = "db-datadir"
-$MARIADB_USER = "refComUser"
-$MARIADB_PASSWORD = "refComPwd"
-$MARIADB_ROOT_PASSWORD = "refComRootPwd"
+$MARIADB_USER = "recomUser"
+$MARIADB_PASSWORD = "recomPwd"
+$MARIADB_ROOT_PASSWORD = "recomRootPwd"
 $PROJECT_FOLDER = $PSScriptRoot
-$PROJECT_DB_NAME = "refCom_db"
+$PROJECT_DB_NAME = "recom_db"
 
 docker pull mariadb
 

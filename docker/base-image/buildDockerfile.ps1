@@ -12,9 +12,9 @@ if ($args.count -ne 1) {
 # END DEFINE INPUT PARAMETER ------------------------------------------------------------------------------------- END #
 
 # ==> MAIN LOGIC <== #
-docker build -t "svencc/ref-com-base:$DOCKER_VERSION_TAG" .
-docker tag "svencc/ref-com-base:$DOCKER_VERSION_TAG" "svencc/ref-com-base:$DOCKER_VERSION_TAG"
-docker push "svencc/ref-com-base:$DOCKER_VERSION_TAG"
+docker build -t "svencc/recom-base:$DOCKER_VERSION_TAG" .
+docker tag "svencc/recom-base:$DOCKER_VERSION_TAG" "svencc/recom-base:$DOCKER_VERSION_TAG"
+docker push "svencc/recom-base:$DOCKER_VERSION_TAG"
 
-echo "svencc/ref-com-base:$DOCKER_VERSION_TAG"
+echo "svencc/recom-base:$DOCKER_VERSION_TAG"
 exit 0

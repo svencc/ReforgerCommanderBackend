@@ -1,1 +1,1 @@
-CREATE DATABASE refCom_db;
+CREATE DATABASE recom_db;
