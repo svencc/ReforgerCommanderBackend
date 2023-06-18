@@ -14,12 +14,12 @@ application-local.properties is preconfigured to work with the provided docker-m
 - https://github.com/svencc/ReforgerCommanderBackend
 
 ## TODO
+* add db entity types to config (for cluster detection) - replace hardcoded approach
 * DB-based Configuration System
   * Control Map Rendering (color, points)
   * rework cluster rendering to direct polygon rendering; controlled by server?
 * map size is not necessarily square! -> fix scanner!
 * save map size to map data and add output to map meta data
-* add db entity types to config (for cluster detection) - replace hardcoded approach
 * woods detection
 * mil detection
 * industrial detection
