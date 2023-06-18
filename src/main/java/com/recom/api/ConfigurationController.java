@@ -32,8 +32,8 @@ public class ConfigurationController {
     private final ConfigurationRESTManagementService configurationRESTManagementService;
 
     @Operation(
-            summary = "Gets configuration data.",
-            description = "Gets all or map specific configuration data, with value inheritance."
+            summary = "Get a list of overridable configuration settings.",
+            description = "Gets all or map specific configuration data, with with default value and map specific overridden values."
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
