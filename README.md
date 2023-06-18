@@ -24,6 +24,7 @@ application-local.properties is preconfigured to work with the provided docker-m
 * woods detection
 * mil detection
 * industrial detection
+* Unit Tests!
 * Command Framework
 * add real JSON endpoints in addition to the necessary "consuming = MediaType.APPLICATION_FORM_URLENCODED_VALUE" Endpoints ...
 * Transactions have to time out via scheduler after one hour
