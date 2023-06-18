@@ -2,7 +2,7 @@ package com.recom.service.configuration;
 
 import com.recom.PostStartupExecutor;
 import com.recom.entity.Configuration;
-import com.recom.model.configuration.configurationvaluedescriptor.BaseRegisteredConfigurationValueDescripable;
+import com.recom.model.configuration.descriptor.BaseRegisteredConfigurationValueDescripable;
 import com.recom.repository.configuration.ConfigurationPersistenceLayer;
 import com.recom.service.PostStartExecutable;
 import jakarta.annotation.PostConstruct;

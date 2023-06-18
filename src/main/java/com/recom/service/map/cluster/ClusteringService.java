@@ -6,7 +6,7 @@ import com.recom.dto.map.cluster.ConcaveHullDto;
 import com.recom.dto.map.cluster.ConvexHullDto;
 import com.recom.dto.map.scanner.MapEntityDto;
 import com.recom.mapper.MapEntityMapper;
-import com.recom.model.configuration.configurationvaluedescriptor.BaseRegisteredConfigurationValueDescripable;
+import com.recom.model.configuration.descriptor.BaseRegisteredConfigurationValueDescripable;
 import com.recom.repository.mapEntity.MapEntityPersistenceLayer;
 import com.recom.service.configuration.DefaultConfigurationProvidable;
 import com.recom.service.configuration.ConfigurationValueProvider;

@@ -1,4 +1,4 @@
-package com.recom.model.configuration.configurationvaluedescriptor;
+package com.recom.model.configuration.descriptor;
 
 import com.recom.model.configuration.ConfigurationType;
 import lombok.NonNull;

@@ -4,7 +4,7 @@ import com.recom.dto.configuration.ConfigurationListDto;
 import com.recom.entity.Configuration;
 import com.recom.exception.ConfigurationNotReadableException;
 import com.recom.model.configuration.ConfigurationType;
-import com.recom.model.configuration.configurationvaluedescriptor.*;
+import com.recom.model.configuration.descriptor.*;
 import com.recom.repository.configuration.ConfigurationPersistenceLayer;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

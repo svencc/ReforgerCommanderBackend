@@ -26,6 +26,9 @@ application-local.properties is preconfigured to work with the provided docker-m
 * woods detection
 * mil detection
 * industrial detection
+* add communication loop between client and server to check if the current map is actually indexed or not; only execute map-scan-process if map is not indexed!
+  * first time: only add startub
+  * advanced: reindex also if index is suddenly deleted from server (work with http codes if you query for clusters)
 * Unit Tests!
 * Command Framework
 * add real JSON endpoints in addition to the necessary "consuming = MediaType.APPLICATION_FORM_URLENCODED_VALUE" Endpoints ...

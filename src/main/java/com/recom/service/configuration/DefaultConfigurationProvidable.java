@@ -1,6 +1,6 @@
 package com.recom.service.configuration;
 
-import com.recom.model.configuration.configurationvaluedescriptor.BaseRegisteredConfigurationValueDescripable;
+import com.recom.model.configuration.descriptor.BaseRegisteredConfigurationValueDescripable;
 import lombok.NonNull;
 
 import java.util.List;
