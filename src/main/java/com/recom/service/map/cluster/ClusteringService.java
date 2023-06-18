@@ -6,11 +6,9 @@ import com.recom.dto.map.cluster.ConcaveHullDto;
 import com.recom.dto.map.cluster.ConvexHullDto;
 import com.recom.dto.map.scanner.MapEntityDto;
 import com.recom.mapper.MapEntityMapper;
-import com.recom.model.configuration.descriptor.BaseRegisteredConfigurationValueDescripable;
 import com.recom.repository.mapEntity.MapEntityPersistenceLayer;
-import com.recom.service.configuration.DefaultConfigurationProvidable;
+import com.recom.service.configuration.ConfigurationDescriptorProvider;
 import com.recom.service.configuration.ConfigurationValueProvider;
-import com.recom.service.configuration.DefaultConfigurationDatabaseInitializer;
 import com.recom.util.JSNumberUtil;
 import jakarta.annotation.PostConstruct;
 import lib.javaconcavehull.main.concavehull.ConcaveHull;
@@ -36,10 +34,8 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ClusteringService implements DefaultConfigurationProvidable {
+public class ClusteringService {
 
-    @NonNull
-    private final DefaultConfigurationDatabaseInitializer defaultConfigurationDatabaseInitializer;
     @NonNull
     private final ConfigurationValueProvider configurationValueProvider;
     @NonNull
@@ -53,7 +49,6 @@ public class ClusteringService implements DefaultConfigurationProvidable {
     public void postConstruct() {
         convexHullGenerator = new MonotoneChain();
         concaveHullGenerator = new ConcaveHull();
-        defaultConfigurationDatabaseInitializer.registerDefaultConfigurationProvider(this);
     }
 
     @NonNull
@@ -82,8 +77,8 @@ public class ClusteringService implements DefaultConfigurationProvidable {
                 .toList();
 
         final DBSCANClusterer<DoublePoint> dbscanClusterer = new DBSCANClusterer<>(
-                configurationValueProvider.queryValue(mapName, ClusterConfigurationDescriptors.EPSILON_MAXIMUM_RADIUS_OF_THE_NEIGHBORHOOD),
-                configurationValueProvider.queryValue(mapName, ClusterConfigurationDescriptors.MINIMUM_NUMBER_OF_POINTS_NEEDED_FOR_CLUSTER)
+                configurationValueProvider.queryValue(mapName, ConfigurationDescriptorProvider.EPSILON_MAXIMUM_RADIUS_OF_THE_NEIGHBORHOOD),
+                configurationValueProvider.queryValue(mapName, ConfigurationDescriptorProvider.MINIMUM_NUMBER_OF_POINTS_NEEDED_FOR_CLUSTER)
         );
 
         final List<Cluster<DoublePoint>> clusters = dbscanClusterer.cluster(buildings);
@@ -181,14 +176,6 @@ public class ClusteringService implements DefaultConfigurationProvidable {
                         .y(BigDecimal.valueOf(point.getY()))
                         .build())
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public @NonNull List<BaseRegisteredConfigurationValueDescripable> provideDefaultConfigurationValues() {
-        return List.of(
-                ClusterConfigurationDescriptors.EPSILON_MAXIMUM_RADIUS_OF_THE_NEIGHBORHOOD                ,
-                ClusterConfigurationDescriptors.MINIMUM_NUMBER_OF_POINTS_NEEDED_FOR_CLUSTER
-        );
     }
 
 }
