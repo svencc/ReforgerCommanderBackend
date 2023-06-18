@@ -2,7 +2,7 @@ package com.recom.api;
 
 import com.recom.api.commons.HttpCommons;
 import com.recom.dto.configuration.ConfigurationListDto;
-import com.recom.service.configuration.ConfigurationValueProvider;
+import com.recom.service.configuration.ConfigurationRESTManagementService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -29,7 +29,7 @@ import java.util.Optional;
 public class ConfigurationController {
 
     @NonNull
-    private final ConfigurationValueProvider configurationValueProvider;
+    private final ConfigurationRESTManagementService configurationRESTManagementService;
 
     @Operation(
             summary = "Gets configuration data.",
@@ -40,17 +40,17 @@ public class ConfigurationController {
     })
     @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ConfigurationListDto> getConfigurations(
-            @RequestParam(required = false)
+            @RequestParam(required = false, name = "mapName")
             @NonNull final Optional<String> mapNameOpt
     ) {
         log.debug("Requested GET /api/v1/map/configuration");
 
         return mapNameOpt.map((final String mapName) -> ResponseEntity.status(HttpStatus.OK)
                         .cacheControl(CacheControl.noCache())
-                        .body(configurationValueProvider.provideAllExistingValueEntities(mapName)))
+                        .body(configurationRESTManagementService.provideAllExistingDefaultConfigurationValues(mapName)))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.OK)
                         .cacheControl(CacheControl.noCache())
-                        .body(configurationValueProvider.provideAllExistingValueEntities())
+                        .body(configurationRESTManagementService.provideAllExistingDefaultConfigurationValues())
                 );
     }
 

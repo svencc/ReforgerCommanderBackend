@@ -15,11 +15,7 @@ import java.io.Serializable;
 @Schema
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ConfigurationDto implements Serializable {
-
-    @Schema
-    @JsonProperty()
-    private String mapName;
+public class OverridableConfigurationDto implements Serializable {
 
     @Schema
     @JsonProperty()
@@ -32,5 +28,13 @@ public class ConfigurationDto implements Serializable {
     @Schema
     @JsonProperty()
     private ConfigurationType type;
+
+    @Schema
+    @JsonProperty()
+    private String defaultValue;
+
+    @Schema
+    @JsonProperty()
+    private String mapOverriddenValue;
 
 }

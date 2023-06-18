@@ -23,6 +23,6 @@ public class ConfigurationListDto implements Serializable {
 
     @Schema
     @JsonProperty()
-    private List<ConfigurationDto> configurationList;
+    private List<OverridableConfigurationDto> configurationList;
 
 }

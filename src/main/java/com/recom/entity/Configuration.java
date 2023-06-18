@@ -18,7 +18,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Table(indexes = {
         @Index(name = "IDX_namespace_name", columnList = "namespace, name", unique = false),
-        @Index(name = "IDX_mapName_namespace_name", columnList = "mapName, namespace, name", unique = false),
+        @Index(name = "IDX_mapName_namespace_name", columnList = "mapName, namespace, name", unique = true),
 })
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
