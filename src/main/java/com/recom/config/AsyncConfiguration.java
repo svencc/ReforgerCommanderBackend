@@ -25,6 +25,11 @@ public class AsyncConfiguration implements AsyncConfigurer {
         return executor;
     }
 
+    @Override
+    public AsyncExceptionHandler getAsyncUncaughtExceptionHandler() {
+        return new AsyncExceptionHandler();
+    }
+
     // Additional Async Executor(s)
     @Bean("AsyncMapTransactionExecutor")
     @Qualifier(value = "AsyncMapTransactionExecutor")
@@ -38,7 +43,6 @@ public class AsyncConfiguration implements AsyncConfigurer {
         return executor;
     }
 
-    // Additional Async Executor(s)
     @Bean("ConfigurationSystemExecutor")
     @Qualifier(value = "ConfigurationSystemExecutor")
     public ThreadPoolTaskExecutor getAsyncConfigurationSystemExecutor() {
@@ -51,8 +55,16 @@ public class AsyncConfiguration implements AsyncConfigurer {
         return executor;
     }
 
-    @Override
-    public AsyncExceptionHandler getAsyncUncaughtExceptionHandler() {
-        return new AsyncExceptionHandler();
+    @Bean("CacheResetExecutor")
+    @Qualifier(value = "CacheResetExecutor")
+    public ThreadPoolTaskExecutor getCacheResetExecutorExecutor() {
+        final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(1);
+        executor.setMaxPoolSize(1);
+        executor.setThreadNamePrefix("CnfEvnt-Exec");
+        executor.initialize();
+
+        return executor;
     }
+
 }

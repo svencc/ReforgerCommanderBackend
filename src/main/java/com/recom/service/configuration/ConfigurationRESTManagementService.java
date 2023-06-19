@@ -7,6 +7,7 @@ import com.recom.dto.configuration.post.OverrideConfigurationListDto;
 import com.recom.entity.Configuration;
 import com.recom.mapper.ConfigurationMapper;
 import com.recom.repository.configuration.ConfigurationPersistenceLayer;
+import com.recom.repository.mapEntity.MapEntityPersistenceLayer;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ConfigurationRESTManagementService {
 
+    @NonNull
+    private final MapEntityPersistenceLayer mapEntityPersistenceLayer;
     @NonNull
     private final ConfigurationPersistenceLayer configurationPersistenceLayer;
     @NonNull
@@ -79,6 +82,11 @@ public class ConfigurationRESTManagementService {
         return Optional.ofNullable(preIndexedConfigurationList.get(namespace))
                 .map(map -> map.get(name))
                 .flatMap(list -> list.stream().findFirst());
+    }
+
+
+    public boolean mapExists(@NonNull final String mapName) {
+        return mapEntityPersistenceLayer.findAllMapNames().contains(mapName);
     }
 
     @Transactional(readOnly = false)

@@ -1,9 +1,11 @@
 package com.recom.event;
 
 import com.recom.entity.MapEntity;
+import com.recom.event.event.async.cache.CacheResetAsyncEvent;
 import com.recom.event.event.async.map.AddMapPackageAsyncEvent;
 import com.recom.event.event.async.map.CommitMapTransactionAsyncEvent;
 import com.recom.event.event.async.map.OpenMapTransactionAsyncEvent;
+import com.recom.event.event.sync.cache.CacheResetSyncEvent;
 import com.recom.mapper.MapEntityMapper;
 import com.recom.model.map.MapTransaction;
 import com.recom.repository.mapEntity.MapEntityPersistenceLayer;
@@ -11,6 +13,7 @@ import com.recom.service.map.scanner.MapTransactionValidatorService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -28,6 +31,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MapEntityScannerTransactionEventListener extends BaseEventListener {
 
+    @NonNull
+    private final ApplicationEventPublisher applicationEventPublisher;
     @NonNull
     private final MapEntityPersistenceLayer mapEntityPersistenceLayer;
     @NonNull
@@ -76,6 +81,7 @@ public class MapEntityScannerTransactionEventListener extends BaseEventListener 
                 if (isProcessed) {
                     transactions.remove(sessionIdentifier);
                     log.info("Transaction named {} committed and removed from stack!", sessionIdentifier);
+                    applicationEventPublisher.publishEvent(new CacheResetSyncEvent());
                 }
             }
         } else {

@@ -3,6 +3,7 @@ package com.recom.api;
 import com.recom.api.commons.HttpCommons;
 import com.recom.dto.configuration.get.ConfigurationListDto;
 import com.recom.dto.configuration.post.OverrideConfigurationListDto;
+import com.recom.event.event.async.cache.CacheResetAsyncEvent;
 import com.recom.service.configuration.ConfigurationRESTManagementService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -12,6 +13,7 @@ import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,6 +33,8 @@ public class ConfigurationController {
 
     @NonNull
     private final ConfigurationRESTManagementService configurationRESTManagementService;
+    @NonNull
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Operation(
             summary = "Get a list of overridable configuration settings.",
@@ -62,19 +66,24 @@ public class ConfigurationController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
     })
-    @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ConfigurationListDto> postConfigurations(
             @RequestBody(required = false)
             @Valid @NonNull final OverrideConfigurationListDto overrideList
     ) {
         log.debug("Requested POST /api/v1/map/configuration");
 
-        configurationRESTManagementService.updateOverrides(overrideList);
+        if (configurationRESTManagementService.mapExists(overrideList.getMapName())) {
+            configurationRESTManagementService.updateOverrides(overrideList);
+            applicationEventPublisher.publishEvent(new CacheResetAsyncEvent());
 
-        return ResponseEntity.status(HttpStatus.OK)
-                        .cacheControl(CacheControl.noCache())
-                        .body(configurationRESTManagementService.provideAllExistingConfigurationValues(overrideList.getMapName()));
-
+            return ResponseEntity.status(HttpStatus.OK)
+                    .cacheControl(CacheControl.noCache())
+                    .body(configurationRESTManagementService.provideAllExistingConfigurationValues(overrideList.getMapName()));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .cacheControl(CacheControl.noCache()).build();
+        }
     }
 
 }

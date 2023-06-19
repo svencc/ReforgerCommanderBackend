@@ -1,6 +1,8 @@
 package com.recom.api;
 
 import com.recom.dto.test.TestDataDto;
+import com.recom.event.event.async.cache.CacheResetAsyncEvent;
+import com.recom.event.event.sync.cache.CacheResetSyncEvent;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -8,7 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.CacheManager;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CacheController {
 
     @NonNull
-    private final CacheManager cacheManager;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Operation(
             summary = "Deletes the complete application cache",
@@ -38,7 +40,7 @@ public class CacheController {
     public ResponseEntity<TestDataDto> getJsonTestData() {
         log.info("Requested DELETE /api/v1/cache");
 
-        cacheManager.getCacheNames().forEach(cacheName -> cacheManager.getCache(cacheName).clear());
+        applicationEventPublisher.publishEvent(new CacheResetSyncEvent());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())

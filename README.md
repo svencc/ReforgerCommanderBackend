@@ -21,12 +21,6 @@ application-local.properties is preconfigured to work with the provided docker-m
 
 ## TODO
 
-* read/write config via JSON/Postman -> cache reset
-  * check if provided map name exists before saving config!
-* after map transaction finishes -> cache reset
-* delete map via POST and corresponding configs -> cache reset
-* trigger and handle spring event to indicate that map related data/configuration caches needs to be reset or deleted; tidy up
-*
 * add db entity types to config (for cluster detection) - replace hardcoded approach
 *
 * DB-based Configuration System
@@ -63,6 +57,11 @@ application-local.properties is preconfigured to work with the provided docker-m
     * async error handler
     * Should error responses give more information? also important for the error logging in db....
     * ServerErrorDto & BadRequestDto are equal in structure ...
+*
+* delete map via POST
+  * -> remove corresponding configs
+  * -> cache reset
+*
 * Implement concave hull generator (besides existing convex hull)
 * add dependency license generator
 * Add Docker Compose
