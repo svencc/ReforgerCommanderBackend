@@ -1,7 +1,6 @@
 package com.recom.api;
 
 import com.recom.dto.test.TestDataDto;
-import com.recom.event.event.async.cache.CacheResetAsyncEvent;
 import com.recom.event.event.sync.cache.CacheResetSyncEvent;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
