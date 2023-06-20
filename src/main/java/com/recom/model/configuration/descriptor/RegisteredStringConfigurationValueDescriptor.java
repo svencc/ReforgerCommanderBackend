@@ -5,7 +5,7 @@ import lombok.NonNull;
 import lombok.experimental.SuperBuilder;
 
 @SuperBuilder
-public class RegisteredStringConfigurationValueDescriptor extends BaseRegisteredConfigurationValueDescripable {
+public class RegisteredStringConfigurationValueDescriptor extends BaseRegisteredConfigurationValueDescriptable {
 
     @Override
     public @NonNull ConfigurationType getType() {

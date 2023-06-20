@@ -22,11 +22,12 @@ application-local.properties is preconfigured to work with the provided docker-m
 ## TODO
 
 * add db entity types to config (for cluster detection) - replace hardcoded approach
+  * requirement: save list in namespace.
 *
 * DB-based Configuration System
     * Control Map Rendering (color, points) -> new config values
     *
-* rework cluster rendering to direct polygon rendering; controlled by server?
+* rework cluster rendering to direct client polygon rendering; controlled by server?
 *
 * map size is not necessarily square! -> fix scanner!
 * save map size to map data and add output to map meta data

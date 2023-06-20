@@ -65,16 +65,16 @@ public class ClusteringService {
                 })
                 .toList();
 
-        final List<DoublePoint> towns = mapEntityPersistenceLayer.findAllTownEntities(mapName).stream()
-                .map(MapEntityMapper.INSTANCE::toDto)
-                .map(MapEntityDto::getCoordinates)
-                .filter(Objects::nonNull)
-                .filter(vector -> vector.size() == 3)
-                .map(vector -> {
-                    final double[] point = {vector.get(0).doubleValue(), vector.get(2).doubleValue()};
-                    return new DoublePoint(point);
-                })
-                .toList();
+//        final List<DoublePoint> towns = mapEntityPersistenceLayer.findAllTownEntities(mapName).stream()
+//                .map(MapEntityMapper.INSTANCE::toDto)
+//                .map(MapEntityDto::getCoordinates)
+//                .filter(Objects::nonNull)
+//                .filter(vector -> vector.size() == 3)
+//                .map(vector -> {
+//                    final double[] point = {vector.get(0).doubleValue(), vector.get(2).doubleValue()};
+//                    return new DoublePoint(point);
+//                })
+//                .toList();
 
         final DBSCANClusterer<DoublePoint> dbscanClusterer = new DBSCANClusterer<>(
                 configurationValueProvider.queryValue(mapName, ConfigurationDescriptorProvider.EPSILON_MAXIMUM_RADIUS_OF_THE_NEIGHBORHOOD),

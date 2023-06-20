@@ -42,7 +42,7 @@ public class ConfigurationValueProvider {
     @NonNull
     private Optional<Configuration> queryMostConcreteConfiguration(
             @NonNull final String mapName,
-            @NonNull final BaseRegisteredConfigurationValueDescripable descriptor
+            @NonNull final BaseRegisteredConfigurationValueDescriptable descriptor
     ) {
         return queryValue(mapName, descriptor.getNamespace(), descriptor.getName()).stream()
                 .min(Comparator.nullsLast(
@@ -83,7 +83,7 @@ public class ConfigurationValueProvider {
 
     @NonNull
     private ConfigurationNotReadableException generateConfigurationNotReadableException(
-            @NonNull final BaseRegisteredConfigurationValueDescripable descriptor,
+            @NonNull final BaseRegisteredConfigurationValueDescriptable descriptor,
             @NonNull final Optional<Configuration> mostConcrete
     ) {
         return mostConcrete.map(configuration -> new ConfigurationNotReadableException(
