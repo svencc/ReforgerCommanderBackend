@@ -1,5 +1,8 @@
 package com.recom.service.configuration;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.recom.entity.Configuration;
 import com.recom.exception.ConfigurationNotReadableException;
 import com.recom.model.configuration.ConfigurationType;
@@ -7,6 +10,7 @@ import com.recom.model.configuration.descriptor.*;
 import com.recom.repository.configuration.ConfigurationPersistenceLayer;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +28,8 @@ public class ConfigurationValueProvider {
 
     @NonNull
     private final ConfigurationPersistenceLayer configurationPersistenceLayer;
+    @NonNull
+    private final ObjectMapper objectMapper;
 
     @NonNull
     public Boolean queryValue(
@@ -76,6 +82,21 @@ public class ConfigurationValueProvider {
 
         if (mostConcrete.isPresent() && mostConcrete.get().getType().equals(ConfigurationType.STRING)) {
             return mostConcrete.get().getValue();
+        }
+
+        throw generateConfigurationNotReadableException(descriptor, Optional.empty());
+    }
+
+    @NonNull
+    @SneakyThrows(JsonProcessingException.class)
+    public <TYPE> List<TYPE> queryValue(
+            @NonNull final String mapName,
+            @NonNull final RegisteredListConfigurationValueDescriptor<TYPE> descriptor
+    ) {
+        final Optional<Configuration> mostConcrete = queryMostConcreteConfiguration(mapName, descriptor);
+
+        if (mostConcrete.isPresent() && mostConcrete.get().getType().equals(ConfigurationType.LIST)) {
+            return objectMapper.readValue(mostConcrete.get().getValue(), new TypeReference<List<TYPE>>() {});
         }
 
         throw generateConfigurationNotReadableException(descriptor, Optional.empty());
