@@ -7,12 +7,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
+@Order(1)
 @Component
 @RequiredArgsConstructor
 public class PostStartupExecutor implements ApplicationRunner {
@@ -26,7 +28,7 @@ public class PostStartupExecutor implements ApplicationRunner {
     }
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(final ApplicationArguments args) throws Exception {
         log.info("* PostStartupExecutor: Application started; execute registered PostStartExecutables now:");
 
         if (registeredPostStarters.isEmpty()) {

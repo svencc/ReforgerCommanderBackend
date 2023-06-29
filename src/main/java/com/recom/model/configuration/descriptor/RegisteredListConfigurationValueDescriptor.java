@@ -2,6 +2,7 @@ package com.recom.model.configuration.descriptor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.recom.model.configuration.ConfigurationType;
+import com.recom.service.provider.StaticObjectMapperProvider;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -35,8 +36,7 @@ public class RegisteredListConfigurationValueDescriptor<TYPE> extends BaseRegist
 
         @SneakyThrows
         public RegisteredListConfigurationValueDescriptor<TYPE> build() {
-            final ObjectMapper objectMapper = new ObjectMapper();
-            final String defaultValue = objectMapper.writeValueAsString(listValue);
+            final String defaultValue = StaticObjectMapperProvider.provide().writeValueAsString(listValue);
             return new RegisteredListConfigurationValueDescriptor<TYPE>(namespace, name, defaultValue, enabled, listValue);
         }
 

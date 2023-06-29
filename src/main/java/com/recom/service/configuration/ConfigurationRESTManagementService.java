@@ -1,13 +1,16 @@
 package com.recom.service.configuration;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.recom.dto.configuration.get.ConfigurationListDto;
 import com.recom.dto.configuration.get.OverridableConfigurationDto;
 import com.recom.dto.configuration.post.OverrideConfigurationDto;
 import com.recom.dto.configuration.post.OverrideConfigurationListDto;
 import com.recom.entity.Configuration;
 import com.recom.mapper.ConfigurationMapper;
+import com.recom.model.configuration.ConfigurationType;
 import com.recom.repository.configuration.ConfigurationPersistenceLayer;
 import com.recom.repository.mapEntity.MapEntityPersistenceLayer;
+import com.recom.service.provider.StaticObjectMapperProvider;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -126,14 +129,22 @@ public class ConfigurationRESTManagementService {
                         configurationsToUpdate.add(existingOverride);
                     },
                     () -> {
-                        final Configuration newConfigurationOverride = Configuration.builder()
+                        final Configuration.ConfigurationBuilder builder = Configuration.builder()
                                 .mapName(overrideList.getMapName())
                                 .namespace(override.getNamespace())
                                 .name(override.getName())
                                 .type(override.getType())
-                                .value(override.getMapOverrideValue())
-                                .build();
-                        configurationsToCreate.add(newConfigurationOverride);
+                                .value(override.getMapOverrideValue());
+
+                        if (override.getType() == ConfigurationType.LIST) {
+                            try {
+                                builder.value(StaticObjectMapperProvider.provide().writeValueAsString(override.getMapOverrideListValue()));
+                            } catch (JsonProcessingException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+
+                        configurationsToCreate.add(builder.build());
                     }
             );
         };

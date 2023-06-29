@@ -50,6 +50,11 @@ public class ConfigurationController {
     ) {
         log.debug("Requested GET /api/v1/map/configuration");
 
+        if (mapNameOpt.isPresent() && !configurationRESTManagementService.mapExists(mapNameOpt.get())) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .cacheControl(CacheControl.noCache()).build();
+        }
+
         return mapNameOpt.map((final String mapName) -> ResponseEntity.status(HttpStatus.OK)
                         .cacheControl(CacheControl.noCache())
                         .body(configurationRESTManagementService.provideAllExistingConfigurationValues(mapName)))

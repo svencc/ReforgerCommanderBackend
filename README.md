@@ -21,7 +21,10 @@ application-local.properties is preconfigured to work with the provided docker-m
 
 ## TODO
 
-* Enhance each config list item with an enabled flag! Add to GET POST EPs
+[//]: # (* Enhance each config list item with an enabled flag! Add to GET POST EPs)
+[//]: # (* generate all types to list config; default is disabled)
+* add api endpoint; where you can provide a regex to enable or disable a set of entities
+
 * add db entity types to config (for cluster detection) - replace hardcoded approach
 *
 * DB-based Configuration System

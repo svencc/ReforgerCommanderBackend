@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @Builder
@@ -38,5 +39,9 @@ public class OverrideConfigurationDto implements Serializable {
     @Schema
     @JsonProperty()
     private String mapOverrideValue;
+
+    @Schema
+    @JsonProperty()
+    private List<String> mapOverrideListValue;
 
 }

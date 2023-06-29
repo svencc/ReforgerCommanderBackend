@@ -1,6 +1,5 @@
 package com.recom.api;
 
-import com.recom.dto.test.TestDataDto;
 import com.recom.event.event.sync.cache.CacheResetSyncEvent;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -36,7 +35,7 @@ public class CacheController {
             @ApiResponse(responseCode = "200", description = "O.K.")
     })
     @DeleteMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<TestDataDto> getJsonTestData() {
+    public ResponseEntity<Void> getJsonTestData() {
         log.info("Requested DELETE /api/v1/cache");
 
         applicationEventPublisher.publishEvent(new CacheResetSyncEvent());
