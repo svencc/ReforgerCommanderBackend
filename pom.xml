@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.0</version>
+        <version>3.1.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -20,7 +20,7 @@
         <java.version>17</java.version>
         <org.projectlombok.version>1.18.28</org.projectlombok.version>
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
-        <org.hibernate.orm.hibernate-jcache.version>6.2.3.Final</org.hibernate.orm.hibernate-jcache.version>
+        <org.hibernate.orm.hibernate-jcache.version>6.2.5.Final</org.hibernate.orm.hibernate-jcache.version>
         <org.ehcache.ehcache.version>3.10.8</org.ehcache.ehcache.version>
         <spring-boot-maven-plugin.version>3.11.0</spring-boot-maven-plugin.version>
         <jib.version>3.3.2</jib.version>
