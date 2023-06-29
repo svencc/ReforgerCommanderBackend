@@ -1,4 +1,4 @@
-package com.recom;
+package com.recom.runner;
 
 
 import com.recom.service.PostStartExecutable;
