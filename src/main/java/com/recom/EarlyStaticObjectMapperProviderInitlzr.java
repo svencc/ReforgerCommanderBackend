@@ -26,7 +26,7 @@ public class EarlyStaticObjectMapperProviderInitlzr implements ApplicationRunner
 
     @Override
     public void run(final ApplicationArguments args) throws Exception {
-        log.info("* PostStartupExecutor: Application started; initialize StaticObjectMapperProvider now.");
+        log.info("* EarlyStaticObjectMapperProviderInitlzr: Application started; initialize StaticObjectMapperProvider now.");
         staticObjectMapperProvider.postConstruct();
     }
 
