@@ -6,7 +6,7 @@ import com.recom.event.event.async.cache.CacheResetAsyncEvent;
 import com.recom.service.configuration.ConfigurationDescriptorProvider;
 import com.recom.service.configuration.ConfigurationRESTManagementService;
 import com.recom.service.configuration.ConfigurationValueProvider;
-import com.recom.service.map.AssertionService;
+import com.recom.service.AssertionService;
 import com.recom.service.map.MapMetaDataService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Validated

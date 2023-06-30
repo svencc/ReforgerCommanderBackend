@@ -1,6 +1,7 @@
-package com.recom.service.map;
+package com.recom.service;
 
 import com.recom.exception.HttpNotFoundException;
+import com.recom.service.map.MapMetaDataService;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

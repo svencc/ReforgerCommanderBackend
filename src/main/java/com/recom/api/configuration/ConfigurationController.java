@@ -5,7 +5,7 @@ import com.recom.dto.configuration.get.ConfigurationListDto;
 import com.recom.dto.configuration.post.OverrideConfigurationListDto;
 import com.recom.event.event.async.cache.CacheResetAsyncEvent;
 import com.recom.service.configuration.ConfigurationRESTManagementService;
-import com.recom.service.map.AssertionService;
+import com.recom.service.AssertionService;
 import com.recom.service.map.MapMetaDataService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

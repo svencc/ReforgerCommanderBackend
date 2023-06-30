@@ -2,7 +2,7 @@ package com.recom.api.map;
 
 import com.recom.api.commons.HttpCommons;
 import com.recom.dto.map.meta.MapMetaDto;
-import com.recom.service.map.AssertionService;
+import com.recom.service.AssertionService;
 import com.recom.service.map.MapMetaDataService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

@@ -4,7 +4,7 @@ import com.recom.api.commons.HttpCommons;
 import com.recom.dto.map.cluster.ClusterListDto;
 import com.recom.dto.map.cluster.MapClusterRequestDto;
 import com.recom.service.ReforgerPayloadParserService;
-import com.recom.service.map.AssertionService;
+import com.recom.service.AssertionService;
 import com.recom.service.map.MapMetaDataService;
 import com.recom.service.map.cluster.ClusteringService;
 import io.swagger.v3.oas.annotations.Operation;
