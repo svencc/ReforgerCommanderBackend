@@ -1,10 +1,12 @@
-package com.recom.api;
+package com.recom.api.configuration;
 
 import com.recom.api.commons.HttpCommons;
 import com.recom.dto.configuration.get.ConfigurationListDto;
 import com.recom.dto.configuration.post.OverrideConfigurationListDto;
 import com.recom.event.event.async.cache.CacheResetAsyncEvent;
 import com.recom.service.configuration.ConfigurationRESTManagementService;
+import com.recom.service.map.AssertionService;
+import com.recom.service.map.MapMetaDataService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -32,13 +34,17 @@ import java.util.Optional;
 public class ConfigurationController {
 
     @NonNull
+    private final AssertionService assertionService;
+    @NonNull
+    private final MapMetaDataService mapMetaDataService;
+    @NonNull
     private final ConfigurationRESTManagementService configurationRESTManagementService;
     @NonNull
     private final ApplicationEventPublisher applicationEventPublisher;
 
     @Operation(
             summary = "Get a list of overridable configuration settings.",
-            description = "Gets all or map specific configuration data, with with default value and map specific overridden values."
+            description = "Gets all or map specific configuration data, with default value and map specific overridden values."
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
@@ -50,10 +56,7 @@ public class ConfigurationController {
     ) {
         log.debug("Requested GET /api/v1/map/configuration");
 
-        if (mapNameOpt.isPresent() && !configurationRESTManagementService.mapExists(mapNameOpt.get())) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .cacheControl(CacheControl.noCache()).build();
-        }
+        mapNameOpt.ifPresent(assertionService::assertMapExists);
 
         return mapNameOpt.map((final String mapName) -> ResponseEntity.status(HttpStatus.OK)
                         .cacheControl(CacheControl.noCache())
@@ -65,8 +68,8 @@ public class ConfigurationController {
     }
 
     @Operation(
-            summary = "Get a list of overridable configuration settings.",
-            description = "Gets all or map specific configuration data, with with default value and map specific overridden values."
+            summary = "Set a list of overridable configuration settings.",
+            description = "Sets map specific configuration data, with map specific overridden values."
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
@@ -78,17 +81,13 @@ public class ConfigurationController {
     ) {
         log.debug("Requested POST /api/v1/map/configuration");
 
-        if (configurationRESTManagementService.mapExists(overrideList.getMapName())) {
-            configurationRESTManagementService.updateOverrides(overrideList);
-            applicationEventPublisher.publishEvent(new CacheResetAsyncEvent());
+        assertionService.assertMapExists(overrideList.getMapName());
+        configurationRESTManagementService.updateOverrides(overrideList);
+        applicationEventPublisher.publishEvent(new CacheResetAsyncEvent());
 
-            return ResponseEntity.status(HttpStatus.OK)
-                    .cacheControl(CacheControl.noCache())
-                    .body(configurationRESTManagementService.provideAllExistingConfigurationValues(overrideList.getMapName()));
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .cacheControl(CacheControl.noCache()).build();
-        }
+        return ResponseEntity.status(HttpStatus.OK)
+                .cacheControl(CacheControl.noCache())
+                .body(configurationRESTManagementService.provideAllExistingConfigurationValues(overrideList.getMapName()));
     }
 
 }

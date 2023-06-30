@@ -4,6 +4,8 @@ import com.recom.api.commons.HttpCommons;
 import com.recom.dto.map.cluster.ClusterListDto;
 import com.recom.dto.map.cluster.MapClusterRequestDto;
 import com.recom.service.ReforgerPayloadParserService;
+import com.recom.service.map.AssertionService;
+import com.recom.service.map.MapMetaDataService;
 import com.recom.service.map.cluster.ClusteringService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -23,10 +25,14 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "Clustering")
+@Tag(name = "MapCluster")
 @RequestMapping("/api/v1/map/clusters")
 public class ClustersController {
 
+    @NonNull
+    private final AssertionService assertionService;
+    @NonNull
+    private final MapMetaDataService mapMetaDataService;
     @NonNull
     private final ClusteringService clusteringService;
     @NonNull
@@ -63,6 +69,8 @@ public class ClustersController {
             @NonNull final MapClusterRequestDto clusterRequestDto
     ) {
         log.debug("Requested POST /api/v1/clusters (JSON)");
+
+        assertionService.assertMapExists(clusterRequestDto.getMapName());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())

@@ -87,9 +87,13 @@ public class ConfigurationRESTManagementService {
                 .flatMap(list -> list.stream().findFirst());
     }
 
+    @Transactional(readOnly = false)
+    public void updateOverride(
+            @NonNull final String mapName,
+            @NonNull final OverrideConfigurationDto override
+    ) {
 
-    public boolean mapExists(@NonNull final String mapName) {
-        return mapEntityPersistenceLayer.findAllMapNames().contains(mapName);
+
     }
 
     @Transactional(readOnly = false)

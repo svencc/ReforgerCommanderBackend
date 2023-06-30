@@ -17,9 +17,7 @@ import org.springframework.stereotype.Service;
 import java.security.InvalidParameterException;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -65,13 +63,13 @@ public class ConfigurationValueProvider {
         return configurationPersistenceLayer.findValues(mapName, namespace, name);
     }
 
-    @NonNull
-    private Map<String, List<Configuration>> preIndexConfigurationList(
-            List<Configuration> listToPreIndex
-    ) {
-        return listToPreIndex.stream()
-                .collect(Collectors.groupingBy(Configuration::getNamespace));
-    }
+//    @NonNull
+//    private Map<String, List<Configuration>> preIndexConfigurationList(
+//            List<Configuration> listToPreIndex
+//    ) {
+//        return listToPreIndex.stream()
+//                .collect(Collectors.groupingBy(Configuration::getNamespace));
+//    }
 
     @NonNull
     public String queryValue(
@@ -82,21 +80,6 @@ public class ConfigurationValueProvider {
 
         if (mostConcrete.isPresent() && mostConcrete.get().getType().equals(ConfigurationType.STRING)) {
             return mostConcrete.get().getValue();
-        }
-
-        throw generateConfigurationNotReadableException(descriptor, Optional.empty());
-    }
-
-    @NonNull
-    @SneakyThrows(JsonProcessingException.class)
-    public <TYPE> List<TYPE> queryValue(
-            @NonNull final String mapName,
-            @NonNull final RegisteredListConfigurationValueDescriptor<TYPE> descriptor
-    ) {
-        final Optional<Configuration> mostConcrete = queryMostConcreteConfiguration(mapName, descriptor);
-
-        if (mostConcrete.isPresent() && mostConcrete.get().getType().equals(ConfigurationType.LIST)) {
-            return objectMapper.readValue(mostConcrete.get().getValue(), new TypeReference<List<TYPE>>() {});
         }
 
         throw generateConfigurationNotReadableException(descriptor, Optional.empty());
@@ -121,6 +104,22 @@ public class ConfigurationValueProvider {
                                 descriptor.getType()
                         ))
         );
+    }
+
+    @NonNull
+    @SneakyThrows(JsonProcessingException.class)
+    public <TYPE> List<TYPE> queryValue(
+            @NonNull final String mapName,
+            @NonNull final RegisteredListConfigurationValueDescriptor<TYPE> descriptor
+    ) {
+        final Optional<Configuration> mostConcrete = queryMostConcreteConfiguration(mapName, descriptor);
+
+        if (mostConcrete.isPresent() && mostConcrete.get().getType().equals(ConfigurationType.LIST)) {
+            return objectMapper.readValue(mostConcrete.get().getValue(), new TypeReference<List<TYPE>>() {
+            });
+        }
+
+        throw generateConfigurationNotReadableException(descriptor, Optional.empty());
     }
 
     @NonNull
@@ -163,4 +162,5 @@ public class ConfigurationValueProvider {
     public List<Configuration> provideAllExistingDefaultValues() {
         return configurationPersistenceLayer.findAllDefaultValueEntities();
     }
+
 }

@@ -1,28 +1,32 @@
-package com.recom.dto.map.meta;
+package com.recom.dto.configuration.maptools.post;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@Schema
 @Builder
-@NoArgsConstructor
+@Schema
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MapMetaListDto implements Serializable {
+public class TownEntitiesDto implements Serializable {
 
+    @NotBlank
     @Schema
     @JsonProperty()
-    @Builder.Default
-    private List<MapMetaDto> maps = new ArrayList<>();
+    private String mapName;
+
+    @NotNull
+    @Schema
+    @JsonProperty()
+    private List<String> townEntitiesMatcherToSet;
 
 }
