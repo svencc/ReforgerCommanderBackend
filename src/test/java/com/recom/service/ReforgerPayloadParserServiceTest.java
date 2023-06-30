@@ -1,6 +1,5 @@
 package com.recom.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.recom.exception.HttpBadRequestException;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.constraints.NotBlank;
@@ -27,9 +26,9 @@ class ReforgerPayloadParserServiceTest {
     }
 
     @Test
-    public void testParseValidated_whenValidPayload_shouldReturnParsedObject() throws JsonProcessingException {
+    public void testParseValidated_whenValidPayload_shouldReturnParsedObject() {
         // Arrange
-        Map<String, String> payload = Collections.singletonMap("{\"name\": \"John\"}", "someValue");
+        Map<String, String> payload = Collections.singletonMap("{\"name\": \"John\"}", "");
         TestDto expectedDto = new TestDto("John");
 
         // Act
@@ -40,7 +39,7 @@ class ReforgerPayloadParserServiceTest {
     }
 
     @Test
-    public void testParseValidated_whenEmptyPayload_shouldThrowHttpBadRequestException() throws JsonProcessingException {
+    public void testParseValidated_whenEmptyPayload_shouldThrowHttpBadRequestException() {
         // Arrange
         Map<String, String> payload = Collections.emptyMap();
 
@@ -53,7 +52,7 @@ class ReforgerPayloadParserServiceTest {
     }
 
     @Test
-    public void testParseValidated_whenInvalidPayload_shouldThrowHttpBadRequestException() throws JsonProcessingException {
+    public void testParseValidated_whenInvalidPayload_shouldThrowHttpBadRequestException() {
         // Arrange
         Map<String, String> payload = Collections.singletonMap("invalidPayload", "someValue");
 
