@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Validated
@@ -52,7 +53,7 @@ public class MapToolsController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
     })
-    @PostMapping(path = "/town/entities", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/town-entities", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> postTownEntities(
             @RequestParam
             @NonNull final String mapName,
@@ -60,15 +61,14 @@ public class MapToolsController {
             @RequestBody(required = false)
             @NonNull final List<String> entityMatcherList
     ) {
-        log.debug("Requested POST /api/v1/map/configuration/map-tools/town/entities");
+        log.debug("Requested POST /api/v1/configuration/map-tools/town-entities");
 
         assertionService.assertMapExists(mapName);
-
 
         // take entityMatcherList and create a list of OverrideConfigurationDto
         final List<String> entitiesToAdd = new ArrayList<>();
         entityMatcherList.forEach(entityMatcher -> {
-            final List<String> matchedEntities = mapMetaDataService.provideMapMeta(mapName).getUtilizedClasses().stream()
+            final List<String> matchedEntities = mapMetaDataService.provideMapMeta(mapName).getUtilizedResources().stream()
                     .filter(utilizedClass -> utilizedClass.matches(entityMatcher))
                     .toList();
 
@@ -97,7 +97,7 @@ public class MapToolsController {
 //                        .mapOverrideListValue(entityList)
                         .build()
         );
-        applicationEventPublisher.publishEvent(new CacheResetAsyncEvent());
+//        applicationEventPublisher.publishEvent(new CacheResetAsyncEvent());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())

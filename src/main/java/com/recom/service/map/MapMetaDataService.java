@@ -19,7 +19,7 @@ public class MapMetaDataService {
     private final MapEntityPersistenceLayer mapEntityPersistenceLayer;
 
     @NonNull
-    @Cacheable(cacheNames = "MapMetaDataService.provideMapList")
+    @Cacheable(cacheNames = "MapMetaDataService.provideMapMetaList")
     public List<MapMetaDto> provideMapMetaList() {
         return mapEntityPersistenceLayer.findAllMapNames().stream()
                 .map((@NonNull final String mapName) -> MapMetaDto.builder()
@@ -36,8 +36,9 @@ public class MapMetaDataService {
     }
 
     @NonNull
-    @Cacheable(cacheNames = "MapMetaDataService.provideMap")
+    @Cacheable(cacheNames = "MapMetaDataService.provideMapMeta")
     public MapMetaDto provideMapMeta(@NonNull final String mapName) {
+        log.info("provideMapMeta({})", mapName);
         return MapMetaDto.builder()
                 .mapName(mapName)
                 .entitiesCount(mapEntityPersistenceLayer.countEntitiesByMapName(mapName))

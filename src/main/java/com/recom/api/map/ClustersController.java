@@ -32,8 +32,6 @@ public class ClustersController {
     @NonNull
     private final AssertionService assertionService;
     @NonNull
-    private final MapMetaDataService mapMetaDataService;
-    @NonNull
     private final ClusteringService clusteringService;
     @NonNull
     private final ReforgerPayloadParserService payloadParser;

@@ -16,9 +16,9 @@
         </resources>
     </cache-template>
 
-    <cache alias="MapMetaDataService.provideMap" uses-template="recomDefaultCache">
+    <cache alias="MapMetaDataService.provideMapMeta" uses-template="recomDefaultCache">
     </cache>
-    <cache alias="MapMetaDataService.provideMapList" uses-template="recomDefaultCache">
+    <cache alias="MapMetaDataService.provideMapMetaList" uses-template="recomDefaultCache">
     </cache>
     <cache alias="MapMetaDataService.provideAllMapNames" uses-template="recomDefaultCache">
     </cache>
