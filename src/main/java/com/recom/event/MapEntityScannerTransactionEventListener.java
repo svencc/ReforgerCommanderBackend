@@ -10,6 +10,7 @@ import com.recom.mapper.MapEntityMapper;
 import com.recom.model.map.MapTransaction;
 import com.recom.repository.mapEntity.MapEntityPersistenceLayer;
 import com.recom.service.map.scanner.MapTransactionValidatorService;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +38,7 @@ public class MapEntityScannerTransactionEventListener extends BaseEventListener 
     private final MapEntityPersistenceLayer mapEntityPersistenceLayer;
     @NonNull
     private final MapTransactionValidatorService mapTransactionValidator;
+    @Getter
     @NonNull
     private final Map<String, MapTransaction> transactions = new HashMap<>();
 
