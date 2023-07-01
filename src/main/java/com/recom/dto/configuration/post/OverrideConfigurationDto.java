@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.recom.model.configuration.ConfigurationType;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -11,7 +12,6 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -36,15 +36,24 @@ public class OverrideConfigurationDto implements Serializable {
     @JsonProperty()
     private ConfigurationType type;
 
-    @NotNull
     @Schema
     @JsonProperty()
-    @Builder.Default
-    private String mapOverrideValue = "";
+    private String mapOverrideValue;
 
     @Schema
     @JsonProperty()
-    @Builder.Default
-    private List<String> mapOverrideListValue = new ArrayList<>();
+    private List<String> mapOverrideListValue;
+
+    @AssertTrue(message = "Only one of [mapOverrideValue or mapOverrideListValue] can be and must be set!")
+    public boolean isValueOrListValueSetAssertion() {
+        final boolean onlyListValueIsSet = mapOverrideListValue != null && mapOverrideValue == null;
+        final boolean onlyValueIsSet = mapOverrideValue != null && mapOverrideListValue == null;
+
+        if (type.equals(ConfigurationType.LIST)) {
+            return onlyListValueIsSet;
+        } else {
+            return onlyValueIsSet && !mapOverrideValue.isBlank();
+        }
+    }
 
 }
