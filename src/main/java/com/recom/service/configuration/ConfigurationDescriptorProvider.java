@@ -38,8 +38,7 @@ public class ConfigurationDescriptorProvider implements DefaultConfigurationProv
             .listValue(List.of("test1", "test2"))
             .enabled(true)
             .build();
-    @NonNull
-    private final ConfigurationValueProvider configurationValueProviderTest;
+
     @NonNull
     private final DefaultConfigurationDatabaseInitializer defaultConfigurationDatabaseInitializer;
 

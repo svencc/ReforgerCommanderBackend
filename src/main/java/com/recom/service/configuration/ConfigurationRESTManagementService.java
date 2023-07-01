@@ -130,10 +130,19 @@ public class ConfigurationRESTManagementService {
                     (final Configuration existingOverride) -> {
                         existingOverride.setType(override.getType());
                         existingOverride.setValue(override.getMapOverrideValue());
+
+                        if (override.getType() == ConfigurationType.LIST) {
+                            try {
+                                existingOverride.setValue(StaticObjectMapperProvider.provide().writeValueAsString(override.getMapOverrideListValue()));
+                            } catch (JsonProcessingException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+
                         configurationsToUpdate.add(existingOverride);
                     },
                     () -> {
-                        final Configuration.ConfigurationBuilder builder = Configuration.builder()
+                        final Configuration.ConfigurationBuilder configurationBuilder = Configuration.builder()
                                 .mapName(overrideList.getMapName())
                                 .namespace(override.getNamespace())
                                 .name(override.getName())
@@ -142,13 +151,13 @@ public class ConfigurationRESTManagementService {
 
                         if (override.getType() == ConfigurationType.LIST) {
                             try {
-                                builder.value(StaticObjectMapperProvider.provide().writeValueAsString(override.getMapOverrideListValue()));
+                                configurationBuilder.value(StaticObjectMapperProvider.provide().writeValueAsString(override.getMapOverrideListValue()));
                             } catch (JsonProcessingException e) {
                                 throw new RuntimeException(e);
                             }
                         }
 
-                        configurationsToCreate.add(builder.build());
+                        configurationsToCreate.add(configurationBuilder.build());
                     }
             );
         };

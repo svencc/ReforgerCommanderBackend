@@ -1,9 +1,9 @@
 package com.recom.service.configuration;
 
-import com.recom.runner.PostStartupExecutor;
 import com.recom.entity.Configuration;
 import com.recom.model.configuration.descriptor.BaseRegisteredConfigurationValueDescriptable;
 import com.recom.repository.configuration.ConfigurationPersistenceLayer;
+import com.recom.runner.PostStartupExecutor;
 import com.recom.service.PostStartExecutable;
 import jakarta.annotation.PostConstruct;
 import lombok.NonNull;
