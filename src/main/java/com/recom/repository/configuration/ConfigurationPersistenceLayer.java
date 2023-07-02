@@ -38,6 +38,11 @@ public class ConfigurationPersistenceLayer {
         return configurationRepository.saveAll(entities);
     }
 
+    @NonNull
+    public Configuration save(@NonNull final Configuration entity) {
+        return configurationRepository.save(entity);
+    }
+
     public void deleteAll(@NonNull final List<Configuration> entities) {
         configurationRepository.deleteAll(entities);
     }

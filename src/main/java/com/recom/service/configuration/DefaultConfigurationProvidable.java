@@ -1,6 +1,6 @@
 package com.recom.service.configuration;
 
-import com.recom.model.configuration.descriptor.BaseRegisteredConfigurationValueDescriptable;
+import com.recom.model.configuration.descriptor.BaseRegisteredConfigurationValueDescribable;
 import lombok.NonNull;
 
 import java.util.List;
@@ -8,6 +8,6 @@ import java.util.List;
 public interface DefaultConfigurationProvidable {
 
     @NonNull
-    List<BaseRegisteredConfigurationValueDescriptable> provideDefaultConfigurationValues();
+    List<BaseRegisteredConfigurationValueDescribable> provideDefaultConfigurationValues();
 
 }

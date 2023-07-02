@@ -30,6 +30,8 @@ application-local.properties is preconfigured to work with the provided docker-m
     * caching of config values (especially json-list values)
 * rework cluster rendering to direct client polygon rendering; controlled by server?
 *
+* replace POST clustering call with GET call (affects client)
+*
 * map size is not necessarily square! -> fix scanner!
 * save map size to map data and add output to map meta data
 *

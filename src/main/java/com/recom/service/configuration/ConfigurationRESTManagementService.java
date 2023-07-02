@@ -1,15 +1,12 @@
 package com.recom.service.configuration;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.recom.dto.configuration.get.ConfigurationListDto;
 import com.recom.dto.configuration.get.OverridableConfigurationDto;
 import com.recom.dto.configuration.post.OverrideConfigurationDto;
-import com.recom.dto.configuration.post.OverrideConfigurationListDto;
 import com.recom.entity.Configuration;
 import com.recom.mapper.ConfigurationMapper;
 import com.recom.model.configuration.ConfigurationType;
 import com.recom.repository.configuration.ConfigurationPersistenceLayer;
-import com.recom.repository.mapEntity.MapEntityPersistenceLayer;
 import com.recom.service.provider.StaticObjectMapperProvider;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -30,44 +27,38 @@ import java.util.stream.Collectors;
 public class ConfigurationRESTManagementService {
 
     @NonNull
-    private final MapEntityPersistenceLayer mapEntityPersistenceLayer;
-    @NonNull
     private final ConfigurationPersistenceLayer configurationPersistenceLayer;
     @NonNull
     private final ConfigurationValueProvider configurationValueProvider;
 
 
     @NonNull
-    public ConfigurationListDto provideAllExistingConfigurationValues(@NonNull final String mapName) {
+    public List<OverridableConfigurationDto> provideAllExistingConfigurationValues(@NonNull final String mapName) {
         return enhanceDefaultConfigurationWithMapSpecificOverrideValues(mapName, provideAllExistingConfigurationValues());
     }
 
     @NonNull
-    private ConfigurationListDto enhanceDefaultConfigurationWithMapSpecificOverrideValues(
+    private List<OverridableConfigurationDto> enhanceDefaultConfigurationWithMapSpecificOverrideValues(
             @NonNull final String mapName,
-            @NonNull final ConfigurationListDto defaultConfigurationListDto
+            @NonNull final List<OverridableConfigurationDto> defaultConfigurationListDto
     ) {
         final List<Configuration> mapSpecificConfigurationValues = configurationPersistenceLayer.findAllMapSpecificValueEntities(mapName);
         final Map<String, Map<String, List<Configuration>>> indexedConfigurationList = createIndexedConfigurationMap(mapSpecificConfigurationValues);
 
-        defaultConfigurationListDto.setMapName(mapName);
-        defaultConfigurationListDto.getConfigurationList()
-                .forEach((final OverridableConfigurationDto defaultConfiguration) -> findConfigurationInIndexedMap(indexedConfigurationList, defaultConfiguration.getNamespace(), defaultConfiguration.getName()).ifPresent(
-                        (mapSpecificConfiguration) -> {
-                            defaultConfiguration.setMapOverriddenValue(mapSpecificConfiguration.getValue());
-                        }
-                ));
+        defaultConfigurationListDto.forEach((final OverridableConfigurationDto defaultConfiguration) -> findConfigurationInIndexedMap(indexedConfigurationList, defaultConfiguration.getNamespace(), defaultConfiguration.getName()).ifPresent(
+                (mapSpecificConfiguration) -> {
+                    defaultConfiguration.setMapOverriddenValue(mapSpecificConfiguration.getValue());
+                }
+        ));
 
         return defaultConfigurationListDto;
     }
 
     @NonNull
-    public ConfigurationListDto provideAllExistingConfigurationValues() {
-        return ConfigurationListDto.builder()
-                .configurationList(configurationValueProvider.provideAllExistingDefaultValues().stream()
-                        .map(ConfigurationMapper.INSTANCE::toDto)
-                        .collect(Collectors.toList()))
-                .build();
+    public List<OverridableConfigurationDto> provideAllExistingConfigurationValues() {
+        return configurationValueProvider.provideAllExistingDefaultValues().stream()
+                .map(ConfigurationMapper.INSTANCE::toDto)
+                .collect(Collectors.toList());
     }
 
     @NonNull
@@ -88,27 +79,21 @@ public class ConfigurationRESTManagementService {
     }
 
     @Transactional(readOnly = false)
-    public void updateOverride(
+    public void updateOverrides(
             @NonNull final String mapName,
-            @NonNull final OverrideConfigurationDto override
+            @NonNull final List<OverrideConfigurationDto> overrideList
     ) {
-
-
-    }
-
-    @Transactional(readOnly = false)
-    public void updateOverrides(@NonNull final OverrideConfigurationListDto overrideList) {
         // @TODO REFACTOR MOVE configurationPersistenceLayer.findAllMapSpecificValueEntities -> configurationValueProvider.provideAllExistingDefaultValues()
-        final Map<String, Map<String, List<Configuration>>> indexedExistingOverrideConfigurationList = createIndexedConfigurationMap(configurationPersistenceLayer.findAllMapSpecificValueEntities(overrideList.getMapName()));
+        final Map<String, Map<String, List<Configuration>>> indexedExistingOverrideConfigurationList = createIndexedConfigurationMap(configurationPersistenceLayer.findAllMapSpecificValueEntities(mapName));
         final Map<String, Map<String, List<Configuration>>> indexedDefaultConfigurationList = createIndexedConfigurationMap(configurationValueProvider.provideAllExistingDefaultValues());
 
         final List<Configuration> configurationsToCreate = new ArrayList<>();
         final List<Configuration> configurationsToUpdate = new ArrayList<>();
         final List<Configuration> configurationsToDelete = new ArrayList<>();
 
-        overrideList.getConfigurationList().forEach(override -> findConfigurationInIndexedMap(indexedDefaultConfigurationList, override.getNamespace(), override.getName())
+        overrideList.forEach(override -> findConfigurationInIndexedMap(indexedDefaultConfigurationList, override.getNamespace(), override.getName())
                 .ifPresentOrElse(
-                        handleOverrideWithCorrespondingDefaultConfiguration(overrideList, indexedExistingOverrideConfigurationList, configurationsToCreate, configurationsToUpdate, override),
+                        handleOverrideWithCorrespondingDefaultConfiguration(mapName, indexedExistingOverrideConfigurationList, configurationsToCreate, configurationsToUpdate, override),
                         otherwiseTidyUpOldOverrideEntries(indexedExistingOverrideConfigurationList, configurationsToDelete, override)
                 ));
 
@@ -119,7 +104,7 @@ public class ConfigurationRESTManagementService {
 
     @NonNull
     private Consumer<Configuration> handleOverrideWithCorrespondingDefaultConfiguration(
-            @NonNull final OverrideConfigurationListDto overrideList,
+            @NonNull final String mapName,
             @NonNull final Map<String, Map<String, List<Configuration>>> indexedExistingOverrideConfigurationList,
             @NonNull final List<Configuration> configurationsToCreate,
             @NonNull final List<Configuration> configurationsToUpdate,
@@ -143,7 +128,7 @@ public class ConfigurationRESTManagementService {
                     },
                     () -> {
                         final Configuration.ConfigurationBuilder configurationBuilder = Configuration.builder()
-                                .mapName(overrideList.getMapName())
+                                .mapName(mapName)
                                 .namespace(override.getNamespace())
                                 .name(override.getName())
                                 .type(override.getType())

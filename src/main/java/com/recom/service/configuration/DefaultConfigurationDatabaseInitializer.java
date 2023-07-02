@@ -1,7 +1,7 @@
 package com.recom.service.configuration;
 
 import com.recom.entity.Configuration;
-import com.recom.model.configuration.descriptor.BaseRegisteredConfigurationValueDescriptable;
+import com.recom.model.configuration.descriptor.BaseRegisteredConfigurationValueDescribable;
 import com.recom.repository.configuration.ConfigurationPersistenceLayer;
 import com.recom.runner.PostStartupExecutor;
 import com.recom.service.PostStartExecutable;
@@ -52,7 +52,7 @@ public class DefaultConfigurationDatabaseInitializer implements PostStartExecuta
     }
 
     private void applyRegisteredDefaultSettingsToDatabase() {
-        final List<BaseRegisteredConfigurationValueDescriptable> allRegisteredDefaultValues = defaultConfigurationProviderRegister.stream()
+        final List<BaseRegisteredConfigurationValueDescribable> allRegisteredDefaultValues = defaultConfigurationProviderRegister.stream()
                 .flatMap((provider) -> provider.provideDefaultConfigurationValues().stream())
                 .toList();
 
@@ -63,7 +63,7 @@ public class DefaultConfigurationDatabaseInitializer implements PostStartExecuta
         final List<Configuration> configurationsToUpdate = new ArrayList<>();
         final List<Configuration> configurationsToDelete = new ArrayList<>();
 
-        allRegisteredDefaultValues.forEach((final BaseRegisteredConfigurationValueDescriptable registeredDefaultValue) -> {
+        allRegisteredDefaultValues.forEach((final BaseRegisteredConfigurationValueDescribable registeredDefaultValue) -> {
             final String namespace = registeredDefaultValue.getNamespace();
             final String name = registeredDefaultValue.getName();
 
@@ -71,7 +71,6 @@ public class DefaultConfigurationDatabaseInitializer implements PostStartExecuta
             if (existingConfigurationOpt.isPresent()) {
                 existingConfigurationOpt.get().setValue(registeredDefaultValue.getDefaultValue());
                 existingConfigurationOpt.get().setType(registeredDefaultValue.getType());
-                existingConfigurationOpt.get().setEnabled(registeredDefaultValue.getEnabled());
                 configurationsToUpdate.add(existingConfigurationOpt.get());
             } else {
                 Configuration newConfiguration = Configuration.builder()
@@ -79,7 +78,6 @@ public class DefaultConfigurationDatabaseInitializer implements PostStartExecuta
                         .name(registeredDefaultValue.getName())
                         .type(registeredDefaultValue.getType())
                         .value(registeredDefaultValue.getDefaultValue())
-                        .enabled(registeredDefaultValue.getEnabled())
                         .build();
 
                 configurationsToCreate.add(newConfiguration);

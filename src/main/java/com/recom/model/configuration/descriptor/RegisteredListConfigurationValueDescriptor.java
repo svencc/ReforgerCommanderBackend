@@ -1,6 +1,5 @@
 package com.recom.model.configuration.descriptor;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.recom.model.configuration.ConfigurationType;
 import com.recom.service.provider.StaticObjectMapperProvider;
 import lombok.NonNull;
@@ -9,10 +8,15 @@ import lombok.SneakyThrows;
 
 import java.util.List;
 
-public class RegisteredListConfigurationValueDescriptor<TYPE> extends BaseRegisteredConfigurationValueDescriptable {
+public class RegisteredListConfigurationValueDescriptor<TYPE> extends BaseRegisteredConfigurationValueDescribable {
 
-    public RegisteredListConfigurationValueDescriptor(String namespace, String name, String defaultValue, Boolean enabled, List<TYPE> listValue) {
-        super(namespace, name, defaultValue, enabled);
+    public RegisteredListConfigurationValueDescriptor(
+            @NonNull final String namespace,
+            @NonNull final String name,
+            @NonNull final String defaultValue,
+            @NonNull final List<TYPE> listValue
+    ) {
+        super(namespace, name, defaultValue);
     }
 
     public static <TYPE> RegisteredListConfigurationValueDescriptorBuilder<TYPE> builder() {
@@ -30,14 +34,13 @@ public class RegisteredListConfigurationValueDescriptor<TYPE> extends BaseRegist
     public static class RegisteredListConfigurationValueDescriptorBuilder<TYPE> {
         private String namespace;
         private String name;
-        private Boolean enabled;
         private ConfigurationType typeHint;
         private List<TYPE> listValue;
 
         @SneakyThrows
         public RegisteredListConfigurationValueDescriptor<TYPE> build() {
             final String defaultValue = StaticObjectMapperProvider.provide().writeValueAsString(listValue);
-            return new RegisteredListConfigurationValueDescriptor<TYPE>(namespace, name, defaultValue, enabled, listValue);
+            return new RegisteredListConfigurationValueDescriptor<TYPE>(namespace, name, defaultValue, listValue);
         }
 
         public RegisteredListConfigurationValueDescriptorBuilder<TYPE> namespace(@NonNull final String namespace) {
@@ -47,11 +50,6 @@ public class RegisteredListConfigurationValueDescriptor<TYPE> extends BaseRegist
 
         public RegisteredListConfigurationValueDescriptorBuilder<TYPE> name(@NonNull final String name) {
             this.name = name;
-            return this;
-        }
-
-        public RegisteredListConfigurationValueDescriptorBuilder<TYPE> enabled(@NonNull final Boolean enabled) {
-            this.enabled = enabled;
             return this;
         }
 

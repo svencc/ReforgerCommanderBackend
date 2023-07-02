@@ -89,15 +89,6 @@ public class MapEntityPersistenceLayer {
         return mapEntityRepository.countByMapName(mapName);
     }
 
-    @CacheEvict(cacheNames = {
-            "MapEntityPersistenceLayer.findAllDistinctMapNames",
-            "MapEntityPersistenceLayer.countEntitiesByMapName",
-            "MapEntityPersistenceLayer.utilizedClassesByMapName"
-    }, allEntries = true)
-    public void evictMapMetaCaches() {
-        // @TODO use this!
-    }
-
     @Cacheable(cacheNames = "MapEntityPersistenceLayer.utilizedMapMetaTypeByMapName")
     public List<String> utilizedMapMetaTypeByMapName(@NonNull final String mapName) {
         return mapEntityRepository.projectMapMetaTypesByMapName(mapName);

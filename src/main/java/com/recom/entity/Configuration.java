@@ -17,8 +17,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(indexes = {
-        @Index(name = "IDX_namespace_name_enabled", columnList = "namespace, name, enabled", unique = false),
-        @Index(name = "IDX_mapName_namespace_name_enabled", columnList = "mapName, namespace, name, enabled", unique = false),
+        @Index(name = "IDX_namespace_name", columnList = "namespace, name", unique = false),
+        @Index(name = "IDX_mapName_namespace_name", columnList = "mapName, namespace, name", unique = false),
 })
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -44,11 +44,8 @@ public class Configuration implements Persistable<Long>, Serializable {
     private ConfigurationType type;
 
     @Lob
-    @Column(insertable = true, updatable = true, nullable = false)
+    @Column(insertable = true, updatable = true, nullable = false, columnDefinition = "LONGTEXT")
     private String value;
-
-    @Column(insertable = true, updatable = true, nullable = false)
-    private boolean enabled;
 
     @Override
     public int hashCode() {
