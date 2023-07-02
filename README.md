@@ -21,7 +21,6 @@ application-local.properties is preconfigured to work with the provided docker-m
 
 ## TODO
 
-* add api endpoint; where you can provide a regex to enable or disable a set of entities
 
 * add db entity types to config (for cluster detection) - replace hardcoded approach
 *

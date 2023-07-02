@@ -25,7 +25,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -54,7 +53,8 @@ public class ClusteringService {
     @NonNull
     @Cacheable(cacheNames = "MapEntityPersistenceLayer.generateClusters")
     public List<ClusterDto> generateClusters(@NonNull final String mapName) {
-        final List<DoublePoint> buildings = mapEntityPersistenceLayer.findAllTownBuildingEntities(mapName).stream()
+        final List<String> villageResourceNames = configurationValueProvider.queryValue(mapName, ConfigurationDescriptorProvider.CLUSTERING_VILLAGE_RESOURCES_LIST);
+        final List<DoublePoint> resources = mapEntityPersistenceLayer.findAllByMapNameAndResourceNameIn(mapName, villageResourceNames).stream()
                 .map(MapEntityMapper.INSTANCE::toDto)
                 .map(MapEntityDto::getCoordinates)
                 .filter(Objects::nonNull)
@@ -81,7 +81,7 @@ public class ClusteringService {
                 configurationValueProvider.queryValue(mapName, ConfigurationDescriptorProvider.MINIMUM_NUMBER_OF_POINTS_NEEDED_FOR_CLUSTER)
         );
 
-        final List<Cluster<DoublePoint>> clusters = dbscanClusterer.cluster(buildings);
+        final List<Cluster<DoublePoint>> clusters = dbscanClusterer.cluster(resources);
         final List<ClusterDto> clusterDtoList = clusters.stream()
                 .map((final Cluster<DoublePoint> cluster) -> ClusterDto.builder()
                         .points(toPoint2DList(cluster))
@@ -117,6 +117,7 @@ public class ClusteringService {
                 .build();
     }
 
+    @NonNull
     private ConcaveHullDto provideConcaveHull(@NonNull final Cluster<DoublePoint> cluster) {
         final List<Point> vectorList = toPointList(cluster);
         final List<Point> hullVertices = concaveHullGenerator.calculateConcaveHull(vectorList, (vectorList.size() - 2));
@@ -148,10 +149,14 @@ public class ClusteringService {
 
     @NonNull
     private List<Point2DDto> reduce(@NonNull final List<Point2DDto> vertices) {
+        final double roundingFactor = 50; // Abrunden auf 10 Meter
+
         return vertices.stream()
                 .peek((final Point2DDto point2D) -> {
-                    point2D.setX(point2D.getX().setScale(0, RoundingMode.DOWN).setScale(1));
-                    point2D.setY(point2D.getY().setScale(0, RoundingMode.DOWN).setScale(1));
+                    double roundedX = Math.round(point2D.getX().doubleValue() / roundingFactor) * roundingFactor;
+                    double roundedY = Math.round(point2D.getY().doubleValue() / roundingFactor) * roundingFactor;
+                    point2D.setX(BigDecimal.valueOf(roundedX));
+                    point2D.setY(BigDecimal.valueOf(roundedY));
                 })
                 .distinct()
                 .toList();

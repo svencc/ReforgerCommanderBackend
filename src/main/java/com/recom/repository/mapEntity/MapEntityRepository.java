@@ -79,9 +79,9 @@ interface MapEntityRepository extends JpaRepository<MapEntity, Long> {
     );
 
     @NonNull
-    List<MapEntity> findAllByMapNameAndClassNameContaining(
+    List<MapEntity> findAllByMapNameAndResourceNameIn(
             @NonNull final String mapName,
-            @NonNull final String className
+            @NonNull final List<String> className
     );
 
 }
