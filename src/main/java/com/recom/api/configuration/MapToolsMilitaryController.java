@@ -25,8 +25,8 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "Configuration")
-@RequestMapping("/api/v1/configuration/map-tools")
-public class MapToolsController {
+@RequestMapping("/api/v1/configuration/map-tools/resources/military")
+public class MapToolsMilitaryController {
 
     @NonNull
     private final AssertionService assertionService;
@@ -35,49 +35,49 @@ public class MapToolsController {
 
 
     @Operation(
-            summary = "Set resources for clustering towns.",
-            description = "Sets map specific town resources. REGEX pattern matching is explicitly supported!"
+            summary = "Set resources for clustering militarys.",
+            description = "Sets map specific military resources. REGEX pattern matching is explicitly supported!"
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
     })
-    @PutMapping(path = "/resources/village", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<String>> addVillageResources(
+    @PutMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<String>> addMilitaryResources(
             @RequestParam
             @NonNull final String mapName,
 
             @RequestBody(required = false)
             @NonNull final List<String> entityMatcherList
     ) {
-        log.debug("Requested POST /api/v1/configuration/map-tools/resources/village");
+        log.debug("Requested POST /api/v1/configuration/map-tools/resources/military");
         assertionService.assertMapExists(mapName);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
-                .body(configurationMapToolsService.addResources(mapName, entityMatcherList, ConfigurationDescriptorProvider.CLUSTERING_VILLAGE_RESOURCES_LIST));
+                .body(configurationMapToolsService.addResources(mapName, entityMatcherList, ConfigurationDescriptorProvider.CLUSTERING_MILITARY_RESOURCES_LIST));
     }
 
     @Operation(
-            summary = "Set resources for clustering towns.",
-            description = "Sets map specific town resources. REGEX pattern matching is explicitly supported!"
+            summary = "Set resources for clustering militarys.",
+            description = "Sets map specific military resources. REGEX pattern matching is explicitly supported!"
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
     })
-    @DeleteMapping(path = "/resources/village", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<String>> removeVillageResources(
+    @DeleteMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<String>> removeMilitaryResources(
             @RequestParam
             @NonNull final String mapName,
 
             @RequestBody(required = false)
             @NonNull final List<String> entityMatcherList
     ) {
-        log.debug("Requested DELETE /api/v1/configuration/map-tools/resources/village");
+        log.debug("Requested DELETE /api/v1/configuration/map-tools/resources/military");
         assertionService.assertMapExists(mapName);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
-                .body(configurationMapToolsService.removeResources(mapName, entityMatcherList, ConfigurationDescriptorProvider.CLUSTERING_VILLAGE_RESOURCES_LIST));
+                .body(configurationMapToolsService.removeResources(mapName, entityMatcherList, ConfigurationDescriptorProvider.CLUSTERING_MILITARY_RESOURCES_LIST));
     }
 
 }

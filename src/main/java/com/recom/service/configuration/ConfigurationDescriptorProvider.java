@@ -618,6 +618,28 @@ public class ConfigurationDescriptorProvider implements DefaultConfigurationProv
             .build();
 
     @NonNull
+    public static final RegisteredListConfigurationValueDescriptor<String> CLUSTERING_FOREST_RESOURCES_LIST = RegisteredListConfigurationValueDescriptor.<String>builder()
+            .namespace("map.clustering.resources")
+            .name("forest")
+            .typeHint(ConfigurationType.STRING)
+            .listValue(List.of(
+                    "{07A5F4B2FB079DCC}Assets/Vegetation/Tree/Carpinus_Betulus/T_Carpinus_betulus_3s.xob",
+                    "{0AED1E19EBEDBE23}Assets/Vegetation/Tree/TreeParts/T_trunk_debris_03.xob",
+                    "{0D2AE4488D6B04E0}Assets/Vegetation/Tree/TreeParts/T_trunk_debris_04.xob",
+                    "{0F73F7DCD0E71BD9}Assets/Vegetation/Tree/Betula_Pendula/t_betula_pendula_2f.xob"
+            ))
+            .build();
+
+    @NonNull
+    public static final RegisteredListConfigurationValueDescriptor<String> CLUSTERING_MILITARY_RESOURCES_LIST = RegisteredListConfigurationValueDescriptor.<String>builder()
+            .namespace("map.clustering.resources")
+            .name("military")
+            .typeHint(ConfigurationType.STRING)
+            .listValue(List.of(
+            ))
+            .build();
+
+    @NonNull
     private final DefaultConfigurationDatabaseInitializer defaultConfigurationDatabaseInitializer;
 
     @PostConstruct
@@ -630,7 +652,9 @@ public class ConfigurationDescriptorProvider implements DefaultConfigurationProv
         return List.of(
                 ConfigurationDescriptorProvider.EPSILON_MAXIMUM_RADIUS_OF_THE_NEIGHBORHOOD,
                 ConfigurationDescriptorProvider.MINIMUM_NUMBER_OF_POINTS_NEEDED_FOR_CLUSTER,
-                ConfigurationDescriptorProvider.CLUSTERING_VILLAGE_RESOURCES_LIST
+                ConfigurationDescriptorProvider.CLUSTERING_VILLAGE_RESOURCES_LIST,
+                ConfigurationDescriptorProvider.CLUSTERING_FOREST_RESOURCES_LIST,
+                ConfigurationDescriptorProvider.CLUSTERING_MILITARY_RESOURCES_LIST
         );
     }
 

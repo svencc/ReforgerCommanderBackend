@@ -3,9 +3,9 @@ package com.recom.api.map;
 import com.recom.api.commons.HttpCommons;
 import com.recom.dto.map.cluster.ClusterListDto;
 import com.recom.dto.map.cluster.MapClusterRequestDto;
-import com.recom.service.ReforgerPayloadParserService;
 import com.recom.service.AssertionService;
-import com.recom.service.map.MapMetaDataService;
+import com.recom.service.ReforgerPayloadParserService;
+import com.recom.service.configuration.ConfigurationDescriptorProvider;
 import com.recom.service.map.cluster.ClusteringService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -20,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -73,7 +74,14 @@ public class ClustersController {
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
                 .body(ClusterListDto.builder()
-                        .clusterList(clusteringService.generateClusters(clusterRequestDto.getMapName()))
+                        .clusterList(clusteringService.generateClusters(
+                                clusterRequestDto.getMapName(),
+                                List.of(
+                                        ConfigurationDescriptorProvider.CLUSTERING_VILLAGE_RESOURCES_LIST,
+                                        ConfigurationDescriptorProvider.CLUSTERING_FOREST_RESOURCES_LIST,
+                                        ConfigurationDescriptorProvider.CLUSTERING_MILITARY_RESOURCES_LIST
+                                )
+                        ))
                         .build()
                 );
     }

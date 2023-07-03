@@ -60,7 +60,7 @@ public class ConfigurationMapToolsService {
                 .distinct()
                 .forEach(entityMatcher -> {
                     final List<String> matchedEntities = mapMetaDataService.provideMapMeta(mapName).getUtilizedResources().stream()
-                            .filter(utilizedClass -> utilizedClass.matches(entityMatcher))
+                            .filter(utilizedClass -> utilizedClass.toLowerCase().matches(entityMatcher.toLowerCase()))
                             .toList();
 
                     resourcesToAdd.addAll(matchedEntities);
@@ -130,7 +130,7 @@ public class ConfigurationMapToolsService {
                 .distinct()
                 .forEach(entityMatcher -> {
                     final List<String> matchedEntities = mapMetaDataService.provideMapMeta(mapName).getUtilizedResources().stream()
-                            .filter(utilizedClass -> utilizedClass.matches(entityMatcher))
+                            .filter(utilizedClass -> utilizedClass.toLowerCase().matches(entityMatcher.toLowerCase()))
                             .toList();
 
                     resourcesToRemove.addAll(matchedEntities);
