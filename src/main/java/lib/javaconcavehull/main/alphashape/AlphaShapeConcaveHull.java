@@ -33,9 +33,9 @@ public class AlphaShapeConcaveHull {
 
     // Compute the convex hull using QuickHull
     private static List<Point> computeConvexHull(List<Point> points) {
-        // TODO -> constructor initialization... now everything is static; change that!
-        final MonotoneChain concaveHullGenerator = new MonotoneChain();
-        return toPolygon(concaveHullGenerator.findHullVertices(toVector2DList(points)));
+        return QuickHull.quickHull(points);
+//        final MonotoneChain concaveHullGenerator = new MonotoneChain();
+//        return toPolygon(concaveHullGenerator.findHullVertices(toVector2DList(points)));
     }
 
     // Check if an edge of the convex hull is valid based on alpha value

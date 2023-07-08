@@ -17,17 +17,19 @@ import java.util.List;
 public class ConfigurationDescriptorProvider implements DefaultConfigurationProvidable {
 
     @NonNull
-    public static final RegisteredDoubleConfigurationValueDescriptor EPSILON_MAXIMUM_RADIUS_OF_THE_NEIGHBORHOOD = RegisteredDoubleConfigurationValueDescriptor.builder()
-            .namespace("map.clustering.dbscan")
+    public static final RegisteredDoubleConfigurationValueDescriptor CLUSTERING_VILLAGE_EPSILON_MAXIMUM_RADIUS_OF_THE_NEIGHBORHOOD = RegisteredDoubleConfigurationValueDescriptor.builder()
+            .namespace("map.clustering.dbscan.village")
             .name("epsilonMaximumRadiusOfTheNeighborhood")
             .defaultValue("200")
             .build();
+
     @NonNull
-    public static final RegisteredIntegerConfigurationValueDescriptor MINIMUM_NUMBER_OF_POINTS_NEEDED_FOR_CLUSTER = RegisteredIntegerConfigurationValueDescriptor.builder()
-            .namespace("map.clustering.dbscan")
+    public static final RegisteredIntegerConfigurationValueDescriptor CLUSTERING_VILLAGE_MINIMUM_POINTS = RegisteredIntegerConfigurationValueDescriptor.builder()
+            .namespace("map.clustering.dbscan.village")
             .name("minimumNumberOfPointsNeededForCluster")
-            .defaultValue("100")
+            .defaultValue("20")
             .build();
+
     @NonNull
     public static final RegisteredListConfigurationValueDescriptor<String> CLUSTERING_VILLAGE_RESOURCES_LIST = RegisteredListConfigurationValueDescriptor.<String>builder()
             .namespace("map.clustering.resources")
@@ -618,6 +620,20 @@ public class ConfigurationDescriptorProvider implements DefaultConfigurationProv
             .build();
 
     @NonNull
+    public static final RegisteredDoubleConfigurationValueDescriptor CLUSTERING_FOREST_EPSILON_MAXIMUM_RADIUS_OF_THE_NEIGHBORHOOD = RegisteredDoubleConfigurationValueDescriptor.builder()
+            .namespace("map.clustering.dbscan.forest")
+            .name("epsilonMaximumRadiusOfTheNeighborhood")
+            .defaultValue("200")
+            .build();
+
+    @NonNull
+    public static final RegisteredIntegerConfigurationValueDescriptor CLUSTERING_FOREST_MINIMUM_POINTS = RegisteredIntegerConfigurationValueDescriptor.builder()
+            .namespace("map.clustering.dbscan.forest")
+            .name("minimumNumberOfPointsNeededForCluster")
+            .defaultValue("20")
+            .build();
+
+    @NonNull
     public static final RegisteredListConfigurationValueDescriptor<String> CLUSTERING_FOREST_RESOURCES_LIST = RegisteredListConfigurationValueDescriptor.<String>builder()
             .namespace("map.clustering.resources")
             .name("forest")
@@ -630,12 +646,28 @@ public class ConfigurationDescriptorProvider implements DefaultConfigurationProv
             ))
             .build();
 
+
+    @NonNull
+    public static final RegisteredDoubleConfigurationValueDescriptor CLUSTERING_MILITARY_EPSILON_MAXIMUM_RADIUS_OF_THE_NEIGHBORHOOD = RegisteredDoubleConfigurationValueDescriptor.builder()
+            .namespace("map.clustering.dbscan.military")
+            .name("epsilonMaximumRadiusOfTheNeighborhood")
+            .defaultValue("200")
+            .build();
+
+    @NonNull
+    public static final RegisteredIntegerConfigurationValueDescriptor CLUSTERING_MILITARY_MINIMUM_POINTS = RegisteredIntegerConfigurationValueDescriptor.builder()
+            .namespace("map.clustering.dbscan.military")
+            .name("minimumNumberOfPointsNeededForCluster")
+            .defaultValue("20")
+            .build();
+
     @NonNull
     public static final RegisteredListConfigurationValueDescriptor<String> CLUSTERING_MILITARY_RESOURCES_LIST = RegisteredListConfigurationValueDescriptor.<String>builder()
             .namespace("map.clustering.resources")
             .name("military")
             .typeHint(ConfigurationType.STRING)
             .listValue(List.of(
+
             ))
             .build();
 
@@ -650,10 +682,16 @@ public class ConfigurationDescriptorProvider implements DefaultConfigurationProv
     @Override
     public @NonNull List<BaseRegisteredConfigurationValueDescribable> provideDefaultConfigurationValues() {
         return List.of(
-                ConfigurationDescriptorProvider.EPSILON_MAXIMUM_RADIUS_OF_THE_NEIGHBORHOOD,
-                ConfigurationDescriptorProvider.MINIMUM_NUMBER_OF_POINTS_NEEDED_FOR_CLUSTER,
+                ConfigurationDescriptorProvider.CLUSTERING_VILLAGE_EPSILON_MAXIMUM_RADIUS_OF_THE_NEIGHBORHOOD,
+                ConfigurationDescriptorProvider.CLUSTERING_VILLAGE_MINIMUM_POINTS,
                 ConfigurationDescriptorProvider.CLUSTERING_VILLAGE_RESOURCES_LIST,
+
+                ConfigurationDescriptorProvider.CLUSTERING_FOREST_EPSILON_MAXIMUM_RADIUS_OF_THE_NEIGHBORHOOD,
+                ConfigurationDescriptorProvider.CLUSTERING_FOREST_MINIMUM_POINTS,
                 ConfigurationDescriptorProvider.CLUSTERING_FOREST_RESOURCES_LIST,
+
+                ConfigurationDescriptorProvider.CLUSTERING_MILITARY_EPSILON_MAXIMUM_RADIUS_OF_THE_NEIGHBORHOOD,
+                ConfigurationDescriptorProvider.CLUSTERING_MILITARY_MINIMUM_POINTS,
                 ConfigurationDescriptorProvider.CLUSTERING_MILITARY_RESOURCES_LIST
         );
     }

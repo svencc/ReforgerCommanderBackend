@@ -3,6 +3,7 @@ package com.recom.api.map;
 import com.recom.api.commons.HttpCommons;
 import com.recom.dto.map.cluster.ClusterListDto;
 import com.recom.dto.map.cluster.MapClusterRequestDto;
+import com.recom.model.map.ClusterConfiguration;
 import com.recom.service.AssertionService;
 import com.recom.service.ReforgerPayloadParserService;
 import com.recom.service.configuration.ConfigurationDescriptorProvider;
@@ -77,9 +78,23 @@ public class ClustersController {
                         .clusterList(clusteringService.generateClusters(
                                 clusterRequestDto.getMapName(),
                                 List.of(
-                                        ConfigurationDescriptorProvider.CLUSTERING_VILLAGE_RESOURCES_LIST,
-                                        ConfigurationDescriptorProvider.CLUSTERING_FOREST_RESOURCES_LIST,
-                                        ConfigurationDescriptorProvider.CLUSTERING_MILITARY_RESOURCES_LIST
+                                        ClusterConfiguration.builder()
+                                                .clusteringResourcesListDescriptor(ConfigurationDescriptorProvider.CLUSTERING_VILLAGE_RESOURCES_LIST)
+                                                .dbscanClusteringEpsilonMaximumRadiusOfTheNeighborhoodDescriptor(ConfigurationDescriptorProvider.CLUSTERING_VILLAGE_EPSILON_MAXIMUM_RADIUS_OF_THE_NEIGHBORHOOD)
+                                                .dbscanClusteringVillageMinimumPointsDescriptor(ConfigurationDescriptorProvider.CLUSTERING_VILLAGE_MINIMUM_POINTS)
+                                                .build(),
+
+//                                        ClusterConfiguration.builder()
+//                                                .clusteringResourcesListDescriptor(ConfigurationDescriptorProvider.CLUSTERING_FOREST_RESOURCES_LIST)
+//                                                .dbscanClusteringEpsilonMaximumRadiusOfTheNeighborhoodDescriptor(ConfigurationDescriptorProvider.CLUSTERING_FOREST_EPSILON_MAXIMUM_RADIUS_OF_THE_NEIGHBORHOOD)
+//                                                .dbscanClusteringVillageMinimumPointsDescriptor(ConfigurationDescriptorProvider.CLUSTERING_FOREST_MINIMUM_POINTS)
+//                                                .build(),
+
+                                        ClusterConfiguration.builder()
+                                                .clusteringResourcesListDescriptor(ConfigurationDescriptorProvider.CLUSTERING_MILITARY_RESOURCES_LIST)
+                                                .dbscanClusteringEpsilonMaximumRadiusOfTheNeighborhoodDescriptor(ConfigurationDescriptorProvider.CLUSTERING_MILITARY_EPSILON_MAXIMUM_RADIUS_OF_THE_NEIGHBORHOOD)
+                                                .dbscanClusteringVillageMinimumPointsDescriptor(ConfigurationDescriptorProvider.CLUSTERING_MILITARY_MINIMUM_POINTS)
+                                                .build()
                                 )
                         ))
                         .build()
