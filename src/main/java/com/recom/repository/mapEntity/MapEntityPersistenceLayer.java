@@ -80,4 +80,31 @@ public class MapEntityPersistenceLayer {
         return mapEntityRepository.projectMapMetaTypesByMapName(mapName);
     }
 
+    @NonNull
+    @Cacheable(cacheNames = "MapEntityPersistenceLayer.findAllByMapNameAndPrefabNameIn")
+    public List<MapEntity> findAllByPrefabIn(
+            @NonNull final String mapName,
+            @NonNull final List<String> prefabNames
+    ) {
+        return mapEntityRepository.findAllByMapNameAndPrefabNameIn(mapName, prefabNames);
+    }
+
+    @NonNull
+    @Cacheable(cacheNames = "MapEntityPersistenceLayer.findAllByClassIn")
+    public List<MapEntity> findAllByClassIn(
+            @NonNull final String mapName,
+            @NonNull final List<String> classNames
+    ) {
+        return mapEntityRepository.findAllByMapNameAndClassNameIn(mapName, classNames);
+    }
+
+    @NonNull
+    @Cacheable(cacheNames = "MapEntityPersistenceLayer.findAllByMapDescriptorTypeIn")
+    public List<MapEntity> findAllByMapDescriptorTypeIn(
+            @NonNull final String mapName,
+            @NonNull final List<String> descriptorTypes
+    ) {
+        return mapEntityRepository.findAllByMapNameAndMapDescriptorTypeIn(mapName, descriptorTypes);
+    }
+
 }

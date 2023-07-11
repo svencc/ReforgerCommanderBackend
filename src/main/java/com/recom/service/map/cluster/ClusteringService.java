@@ -149,7 +149,7 @@ public class ClusteringService {
 
     @NonNull
     private List<Point2DDto> reduce(@NonNull final List<Point2DDto> vertices) {
-        final double roundingFactor = 50; // Abrunden auf 10 Meter
+        final double roundingFactor = 10; // Abrunden auf 10 Meter
 
         return vertices.stream()
                 .peek((final Point2DDto point2D) -> {

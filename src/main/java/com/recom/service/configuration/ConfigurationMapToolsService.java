@@ -1,9 +1,11 @@
 package com.recom.service.configuration;
 
 import com.recom.entity.Configuration;
+import com.recom.entity.MapEntity;
 import com.recom.event.event.async.cache.CacheResetAsyncEvent;
 import com.recom.model.configuration.descriptor.RegisteredListConfigurationValueDescriptor;
 import com.recom.repository.configuration.ConfigurationPersistenceLayer;
+import com.recom.repository.mapEntity.MapEntityPersistenceLayer;
 import com.recom.service.map.MapMetaDataService;
 import com.recom.service.provider.StaticObjectMapperProvider;
 import lombok.NonNull;
@@ -32,6 +34,8 @@ public class ConfigurationMapToolsService {
     private final ApplicationEventPublisher applicationEventPublisher;
     @NonNull
     private final ConfigurationPersistenceLayer configurationPersistenceLayer;
+    @NonNull
+    private final MapEntityPersistenceLayer mapEntityPersistenceLayer;
 
     @NonNull
     @Transactional(readOnly = false)
@@ -56,26 +60,51 @@ public class ConfigurationMapToolsService {
             @NonNull final RegisteredListConfigurationValueDescriptor<String> configurationValueDescriptor
     ) {
         final Set<String> resourcesToAdd = new HashSet<>();
+
         addResourcesMatcherList.stream()
                 .distinct()
                 .forEach(entityMatcher -> {
-                    final List<String> matchedEntities = mapMetaDataService.provideMapMeta(mapName).getUtilizedResources().stream()
-                            .filter(utilizedClass -> utilizedClass.toLowerCase().matches(entityMatcher.toLowerCase()))
+                    final List<String> matchedResources = mapMetaDataService.provideMapMeta(mapName).getUtilizedResources().stream()
+                            .filter(utilizedResource -> utilizedResource.toLowerCase().matches(entityMatcher.toLowerCase()))
                             .toList();
+                    resourcesToAdd.addAll(matchedResources);
 
-                    resourcesToAdd.addAll(matchedEntities);
+                    final List<String> matchedPrefabs = mapMetaDataService.provideMapMeta(mapName).getUtilizedPrefabs().stream()
+                            .filter(utilizedPrefab -> utilizedPrefab.toLowerCase().matches(entityMatcher.toLowerCase()))
+                            .toList();
+                    final List<String> matchedResourcesByPrefabs = mapEntityPersistenceLayer.findAllByPrefabIn(mapName, matchedPrefabs).stream()
+                            .map(MapEntity::getResourceName)
+                            .toList();
+                    resourcesToAdd.addAll(matchedResourcesByPrefabs);
+
+                    final List<String> matchedClasses = mapMetaDataService.provideMapMeta(mapName).getUtilizedClasses().stream()
+                            .filter(utilizedPrefab -> utilizedPrefab.toLowerCase().matches(entityMatcher.toLowerCase()))
+                            .toList();
+                    final List<String> matchedResourcesByClasses = mapEntityPersistenceLayer.findAllByClassIn(mapName, matchedClasses).stream()
+                            .map(MapEntity::getResourceName)
+                            .toList();
+                    resourcesToAdd.addAll(matchedResourcesByClasses);
+
+                    final List<String> matchedMapDescriptorTypes = mapMetaDataService.provideMapMeta(mapName).getUtilizedClasses().stream()
+                            .filter(utilizedPrefab -> utilizedPrefab.toLowerCase().matches(entityMatcher.toLowerCase()))
+                            .toList();
+                    final List<String> matchedResourcesByMapDescriptorTypes = mapEntityPersistenceLayer.findAllByMapDescriptorTypeIn(mapName, matchedMapDescriptorTypes).stream()
+                            .map(MapEntity::getResourceName)
+                            .toList();
+                    resourcesToAdd.addAll(matchedResourcesByMapDescriptorTypes);
                 });
 
         final List<String> existingClusterResources = configurationValueProvider.queryValue(mapName, configurationValueDescriptor);
 
         List<String> mergedResourceList = new ArrayList<>(existingClusterResources);
-        mergedResourceList.addAll(resourcesToAdd);
+        mergedResourceList.addAll(resourcesToAdd.stream().filter(Objects::nonNull).toList());
         mergedResourceList = mergedResourceList.stream()
+                .filter(Objects::nonNull)
                 .distinct()
                 .sorted()
                 .collect(Collectors.toList());
 
-        return new AddResourcesTuple(resourcesToAdd, mergedResourceList);
+        return new AddResourcesTuple(resourcesToAdd.stream().filter(Objects::nonNull).collect(Collectors.toSet()), mergedResourceList);
     }
 
     @SneakyThrows

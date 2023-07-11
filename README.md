@@ -22,6 +22,8 @@ application-local.properties is preconfigured to work with the provided docker-m
 ## TODO
 
 
+* mutex service to save EPs-regenerating cache data -> 204 NO CONTENT; 503 SERVICE UNAVAILABLE
+*
 * DB-based Configuration System
     * Control Map Rendering (color, points) -> new config values
     * caching of config values (especially json-list values)

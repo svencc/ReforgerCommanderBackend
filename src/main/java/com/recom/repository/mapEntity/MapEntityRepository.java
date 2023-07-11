@@ -84,4 +84,16 @@ interface MapEntityRepository extends JpaRepository<MapEntity, Long> {
             @NonNull final List<String> className
     );
 
+    @NonNull
+    List<MapEntity> findAllByMapNameAndPrefabNameIn(
+            @NonNull final String mapName,
+            @NonNull final List<String> prefabNames
+    );
+
+    @NonNull
+    List<MapEntity> findAllByMapNameAndClassNameIn(
+            @NonNull final String mapName,
+            @NonNull final List<String>  classNames
+    );
+
 }

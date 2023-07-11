@@ -1,7 +1,6 @@
 package com.recom.event;
 
 import com.recom.entity.MapEntity;
-import com.recom.event.event.async.cache.CacheResetAsyncEvent;
 import com.recom.event.event.async.map.AddMapPackageAsyncEvent;
 import com.recom.event.event.async.map.CommitMapTransactionAsyncEvent;
 import com.recom.event.event.async.map.OpenMapTransactionAsyncEvent;
@@ -18,10 +17,12 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /*
@@ -32,6 +33,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MapEntityScannerTransactionEventListener extends BaseEventListener {
 
+    @NonNull
+    private final TransactionTemplate transactionTemplate;
     @NonNull
     private final ApplicationEventPublisher applicationEventPublisher;
     @NonNull
@@ -75,8 +78,10 @@ public class MapEntityScannerTransactionEventListener extends BaseEventListener 
         if (transactions.containsKey(sessionIdentifier)) {
             final MapTransaction existingTransaction = transactions.get(sessionIdentifier);
             existingTransaction.getPackages().add(event.getTransactionalEntityPackageDto());
-            log.debug("Added map entitiy package to transaction named {}!", sessionIdentifier);
+            log.debug("Added map entity package to transaction named {}!", sessionIdentifier);
 
+            // EDGE CASE: If transaction is already committed, process it immediately
+            // Try to process already committed transaction, in case that transaction-commit-message took over a data package!
             if (existingTransaction.isCommitted()) {
                 log.debug("Try to process transaction {}, in case that transaction-commit-message took over a data package!", sessionIdentifier);
                 boolean isProcessed = processTransaction(sessionIdentifier);
@@ -103,11 +108,15 @@ public class MapEntityScannerTransactionEventListener extends BaseEventListener 
                         .peek(mapEntity -> mapEntity.setMapName(sessionIdentifier))
                         .collect(Collectors.toList());
 
-                mapEntityPersistenceLayer.deleteMapEntities(sessionIdentifier);
-                mapEntityPersistenceLayer.saveAll(distinctEntities);
-                log.info("Transaction named {} persisted!", sessionIdentifier);
+                final Boolean transactionExecuted = transactionTemplate.execute(status -> {
+                    mapEntityPersistenceLayer.deleteMapEntities(sessionIdentifier);
+                    mapEntityPersistenceLayer.saveAll(distinctEntities);
+                    log.info("Transaction named {} persisted!", sessionIdentifier);
 
-                return true;
+                    return true;
+                });
+
+                return Optional.ofNullable(transactionExecuted).orElse(false);
             }
         }
 
