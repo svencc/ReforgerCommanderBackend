@@ -18,6 +18,7 @@ application-local.properties is preconfigured to work with the provided docker-m
 
 - https://github.com/svencc/ReforgerCommanderClient
 - https://github.com/svencc/ReforgerCommanderBackend
+- Discord: https://discord.com/channels/1112324350868193350/1113566684142379099
 
 ## TODO
 
