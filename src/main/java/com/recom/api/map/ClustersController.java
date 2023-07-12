@@ -1,12 +1,12 @@
 package com.recom.api.map;
 
 import com.recom.api.commons.HttpCommons;
+import com.recom.dto.map.cluster.ClusterDto;
 import com.recom.dto.map.cluster.ClusterListDto;
 import com.recom.dto.map.cluster.MapClusterRequestDto;
-import com.recom.model.map.ClusterConfiguration;
 import com.recom.service.AssertionService;
+import com.recom.service.MutexService;
 import com.recom.service.ReforgerPayloadParserService;
-import com.recom.service.configuration.ConfigurationDescriptorProvider;
 import com.recom.service.map.cluster.ClusteringService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -15,6 +15,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,6 +25,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @RestController
@@ -37,6 +42,10 @@ public class ClustersController {
     private final ClusteringService clusteringService;
     @NonNull
     private final ReforgerPayloadParserService payloadParser;
+    @NonNull
+    private final MutexService mutexService;
+    @NonNull
+    private final CacheManager cacheManager;
 
 
     @Operation(
@@ -72,33 +81,59 @@ public class ClustersController {
 
         assertionService.assertMapExists(clusterRequestDto.getMapName());
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .cacheControl(CacheControl.noCache())
-                .body(ClusterListDto.builder()
-                        .clusterList(clusteringService.generateClusters(
-                                clusterRequestDto.getMapName(),
-                                List.of(
-                                        ClusterConfiguration.builder()
-                                                .clusteringResourcesListDescriptor(ConfigurationDescriptorProvider.CLUSTERING_VILLAGE_RESOURCES_LIST)
-                                                .dbscanClusteringEpsilonMaximumRadiusOfTheNeighborhoodDescriptor(ConfigurationDescriptorProvider.CLUSTERING_VILLAGE_EPSILON_MAXIMUM_RADIUS_OF_THE_NEIGHBORHOOD)
-                                                .dbscanClusteringVillageMinimumPointsDescriptor(ConfigurationDescriptorProvider.CLUSTERING_VILLAGE_MINIMUM_POINTS)
-                                                .build(),
+        final String cacheName = "MapEntityPersistenceLayer.generateClusters";
+        final String mutexFormat = "ClustersController.generateClustersJSON#%1s";
 
-//                                        ClusterConfiguration.builder()
-//                                                .clusteringResourcesListDescriptor(ConfigurationDescriptorProvider.CLUSTERING_FOREST_RESOURCES_LIST)
-//                                                .dbscanClusteringEpsilonMaximumRadiusOfTheNeighborhoodDescriptor(ConfigurationDescriptorProvider.CLUSTERING_FOREST_EPSILON_MAXIMUM_RADIUS_OF_THE_NEIGHBORHOOD)
-//                                                .dbscanClusteringVillageMinimumPointsDescriptor(ConfigurationDescriptorProvider.CLUSTERING_FOREST_MINIMUM_POINTS)
-//                                                .build(),
+        final Optional<List<ClusterDto>> cachedValue = Optional.ofNullable(cacheManager.getCache(cacheName))
+                .flatMap(cache -> {
+                    try {
+                        final Optional<Cache.ValueWrapper> valueWrapper = Optional.ofNullable(cache.get(clusterRequestDto.getMapName()));
+                        if (valueWrapper.isPresent()) {
+                            return Optional.ofNullable((List<ClusterDto>) valueWrapper.get().get());
+                        } else {
+                            return Optional.empty();
+                        }
+                    } catch (NoSuchElementException noSuchElementException) {
+                        return Optional.empty();
+                    } catch (Exception e) {
+                        log.error(e.getMessage(), e);
+                        return Optional.empty();
+                    }
+                });
 
-                                        ClusterConfiguration.builder()
-                                                .clusteringResourcesListDescriptor(ConfigurationDescriptorProvider.CLUSTERING_MILITARY_RESOURCES_LIST)
-                                                .dbscanClusteringEpsilonMaximumRadiusOfTheNeighborhoodDescriptor(ConfigurationDescriptorProvider.CLUSTERING_MILITARY_EPSILON_MAXIMUM_RADIUS_OF_THE_NEIGHBORHOOD)
-                                                .dbscanClusteringVillageMinimumPointsDescriptor(ConfigurationDescriptorProvider.CLUSTERING_MILITARY_MINIMUM_POINTS)
-                                                .build()
-                                )
-                        ))
-                        .build()
-                );
+        if (cachedValue.isPresent()) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .cacheControl(CacheControl.noCache())
+                    .body(ClusterListDto.builder().clusterList(cachedValue.get()).build());
+        } else {
+            boolean claimed = mutexService.claim(String.format(mutexFormat, clusterRequestDto.getMapName()));
+            if (claimed) {
+                log.info("Generating clusters for map {}.", clusterRequestDto.getMapName());
+
+                CompletableFuture.supplyAsync(() -> {
+                    try {
+                        final List<ClusterDto> clusterDtos = clusteringService.generateClusters(clusterRequestDto.getMapName());
+                        cacheManager.getCache(cacheName).put(clusterRequestDto.getMapName(), clusterDtos);
+                    } catch (Exception e) {
+                        log.error("Async-Exception", e);
+                    } finally {
+                        mutexService.release(String.format(mutexFormat, clusterRequestDto.getMapName()));
+                        log.info("Generated clusters for map {}.", clusterRequestDto.getMapName());
+                    }
+
+                    return "Result of the asynchronous computation";
+                });
+
+                return ResponseEntity.status(HttpStatus.ACCEPTED)
+                        .cacheControl(CacheControl.noCache())
+                        .build();
+            } else {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                        .cacheControl(CacheControl.noCache())
+                        .build();
+            }
+        }
     }
 
 }

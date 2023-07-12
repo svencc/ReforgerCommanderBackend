@@ -33,7 +33,7 @@ public class AsyncConfiguration implements AsyncConfigurer {
     // Additional Async Executor(s)
     @Bean("AsyncMapTransactionExecutor")
     @Qualifier(value = "AsyncMapTransactionExecutor")
-    public ThreadPoolTaskExecutor getAsyncMapExecutor() {
+    public ThreadPoolTaskExecutor getprovide() {
         final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(1);
         executor.setMaxPoolSize(1);
@@ -45,7 +45,7 @@ public class AsyncConfiguration implements AsyncConfigurer {
 
     @Bean("ConfigurationSystemExecutor")
     @Qualifier(value = "ConfigurationSystemExecutor")
-    public ThreadPoolTaskExecutor getAsyncConfigurationSystemExecutor() {
+    public ThreadPoolTaskExecutor provideAsyncConfigurationSystemExecutor() {
         final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(1);
         executor.setMaxPoolSize(1);
@@ -57,7 +57,7 @@ public class AsyncConfiguration implements AsyncConfigurer {
 
     @Bean("CacheResetExecutor")
     @Qualifier(value = "CacheResetExecutor")
-    public ThreadPoolTaskExecutor getCacheResetExecutorExecutor() {
+    public ThreadPoolTaskExecutor provideCacheResetExecutorExecutor() {
         final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(1);
         executor.setMaxPoolSize(1);

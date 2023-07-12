@@ -8,6 +8,8 @@ import com.recom.dto.map.scanner.MapEntityDto;
 import com.recom.mapper.MapEntityMapper;
 import com.recom.model.map.ClusterConfiguration;
 import com.recom.repository.mapEntity.MapEntityPersistenceLayer;
+import com.recom.service.MutexService;
+import com.recom.service.configuration.ConfigurationDescriptorProvider;
 import com.recom.service.configuration.ConfigurationValueProvider;
 import com.recom.util.JSNumberUtil;
 import jakarta.annotation.PostConstruct;
@@ -22,6 +24,7 @@ import org.apache.commons.math3.geometry.euclidean.twod.hull.MonotoneChain;
 import org.apache.commons.math3.ml.clustering.Cluster;
 import org.apache.commons.math3.ml.clustering.DBSCANClusterer;
 import org.apache.commons.math3.ml.clustering.DoublePoint;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +43,10 @@ public class ClusteringService {
     private final ConfigurationValueProvider configurationValueProvider;
     @NonNull
     private final MapEntityPersistenceLayer mapEntityPersistenceLayer;
+    @NonNull
+    private final CacheManager cacheManager;
+    @NonNull
+    private final MutexService mutexService;
 
     private MonotoneChain convexHullGenerator;
     private ConcaveHull concaveHullGenerator;
@@ -61,12 +68,28 @@ public class ClusteringService {
         concaveHullGenerator = new ConcaveHull();
     }
 
-    @NonNull
     @Cacheable(cacheNames = "MapEntityPersistenceLayer.generateClusters")
     public List<ClusterDto> generateClusters(
-            @NonNull final String mapName,
-            @NonNull final List<ClusterConfiguration> clusterConfigurations
+            @NonNull final String mapName
     ) {
+        final List<ClusterConfiguration> clusterConfigurations = List.of(
+                ClusterConfiguration.builder()
+                        .clusteringResourcesListDescriptor(ConfigurationDescriptorProvider.CLUSTERING_VILLAGE_RESOURCES_LIST)
+                        .dbscanClusteringEpsilonMaximumRadiusOfTheNeighborhoodDescriptor(ConfigurationDescriptorProvider.CLUSTERING_VILLAGE_EPSILON_MAXIMUM_RADIUS_OF_THE_NEIGHBORHOOD)
+                        .dbscanClusteringVillageMinimumPointsDescriptor(ConfigurationDescriptorProvider.CLUSTERING_VILLAGE_MINIMUM_POINTS)
+                        .build(),
+//                ClusterConfiguration.builder()
+//                        .clusteringResourcesListDescriptor(ConfigurationDescriptorProvider.CLUSTERING_FOREST_RESOURCES_LIST)
+//                        .dbscanClusteringEpsilonMaximumRadiusOfTheNeighborhoodDescriptor(ConfigurationDescriptorProvider.CLUSTERING_FOREST_EPSILON_MAXIMUM_RADIUS_OF_THE_NEIGHBORHOOD)
+//                        .dbscanClusteringVillageMinimumPointsDescriptor(ConfigurationDescriptorProvider.CLUSTERING_FOREST_MINIMUM_POINTS)
+//                        .build(),
+                ClusterConfiguration.builder()
+                        .clusteringResourcesListDescriptor(ConfigurationDescriptorProvider.CLUSTERING_MILITARY_RESOURCES_LIST)
+                        .dbscanClusteringEpsilonMaximumRadiusOfTheNeighborhoodDescriptor(ConfigurationDescriptorProvider.CLUSTERING_MILITARY_EPSILON_MAXIMUM_RADIUS_OF_THE_NEIGHBORHOOD)
+                        .dbscanClusteringVillageMinimumPointsDescriptor(ConfigurationDescriptorProvider.CLUSTERING_MILITARY_MINIMUM_POINTS)
+                        .build()
+        );
+
         return clusterConfigurations.stream()
                 .flatMap((final ClusterConfiguration configuration) -> {
                     final List<String> clusterResources = configurationValueProvider.queryValue(mapName, configuration.getClusteringResourcesListDescriptor());
@@ -114,23 +137,6 @@ public class ClusteringService {
     }
 
     @NonNull
-    private ConcaveHullDto provideConcaveHull(@NonNull final Cluster<DoublePoint> cluster) {
-        final List<Point> vectorList = toPointList(cluster);
-//        final List<Point> hullVertices = concaveHullGenerator.calculateConcaveHull(vectorList, (vectorList.size() - 2));
-//        final List<Point> hullVertices = concaveHullGenerator.calculateConcaveHull(vectorList, (vectorList.size() - 2));
-
-        final List<Point> hullVertices = AlphaShapeConcaveHull.computeConcaveHull(vectorList, 500);
-
-        final List<Point2DDto> vertices = toPolygon(hullVertices);
-        final List<Point2DDto> reducedVertices = reduce(vertices);
-
-        // @TODO: Set vertices empty if lower than 3 edges!
-        return ConcaveHullDto.builder()
-                .vertices(reducedVertices)
-                .build();
-    }
-
-    @NonNull
     private List<Vector2D> toVector2DList(@NonNull final Cluster<DoublePoint> cluster) {
         return cluster.getPoints().stream()
                 .map((final DoublePoint doublePoint) -> new Vector2D(doublePoint.getPoint()))
@@ -160,6 +166,23 @@ public class ClusteringService {
                 })
                 .distinct()
                 .toList();
+    }
+
+    @NonNull
+    private ConcaveHullDto provideConcaveHull(@NonNull final Cluster<DoublePoint> cluster) {
+        final List<Point> vectorList = toPointList(cluster);
+//        final List<Point> hullVertices = concaveHullGenerator.calculateConcaveHull(vectorList, (vectorList.size() - 2));
+//        final List<Point> hullVertices = concaveHullGenerator.calculateConcaveHull(vectorList, (vectorList.size() - 2));
+
+        final List<Point> hullVertices = AlphaShapeConcaveHull.computeConcaveHull(vectorList, 500);
+
+        final List<Point2DDto> vertices = toPolygon(hullVertices);
+        final List<Point2DDto> reducedVertices = reduce(vertices);
+
+        // @TODO: Set vertices empty if lower than 3 edges!
+        return ConcaveHullDto.builder()
+                .vertices(reducedVertices)
+                .build();
     }
 
     @NonNull
