@@ -26,7 +26,8 @@ echo "$DOCKER_DBCONTAINER_FILTER_STRING"
 if [[ $DOCKER_DBCONTAINER_FILTER_STRING == *"$MARIADB_CONTAINER_NAME"* ]]; then
   echo "Container $MARIADB_CONTAINER_NAME was found!"
   # start if exists
-  iex "docker start $MARIADB_CONTAINER_NAME"
+  echo "docker start $MARIADB_CONTAINER_NAME"
+  docker start "$MARIADB_CONTAINER_NAME"
   # wait until db is startet and initialized
   sleep 10
   # run mariadb-docker-local cli, connected to running
