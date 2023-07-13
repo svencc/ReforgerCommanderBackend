@@ -13,9 +13,11 @@ import java.util.Set;
 public class MutexService {
 
     @NonNull
+    private final Object lock = new Object();
+    @NonNull
     private final Set<String> semaphore = new HashSet<>();
 
-    @Synchronized
+    @Synchronized("lock")
     public boolean claim(@NonNull final String resource) {
         if (semaphore.contains(resource)) {
             log.warn(String.format("Cannot claim resource '%s1'", resource));
@@ -27,7 +29,7 @@ public class MutexService {
         }
     }
 
-    @Synchronized
+    @Synchronized("lock")
     public void release(@NonNull final String resource) {
         if (semaphore.contains(resource)) {
             log.info(String.format("Release resource '%s1'", resource));
