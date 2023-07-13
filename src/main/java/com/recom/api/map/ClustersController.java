@@ -114,7 +114,8 @@ public class ClustersController {
                 CompletableFuture.supplyAsync(() -> {
                     try {
                         final List<ClusterDto> clusterDtos = clusteringService.generateClusters(clusterRequestDto.getMapName());
-                        cacheManager.getCache(cacheName).put(clusterRequestDto.getMapName(), clusterDtos);
+                        // @ TODO: test this
+//                        cacheManager.getCache(cacheName).put(clusterRequestDto.getMapName(), clusterDtos);
                     } catch (Exception e) {
                         log.error("Async-Exception", e);
                     } finally {
