@@ -1,6 +1,7 @@
 package com.recom.api.map;
 
 import com.recom.api.commons.HttpCommons;
+import com.recom.config.AsyncConfiguration;
 import com.recom.dto.map.cluster.ClusterDto;
 import com.recom.dto.map.cluster.ClusterListDto;
 import com.recom.dto.map.cluster.MapClusterRequestDto;
@@ -17,10 +18,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,6 +49,8 @@ public class ClustersController {
     private final MutexService mutexService;
     @NonNull
     private final CacheManager cacheManager;
+    @NonNull
+    private final ApplicationContext applicationContext;
 
 
     @Operation(
@@ -111,6 +116,8 @@ public class ClustersController {
             if (claimed) {
                 log.info("Generating clusters for map {}.", clusterRequestDto.getMapName());
 
+                final ThreadPoolTaskExecutor clusterGeneratorExecutor = (ThreadPoolTaskExecutor) applicationContext.getBean(AsyncConfiguration.CLUSTER_GENERATOR_EXECUTOR_BEAN);
+
                 CompletableFuture.supplyAsync(() -> {
                     Optional<List<ClusterDto>> result = Optional.empty();
                     try {
@@ -123,7 +130,7 @@ public class ClustersController {
                     }
 
                     return result;
-                });
+                }, clusterGeneratorExecutor);
             }
 
             return ResponseEntity.status(HttpStatus.ACCEPTED)

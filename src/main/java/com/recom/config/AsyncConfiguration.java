@@ -67,4 +67,17 @@ public class AsyncConfiguration implements AsyncConfigurer {
         return executor;
     }
 
+    public static final String CLUSTER_GENERATOR_EXECUTOR_BEAN = "ClusterGeneratorExecutor";
+    @Bean(CLUSTER_GENERATOR_EXECUTOR_BEAN)
+    @Qualifier(value = CLUSTER_GENERATOR_EXECUTOR_BEAN)
+    public ThreadPoolTaskExecutor provideClusterGeneratorExecutor() {
+        final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(1);
+        executor.setMaxPoolSize(2);
+        executor.setThreadNamePrefix("ClusterGen-Exec");
+        executor.initialize();
+
+        return executor;
+    }
+
 }
