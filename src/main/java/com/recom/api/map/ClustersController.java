@@ -114,8 +114,6 @@ public class ClustersController {
                 CompletableFuture.supplyAsync(() -> {
                     try {
                         final List<ClusterDto> clusterDtos = clusteringService.generateClusters(clusterRequestDto.getMapName());
-                        // @ TODO: test this
-//                        cacheManager.getCache(cacheName).put(clusterRequestDto.getMapName(), clusterDtos);
                     } catch (Exception e) {
                         log.error("Async-Exception", e);
                     } finally {
@@ -130,7 +128,7 @@ public class ClustersController {
                         .cacheControl(CacheControl.noCache())
                         .build();
             } else {
-                return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                return ResponseEntity.status(HttpStatus.ACCEPTED)
                         .cacheControl(CacheControl.noCache())
                         .build();
             }
