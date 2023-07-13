@@ -22,7 +22,8 @@ application-local.properties is preconfigured to work with the provided docker-m
 
 ## TODO
 
-
+* remove resource EP should operate on configuration list values
+*
 * DB-based Configuration System
     * Control Map Rendering (color, points) -> new config values
     * caching of config values (especially json-list values)

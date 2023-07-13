@@ -56,6 +56,7 @@ public interface MapEntityMapper {
     }
 
     @BeanMapping(ignoreByDefault = true)
+    @Mapping(source = "entityId", target = "entityId")
     @Mapping(source = "name", target = "name", qualifiedByName = "blankStringToNull")
     @Mapping(source = "className", target = "className")
     @Mapping(source = "prefabName", target = "prefabName", qualifiedByName = "blankStringToNull")
@@ -68,6 +69,7 @@ public interface MapEntityMapper {
     MapEntity toEntity(final MapEntityDto mapEntityDto);
 
     @BeanMapping(ignoreByDefault = true)
+    @Mapping(source = "entityId", target = "entityId")
     @Mapping(source = "name", target = "name")
     @Mapping(source = "className", target = "className")
     @Mapping(source = "prefabName", target = "prefabName")

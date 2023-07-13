@@ -38,6 +38,10 @@ public class MapEntity implements Persistable<Long>, Serializable {
 
     @Nationalized
     @Column(insertable = true, updatable = false, nullable = true, length = 255)
+    private String entityId;
+
+    @Nationalized
+    @Column(insertable = true, updatable = false, nullable = true, length = 255)
     private String name;
 
     @Nationalized

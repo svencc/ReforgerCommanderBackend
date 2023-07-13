@@ -154,6 +154,7 @@ public class ConfigurationMapToolsService {
             @NonNull final List<String> removeResourcesMatcherList,
             @NonNull final RegisteredListConfigurationValueDescriptor<String> configurationValueDescriptor
     ) {
+
         final Set<String> resourcesToRemove = new HashSet<>();
         removeResourcesMatcherList.stream()
                 .distinct()
