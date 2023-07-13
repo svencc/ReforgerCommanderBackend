@@ -1,11 +1,11 @@
 package com.recom.api.map;
 
 import com.recom.api.commons.HttpCommons;
-import com.recom.config.AsyncConfiguration;
 import com.recom.dto.map.cluster.ClusterDto;
 import com.recom.dto.map.cluster.ClusterListDto;
 import com.recom.dto.map.cluster.MapClusterRequestDto;
 import com.recom.service.AssertionService;
+import com.recom.service.ExecutorProvider;
 import com.recom.service.MutexService;
 import com.recom.service.ReforgerPayloadParserService;
 import com.recom.service.map.cluster.ClusteringService;
@@ -18,12 +18,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -50,7 +48,7 @@ public class ClustersController {
     @NonNull
     private final CacheManager cacheManager;
     @NonNull
-    private final ApplicationContext applicationContext;
+    private final ExecutorProvider executorProvider;
 
 
     @Operation(
@@ -116,8 +114,6 @@ public class ClustersController {
             if (claimed) {
                 log.info("Generating clusters for map {}.", clusterRequestDto.getMapName());
 
-                final ThreadPoolTaskExecutor clusterGeneratorExecutor = (ThreadPoolTaskExecutor) applicationContext.getBean(AsyncConfiguration.CLUSTER_GENERATOR_EXECUTOR_BEAN);
-
                 CompletableFuture.supplyAsync(() -> {
                     Optional<List<ClusterDto>> result = Optional.empty();
                     try {
@@ -130,7 +126,7 @@ public class ClustersController {
                     }
 
                     return result;
-                }, clusterGeneratorExecutor);
+                }, executorProvider.provideClusterGeneratorExecutor());
             }
 
             return ResponseEntity.status(HttpStatus.ACCEPTED)
