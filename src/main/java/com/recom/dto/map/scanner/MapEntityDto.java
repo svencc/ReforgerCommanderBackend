@@ -21,10 +21,6 @@ public class MapEntityDto {
 
     @Schema
     @JsonProperty()
-    private String entityId;
-
-    @Schema
-    @JsonProperty()
     private String name;
 
     @Schema

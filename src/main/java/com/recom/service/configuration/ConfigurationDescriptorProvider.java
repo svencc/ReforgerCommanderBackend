@@ -20,7 +20,7 @@ public class ConfigurationDescriptorProvider implements DefaultConfigurationProv
     public static final RegisteredDoubleConfigurationValueDescriptor CLUSTERING_VILLAGE_EPSILON_MAXIMUM_RADIUS_OF_THE_NEIGHBORHOOD = RegisteredDoubleConfigurationValueDescriptor.builder()
             .namespace("map.clustering.dbscan.village")
             .name("epsilonMaximumRadiusOfTheNeighborhood")
-            .defaultValue("200")
+            .defaultValue("50")
             .build();
 
     @NonNull

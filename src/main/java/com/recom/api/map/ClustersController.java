@@ -22,6 +22,7 @@ import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -115,6 +116,9 @@ public class ClustersController {
                 log.info("Generating clusters for map {}.", clusterRequestDto.getMapName());
 
                 CompletableFuture.supplyAsync(() -> {
+                    final StopWatch stopwatch = new StopWatch();
+                    stopwatch.start();
+
                     Optional<List<ClusterDto>> result = Optional.empty();
                     try {
                         result = Optional.of(clusteringService.generateClusters(clusterRequestDto.getMapName()));
@@ -122,7 +126,8 @@ public class ClustersController {
                         log.error("Async-Exception", e);
                     } finally {
                         mutexService.release(String.format(mutexFormat, clusterRequestDto.getMapName()));
-                        log.info("Generated clusters for map {}.", clusterRequestDto.getMapName());
+                        stopwatch.stop();
+                        log.info("Generated clusters for map {} in {} ms.", clusterRequestDto.getMapName(), stopwatch.getTotalTimeMillis());
                     }
 
                     return result;
