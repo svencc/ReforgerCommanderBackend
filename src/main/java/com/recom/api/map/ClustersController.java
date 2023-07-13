@@ -112,8 +112,9 @@ public class ClustersController {
                 log.info("Generating clusters for map {}.", clusterRequestDto.getMapName());
 
                 CompletableFuture.supplyAsync(() -> {
+                    Optional<List<ClusterDto>> result = Optional.empty();
                     try {
-                        final List<ClusterDto> clusterDtos = clusteringService.generateClusters(clusterRequestDto.getMapName());
+                        result = Optional.of(clusteringService.generateClusters(clusterRequestDto.getMapName()));
                     } catch (Exception e) {
                         log.error("Async-Exception", e);
                     } finally {
@@ -121,17 +122,13 @@ public class ClustersController {
                         log.info("Generated clusters for map {}.", clusterRequestDto.getMapName());
                     }
 
-                    return "Result of the asynchronous computation";
+                    return result;
                 });
-
-                return ResponseEntity.status(HttpStatus.ACCEPTED)
-                        .cacheControl(CacheControl.noCache())
-                        .build();
-            } else {
-                return ResponseEntity.status(HttpStatus.ACCEPTED)
-                        .cacheControl(CacheControl.noCache())
-                        .build();
             }
+
+            return ResponseEntity.status(HttpStatus.ACCEPTED)
+                    .cacheControl(CacheControl.noCache())
+                    .build();
         }
     }
 
