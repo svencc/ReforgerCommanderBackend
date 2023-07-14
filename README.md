@@ -19,10 +19,11 @@ What works and what you can see in the example images:
 ![cluster-example-3.png](md-media%2Fcluster-example-3.png)
 
 To create more intelligence from map data the following features are planned:
-* Forest detection / Heatmap
-* Terrain Heightmap
+* Forest detection / forest heatmap
+* Terrain heightmap
 * Mil detection
 * Industrial detection
+* Qualification and prioritization of clusters / targets
 
 After having more intelligence from the map data, the work on the AI Commander will start.
 Planned is to harness the power of OpenAI to create a commander that make decisions and gives orders to his units.
