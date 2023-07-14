@@ -14,7 +14,7 @@ What works and what you can see in the example images:
 * Configuration System (DB based) 
     * Cluster Entity-Type Configuration
 
-![cluster-example-1.png](md-media%2Fcluster-example-1.png)![example1](md-media/![cluster-example-1.png](md-media%2Fcluster-example-1.png))
+![cluster-example-1.png](md-media%2Fcluster-example-1.png)
 ![cluster-example-2.png](md-media%2Fcluster-example-2.png)
 ![cluster-example-3.png](md-media%2Fcluster-example-3.png)
 
