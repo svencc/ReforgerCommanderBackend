@@ -9,7 +9,7 @@ To show some progress, here are some examples of the current state of the projec
 
 What works and what you can see in the example images:
 * Map Scanning and persisting to DB
-* basic Cluster Generation (Convex Hull)
+* basic Cluster Generation (Convex Hull) using ML k-means-nearest-neighbour DBSCAN algorithm
 * basic Cluster Rendering
 * Configuration System (DB based) 
     * Cluster Entity-Type Configuration
