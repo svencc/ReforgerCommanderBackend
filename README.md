@@ -46,8 +46,7 @@ application-local.properties is preconfigured to work with the provided docker-m
 
 ## TODO
 
-* remove resource EP should operate on configuration list values
-* persist map cluster to db (map_cluster table) with key map_name + input-parameters (hash)
+* delete-resource endpoint, should operate directly on configuration list values
 *
 * DB-based Configuration System
     * Control Map Rendering (color, points) -> new config values
@@ -64,6 +63,8 @@ application-local.properties is preconfigured to work with the provided docker-m
 * woods detection
 * mil detection
 * industrial detection
+*
+* improve dbcashed
 *
 * add communication loop between client and server to check if the current map is actually indexed or not; only execute
   map-scan-process if map is not indexed!
