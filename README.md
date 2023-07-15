@@ -63,8 +63,10 @@ application-local.properties is preconfigured to work with the provided docker-m
 * woods detection
 * mil detection
 * industrial detection
+* terrain heightmap
+* forest heatmap
 *
-* improve dbcashed
+* improve DBcached
 *
 * add communication loop between client and server to check if the current map is actually indexed or not; only execute
   map-scan-process if map is not indexed!
@@ -74,7 +76,6 @@ application-local.properties is preconfigured to work with the provided docker-m
 * move from POST-get http methods to real GET Methods. we only need to pass MapName (and eventual token name) so we can
   get rid of the POST-Request-DTOs
 *
-* Unit Tests!
 * Command Framework
 * add real JSON endpoints in addition to the necessary "consuming = MediaType.APPLICATION_FORM_URLENCODED_VALUE"
   Endpoints ...
