@@ -23,6 +23,7 @@ application-local.properties is preconfigured to work with the provided docker-m
 ## TODO
 
 * remove resource EP should operate on configuration list values
+* persist map cluster to db (map_cluster table) with key map_name + input-parameters (hash)
 *
 * DB-based Configuration System
     * Control Map Rendering (color, points) -> new config values

@@ -7,8 +7,8 @@ import com.recom.dto.map.cluster.ConvexHullDto;
 import com.recom.dto.map.scanner.MapEntityDto;
 import com.recom.mapper.MapEntityMapper;
 import com.recom.model.map.ClusterConfiguration;
+import com.recom.repository.dbcached.DBCachedPersistenceLayer;
 import com.recom.repository.mapEntity.MapEntityPersistenceLayer;
-import com.recom.service.MutexService;
 import com.recom.service.configuration.ConfigurationDescriptorProvider;
 import com.recom.service.configuration.ConfigurationValueProvider;
 import com.recom.util.JSNumberUtil;
@@ -24,14 +24,11 @@ import org.apache.commons.math3.geometry.euclidean.twod.hull.MonotoneChain;
 import org.apache.commons.math3.ml.clustering.Cluster;
 import org.apache.commons.math3.ml.clustering.DBSCANClusterer;
 import org.apache.commons.math3.ml.clustering.DoublePoint;
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -44,9 +41,7 @@ public class ClusteringService {
     @NonNull
     private final MapEntityPersistenceLayer mapEntityPersistenceLayer;
     @NonNull
-    private final CacheManager cacheManager;
-    @NonNull
-    private final MutexService mutexService;
+    private final DBCachedPersistenceLayer dbCachedPersistenceLayer;
 
     private MonotoneChain convexHullGenerator;
     private ConcaveHull concaveHullGenerator;
@@ -90,30 +85,39 @@ public class ClusteringService {
 //                        .build()
         );
 
-        return clusterConfigurations.stream()
-                .flatMap((final ClusterConfiguration configuration) -> {
-                    final List<String> clusterResources = configurationValueProvider.queryValue(mapName, configuration.getClusteringResourcesListDescriptor());
-                    final List<DoublePoint> resources = mapEntityPersistenceLayer.findAllByMapNameAndResourceNameIn(mapName, clusterResources).stream()
-                            .map(MapEntityMapper.INSTANCE::toDto)
-                            .map(MapEntityDto::getCoordinates)
-                            .filter(Objects::nonNull)
-                            .filter(vector -> vector.size() == 3)
-                            .map(this::vectorToPoint)
-                            .toList();
+        final Optional<ArrayList<ClusterDto>> serializedCluster = dbCachedPersistenceLayer.get("MapEntityPersistenceLayer.generateClusters", mapName);
+        if (serializedCluster.isPresent()) {
+            return serializedCluster.get();
+        } else {
+            final ArrayList<ClusterDto> generatedValue = clusterConfigurations.stream()
+                    .flatMap((final ClusterConfiguration configuration) -> {
+                        final List<String> clusterResources = configurationValueProvider.queryValue(mapName, configuration.getClusteringResourcesListDescriptor());
+                        final List<DoublePoint> resources = mapEntityPersistenceLayer.findAllByMapNameAndResourceNameIn(mapName, clusterResources).stream()
+                                .map(MapEntityMapper.INSTANCE::toDto)
+                                .map(MapEntityDto::getCoordinates)
+                                .filter(Objects::nonNull)
+                                .filter(vector -> vector.size() == 3)
+                                .map(this::vectorToPoint)
+                                .toList();
 
-                    final DBSCANClusterer<DoublePoint> dbscanClusterer = new DBSCANClusterer<>(
-                            configurationValueProvider.queryValue(mapName, configuration.getDbscanClusteringEpsilonMaximumRadiusOfTheNeighborhoodDescriptor()),
-                            configurationValueProvider.queryValue(mapName, configuration.getDbscanClusteringVillageMinimumPointsDescriptor())
-                    );
+                        final DBSCANClusterer<DoublePoint> dbscanClusterer = new DBSCANClusterer<>(
+                                configurationValueProvider.queryValue(mapName, configuration.getDbscanClusteringEpsilonMaximumRadiusOfTheNeighborhoodDescriptor()),
+                                configurationValueProvider.queryValue(mapName, configuration.getDbscanClusteringVillageMinimumPointsDescriptor())
+                        );
 
-                    return dbscanClusterer.cluster(resources).stream()
-                            .map((final Cluster<DoublePoint> cluster) -> ClusterDto.builder()
+                        return dbscanClusterer.cluster(resources).stream()
+                                .map((final Cluster<DoublePoint> cluster) -> ClusterDto.builder()
 //                                    .points(toPoint2DList(cluster))
-                                    .convexHull(provideConvexHull(cluster))
+                                        .convexHull(provideConvexHull(cluster))
 //                                    .concaveHull(provideConcaveHull(cluster))
-                                    .build());
-                })
-                .collect(Collectors.toList());
+                                        .build());
+                    })
+                    .collect(Collectors.toCollection(ArrayList::new));
+
+            dbCachedPersistenceLayer.put("MapEntityPersistenceLayer.generateClusters", mapName, generatedValue);
+
+            return generatedValue;
+        }
     }
 
     @NonNull
