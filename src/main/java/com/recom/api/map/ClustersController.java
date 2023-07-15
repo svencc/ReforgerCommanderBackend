@@ -31,6 +31,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -85,10 +86,7 @@ public class ClustersController {
 
         assertionService.assertMapExists(clusterRequestDto.getMapName());
 
-        final String cacheName = "MapEntityPersistenceLayer.generateClusters";
-        final String mutexFormat = "ClustersController.generateClustersJSON#%1s";
-
-        final Optional<List<ClusterDto>> cachedValue = Optional.ofNullable(cacheManager.getCache(cacheName))
+        final Optional<List<ClusterDto>> cachedValue = Optional.ofNullable(cacheManager.getCache(ClusteringService.MAPENTITYPERSISTENCELAYER_GENERATECLUSTERS_CACHE))
                 .flatMap(cache -> {
                     try {
                         final Optional<Cache.ValueWrapper> valueWrapper = Optional.ofNullable(cache.get(clusterRequestDto.getMapName()));
@@ -111,6 +109,8 @@ public class ClustersController {
                     .cacheControl(CacheControl.noCache())
                     .body(ClusterListDto.builder().clusterList(cachedValue.get()).build());
         } else {
+            final String mutexFormat = "ClustersController.generateClustersJSON#%1s";
+
             boolean claimed = mutexService.claim(String.format(mutexFormat, clusterRequestDto.getMapName()));
             if (claimed) {
                 log.info("Generating clusters for map {}.", clusterRequestDto.getMapName());

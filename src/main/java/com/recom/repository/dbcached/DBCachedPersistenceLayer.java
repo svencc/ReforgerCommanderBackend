@@ -34,12 +34,12 @@ public class DBCachedPersistenceLayer {
             @NonNull final DBCachedItem existingCacheItem,
             @NonNull final V value
     ) {
-        log.info("Updating existing cache item {} - {}", existingCacheItem.getCacheName(), existingCacheItem.getCacheKey());
+        log.info("Updating existing cache item {} - {}.", existingCacheItem.getCacheName(), existingCacheItem.getCacheKey());
         try (ByteArrayOutputStream byteArrayOutputStream = serializeObject(value)) {
             existingCacheItem.setCachedValue(byteArrayOutputStream.toByteArray());
             return existingCacheItem;
         } catch (Exception e) {
-            log.error("Error serializing cache value with key {}", existingCacheItem.getCacheKey(), e);
+            log.error("Error serializing cache value with key {}!", existingCacheItem.getCacheKey(), e);
             return null;
         }
     }
@@ -50,7 +50,7 @@ public class DBCachedPersistenceLayer {
             @NonNull final String cacheKey,
             @NonNull final V cachedValue
     ) {
-        log.info("Creating new cache item {} - {}", cacheName, cacheKey);
+        log.info("Creating new cache item {} - {}.", cacheName, cacheKey);
         try (ByteArrayOutputStream byteArrayOutputStream = serializeObject(cachedValue)) {
             return DBCachedItem.builder()
                     .cacheName(cacheName)
@@ -58,7 +58,7 @@ public class DBCachedPersistenceLayer {
                     .cachedValue(byteArrayOutputStream.toByteArray())
                     .build();
         } catch (Exception e) {
-            log.error("Error serializing cache value with key {}", cacheKey, e);
+            log.error("Error serializing cache value with key {}!", cacheKey, e);
             return null;
         }
     }
@@ -77,12 +77,12 @@ public class DBCachedPersistenceLayer {
             @NonNull final String cacheName,
             @NonNull final String cacheKey
     ) {
-        log.info("Lookup cache item {} - {}", cacheName, cacheKey);
+        log.info("Lookup cache item {} - {}.", cacheName, cacheKey);
         final Optional<DBCachedItem> byCacheNameAndCacheKey = databasePersistentCacheRepository.findByCacheNameAndCacheKey(cacheName, cacheKey);
 
         byCacheNameAndCacheKey.ifPresentOrElse(
-                (__) -> log.info("Found cache item {} - {}", cacheName, cacheKey),
-                () -> log.info("Cache item {} - {} not found", cacheName, cacheKey)
+                (__) -> log.info("Found cache item {} - {}.", cacheName, cacheKey),
+                () -> log.info("Cache item {} - {} not found.", cacheName, cacheKey)
         );
 
         return byCacheNameAndCacheKey.flatMap(cacheItem -> deserializeCacheValue(cacheKey, cacheItem.getCachedValue()));
@@ -96,7 +96,7 @@ public class DBCachedPersistenceLayer {
         try (ObjectInputStream inputStream = new ObjectInputStream(new ByteArrayInputStream(serializedValue))) {
             return Optional.ofNullable((V) inputStream.readObject());
         } catch (Exception e) {
-            log.error("Error deserializing cache value with key {}", cacheKey, e);
+            log.error("Error deserializing cache value with key {}!", cacheKey, e);
             return Optional.empty();
         }
     }

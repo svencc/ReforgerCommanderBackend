@@ -7,8 +7,8 @@ import com.recom.dto.map.cluster.ConvexHullDto;
 import com.recom.dto.map.scanner.MapEntityDto;
 import com.recom.mapper.MapEntityMapper;
 import com.recom.model.map.ClusterConfiguration;
-import com.recom.repository.dbcached.DBCachedPersistenceLayer;
 import com.recom.repository.mapEntity.MapEntityPersistenceLayer;
+import com.recom.service.DBCachedService;
 import com.recom.service.configuration.ConfigurationDescriptorProvider;
 import com.recom.service.configuration.ConfigurationValueProvider;
 import com.recom.util.JSNumberUtil;
@@ -28,7 +28,10 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -37,12 +40,14 @@ import java.util.stream.Collectors;
 public class ClusteringService {
 
     @NonNull
+    public static final String MAPENTITYPERSISTENCELAYER_GENERATECLUSTERS_CACHE = "MapEntityPersistenceLayer.generateClusters";
+
+    @NonNull
     private final ConfigurationValueProvider configurationValueProvider;
     @NonNull
     private final MapEntityPersistenceLayer mapEntityPersistenceLayer;
     @NonNull
-    private final DBCachedPersistenceLayer dbCachedPersistenceLayer;
-
+    private final DBCachedService dbCachedService;
     private MonotoneChain convexHullGenerator;
     private ConcaveHull concaveHullGenerator;
 
@@ -63,7 +68,7 @@ public class ClusteringService {
         concaveHullGenerator = new ConcaveHull();
     }
 
-    @Cacheable(cacheNames = "MapEntityPersistenceLayer.generateClusters")
+    @Cacheable(cacheNames = MAPENTITYPERSISTENCELAYER_GENERATECLUSTERS_CACHE)
     public List<ClusterDto> generateClusters(
             @NonNull final String mapName
     ) {
@@ -84,40 +89,34 @@ public class ClusteringService {
 //                        .dbscanClusteringVillageMinimumPointsDescriptor(ConfigurationDescriptorProvider.CLUSTERING_MILITARY_MINIMUM_POINTS)
 //                        .build()
         );
+        return dbCachedService.proxyThrough(
+                MAPENTITYPERSISTENCELAYER_GENERATECLUSTERS_CACHE,
+                mapName,
+                () -> clusterConfigurations.stream()
+                        .flatMap((final ClusterConfiguration configuration) -> {
+                            final List<String> clusterResources = configurationValueProvider.queryValue(mapName, configuration.getClusteringResourcesListDescriptor());
+                            final List<DoublePoint> resources = mapEntityPersistenceLayer.findAllByMapNameAndResourceNameIn(mapName, clusterResources).stream()
+                                    .map(MapEntityMapper.INSTANCE::toDto)
+                                    .map(MapEntityDto::getCoordinates)
+                                    .filter(Objects::nonNull)
+                                    .filter(vector -> vector.size() == 3)
+                                    .map(this::vectorToPoint)
+                                    .toList();
 
-        final Optional<ArrayList<ClusterDto>> serializedCluster = dbCachedPersistenceLayer.get("MapEntityPersistenceLayer.generateClusters", mapName);
-        if (serializedCluster.isPresent()) {
-            return serializedCluster.get();
-        } else {
-            final ArrayList<ClusterDto> generatedValue = clusterConfigurations.stream()
-                    .flatMap((final ClusterConfiguration configuration) -> {
-                        final List<String> clusterResources = configurationValueProvider.queryValue(mapName, configuration.getClusteringResourcesListDescriptor());
-                        final List<DoublePoint> resources = mapEntityPersistenceLayer.findAllByMapNameAndResourceNameIn(mapName, clusterResources).stream()
-                                .map(MapEntityMapper.INSTANCE::toDto)
-                                .map(MapEntityDto::getCoordinates)
-                                .filter(Objects::nonNull)
-                                .filter(vector -> vector.size() == 3)
-                                .map(this::vectorToPoint)
-                                .toList();
+                            final DBSCANClusterer<DoublePoint> dbscanClusterer = new DBSCANClusterer<>(
+                                    configurationValueProvider.queryValue(mapName, configuration.getDbscanClusteringEpsilonMaximumRadiusOfTheNeighborhoodDescriptor()),
+                                    configurationValueProvider.queryValue(mapName, configuration.getDbscanClusteringVillageMinimumPointsDescriptor())
+                            );
 
-                        final DBSCANClusterer<DoublePoint> dbscanClusterer = new DBSCANClusterer<>(
-                                configurationValueProvider.queryValue(mapName, configuration.getDbscanClusteringEpsilonMaximumRadiusOfTheNeighborhoodDescriptor()),
-                                configurationValueProvider.queryValue(mapName, configuration.getDbscanClusteringVillageMinimumPointsDescriptor())
-                        );
-
-                        return dbscanClusterer.cluster(resources).stream()
-                                .map((final Cluster<DoublePoint> cluster) -> ClusterDto.builder()
+                            return dbscanClusterer.cluster(resources).stream()
+                                    .map((final Cluster<DoublePoint> cluster) -> ClusterDto.builder()
 //                                    .points(toPoint2DList(cluster))
-                                        .convexHull(provideConvexHull(cluster))
+                                            .convexHull(provideConvexHull(cluster))
 //                                    .concaveHull(provideConcaveHull(cluster))
-                                        .build());
-                    })
-                    .collect(Collectors.toCollection(ArrayList::new));
-
-            dbCachedPersistenceLayer.put("MapEntityPersistenceLayer.generateClusters", mapName, generatedValue);
-
-            return generatedValue;
-        }
+                                            .build());
+                        })
+                        .collect(Collectors.toCollection(ArrayList::new))
+        );
     }
 
     @NonNull
