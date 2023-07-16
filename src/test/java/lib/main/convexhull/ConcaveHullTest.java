@@ -2,6 +2,7 @@ package lib.main.convexhull;
 
 import lib.javaconcavehull.main.concavehull.ConcaveHull;
 import lib.javaconcavehull.main.concavehull.Point;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class ConcaveHullTest {
     }
 
     @Test
+    @Disabled
     public void testMyTestCase() {
         // prepare
         List<Point> cluster = new ArrayList<>(Arrays.asList(

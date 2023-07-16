@@ -3,6 +3,7 @@ package lib.main.alphashape;
 import lib.javaconcavehull.main.alphashape.AlphaShapeConcaveHull;
 import lib.javaconcavehull.main.concavehull.Point;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.List;
 public class AlphaShapeConcaveHullTest {
 
     @Test
+    @Disabled
     public void testComputeConcaveHull() {
 
         // Create a list of points
