@@ -113,3 +113,4 @@ application-local.properties is preconfigured to work with the provided docker-m
 
 * ConcaveHull.java implements Point on its own; change to Point2D Implementation so we dont need to map this data
     * but first we have to test if we want to keep the ConcaveHull implementation
+
