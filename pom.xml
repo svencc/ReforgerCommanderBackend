@@ -24,6 +24,7 @@
         <org.ehcache.ehcache.version>3.10.8</org.ehcache.ehcache.version>
         <spring-boot-maven-plugin.version>3.11.0</spring-boot-maven-plugin.version>
         <jib.version>3.3.2</jib.version>
+        <snakeyaml.version>2.0</snakeyaml.version>
 
         <!-- JIB from source -->
         <docker.source.base-image.registry>svencc</docker.source.base-image.registry>
