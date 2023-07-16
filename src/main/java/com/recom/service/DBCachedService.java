@@ -19,7 +19,7 @@ public class DBCachedService {
 
 
     @NonNull
-    public <V extends Serializable> V proxyThrough(
+    public <V extends Serializable> V cacheProxyThrough(
             @NonNull final String cacheName,
             @NonNull final String cacheKey,
             @NonNull final Supplier<? extends V> supplier

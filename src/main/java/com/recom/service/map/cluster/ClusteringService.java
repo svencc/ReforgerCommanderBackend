@@ -89,7 +89,7 @@ public class ClusteringService {
 //                        .dbscanClusteringVillageMinimumPointsDescriptor(ConfigurationDescriptorProvider.CLUSTERING_MILITARY_MINIMUM_POINTS)
 //                        .build()
         );
-        return dbCachedService.proxyThrough(
+        return dbCachedService.cacheProxyThrough(
                 MAPENTITYPERSISTENCELAYER_GENERATECLUSTERS_CACHE,
                 mapName,
                 () -> clusterConfigurations.stream()
