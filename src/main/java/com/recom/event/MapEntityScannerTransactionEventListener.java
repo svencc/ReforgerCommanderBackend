@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class MapEntityScannerTransactionEventListener extends BaseEventListener {
+public class MapEntityScannerTransactionEventListener extends BaseRecomEventListener {
 
     @NonNull
     private final TransactionTemplate transactionTemplate;

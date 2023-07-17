@@ -19,15 +19,15 @@ public class DBCachedService {
 
 
     @NonNull
-    public <V extends Serializable> V cacheProxyThrough(
+    public <V extends Serializable> V proxyToDBCache(
             @NonNull final String cacheName,
             @NonNull final String cacheKey,
-            @NonNull final Supplier<? extends V> supplier
+            @NonNull final Supplier<? extends V> cacheLoader
     ) {
         return dbCachedPersistenceLayer.<V>get(cacheName, cacheKey)
                 .orElseGet(() -> {
                             log.info("Cache item {} - {} not found, executing supplier!", cacheName, cacheKey);
-                            final V value = supplier.get();
+                            final V value = cacheLoader.get();
                             dbCachedPersistenceLayer.put(cacheName, cacheKey, value);
                             return value;
                         }

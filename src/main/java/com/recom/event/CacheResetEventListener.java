@@ -16,7 +16,7 @@ import java.util.Optional;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class CacheResetEventListener extends BaseEventListener {
+public class CacheResetEventListener extends BaseRecomEventListener {
 
     @NonNull
     private final CacheManager cacheManager;
