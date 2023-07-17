@@ -2,41 +2,48 @@
 * delete-resource endpoint, should operate directly on configuration list values
 *
 * DB-based Configuration System
-    * Control Map Rendering (color, points) -> new config values
-    * caching of config values (especially json-list values)
-* rework cluster rendering to direct client polygon rendering; controlled by server?
+    * new RENDER format (no cluster format):
+        * goal: do not render clusters; render generic polygons and text with color and z-index!
+        * meta: amount of z-indexes 
+        * clusterList with type, name, color, z-index 
+        * map structure / associative array with z-index as key and clusterList as value
+    * new db config values for type-colors, z-indexes, etc.
+    * rework cluster rendering to direct client polygon rendering; controlled by server?
 *
+* try forest clustering again; will not work with convex hulls; we need to implement concave hulls!
 * forest heatmap rendering
 *
 * replace POST clustering call with GET call (affects client)
 *
 * map size is not necessarily square! -> fix scanner!
 * save map size to map data and add output to map meta data
+* rework scanner; now works with sphere -> we need to implement a cube scanner!
+    * get map height for setting the cube height 
 *
 * woods detection
-* mil detection
+* military detection
 * industrial detection
 * terrain heightmap
 * forest heatmap
 *
-* improve DBcached
+* improve DBcached:
+    * add cache reset endpoint
     * wrap around method via annotation
     * use BeanPostProcessor to wrap around methods
+    * add column for key->keyHash:indexed, cacheName->hash:indexed, dataType
+    * move to separate project / dependency
 *
-* add communication loop between client and server to check if the current map is actually indexed or not; only execute
-  map-scan-process if map is not indexed!
+* add communication loop between client and server to check if the current map is actually indexed or not; only execute map-scan-process if map is not indexed!
     * first time: only once at startup time
     * advanced: reindex also if index is suddenly deleted from server (work with http codes if you query for clusters)
-    *
 * move from POST-get http methods to real GET Methods. we only need to pass MapName (and eventual token name) so we can
   get rid of the POST-Request-DTOs
 *
 * Command Framework
-* add real JSON endpoints in addition to the necessary "consuming = MediaType.APPLICATION_FORM_URLENCODED_VALUE"
-  Endpoints ...
+* add real JSON endpoints in addition to the necessary "consuming = MediaType.APPLICATION_FORM_URLENCODED_VALUE" Endpoints ...
 * Transactions have to time out via scheduler after one hour
 *
-* normalize db/map entities tabble
+* normalize db/map entities table
 *
 * Use spring health actuator instead health controller ...
 *
@@ -56,7 +63,6 @@
 * Add Docker Compose
 * Transactional Controller Template?
 * map entity query/filter controller
-* settings READ/WRITE REST API
 * authentication / user-token acces and tenant-based-db-table-fields?
 * documentation / wiki
 * project page
