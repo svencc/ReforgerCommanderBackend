@@ -7,7 +7,7 @@
 </p>
 
 
-## Examples % Progress
+## Examples & Progress
 To show some progress, here are some examples of the current state of the project.
 
 What works and what you can see in the example images:
