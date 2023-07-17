@@ -2,7 +2,8 @@
 
 ## ARMA Reforger+ AI Commander Backend Project
 
-![Logo](md-media/logo.png)
+![RECOM.png](md-media%2FRECOM.png)
+
 
 ## Examples % Progress
 To show some progress, here are some examples of the current state of the project.
