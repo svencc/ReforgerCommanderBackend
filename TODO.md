@@ -1,5 +1,4 @@
 # TODO LIST
-* delete-resource endpoint, should operate directly on configuration list values
 * 
 * configuration endpoints rework: 
     * read/write model same; (allow copy, paste, modify)

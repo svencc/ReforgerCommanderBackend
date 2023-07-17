@@ -154,19 +154,18 @@ public class ConfigurationMapToolsService {
             @NonNull final List<String> removeResourcesMatcherList,
             @NonNull final RegisteredListConfigurationValueDescriptor<String> configurationValueDescriptor
     ) {
-
         final Set<String> resourcesToRemove = new HashSet<>();
+        final List<String> existingClusterResources = configurationValueProvider.queryValue(mapName, configurationValueDescriptor);
         removeResourcesMatcherList.stream()
                 .distinct()
                 .forEach(entityMatcher -> {
-                    final List<String> matchedEntities = mapMetaDataService.provideMapMeta(mapName).getUtilizedResources().stream()
+                    final List<String> matchedEntities = existingClusterResources.stream()
                             .filter(utilizedClass -> utilizedClass.toLowerCase().matches(entityMatcher.toLowerCase()))
                             .toList();
 
                     resourcesToRemove.addAll(matchedEntities);
                 });
 
-        final List<String> existingClusterResources = configurationValueProvider.queryValue(mapName, configurationValueDescriptor);
         existingClusterResources.removeIf(resourcesToRemove::contains);
 
         return new RemoveResourcesTuple(resourcesToRemove, existingClusterResources);
