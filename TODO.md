@@ -11,6 +11,7 @@
         * meta: amount of z-indexes 
         * clusterList with type, name, color, z-index 
         * map structure / associative array with z-index as key and clusterList as value
+        * cluster size / amount of points, weight the quality of an area; this should be reflected in color intensity! 
     * new db config values for type-colors, z-indexes, etc.
     * rework cluster rendering to direct client polygon rendering; controlled by server?
 *
