@@ -1,8 +1,9 @@
-package com.recom.dto.configuration.get;
+package com.recom.dto.configuration;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.recom.dto.configuration.OverridableConfigurationInterface;
 import com.recom.model.configuration.ConfigurationType;
 import com.recom.service.provider.StaticObjectMapperProvider;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,7 +21,7 @@ import java.util.List;
 @Schema
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class OverridableConfigurationDto implements Serializable {
+public class OverridableConfigurationDto implements Serializable, OverridableConfigurationInterface {
 
     @Schema
     @JsonProperty()
@@ -64,7 +65,8 @@ public class OverridableConfigurationDto implements Serializable {
     @SneakyThrows
     public List<String> getDefaultListValue() {
         if (type == ConfigurationType.LIST && defaultValue != null) {
-            return StaticObjectMapperProvider.provide().readValue(defaultValue, new TypeReference<List<String>>() {});
+            return StaticObjectMapperProvider.provide().readValue(defaultValue, new TypeReference<List<String>>() {
+            });
         } else {
             return null;
         }
@@ -83,7 +85,8 @@ public class OverridableConfigurationDto implements Serializable {
     @SneakyThrows
     public List<String> getMapOverriddenListValue() {
         if (type == ConfigurationType.LIST && mapOverriddenValue != null) {
-            return StaticObjectMapperProvider.provide().readValue(mapOverriddenValue, new TypeReference<List<String>>() {});
+            return StaticObjectMapperProvider.provide().readValue(mapOverriddenValue, new TypeReference<List<String>>() {
+            });
         } else {
             return null;
         }

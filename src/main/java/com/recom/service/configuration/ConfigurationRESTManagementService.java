@@ -1,8 +1,8 @@
 package com.recom.service.configuration;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.recom.dto.configuration.get.OverridableConfigurationDto;
-import com.recom.dto.configuration.post.OverrideConfigurationDto;
+import com.recom.dto.configuration.OverridableConfigurationDto;
+import com.recom.dto.configuration.OverrideConfigurationDto;
 import com.recom.entity.Configuration;
 import com.recom.mapper.ConfigurationMapper;
 import com.recom.model.configuration.ConfigurationType;
@@ -93,7 +93,7 @@ public class ConfigurationRESTManagementService {
 
         overrideList.forEach(override -> findConfigurationInIndexedMap(indexedDefaultConfigurationList, override.getNamespace(), override.getName())
                 .ifPresentOrElse(
-                        handleOverrideWithCorrespondingDefaultConfiguration(mapName, indexedExistingOverrideConfigurationList, configurationsToCreate, configurationsToUpdate, override),
+                        handleOverrideWithCorrespondingDefaultConfiguration(mapName, indexedExistingOverrideConfigurationList, configurationsToCreate, configurationsToUpdate, configurationsToDelete, override),
                         otherwiseTidyUpOldOverrideEntries(indexedExistingOverrideConfigurationList, configurationsToDelete, override)
                 ));
 
@@ -108,17 +108,23 @@ public class ConfigurationRESTManagementService {
             @NonNull final Map<String, Map<String, List<Configuration>>> indexedExistingOverrideConfigurationList,
             @NonNull final List<Configuration> configurationsToCreate,
             @NonNull final List<Configuration> configurationsToUpdate,
+            @NonNull final List<Configuration> configurationsToDelete,
             @NonNull final OverrideConfigurationDto override
     ) {
         return (final Configuration existingDefaultConfiguration) -> {
             findConfigurationInIndexedMap(indexedExistingOverrideConfigurationList, override.getNamespace(), override.getName()).ifPresentOrElse(
                     (final Configuration existingOverride) -> {
+                        if (override.getMapOverriddenValue() == null && override.getMapOverriddenListValue() == null) {
+                            configurationsToDelete.add(existingOverride);
+                            return;
+                        }
+
                         existingOverride.setType(override.getType());
-                        existingOverride.setValue(override.getMapOverrideValue());
+                        existingOverride.setValue(override.getMapOverriddenValue());
 
                         if (override.getType() == ConfigurationType.LIST) {
                             try {
-                                existingOverride.setValue(StaticObjectMapperProvider.provide().writeValueAsString(override.getMapOverrideListValue()));
+                                existingOverride.setValue(StaticObjectMapperProvider.provide().writeValueAsString(override.getMapOverriddenListValue()));
                             } catch (JsonProcessingException e) {
                                 throw new RuntimeException(e);
                             }
@@ -132,17 +138,22 @@ public class ConfigurationRESTManagementService {
                                 .namespace(override.getNamespace())
                                 .name(override.getName())
                                 .type(override.getType())
-                                .value(override.getMapOverrideValue());
+                                .value(override.getMapOverriddenValue());
 
                         if (override.getType() == ConfigurationType.LIST) {
                             try {
-                                configurationBuilder.value(StaticObjectMapperProvider.provide().writeValueAsString(override.getMapOverrideListValue()));
+                                configurationBuilder.value(StaticObjectMapperProvider.provide().writeValueAsString(override.getMapOverriddenListValue()));
                             } catch (JsonProcessingException e) {
                                 throw new RuntimeException(e);
                             }
                         }
 
-                        configurationsToCreate.add(configurationBuilder.build());
+                        final Configuration configurationToUpdate = configurationBuilder.build();
+
+                        // only create new configuration if an override value is set!
+                        if (configurationToUpdate.getValue() != null) {
+                            configurationsToCreate.add(configurationToUpdate);
+                        }
                     }
             );
         };
