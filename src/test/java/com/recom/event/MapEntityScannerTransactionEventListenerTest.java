@@ -2,9 +2,7 @@ package com.recom.event;
 
 import com.recom.dto.map.scanner.TransactionIdentifierDto;
 import com.recom.dto.map.scanner.TransactionalEntityPackageDto;
-import com.recom.entity.MapEntity;
 import com.recom.event.event.async.map.AddMapPackageAsyncEvent;
-import com.recom.event.event.async.map.CommitMapTransactionAsyncEvent;
 import com.recom.event.event.async.map.OpenMapTransactionAsyncEvent;
 import com.recom.event.event.sync.cache.CacheResetSyncEvent;
 import com.recom.model.map.MapTransaction;
@@ -18,20 +16,20 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.transaction.support.TransactionTemplate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.*;
 
-/*
 @ExtendWith(MockitoExtension.class)
 public class MapEntityScannerTransactionEventListenerTest {
 
+    @Mock
+    private TransactionTemplate transactionTemplate;
     @Mock
     private ApplicationEventPublisher applicationEventPublisher;
     @Mock
@@ -63,26 +61,8 @@ public class MapEntityScannerTransactionEventListenerTest {
         assert transaction.getOpenTransactionIdentifier().equals(transactionIdentifierDto);
     }
 
-//    @Test
-//    public void testHandleAddMapPackage_ExistingTransaction() {
-//        // Arrange
-//        final TransactionalEntityPackageDto packageDto = new TransactionalEntityPackageDto();
-//        packageDto.setSessionIdentifier("session1");
-//        final AddMapPackageAsyncEvent event = new AddMapPackageAsyncEvent(packageDto);
-//
-//        final Map<String, MapTransaction> transactions = eventListener.getTransactions();
-//
-//        // Act
-//        eventListener.handleAddMapPackage(event);
-//
-//        // Assert
-////        verify(mapEntityPersistenceLayer, times(1)).deleteMapEntities("session1");
-//        verify(mapEntityPersistenceLayer, times(1)).saveAll(anyList());
-//        verify(applicationEventPublisher, times(1)).publishEvent(any(CacheResetSyncEvent.class));
-//    }
-
     @Test
-    public void testHandleAddMapPackage_NewTransaction() {
+    public void testHandleAddMapPackage_whenTransactionExists_shouldIgnoreEventAndDoNothing() {
         // Arrange
         final TransactionalEntityPackageDto packageDto = new TransactionalEntityPackageDto();
         packageDto.setSessionIdentifier("session1");
@@ -92,6 +72,28 @@ public class MapEntityScannerTransactionEventListenerTest {
         eventListener.handleAddMapPackage(event);
 
         // Assert
+        assertFalse(eventListener.getTransactions().containsKey("session1"));
+        verify(mapEntityPersistenceLayer, never()).deleteMapEntities(anyString());
+        verify(mapEntityPersistenceLayer, never()).saveAll(anyList());
+        verify(applicationEventPublisher, never()).publishEvent(any(CacheResetSyncEvent.class));
+    }
+
+    @Test
+    public void testHandleAddMapPackage_whenTransactionIsOpenedJustBefore_shouldAddPackageAndDoNotPersist() {
+        // Arrange
+        final TransactionalEntityPackageDto packageDto = new TransactionalEntityPackageDto();
+        packageDto.setSessionIdentifier("session1");
+        final AddMapPackageAsyncEvent event = new AddMapPackageAsyncEvent(packageDto);
+
+        // Act
+        final OpenMapTransactionAsyncEvent openSessionEvent = new OpenMapTransactionAsyncEvent(TransactionIdentifierDto.builder().sessionIdentifier("session1").build());
+        eventListener.handleOpenTransaction(openSessionEvent);
+        eventListener.handleAddMapPackage(event);
+
+        // Assert
+        assertTrue(eventListener.getTransactions().containsKey("session1"));
+        assertEquals(1, eventListener.getTransactions().get("session1").getPackages().size());
+        assertTrue(eventListener.getTransactions().get("session1").getPackages().contains(packageDto));
         verify(mapEntityPersistenceLayer, never()).deleteMapEntities(anyString());
         verify(mapEntityPersistenceLayer, never()).saveAll(anyList());
         verify(applicationEventPublisher, never()).publishEvent(any(CacheResetSyncEvent.class));
@@ -178,5 +180,3 @@ public class MapEntityScannerTransactionEventListenerTest {
 //    }
 
 }
-
- */
