@@ -1,6 +1,6 @@
 package com.recom.mapper;
 
-import com.recom.dto.configuration.get.OverridableConfigurationDto;
+import com.recom.dto.configuration.OverridableConfigurationDto;
 import com.recom.entity.Configuration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

@@ -1,8 +1,7 @@
 package com.recom.service.configuration;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.recom.dto.configuration.get.OverridableConfigurationDto;
-import com.recom.dto.configuration.post.OverrideConfigurationDto;
+import com.recom.dto.configuration.OverridableConfigurationDto;
 import com.recom.entity.Configuration;
 import com.recom.mapper.ConfigurationMapper;
 import com.recom.model.configuration.ConfigurationType;
@@ -81,7 +80,7 @@ public class ConfigurationRESTManagementService {
     @Transactional(readOnly = false)
     public void updateOverrides(
             @NonNull final String mapName,
-            @NonNull final List<OverrideConfigurationDto> overrideList
+            @NonNull final List<OverridableConfigurationDto> overrideList
     ) {
         // @TODO REFACTOR MOVE configurationPersistenceLayer.findAllMapSpecificValueEntities -> configurationValueProvider.provideAllExistingDefaultValues()
         final Map<String, Map<String, List<Configuration>>> indexedExistingOverrideConfigurationList = createIndexedConfigurationMap(configurationPersistenceLayer.findAllMapSpecificValueEntities(mapName));
@@ -93,7 +92,7 @@ public class ConfigurationRESTManagementService {
 
         overrideList.forEach(override -> findConfigurationInIndexedMap(indexedDefaultConfigurationList, override.getNamespace(), override.getName())
                 .ifPresentOrElse(
-                        handleOverrideWithCorrespondingDefaultConfiguration(mapName, indexedExistingOverrideConfigurationList, configurationsToCreate, configurationsToUpdate, override),
+                        handleOverride(mapName, indexedExistingOverrideConfigurationList, configurationsToCreate, configurationsToUpdate, configurationsToDelete, override),
                         otherwiseTidyUpOldOverrideEntries(indexedExistingOverrideConfigurationList, configurationsToDelete, override)
                 ));
 
@@ -103,22 +102,31 @@ public class ConfigurationRESTManagementService {
     }
 
     @NonNull
-    private Consumer<Configuration> handleOverrideWithCorrespondingDefaultConfiguration(
+    private Consumer<Configuration> handleOverride(
             @NonNull final String mapName,
             @NonNull final Map<String, Map<String, List<Configuration>>> indexedExistingOverrideConfigurationList,
             @NonNull final List<Configuration> configurationsToCreate,
             @NonNull final List<Configuration> configurationsToUpdate,
-            @NonNull final OverrideConfigurationDto override
+            @NonNull final List<Configuration> configurationsToDelete,
+            @NonNull final OverridableConfigurationDto override
     ) {
         return (final Configuration existingDefaultConfiguration) -> {
             findConfigurationInIndexedMap(indexedExistingOverrideConfigurationList, override.getNamespace(), override.getName()).ifPresentOrElse(
                     (final Configuration existingOverride) -> {
+                        if (existingOverride.getType().equals(ConfigurationType.LIST) &&
+                                override.getType().equals(ConfigurationType.LIST) &&
+                                (override.getMapOverriddenValue() == null && override.getMapOverriddenListValue() == null)
+                        ) {
+                            configurationsToDelete.add(existingOverride);
+                            return;
+                        }
+
                         existingOverride.setType(override.getType());
-                        existingOverride.setValue(override.getMapOverrideValue());
+                        existingOverride.setValue(override.getMapOverriddenValue());
 
                         if (override.getType() == ConfigurationType.LIST) {
                             try {
-                                existingOverride.setValue(StaticObjectMapperProvider.provide().writeValueAsString(override.getMapOverrideListValue()));
+                                existingOverride.setValue(StaticObjectMapperProvider.provide().writeValueAsString(override.getMapOverriddenListValue()));
                             } catch (JsonProcessingException e) {
                                 throw new RuntimeException(e);
                             }
@@ -132,17 +140,21 @@ public class ConfigurationRESTManagementService {
                                 .namespace(override.getNamespace())
                                 .name(override.getName())
                                 .type(override.getType())
-                                .value(override.getMapOverrideValue());
+                                .value(override.getMapOverriddenValue());
 
-                        if (override.getType() == ConfigurationType.LIST) {
+                        if (override.getType() == ConfigurationType.LIST && override.getMapOverriddenListValue() != null) {
                             try {
-                                configurationBuilder.value(StaticObjectMapperProvider.provide().writeValueAsString(override.getMapOverrideListValue()));
+                                configurationBuilder.value(StaticObjectMapperProvider.provide().writeValueAsString(override.getMapOverriddenListValue()));
                             } catch (JsonProcessingException e) {
                                 throw new RuntimeException(e);
                             }
                         }
 
-                        configurationsToCreate.add(configurationBuilder.build());
+                        final Configuration configurationToUpdate = configurationBuilder.build();
+
+                        if (configurationToUpdate.getValue() != null) {
+                            configurationsToCreate.add(configurationToUpdate);
+                        }
                     }
             );
         };
@@ -152,7 +164,7 @@ public class ConfigurationRESTManagementService {
     private Runnable otherwiseTidyUpOldOverrideEntries(
             @NonNull final Map<String, Map<String, List<Configuration>>> indexedExistingOverrideConfigurationList,
             @NonNull final List<Configuration> configurationsToDelete,
-            @NonNull final OverrideConfigurationDto override
+            @NonNull final OverridableConfigurationDto override
     ) {
         return () -> findConfigurationInIndexedMap(indexedExistingOverrideConfigurationList, override.getNamespace(), override.getName())
                 .ifPresent(configurationsToDelete::add);

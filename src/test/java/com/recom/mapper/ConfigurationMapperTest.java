@@ -2,7 +2,7 @@ package com.recom.mapper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.recom.dto.configuration.get.OverridableConfigurationDto;
+import com.recom.dto.configuration.OverridableConfigurationDto;
 import com.recom.entity.Configuration;
 import com.recom.model.configuration.ConfigurationType;
 import com.recom.service.provider.StaticObjectMapperProvider;

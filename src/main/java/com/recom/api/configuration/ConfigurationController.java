@@ -1,8 +1,7 @@
 package com.recom.api.configuration;
 
 import com.recom.api.commons.HttpCommons;
-import com.recom.dto.configuration.get.OverridableConfigurationDto;
-import com.recom.dto.configuration.post.OverrideConfigurationDto;
+import com.recom.dto.configuration.OverridableConfigurationDto;
 import com.recom.event.event.async.cache.CacheResetAsyncEvent;
 import com.recom.service.AssertionService;
 import com.recom.service.configuration.ConfigurationRESTManagementService;
@@ -78,7 +77,7 @@ public class ConfigurationController {
             @NonNull final String mapName,
 
             @RequestBody(required = true)
-            @Valid @NonNull final List<OverrideConfigurationDto> overrideList
+            @Valid @NonNull final List<OverridableConfigurationDto> overrideList
     ) {
         log.debug("Requested POST /api/v1/map/configuration");
 

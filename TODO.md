@@ -3,7 +3,7 @@
 * configuration endpoints rework: 
     * read/write model same; (allow copy, paste, modify)
     * delete value with setting it to null / undefined explicitly!
-
+*
 * DB-based Configuration System
     * new RENDER format (no cluster format):
         * goal: do not render clusters; render generic polygons and text with color and z-index!
