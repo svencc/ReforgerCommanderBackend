@@ -16,6 +16,7 @@
         </resources>
     </cache-template>
 
+
     <cache alias="MapMetaDataService.provideMapMeta" uses-template="recomDefaultCache">
     </cache>
     <cache alias="MapMetaDataService.provideMapMetaList" uses-template="recomDefaultCache">
@@ -24,6 +25,15 @@
     </cache>
     <cache alias="MapMetaDataService.mapExists" uses-template="recomDefaultCache">
     </cache>
+
+
+    <cache alias="ConfigurationPersistenceLayer.findValues" uses-template="recomDefaultCache">
+    </cache>
+    <cache alias="ConfigurationPersistenceLayer.findAllMapSpecificValueEntities" uses-template="recomDefaultCache">
+    </cache>
+    <cache alias="ConfigurationPersistenceLayer.findAllDefaultValueEntities" uses-template="recomDefaultCache">
+    </cache>
+
 
     <cache alias="MapEntityPersistenceLayer.findAllByMapNameAndResourceNameIn" uses-template="recomDefaultCache">
     </cache>
@@ -51,5 +61,6 @@
     </cache>
     <cache alias="MapEntityPersistenceLayer.findAllByMapDescriptorTypeIn" uses-template="recomDefaultCache">
     </cache>
+
 
 </config>

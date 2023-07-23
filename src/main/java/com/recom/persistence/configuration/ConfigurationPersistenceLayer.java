@@ -3,6 +3,7 @@ package com.recom.persistence.configuration;
 import com.recom.entity.Configuration;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public class ConfigurationPersistenceLayer {
     private final ConfigurationRepository configurationRepository;
 
     @NonNull
+    @Cacheable(cacheNames = "ConfigurationPersistenceLayer.findValues")
     public List<Configuration> findValues(
             @NonNull final String mapName,
             @NonNull final String namespace,
@@ -24,11 +26,13 @@ public class ConfigurationPersistenceLayer {
     }
 
     @NonNull
+    @Cacheable(cacheNames = "ConfigurationPersistenceLayer.findAllDefaultValueEntities")
     public List<Configuration> findAllDefaultValueEntities() {
         return configurationRepository.findAllByMapNameIsNull();
     }
 
     @NonNull
+    @Cacheable(cacheNames = "ConfigurationPersistenceLayer.findAllMapSpecificValueEntities")
     public List<Configuration> findAllMapSpecificValueEntities(@NonNull final String mapName) {
         return configurationRepository.findAllByMapName(mapName);
     }
