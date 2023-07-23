@@ -10,6 +10,12 @@
     * new db config values for type-colors, z-indexes, etc.
     * rework cluster rendering to direct client polygon rendering; controlled by server?
 *
+*
+*
+*
+*
+*
+*
 * try forest clustering again; will not work with convex hulls; we need to implement concave hulls!
 * forest heatmap rendering
 *

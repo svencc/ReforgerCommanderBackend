@@ -87,7 +87,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(value = {HttpNotFoundException.class})
-    public ResponseEntity<BadRequestDto> handleHttpNotFoundException(@NonNull final HttpNotFoundException exception) {
+    public ResponseEntity<Void> handleHttpNotFoundException(@NonNull final HttpNotFoundException exception) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .build();
