@@ -22,27 +22,23 @@ public class MapRenderCommandDto implements Serializable {
 
     @Schema
     @JsonProperty()
-    private UUID id;
+    private UUID id; // UUID Generator
 
     @Schema
     @JsonProperty()
-    private String clusterList;
+    private List<Point2DDto> geometry;  // cluster polygon
 
     @Schema
     @JsonProperty()
-    private List<Point2DDto> geometry;
+    private Point2DDto coordinates; // village name coordinates
 
     @Schema
     @JsonProperty()
-    private Point2DDto coordinates;
+    private String text;    // Try to get Village Name; try to render text
 
     @Schema
     @JsonProperty()
-    private String text;
-
-    @Schema
-    @JsonProperty()
-    private Integer color;
+    private Integer color;  // all clusters have color = xxx (from database config)
 
     @Schema
     @JsonProperty()
@@ -50,15 +46,17 @@ public class MapRenderCommandDto implements Serializable {
 
     @Schema
     @JsonProperty()
-    private String zIndex;
+    private String zIndex; // all clusters have zIndex = 0
 
     @Schema
     @JsonProperty()
-    private MapObjectType belongsToGroup;
+    private MapObjectType belongsToGroup; // Try to get Village Name
 
     @Schema
     @JsonProperty()
     @Builder.Default
-    private List<String> tags = new ArrayList<>();
+    private List<String> tags = new ArrayList<>();  // village / structure or so
+
+    // density = area/points ; size (points of cluster)? area m2;
 
 }
