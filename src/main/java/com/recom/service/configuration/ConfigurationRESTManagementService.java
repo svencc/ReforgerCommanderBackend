@@ -6,7 +6,7 @@ import com.recom.dto.configuration.OverrideConfigurationDto;
 import com.recom.entity.Configuration;
 import com.recom.mapper.ConfigurationMapper;
 import com.recom.model.configuration.ConfigurationType;
-import com.recom.repository.configuration.ConfigurationPersistenceLayer;
+import com.recom.persistence.configuration.ConfigurationPersistenceLayer;
 import com.recom.service.provider.StaticObjectMapperProvider;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

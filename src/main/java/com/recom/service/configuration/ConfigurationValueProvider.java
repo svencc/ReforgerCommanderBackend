@@ -7,7 +7,7 @@ import com.recom.entity.Configuration;
 import com.recom.exception.ConfigurationNotReadableException;
 import com.recom.model.configuration.ConfigurationType;
 import com.recom.model.configuration.descriptor.*;
-import com.recom.repository.configuration.ConfigurationPersistenceLayer;
+import com.recom.persistence.configuration.ConfigurationPersistenceLayer;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

@@ -7,7 +7,7 @@ import com.recom.event.event.async.map.CommitMapTransactionAsyncEvent;
 import com.recom.event.event.async.map.OpenMapTransactionAsyncEvent;
 import com.recom.event.event.sync.cache.CacheResetSyncEvent;
 import com.recom.model.map.MapTransaction;
-import com.recom.repository.mapEntity.MapEntityPersistenceLayer;
+import com.recom.persistence.mapEntity.MapEntityPersistenceLayer;
 import com.recom.service.map.scanner.MapTransactionValidatorService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

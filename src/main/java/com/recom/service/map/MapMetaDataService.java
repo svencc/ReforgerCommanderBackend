@@ -1,7 +1,7 @@
 package com.recom.service.map;
 
 import com.recom.dto.map.meta.MapMetaDto;
-import com.recom.repository.mapEntity.MapEntityPersistenceLayer;
+import com.recom.persistence.mapEntity.MapEntityPersistenceLayer;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

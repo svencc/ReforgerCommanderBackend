@@ -1,4 +1,4 @@
-package com.recom.repository.mapEntity;
+package com.recom.persistence.mapEntity;
 
 import com.recom.entity.MapEntity;
 import lombok.NonNull;

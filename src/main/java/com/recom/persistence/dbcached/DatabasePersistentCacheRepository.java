@@ -1,4 +1,4 @@
-package com.recom.repository.dbcached;
+package com.recom.persistence.dbcached;
 
 import com.recom.entity.DBCachedItem;
 import lombok.NonNull;

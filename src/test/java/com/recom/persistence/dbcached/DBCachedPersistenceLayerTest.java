@@ -1,4 +1,4 @@
-package com.recom.repository.dbcached;
+package com.recom.persistence.dbcached;
 
 import com.recom.entity.DBCachedItem;
 import lombok.NonNull;
@@ -30,7 +30,7 @@ class DBCachedPersistenceLayerTest {
     private DBCachedPersistenceLayer cachePersistenceLayer;
 
     @Test
-    public void testPut() {
+    public void testPut_NonExistingCacheItem_ItemIsStored() {
         // Arrange
         final String cacheName = "testCacheName";
         final String key = "testKey";
@@ -64,7 +64,7 @@ class DBCachedPersistenceLayerTest {
     }
 
     @Test
-    public void testGet() {
+    public void testGet_withValidCacheData_returnsValue() {
         // Arrange
         final String cacheName = "testCacheName";
         final String key = "testKey";

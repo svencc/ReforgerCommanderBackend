@@ -1,4 +1,4 @@
-package com.recom.repository.configuration;
+package com.recom.persistence.configuration;
 
 import com.recom.entity.Configuration;
 import lombok.NonNull;

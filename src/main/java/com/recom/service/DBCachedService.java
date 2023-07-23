@@ -1,6 +1,6 @@
 package com.recom.service;
 
-import com.recom.repository.dbcached.DBCachedPersistenceLayer;
+import com.recom.persistence.dbcached.DBCachedPersistenceLayer;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

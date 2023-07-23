@@ -32,7 +32,7 @@ public class CacheResetEventListenerTest {
 
 
     @Test
-    public void testHandleCacheResetAsyncEvent() {
+    public void testHandleCacheResetAsyncEvent_WithCacheResetAsyncEvent_shouldClearsAllCaches() throws InterruptedException {
         // Arrange
         final CacheResetAsyncEvent event = new CacheResetAsyncEvent();
 
@@ -42,6 +42,9 @@ public class CacheResetEventListenerTest {
 
         // Act
         eventListenerToTest.handleCacheResetAsyncEvent(event);
+
+        // wait 1 second here to give async event listener time to finish
+        Thread.sleep(1000);
 
         // Assert
         verify(cacheManager, times(cacheNames.size())).getCache(cacheNameCaptor.capture());
@@ -54,7 +57,7 @@ public class CacheResetEventListenerTest {
     }
 
     @Test
-    public void testHandleCacheResetSyncEvent() {
+    public void testHandleCacheResetSyncEvent_WithCacheResetSyncEvent_shouldClearsAllCaches() {
         // Arrange
         CacheResetSyncEvent event = new CacheResetSyncEvent();
 
