@@ -46,7 +46,8 @@ public class AuthenticationService {
 
     @NonNull
     public AuthenticationResponseDto authenticateWith(@NonNull final AuthenticationRequestDto authenticationRequestDto) {
-        final Account account = accountPersistenceLayer.findByUUID(conversionService.convert(authenticationRequestDto.getAccountUUID(), UUID.class))
+        final Account account = Optional.ofNullable(conversionService.convert(authenticationRequestDto.getAccountUUID(), UUID.class))
+                .flatMap(accountPersistenceLayer::findByUUID)
                 .orElseThrow(() -> new HttpUnauthorizedException("Account not found"));
 
         if (!account.getAccessKey().equals(authenticationRequestDto.getAccessKey())) {
