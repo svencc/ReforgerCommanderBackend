@@ -2,11 +2,13 @@ package com.recom.dto.authentication;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.recom.dto.situationpicture.mapobjects.MapObjectsDto;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import org.hibernate.validator.constraints.UUID;
 
 import java.io.Serializable;
 
@@ -17,12 +19,15 @@ import java.io.Serializable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AuthenticationRequestDto implements Serializable {
 
+    @UUID
+    @NotNull
     @Schema
     @JsonProperty()
-    private String username;
+    private String accountUUID;
 
+    @NotBlank
     @Schema
     @JsonProperty()
-    private String password;
+    private String accessKey;
 
 }

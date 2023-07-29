@@ -18,12 +18,12 @@ import java.util.UUID;
 @AllArgsConstructor
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class User implements Persistable<UUID>, Serializable {
+public class Account implements Persistable<UUID>, Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(insertable = true, updatable = false, nullable = false)
-    private UUID userUuid;
+    private UUID accountUuid;
 
     @Nationalized
     @Column(insertable = true, updatable = false, nullable = true, length = 255)
@@ -32,7 +32,7 @@ public class User implements Persistable<UUID>, Serializable {
 
     @Override
     public int hashCode() {
-        return User.class.hashCode();
+        return Account.class.hashCode();
     }
 
     @Override
@@ -44,7 +44,7 @@ public class User implements Persistable<UUID>, Serializable {
         } else if (getClass() != obj.getClass()) {
             return false;
         } else {
-            final User other = (User) obj;
+            final Account other = (Account) obj;
             if (getId() == null) {
                 return false;
             } else return getId().equals(other.getId());
@@ -53,7 +53,7 @@ public class User implements Persistable<UUID>, Serializable {
 
     @Override
     public UUID getId() {
-        return userUuid;
+        return accountUuid;
     }
 
     @Override

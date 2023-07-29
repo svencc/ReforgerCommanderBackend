@@ -1,7 +1,5 @@
 # TODO LIST
 *
-* authentication / user-token acces and tenant-based-db-table-fields?
-* 
 * DB-based Configuration System
       * goal: do not render clusters; render generic polygons and text with color and z-index!
       * meta: amount of z-indexes 
