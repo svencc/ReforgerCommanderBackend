@@ -1,8 +1,8 @@
 package com.recom.exception;
 
-import com.recom.dto.BadRequestDto;
 import com.recom.dto.ConstraintViolationEntryDto;
 import com.recom.dto.ServerErrorDto;
+import com.recom.dto.ServerMessageDto;
 import jakarta.validation.ConstraintViolationException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -26,6 +27,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
+    // VALIDATION EXCEPTIONS
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             final MethodArgumentNotValidException ex,
@@ -56,34 +58,62 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(errorList);
     }
 
+
+    // UNHANDLED EXCEPTIONS
     @ExceptionHandler(value = {Exception.class})
     public ResponseEntity<List<Void>> handleException(@NonNull final Exception exception) {
         log.error("GlobalExceptionHandler.handleException: ", exception);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
-    @ExceptionHandler(value = {HttpUnprocessableEntityException.class})
-    public ResponseEntity<List<Void>> handleHttpUnprocessableEntityException(@NonNull final HttpUnprocessableEntityException exception) {
-        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
-    }
-
     @ExceptionHandler(value = {ConfigurationNotReadableException.class})
     public ResponseEntity<ServerErrorDto> handleConfigurationNotReadableException(@NonNull final ConfigurationNotReadableException exception) {
+        final String message = String.format("There is an issue with a configuration entry in the database! ConfigurationNotReadableException: %s", exception.getMessage());
+        log.error(message, exception);
+
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ServerErrorDto.builder()
-                        .message(String.format("There is an issue with a configuration entry in the database! ConfigurationNotReadableException: %s", exception.getMessage()))
+                        .message(message)
                         .build()
                 );
     }
 
+    // 400er
     @ExceptionHandler(value = {HttpBadRequestException.class})
-    public ResponseEntity<BadRequestDto> handleHttpBadRequestException(@NonNull final HttpBadRequestException exception) {
+    public ResponseEntity<ServerMessageDto> handleHttpBadRequestException(@NonNull final HttpBadRequestException exception) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(BadRequestDto.builder()
+                .body(ServerMessageDto.builder()
                         .message(exception.getMessage())
                         .build()
                 );
+    }
+
+    @ExceptionHandler(HttpUnauthorizedException.class)
+    public ResponseEntity<ServerMessageDto> handleHttpUnauthorizedException(@NonNull final HttpUnauthorizedException exception) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(ServerMessageDto.builder()
+                        .message("You are not authorized to access this resource.")
+                        .build()
+                );
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ServerMessageDto> handleAccessDeniedException(@NonNull final AccessDeniedException exception) {
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(ServerMessageDto.builder()
+                        .message("You are not authorized to access this resource.")
+                        .build()
+                );
+    }
+
+    @ExceptionHandler(HttpForbiddenException.class)
+    public ResponseEntity<ServerMessageDto> handleHttpForbiddenException(@NonNull final HttpForbiddenException exception) {
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .build();
     }
 
     @ExceptionHandler(value = {HttpNotFoundException.class})
@@ -91,6 +121,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .build();
+    }
+
+    @ExceptionHandler(value = {HttpUnprocessableEntityException.class})
+    public ResponseEntity<List<Void>> handleHttpUnprocessableEntityException(@NonNull final HttpUnprocessableEntityException exception) {
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
     }
 
 }

@@ -2,8 +2,10 @@ package com.recom.api;
 
 import com.recom.api.commons.HttpCommons;
 import com.recom.dto.map.cluster.ClusterListDto;
+import com.recom.dto.situationpicture.SituationPictureDto;
 import com.recom.dto.situationpicture.SituationPictureRequestDto;
 import com.recom.service.ReforgerPayloadParserService;
+import com.recom.service.SituationPictureService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -29,6 +31,8 @@ public class SituationPictureController {
 
     @NonNull
     private final ReforgerPayloadParserService payloadParser;
+    @NonNull
+    private final SituationPictureService situationPictureService;
 
 
     @Operation(
@@ -39,13 +43,13 @@ public class SituationPictureController {
             @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
     })
     @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity<ClusterListDto> generateClustersForm(
+    public ResponseEntity<SituationPictureDto> generateSituationPictureForm(
             @RequestParam(required = true)
             @NonNull final Map<String, String> payload
     ) {
         log.debug("Requested POST /api/v1/map/situation-picture (FORM)");
 
-        return generateClustersJSON(payloadParser.parseValidated(payload, SituationPictureRequestDto.class));
+        return generateSituationPictureJSON(payloadParser.parseValidated(payload, SituationPictureRequestDto.class));
     }
 
     @Operation(
@@ -56,7 +60,7 @@ public class SituationPictureController {
             @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
     })
     @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ClusterListDto> generateClustersJSON(
+    public ResponseEntity<SituationPictureDto> generateSituationPictureJSON(
             @RequestBody(required = true)
             @NonNull final SituationPictureRequestDto situationPictureRequestDto
     ) {
@@ -65,8 +69,8 @@ public class SituationPictureController {
         // 202 Accepted logic - async processing
         // Refactor ClustersController. Extract async processing to service
 
-        return ResponseEntity.status(HttpStatus.ACCEPTED)
+        return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
-                .build();
+                .body(situationPictureService.generateSituationPicture(situationPictureRequestDto));
     }
 }

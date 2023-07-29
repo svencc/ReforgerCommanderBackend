@@ -1,5 +1,6 @@
 package com.recom.api;
 
+import com.recom.api.commons.HttpCommons;
 import com.recom.event.event.sync.cache.CacheResetSyncEvent;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -19,8 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequiredArgsConstructor
 @Tag(name = "Cache")
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/cache")
 public class CacheController {
 
@@ -32,10 +33,10 @@ public class CacheController {
             description = "Delete cache. Everything"
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "O.K.")
+            @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
     })
     @DeleteMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> getJsonTestData() {
+    public ResponseEntity<Void>deleteCache() {
         log.info("Requested DELETE /api/v1/cache");
 
         applicationEventPublisher.publishEvent(new CacheResetSyncEvent());

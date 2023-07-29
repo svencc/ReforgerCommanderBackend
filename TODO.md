@@ -1,12 +1,13 @@
 # TODO LIST
+*
+* authentication / user-token acces and tenant-based-db-table-fields?
 * 
 * DB-based Configuration System
-    * new RENDER format (no cluster format):
-        * goal: do not render clusters; render generic polygons and text with color and z-index!
-        * meta: amount of z-indexes 
-        * clusterList with type, name, color, z-index 
-        * map structure / associative array with z-index as key and clusterList as value
-        * cluster size / amount of points, weight the quality of an area; this should be reflected in color intensity! 
+      * goal: do not render clusters; render generic polygons and text with color and z-index!
+      * meta: amount of z-indexes 
+      * clusterList with type, name, color, z-index 
+      * map structure / associative array with z-index as key and clusterList as value
+      * cluster size / amount of points, weight the quality of an area; this should be reflected in color intensity! 
     * new db config values for type-colors, z-indexes, etc.
     * rework cluster rendering to direct client polygon rendering; controlled by server?
 *
@@ -69,7 +70,6 @@
 * Add Docker Compose
 * Transactional Controller Template?
 * map entity query/filter controller
-* authentication / user-token acces and tenant-based-db-table-fields?
 * documentation / wiki
 * project page
 * build pipeline / cd

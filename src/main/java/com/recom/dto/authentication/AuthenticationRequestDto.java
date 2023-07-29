@@ -1,4 +1,4 @@
-package com.recom.dto.situationpicture;
+package com.recom.dto.authentication;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -15,10 +15,14 @@ import java.io.Serializable;
 @Schema
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class SituationPictureRequestDto implements Serializable {
+public class AuthenticationRequestDto implements Serializable {
 
     @Schema
     @JsonProperty()
-    private MapObjectsDto manName;
+    private String username;
+
+    @Schema
+    @JsonProperty()
+    private String password;
 
 }

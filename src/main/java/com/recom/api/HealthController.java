@@ -29,7 +29,7 @@ public class HealthController {
             @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
     })
     @GetMapping(path = "")
-    public ResponseEntity<Void> health() {
+    public ResponseEntity<Void> getHealth() {
         log.debug("Requested GET /health");
 
         return ResponseEntity.status(HttpStatus.OK)

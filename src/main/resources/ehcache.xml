@@ -17,6 +17,9 @@
     </cache-template>
 
 
+    <cache alias="UserPersistenceLayer.findByUUID" uses-template="recomDefaultCache">
+    </cache>
+
     <cache alias="MapMetaDataService.provideMapMeta" uses-template="recomDefaultCache">
     </cache>
     <cache alias="MapMetaDataService.provideMapMetaList" uses-template="recomDefaultCache">

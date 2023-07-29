@@ -6,4 +6,5 @@ public class HttpBadRequestException extends RuntimeException {
     public HttpBadRequestException(@NonNull final String message) {
         super(message);
     }
+
 }
