@@ -7,6 +7,7 @@ import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import lombok.NonNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
@@ -16,6 +17,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 @Configuration
 public class RECOMJWTCoderConfiguration {
 
+    @Primary
     @Bean("RECOMSecurityJwtDecoder")
     public JwtDecoder JwtDecoderFactory(@NonNull final RSAKey rsaKey) throws JOSEException {
         return NimbusJwtDecoder
@@ -23,6 +25,7 @@ public class RECOMJWTCoderConfiguration {
                 .build();
     }
 
+    @Primary
     @Bean("RECOMSecurityJwtEncoder")
     public JwtEncoder jwtEncoderFactory(@NonNull final RSAKey rsaKey) {
         return new NimbusJwtEncoder(
