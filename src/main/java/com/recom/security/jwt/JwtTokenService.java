@@ -14,24 +14,24 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class JwtTokenAssertionService {
+public class JwtTokenService {
 
     @NonNull
     private final ConversionService conversionService;
 
-    public void assertAuthorizationHeaderIsPresent(@NonNull final Optional<String> authorizationHeader) {
+    public void assertAuthorizationHeaderIsPresent(@NonNull final Optional<String> authorizationHeader) throws HttpUnauthorizedException {
         if (authorizationHeader.isEmpty()) {
             throw new HttpUnauthorizedException("Authorization header is not present");
         }
     }
 
-    public void assertAuthorizationHeaderStartsWithBearer(@NonNull final String authorizationHeader) {
+    public void assertAuthorizationHeaderStartsWithBearer(@NonNull final String authorizationHeader) throws HttpUnauthorizedException {
         if (!authorizationHeader.startsWith("Bearer ")) {
             throw new HttpUnauthorizedException("Authorization header is not present");
         }
     }
 
-    public void assertTokenIsNotExpired(@Nullable final Object expiration) {
+    public void assertTokenIsNotExpired(@Nullable final Object expiration) throws HttpUnauthorizedException {
         if (expiration == null) {
             throw new HttpUnauthorizedException("Token expiration is not present");
         } else {
@@ -46,18 +46,29 @@ public class JwtTokenAssertionService {
         }
     }
 
-    public void assertSubjectIsPresent(@Nullable final Object sub) {
+    public void assertSubjectIsPresent(@Nullable final Object sub) throws HttpUnauthorizedException {
         if (sub == null) {
             throw new HttpUnauthorizedException("Token subject is not present");
         }
     }
 
     @NonNull
-    public UUID extractAndAssertSubjectIsUUID(@NonNull final String sub) {
+    public UUID extractAndAssertSubjectIsUUID(@NonNull final String sub) throws HttpUnauthorizedException {
         try {
             return conversionService.convert(sub, UUID.class);
         } catch (ConversionException e) {
             throw new HttpUnauthorizedException("Invalid token; expiration is not a valid date");
         }
     }
+
+    @NonNull
+    public String extractToken(@NonNull final String authorizationHeaderOpt) {
+        return authorizationHeaderOpt.substring("Bearer".length()).trim();
+    }
+
+    @NonNull
+    public String validateAnProvideToken(@NonNull final String authorizationHeaderOpt) {
+        return authorizationHeaderOpt.substring("Bearer".length()).trim();
+    }
+
 }
