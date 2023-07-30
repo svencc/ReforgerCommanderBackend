@@ -23,7 +23,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class RECOMJWTAuthenticationFilter extends OncePerRequestFilter {
 
-
     @NonNull
     private final JwtDecoder jwtDecoder;
     @NonNull
