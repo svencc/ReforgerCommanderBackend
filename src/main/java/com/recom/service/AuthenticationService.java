@@ -1,5 +1,6 @@
 package com.recom.service;
 
+import com.recom.dto.authentication.AccountRequestDto;
 import com.recom.dto.authentication.AuthenticationRequestDto;
 import com.recom.dto.authentication.AuthenticationResponseDto;
 import com.recom.entity.Account;
@@ -34,14 +35,13 @@ public class AuthenticationService {
     private final AccountPersistenceLayer accountPersistenceLayer;
 
     @NonNull
-    public AuthenticationRequestDto createNewAccount() {
-        return Optional.of(accountPersistenceLayer.createAccount())
-                .map(account -> AuthenticationRequestDto.builder()
-                        .accountUUID(account.getAccountUuid().toString())
-                        .accessKey(account.getAccessKey())
-                        .build()
-                )
-                .get();
+    public AccountRequestDto createNewAccount() {
+        final Account account = accountPersistenceLayer.createAccount();
+
+        return AccountRequestDto.builder()
+                .accountUUID(account.getAccountUuid().toString())
+                .accessKey(account.getAccessKey())
+                .build();
     }
 
     @NonNull
@@ -60,7 +60,7 @@ public class AuthenticationService {
                 .issuedAt(now)
                 .expiresAt(now.plus(recomSecurityProperties.getJwtExpirationTime()))
                 .subject(authenticationRequestDto.getAccountUUID())
-                .claim("accessKey", authenticationRequestDto.getAccessKey())
+//                .claim("accessKey", authenticationRequestDto.getAccessKey())
                 .build();
 
         final String jwt = jwtEncoder.encode(JwtEncoderParameters.from(claims))

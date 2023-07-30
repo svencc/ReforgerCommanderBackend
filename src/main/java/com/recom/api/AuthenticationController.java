@@ -1,6 +1,7 @@
 package com.recom.api;
 
 import com.recom.api.commons.HttpCommons;
+import com.recom.dto.authentication.AccountRequestDto;
 import com.recom.dto.authentication.AuthenticationRequestDto;
 import com.recom.dto.authentication.AuthenticationResponseDto;
 import com.recom.service.AuthenticationService;
@@ -49,7 +50,7 @@ public class AuthenticationController {
     })
     @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity<AuthenticationResponseDto> authenticateForm(
-            @RequestBody(required = true)
+            @RequestBody()
             @NonNull final Map<String, String> payload
     ) {
         log.debug("Requested POST /api/v1/authenticate (FORM)");
@@ -67,7 +68,7 @@ public class AuthenticationController {
     })
     @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AuthenticationResponseDto> authenticateJSON(
-            @RequestBody(required = true)
+            @RequestBody()
             @Valid @NonNull final AuthenticationRequestDto authenticationRequestDto
     ) {
         log.debug("Requested POST /api/v1/authenticate (JSON)");
@@ -85,8 +86,8 @@ public class AuthenticationController {
             @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK),
             @ApiResponse(responseCode = HttpCommons.UNAUTHORIZED_CODE, description = HttpCommons.UNAUTHORIZED, content = {@Content()}),
     })
-    @PostMapping(path = "/new", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AuthenticationRequestDto> createAccount() {
+    @PostMapping(path = "/new-account", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<AccountRequestDto> createAccount() {
         log.debug("Requested POST /api/v1/authenticate/new (JSON)");
 
         return ResponseEntity.status(HttpStatus.OK)

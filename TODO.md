@@ -1,5 +1,7 @@
 # TODO LIST
 *
+* jwt authentication implemented; add roles and permissions (also to db); after login account-token should make claims, from the database persisted roles/claims
+*
 * DB-based Configuration System
       * goal: do not render clusters; render generic polygons and text with color and z-index!
       * meta: amount of z-indexes 
