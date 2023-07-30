@@ -54,13 +54,11 @@ public class RECOMJWTAuthenticationFilter extends OncePerRequestFilter {
             jwtTokenService.assertAuthorizationHeaderStartsWithBearer(authorizationHeaderOpt.get());
 
             final Jwt jwt = jwtDecoder.decode(jwtTokenService.extractToken(authorizationHeaderOpt.get()));
-            final Map<String, Object> headers = jwt.getHeaders();
-            final Map<String, Object> claims = jwt.getClaims();
 
-            jwtTokenService.assertTokenIsNotExpired((claims.get("exp")));
-            jwtTokenService.assertSubjectIsPresent(claims.get("sub"));
+            jwtTokenService.assertTokenIsNotExpired((jwt.getClaims().get("exp")));
+            jwtTokenService.assertSubjectIsPresent(jwt.getClaims().get("sub"));
 
-            final UUID subjectUUID = jwtTokenService.extractAndAssertSubjectIsUUID(claims.get("sub").toString());
+            final UUID subjectUUID = jwtTokenService.extractAndAssertSubjectIsUUID(jwt.getClaims().get("sub").toString());
             final Optional<Account> account = accountPersistenceLayer.findByUUID(subjectUUID);
 
             if (account.isPresent()) {
