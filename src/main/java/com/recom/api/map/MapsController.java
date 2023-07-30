@@ -1,7 +1,7 @@
 package com.recom.api.map;
 
 import com.recom.api.commons.HttpCommons;
-import com.recom.security.account.RECOMUser;
+import com.recom.security.account.RECOMAccount;
 import com.recom.service.map.MapMetaDataService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -43,7 +43,7 @@ public class MapsController {
     @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
     @Secured({"AUTHORITY_TEST"})
     public ResponseEntity<List<String>> listMapNames(
-            @AuthenticationPrincipal RECOMUser recomUser
+            @AuthenticationPrincipal RECOMAccount recomAccount
     ) {
         log.debug("Requested GET /api/v1/maps");
 

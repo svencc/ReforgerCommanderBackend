@@ -8,10 +8,10 @@ import java.util.UUID;
 
 @Data
 @Builder
-public class RECOMUser {
+public class RECOMAccount {
 
-    private Set<RECOMUserAuthorities> roles;
-    private UUID userUuid;
+    private Set<RECOMAuthorities> roles;
+    private UUID accountUuid;
     private String accessKey;
 
 }

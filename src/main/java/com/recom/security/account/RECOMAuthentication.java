@@ -15,7 +15,7 @@ public class RECOMAuthentication implements Authentication {
     private Collection<? extends GrantedAuthority> authorities;
     private Object credentials;
     private Object details;
-    private RECOMUser principal;
+    private RECOMAccount principal;
     private boolean authenticated;
     private String name;
 

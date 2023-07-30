@@ -1,6 +1,6 @@
 package com.recom.security.account;
 
-public enum RECOMUserAuthorities {
+public enum RECOMAuthorities {
 
     AUTHORITY_TEST, AUTHORITY_EVERYBODY
 

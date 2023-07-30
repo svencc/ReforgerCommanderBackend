@@ -2,8 +2,8 @@ package com.recom.security;
 
 import com.recom.entity.Account;
 import com.recom.security.account.RECOMAuthentication;
-import com.recom.security.account.RECOMUser;
-import com.recom.security.account.RECOMUserAuthorities;
+import com.recom.security.account.RECOMAccount;
+import com.recom.security.account.RECOMAuthorities;
 import lombok.NonNull;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
@@ -15,21 +15,21 @@ public class RECOMAuthenticationMapper {
 
     @NonNull
     public RECOMAuthentication toAuthentication(@NonNull final Account user) {
-        final RECOMUser recomUser = RECOMUser.builder()
-                .userUuid(user.getAccountUuid())
+        final RECOMAccount recomAccount = RECOMAccount.builder()
+                .accountUuid(user.getAccountUuid())
                 .accessKey(user.getAccessKey())
                 .roles(Set.of(
-                        RECOMUserAuthorities.AUTHORITY_TEST,
-                        RECOMUserAuthorities.AUTHORITY_EVERYBODY
+                        RECOMAuthorities.AUTHORITY_TEST,
+                        RECOMAuthorities.AUTHORITY_EVERYBODY
                 ))
                 .build();
 
         final RECOMAuthentication authentication = RECOMAuthentication.builder()
-                .authorities(recomUser.getRoles().stream()
+                .authorities(recomAccount.getRoles().stream()
                         .map(role -> new SimpleGrantedAuthority(role.name()))
                         .toList()
                 )
-                .principal(recomUser)
+                .principal(recomAccount)
                 .authenticated(true)
                 .build();
 
