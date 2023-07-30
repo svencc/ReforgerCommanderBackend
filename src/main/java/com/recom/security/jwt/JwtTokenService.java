@@ -46,7 +46,7 @@ public class JwtTokenService {
         }
     }
 
-    public void assertSubjectIsPresent(@Nullable final Object sub) throws HttpUnauthorizedException {
+    public void assertClaimIsPresent(@Nullable final Object sub) throws HttpUnauthorizedException {
         if (sub == null) {
             throw new HttpUnauthorizedException("Token subject is not present");
         }

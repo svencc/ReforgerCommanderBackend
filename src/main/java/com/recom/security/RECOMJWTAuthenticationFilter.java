@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -56,7 +55,7 @@ public class RECOMJWTAuthenticationFilter extends OncePerRequestFilter {
             final Jwt jwt = jwtDecoder.decode(jwtTokenService.extractToken(authorizationHeaderOpt.get()));
 
             jwtTokenService.assertTokenIsNotExpired((jwt.getClaims().get("exp")));
-            jwtTokenService.assertSubjectIsPresent(jwt.getClaims().get("sub"));
+            jwtTokenService.assertClaimIsPresent(jwt.getClaims().get("sub"));
 
             final UUID subjectUUID = jwtTokenService.extractAndAssertSubjectIsUUID(jwt.getClaims().get("sub").toString());
             final Optional<Account> account = accountPersistenceLayer.findByUUID(subjectUUID);
