@@ -1,6 +1,6 @@
 package com.recom.security;
 
-import com.recom.security.user.RECOMUserDetailsService;
+import com.recom.security.account.RECOMUserDetailsService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;

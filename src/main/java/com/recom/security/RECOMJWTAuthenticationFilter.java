@@ -26,7 +26,7 @@ public class RECOMJWTAuthenticationFilter extends OncePerRequestFilter {
     @NonNull
     private final JwtDecoder jwtDecoder;
     @NonNull
-    private final PublicEndpoints publicEndpoints;
+    private final PublicEndpointsProvider publicEndpointsProvider;
     @NonNull
     private final JwtTokenService jwtTokenService;
     @NonNull
@@ -42,7 +42,7 @@ public class RECOMJWTAuthenticationFilter extends OncePerRequestFilter {
             @NonNull final FilterChain filterChain
     ) throws ServletException, IOException {
         try {
-            if (publicEndpoints.publicEndpointsMatcher().matches(request)) {
+            if (publicEndpointsProvider.publicEndpointsMatcher().matches(request)) {
                 filterChain.doFilter(request, response);
                 return;
             }

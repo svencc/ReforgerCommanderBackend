@@ -1,4 +1,4 @@
-package com.recom.security.user;
+package com.recom.security.account;
 
 import lombok.Builder;
 import lombok.Data;

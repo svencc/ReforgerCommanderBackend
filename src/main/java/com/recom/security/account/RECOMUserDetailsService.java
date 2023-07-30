@@ -1,4 +1,4 @@
-package com.recom.security.user;
+package com.recom.security.account;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;

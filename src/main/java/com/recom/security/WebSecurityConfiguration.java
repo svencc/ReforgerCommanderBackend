@@ -22,7 +22,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 public class WebSecurityConfiguration implements AsyncConfigurer {
 
     @NonNull
-    private final PublicEndpoints publicEndpoints;
+    private final PublicEndpointsProvider publicEndpointsProvider;
 
     @NonNull
     private final RECOMJWTAuthenticationFilter authenticationFilter;
@@ -34,7 +34,7 @@ public class WebSecurityConfiguration implements AsyncConfigurer {
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorizeRequests) -> authorizeRequests
-                        .requestMatchers(publicEndpoints.publicEndpointsMatcher()).permitAll()
+                        .requestMatchers(publicEndpointsProvider.publicEndpointsMatcher()).permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(AbstractHttpConfigurer::disable)

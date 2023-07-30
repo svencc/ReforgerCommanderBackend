@@ -1,9 +1,9 @@
 package com.recom.security;
 
 import com.recom.entity.Account;
-import com.recom.security.user.RECOMAuthentication;
-import com.recom.security.user.RECOMUser;
-import com.recom.security.user.RECOMUserAuthorities;
+import com.recom.security.account.RECOMAuthentication;
+import com.recom.security.account.RECOMUser;
+import com.recom.security.account.RECOMUserAuthorities;
 import lombok.NonNull;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;

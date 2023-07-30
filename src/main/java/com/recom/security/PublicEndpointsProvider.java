@@ -2,6 +2,7 @@ package com.recom.security;
 
 import lombok.NonNull;
 import org.springframework.http.HttpMethod;
+import org.springframework.lang.Nullable;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
@@ -12,11 +13,18 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class PublicEndpoints {
+public class PublicEndpointsProvider {
+
+    @Nullable
+    private RequestMatcher cachedPublicEndpointMatcher;
 
     @NonNull
     public RequestMatcher publicEndpointsMatcher() {
-        return new OrRequestMatcher(publicEndpoints().stream().filter(Objects::nonNull).toList());
+        if (cachedPublicEndpointMatcher == null) {
+            cachedPublicEndpointMatcher = new OrRequestMatcher(publicEndpoints().stream().filter(Objects::nonNull).toList());
+        }
+
+        return cachedPublicEndpointMatcher;
     }
 
     @NonNull

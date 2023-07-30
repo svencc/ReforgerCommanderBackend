@@ -1,6 +1,6 @@
 package com.recom.service;
 
-import com.recom.config.AsyncConfiguration;
+import com.recom.configuration.AsyncConfiguration;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;

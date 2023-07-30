@@ -1,4 +1,4 @@
-package com.recom.config;
+package com.recom.configuration;
 
 import com.recom.exception.AsyncExceptionHandler;
 import lombok.RequiredArgsConstructor;
