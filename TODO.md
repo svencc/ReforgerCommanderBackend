@@ -1,6 +1,7 @@
 # TODO LIST
 *
 * jwt authentication implemented; add roles and permissions (also to db); after login account-token should make claims, from the database persisted roles/claims
+* add tests for RSAKeyGenerator.java
 *
 * DB-based Configuration System
       * goal: do not render clusters; render generic polygons and text with color and z-index!
@@ -64,6 +65,9 @@
 * delete map via POST
     * -> remove corresponding configs
     * -> cache reset
+*
+* add tests for Runners
+*
 *
 * Implement concave hull generator (besides existing convex hull)
 * add dependency license generator
