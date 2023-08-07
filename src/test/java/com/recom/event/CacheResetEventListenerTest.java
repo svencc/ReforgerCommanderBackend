@@ -32,7 +32,7 @@ public class CacheResetEventListenerTest {
 
 
     @Test
-    public void testHandleCacheResetAsyncEvent_WithCacheResetAsyncEvent_shouldClearsAllCaches() throws InterruptedException {
+    public void testHandleCacheResetAsyncEvent_withCacheResetAsyncEvent_shouldClearsAllCaches() throws InterruptedException {
         // Arrange
         final CacheResetAsyncEvent event = new CacheResetAsyncEvent();
 
@@ -57,7 +57,7 @@ public class CacheResetEventListenerTest {
     }
 
     @Test
-    public void testHandleCacheResetSyncEvent_WithCacheResetSyncEvent_shouldClearsAllCaches() {
+    public void testHandleCacheResetSyncEvent_withCacheResetSyncEvent_shouldClearsAllCaches() {
         // Arrange
         CacheResetSyncEvent event = new CacheResetSyncEvent();
 
