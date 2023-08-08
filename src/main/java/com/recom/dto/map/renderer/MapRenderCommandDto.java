@@ -1,4 +1,4 @@
-package com.recom.dto.situationpicture.mapobjects;
+package com.recom.dto.map.renderer;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,6 +19,9 @@ import java.util.UUID;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MapRenderCommandDto implements Serializable {
+
+    // MapRenderCommands - wir brauchen diverse Typen wie Polygon, Point, Line, Text, Image, Circle, etc.
+
 
     @Schema
     @JsonProperty()
@@ -50,13 +53,10 @@ public class MapRenderCommandDto implements Serializable {
 
     @Schema
     @JsonProperty()
-    private MapObjectType belongsToGroup; // Try to get Village Name
-
-    @Schema
-    @JsonProperty()
     @Builder.Default
     private List<String> tags = new ArrayList<>();  // village / structure or so
 
-    // density = area/points ; size (points of cluster)? area m2;
+    // density = area/points ; size (points of cluster)? area m2; <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< (META)
+
 
 }

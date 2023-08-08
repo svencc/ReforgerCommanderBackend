@@ -1,11 +1,10 @@
-package com.recom.api;
+package com.recom.api.map;
 
 import com.recom.api.commons.HttpCommons;
-import com.recom.dto.map.cluster.ClusterListDto;
-import com.recom.dto.situationpicture.SituationPictureDto;
-import com.recom.dto.situationpicture.SituationPictureRequestDto;
+import com.recom.dto.map.renderer.MapRenderingsDto;
+import com.recom.dto.map.renderer.MapRendererRequestDto;
 import com.recom.service.ReforgerPayloadParserService;
-import com.recom.service.SituationPictureService;
+import com.recom.service.MapRendererService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -26,13 +25,13 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "MapCluster")
-@RequestMapping("/api/v1/map/situation-picture")
-public class SituationPictureController {
+@RequestMapping("/api/v1/map/renderer")
+public class MapRendererController {
 
     @NonNull
     private final ReforgerPayloadParserService payloadParser;
     @NonNull
-    private final SituationPictureService situationPictureService;
+    private final MapRendererService mapRendererService;
 
 
     @Operation(
@@ -43,13 +42,13 @@ public class SituationPictureController {
             @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
     })
     @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity<SituationPictureDto> generateSituationPictureForm(
+    public ResponseEntity<MapRenderingsDto> generateMapRenderingsForm(
             @RequestParam(required = true)
             @NonNull final Map<String, String> payload
     ) {
-        log.debug("Requested POST /api/v1/map/situation-picture (FORM)");
+        log.debug("Requested POST /api/v1/map/renderer (FORM)");
 
-        return generateSituationPictureJSON(payloadParser.parseValidated(payload, SituationPictureRequestDto.class));
+        return generateMapRenderingsJSON(payloadParser.parseValidated(payload, MapRendererRequestDto.class));
     }
 
     @Operation(
@@ -60,17 +59,17 @@ public class SituationPictureController {
             @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
     })
     @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SituationPictureDto> generateSituationPictureJSON(
+    public ResponseEntity<MapRenderingsDto> generateMapRenderingsJSON(
             @RequestBody(required = true)
-            @NonNull final SituationPictureRequestDto situationPictureRequestDto
+            @NonNull final MapRendererRequestDto mapRendererRequestDto
     ) {
-        log.debug("Requested POST /api/v1/map/situation-picture (JSON)");
+        log.debug("Requested POST /api/v1/map/renderer (JSON)");
 
         // 202 Accepted logic - async processing
         // Refactor ClustersController. Extract async processing to service
 
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
-                .body(situationPictureService.generateSituationPicture(situationPictureRequestDto));
+                .body(mapRendererService.renderMap(mapRendererRequestDto));
     }
 }

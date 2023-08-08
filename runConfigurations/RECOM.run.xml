@@ -7,7 +7,7 @@
     <option name="VM_PARAMETERS" value="-XX:+UseShenandoahGC -Xms256m -Xmx16384m -Dspring.profiles.active=local" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="com.recom.runner.*" />
+        <option name="PATTERN" value="com.recom.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>
