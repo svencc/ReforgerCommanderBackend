@@ -1,7 +1,10 @@
 package com.recom.security.account;
 
-public enum RECOMAuthorities {
+import lombok.NonNull;
 
-    AUTHORITY_TEST, AUTHORITY_EVERYBODY
+public final class RECOMAuthorities {
+
+    @NonNull
+    public static final String EVERYBODY = "AUTHORITY_EVERYBODY";
 
 }

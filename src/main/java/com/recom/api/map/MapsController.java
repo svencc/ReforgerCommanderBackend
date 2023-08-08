@@ -2,6 +2,7 @@ package com.recom.api.map;
 
 import com.recom.api.commons.HttpCommons;
 import com.recom.security.account.RECOMAccount;
+import com.recom.security.account.RECOMAuthorities;
 import com.recom.service.map.MapMetaDataService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -41,7 +42,7 @@ public class MapsController {
             @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
     })
     @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Secured({"AUTHORITY_TEST"})
+    @Secured({RECOMAuthorities.EVERYBODY})
     public ResponseEntity<List<String>> listMapNames(
             @AuthenticationPrincipal RECOMAccount recomAccount
     ) {

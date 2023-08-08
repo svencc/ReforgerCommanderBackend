@@ -10,7 +10,7 @@ import java.util.UUID;
 @Builder
 public class RECOMAccount {
 
-    private Set<RECOMAuthorities> roles;
+    private Set<String> roles;
     private UUID accountUuid;
     private String accessKey;
 

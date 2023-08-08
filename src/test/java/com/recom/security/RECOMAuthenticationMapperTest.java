@@ -51,12 +51,12 @@ class RECOMAuthenticationMapperTest {
         assertNotNull(authentication);
         assertTrue(authentication.isAuthenticated());
 
-        final RECOMAccount principal = (RECOMAccount) authentication.getPrincipal();
+        final RECOMAccount principal = authentication.getPrincipal();
         assertNotNull(principal);
         assertEquals(accountUuid, principal.getAccountUuid());
         assertEquals("user-access-key", principal.getAccessKey());
 
-        final Set<String> expectedRoles = Set.of(RECOMAuthorities.AUTHORITY_TEST.name(), RECOMAuthorities.AUTHORITY_EVERYBODY.name());
+        final Set<String> expectedRoles = Set.of(RECOMAuthorities.EVERYBODY);
         final Set<String> actualRoles = authentication.getAuthorities().stream()
                 .map(authority -> (SimpleGrantedAuthority) authority)
                 .map(SimpleGrantedAuthority::getAuthority)

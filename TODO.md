@@ -2,7 +2,6 @@
 *
 * DB-based Configuration System
       * goal: do not render clusters; render generic polygons and text with color and z-index!
-      * clusterList with type, name, color, z-index 
     * new db config values for type-colors, z-indexes, etc.
     * rework cluster rendering to direct client polygon rendering; controlled by server?
 *
