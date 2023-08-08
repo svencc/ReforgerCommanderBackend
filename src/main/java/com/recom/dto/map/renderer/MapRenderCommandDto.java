@@ -20,8 +20,9 @@ import java.util.UUID;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MapRenderCommandDto implements Serializable {
 
-    // MapRenderCommands - wir brauchen diverse Typen wie Polygon, Point, Line, Text, Image, Circle, etc.
-
+    @Schema
+    @JsonProperty()
+    private MapRenderCommandType mapRenderCommandType;
 
     @Schema
     @JsonProperty()
