@@ -4,7 +4,7 @@ import com.recom.api.commons.HttpCommons;
 import com.recom.dto.map.renderer.MapRenderingsDto;
 import com.recom.dto.map.renderer.MapRendererRequestDto;
 import com.recom.service.ReforgerPayloadParserService;
-import com.recom.service.MapRendererService;
+import com.recom.service.map.MapRendererService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

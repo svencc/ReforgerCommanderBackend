@@ -1,4 +1,4 @@
-package com.recom.service;
+package com.recom.service.map;
 
 import com.recom.dto.map.renderer.MapRenderingsDto;
 import com.recom.dto.map.renderer.MapRendererRequestDto;
