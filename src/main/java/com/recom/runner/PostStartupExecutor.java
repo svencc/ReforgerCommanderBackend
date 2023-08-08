@@ -16,7 +16,6 @@ import java.util.List;
 @Slf4j
 @Order(1)
 @Component
-@RequiredArgsConstructor
 public class PostStartupExecutor implements ApplicationRunner {
 
     @NonNull
