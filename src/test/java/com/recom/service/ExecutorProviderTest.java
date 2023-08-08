@@ -15,12 +15,12 @@ class ExecutorProviderTest {
     @Mock
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
     @InjectMocks
-    private ExecutorProvider serviceToTest;
+    private ExecutorProvider serviceUnderTest;
 
     @Test
     public void testProvideClusterGeneratorExecutor() {
         // Act
-        ThreadPoolTaskExecutor resultExecutor = serviceToTest.provideClusterGeneratorExecutor();
+        ThreadPoolTaskExecutor resultExecutor = serviceUnderTest.provideClusterGeneratorExecutor();
 
         // Assert
         assertEquals(threadPoolTaskExecutor, resultExecutor);

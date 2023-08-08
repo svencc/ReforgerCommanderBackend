@@ -17,7 +17,7 @@ class AssertionServiceTest {
     @Mock
     private MapMetaDataService mapMetaDataService;
     @InjectMocks
-    private AssertionService serviceToTest;
+    private AssertionService serviceUnderTest;
 
     @Test
     public void testAssertMapExists_whenMapExists_shouldNotThrowException() {
@@ -26,7 +26,7 @@ class AssertionServiceTest {
         when(mapMetaDataService.mapExists(mapName)).thenReturn(true);
 
         // Act and Assert
-        assertDoesNotThrow(() -> serviceToTest.assertMapExists(mapName));
+        assertDoesNotThrow(() -> serviceUnderTest.assertMapExists(mapName));
     }
 
     @Test
@@ -37,7 +37,7 @@ class AssertionServiceTest {
 
         // Act and Assert
         HttpNotFoundException exception = assertThrows(HttpNotFoundException.class,
-                () -> serviceToTest.assertMapExists(mapName));
+                () -> serviceUnderTest.assertMapExists(mapName));
 
         assertEquals("Map nonExistingMap does not exist", exception.getMessage());
     }

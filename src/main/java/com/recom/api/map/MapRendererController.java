@@ -24,7 +24,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "MapCluster")
+@Tag(name = "MapRenderer")
 @RequestMapping("/api/v1/map/renderer")
 public class MapRendererController {
 
@@ -35,8 +35,8 @@ public class MapRendererController {
 
 
     @Operation(
-            summary = "Determines clusters of Town/City/Village and military relevant targets.",
-            description = "Calculates city clusters. WIP - other cluster have to be added; db-based-config system is needed (per map)."
+            summary = "Generates map render commands.",
+            description = "Calculates map render commands based on the given map."
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
@@ -52,8 +52,8 @@ public class MapRendererController {
     }
 
     @Operation(
-            summary = "Determines clusters of Town/City/Village and military relevant targets.",
-            description = "Calculates city clusters. WIP - other cluster have to be added; db-based-config system is needed (per map)."
+            summary = "Generates map render commands.",
+            description = "Calculates map render commands based on the given map."
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)

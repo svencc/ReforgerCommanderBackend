@@ -19,11 +19,11 @@ class StaticObjectMapperProviderTest {
     private ObjectMapper objectMapper;
 
     @InjectMocks
-    private StaticObjectMapperProvider serviceToTest;
+    private StaticObjectMapperProvider serviceUnderTest;
 
     @BeforeEach
     public void setUp() {
-        serviceToTest.postConstruct();
+        serviceUnderTest.postConstruct();
     }
 
     @Test
