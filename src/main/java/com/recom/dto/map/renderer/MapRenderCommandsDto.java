@@ -16,7 +16,7 @@ import java.util.List;
 @Schema
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MapRenderingsDto implements Serializable {
+public class MapRenderCommandsDto implements Serializable {
 
     @Schema
     @JsonProperty()
@@ -29,4 +29,5 @@ public class MapRenderingsDto implements Serializable {
     @Schema
     @JsonProperty()
     private BigDecimal zIndexMax;
+
 }

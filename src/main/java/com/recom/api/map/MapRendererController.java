@@ -1,7 +1,7 @@
 package com.recom.api.map;
 
 import com.recom.api.commons.HttpCommons;
-import com.recom.dto.map.renderer.MapRenderingsDto;
+import com.recom.dto.map.renderer.MapRenderCommandsDto;
 import com.recom.dto.map.renderer.MapRendererRequestDto;
 import com.recom.service.ReforgerPayloadParserService;
 import com.recom.service.map.MapRendererService;
@@ -42,7 +42,7 @@ public class MapRendererController {
             @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
     })
     @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity<MapRenderingsDto> generateMapRenderingsForm(
+    public ResponseEntity<MapRenderCommandsDto> generateMapRenderingsForm(
             @RequestParam(required = true)
             @NonNull final Map<String, String> payload
     ) {
@@ -59,7 +59,7 @@ public class MapRendererController {
             @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
     })
     @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<MapRenderingsDto> generateMapRenderingsJSON(
+    public ResponseEntity<MapRenderCommandsDto> generateMapRenderingsJSON(
             @RequestBody(required = true)
             @NonNull final MapRendererRequestDto mapRendererRequestDto
     ) {
