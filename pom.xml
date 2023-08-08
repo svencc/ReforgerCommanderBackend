@@ -18,13 +18,17 @@
 
     <properties>
         <java.version>17</java.version>
-        <org.projectlombok.version>1.18.28</org.projectlombok.version>
-        <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
-        <org.hibernate.orm.hibernate-jcache.version>6.2.5.Final</org.hibernate.orm.hibernate-jcache.version>
-        <org.ehcache.ehcache.version>3.10.8</org.ehcache.ehcache.version>
-        <spring-boot-maven-plugin.version>3.11.0</spring-boot-maven-plugin.version>
-        <jib.version>3.3.2</jib.version>
+        <lombok.version>1.18.28</lombok.version>
+        <mapstruct.version>1.5.5.Final</mapstruct.version>
+        <hibernate-jcache.version>6.2.7.Final</hibernate-jcache.version>
+        <ehcache.version>3.10.8</ehcache.version>
+        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
+        <jib-maven-plugin.version>3.3.2</jib-maven-plugin.version>
         <snakeyaml.version>2.0</snakeyaml.version>
+        <springdoc-openapi.version>2.1.0</springdoc-openapi.version>
+        <commons-math3.version>3.6.1</commons-math3.version>
+        <nimbus-jose-jwt.version>9.31</nimbus-jose-jwt.version>
+        <spring-security-oauth2-jose.version>6.1.2</spring-security-oauth2-jose.version>
 
         <!-- JIB from source -->
         <docker.source.base-image.registry>svencc</docker.source.base-image.registry>
@@ -60,12 +64,12 @@
         <dependency>
             <groupId>com.nimbusds</groupId>
             <artifactId>nimbus-jose-jwt</artifactId>
-            <version>9.31</version>
+            <version>${nimbus-jose-jwt.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-oauth2-jose</artifactId>
-            <version>6.1.2</version>
+            <version>${spring-security-oauth2-jose.version}</version>
         </dependency>
         <!-- JWT -->
 
@@ -74,7 +78,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-math3</artifactId>
-            <version>3.6.1</version>
+            <version>${commons-math3.version}</version>
         </dependency>
         <!-- APACHE MATH  -->
 
@@ -108,12 +112,12 @@
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-jcache</artifactId>
-            <version>${org.hibernate.orm.hibernate-jcache.version}</version>
+            <version>${hibernate-jcache.version}</version>
         </dependency>
         <dependency>
             <groupId>org.ehcache</groupId>
             <artifactId>ehcache</artifactId>
-            <version>${org.ehcache.ehcache.version}</version>
+            <version>${ehcache.version}</version>
             <classifier>jakarta</classifier>
             <scope>runtime</scope>
         </dependency>
@@ -124,14 +128,13 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>${org.projectlombok.version}</version>
-            <!--<optional>true</optional>-->
-            <scope>provided</scope>
+            <version>${lombok.version}</version>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
-            <version>${org.mapstruct.version}</version>
+            <version>${mapstruct.version}</version>
         </dependency>
         <!-- COMPILER UTILS  -->
 
@@ -140,7 +143,7 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>2.1.0</version>
+            <version>${springdoc-openapi.version}</version>
         </dependency>
         <!-- SPRINGDOC / OPENAPI/ SWAGGER -->
 
@@ -183,7 +186,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${spring-boot-maven-plugin.version}</version>
+                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -191,12 +194,12 @@
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
-                            <version>${org.projectlombok.version}</version>
+                            <version>${lombok.version}</version>
                         </path>
                         <path>
                             <groupId>org.mapstruct</groupId>
                             <artifactId>mapstruct-processor</artifactId>
-                            <version>${org.mapstruct.version}</version>
+                            <version>${mapstruct.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
@@ -204,7 +207,7 @@
             <plugin>
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
-                <version>${jib.version}</version>
+                <version>${jib-maven-plugin.version}</version>
                 <configuration>
                     <from>
                         <image>
@@ -226,6 +229,7 @@
                             <password>${docker.registry.password}</password>
                         </auth>
                     </to>
+
                     <container>
                         <entrypoint>./bootstrap</entrypoint>
                     </container>
