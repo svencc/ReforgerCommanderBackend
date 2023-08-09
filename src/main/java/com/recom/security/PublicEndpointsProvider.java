@@ -32,6 +32,7 @@ public class PublicEndpointsProvider {
         final ArrayList<RequestMatcher> publicEndpoints = new ArrayList<>();
         publicEndpoints.addAll(swaggerEndpoints());
         publicEndpoints.addAll(authenticateEndpoints());
+        publicEndpoints.addAll(actuatorEndpoints());
 
         return publicEndpoints;
     }
@@ -52,6 +53,13 @@ public class PublicEndpointsProvider {
         return List.of(
                 AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/v1/authenticate"),
                 AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/v1/authenticate/new-account")
+        );
+    }
+
+    @NonNull
+    private static List<RequestMatcher> actuatorEndpoints() {
+        return List.of(
+                AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/health")
         );
     }
 

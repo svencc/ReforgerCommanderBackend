@@ -5,8 +5,10 @@ import com.recom.dto.map.meta.MapMetaDto;
 import com.recom.service.AssertionService;
 import com.recom.service.map.MapMetaDataService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -37,11 +39,13 @@ public class MapMetaController {
 
 
     @Operation(
-            summary = "Gets a list of scanned maps meta data.",
-            description = "Return a list of maps with meta information."
+            summary = "Gets a list of scanned maps meta data",
+            description = "Return a list of maps with meta information.",
+            security = @SecurityRequirement(name = HttpCommons.BEARER_AUTHENTICATION_REQUIREMENT)
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
+            @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK),
+            @ApiResponse(responseCode = HttpCommons.UNAUTHORIZED_CODE, description = HttpCommons.UNAUTHORIZED, content = @Content())
     })
     @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<MapMetaDto>> mapMeta(

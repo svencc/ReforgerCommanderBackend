@@ -5,8 +5,10 @@ import com.recom.security.account.RECOMAccount;
 import com.recom.security.account.RECOMAuthorities;
 import com.recom.service.map.MapMetaDataService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -35,11 +37,13 @@ public class MapsController {
 
 
     @Operation(
-            summary = "Gets a list of all scanned map names.",
-            description = "Return a list of map names."
+            summary = "Gets a list of all scanned map names",
+            description = "Return a list of map names.",
+            security = @SecurityRequirement(name = HttpCommons.BEARER_AUTHENTICATION_REQUIREMENT)
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
+            @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK),
+            @ApiResponse(responseCode = HttpCommons.UNAUTHORIZED_CODE, description = HttpCommons.UNAUTHORIZED, content = @Content())
     })
     @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
     @Secured({RECOMAuthorities.EVERYBODY})

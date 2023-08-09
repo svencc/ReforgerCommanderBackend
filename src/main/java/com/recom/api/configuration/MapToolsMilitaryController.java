@@ -5,8 +5,10 @@ import com.recom.service.AssertionService;
 import com.recom.service.configuration.ConfigurationDescriptorProvider;
 import com.recom.service.configuration.ConfigurationMapToolsService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -35,11 +37,13 @@ public class MapToolsMilitaryController {
 
 
     @Operation(
-            summary = "Set resources for clustering militarys.",
-            description = "Sets map specific military resources. REGEX pattern matching is explicitly supported!"
+            summary = "Set resources for clustering militarys",
+            description = "Sets map specific military resources. REGEX pattern matching is explicitly supported!",
+            security = @SecurityRequirement(name = HttpCommons.BEARER_AUTHENTICATION_REQUIREMENT)
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
+            @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK),
+            @ApiResponse(responseCode = HttpCommons.UNAUTHORIZED_CODE, description = HttpCommons.UNAUTHORIZED, content = @Content())
     })
     @PutMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<String>> addMilitaryResources(
@@ -58,11 +62,13 @@ public class MapToolsMilitaryController {
     }
 
     @Operation(
-            summary = "Set resources for clustering militarys.",
-            description = "Sets map specific military resources. REGEX pattern matching is explicitly supported!"
+            summary = "Set resources for clustering militarys",
+            description = "Sets map specific military resources. REGEX pattern matching is explicitly supported!",
+            security = @SecurityRequirement(name = HttpCommons.BEARER_AUTHENTICATION_REQUIREMENT)
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
+            @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK),
+            @ApiResponse(responseCode = HttpCommons.UNAUTHORIZED_CODE, description = HttpCommons.UNAUTHORIZED, content = @Content())
     })
     @DeleteMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<String>> removeMilitaryResources(

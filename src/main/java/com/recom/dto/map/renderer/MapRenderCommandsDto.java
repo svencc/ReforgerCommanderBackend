@@ -23,11 +23,11 @@ public class MapRenderCommandsDto implements Serializable {
     private List<MapRenderCommandDto> renderCommands;
 
     @Schema
-    @JsonProperty()
+    @JsonProperty(value = "zIndexMin")
     private BigDecimal zIndexMin;
 
     @Schema
-    @JsonProperty()
+    @JsonProperty(value = "zIndexMax")
     private BigDecimal zIndexMax;
 
 }

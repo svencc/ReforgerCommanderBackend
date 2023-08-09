@@ -40,9 +40,10 @@ public class AuthenticationController {
     @NonNull
     private final ReforgerPayloadParserService payloadParser;
 
+
     @Operation(
             summary = "Authenticate a user",
-            description = "Authenticate a user via username and password; and returns a JWT token "
+            description = "Authenticate a user via username and password; and returns a JWT token."
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK),
@@ -60,7 +61,7 @@ public class AuthenticationController {
 
     @Operation(
             summary = "Authenticate a user",
-            description = "Authenticate a user via username and password; and returns a JWT token"
+            description = "Authenticate a user via username and password; and returns a JWT token."
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK),
@@ -80,7 +81,7 @@ public class AuthenticationController {
 
     @Operation(
             summary = "Request a new account",
-            description = "Create a new account"
+            description = "Create a new account."
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK),

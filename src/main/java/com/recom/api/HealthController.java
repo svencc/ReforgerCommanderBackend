@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class HealthController {
 
     @Operation(
-            summary = "Provides a health indicator.",
+            summary = "Provides a health indicator",
             description = "Returns 200 if alive."
     )
     @ApiResponses(value = {

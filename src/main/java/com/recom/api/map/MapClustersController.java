@@ -10,8 +10,10 @@ import com.recom.service.MutexService;
 import com.recom.service.ReforgerPayloadParserService;
 import com.recom.service.map.cluster.ClusteringService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +34,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 
+@Deprecated
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -54,28 +57,32 @@ public class MapClustersController {
 
 
     @Operation(
-            summary = "Determines clusters of Town/City/Village and military relevant targets.",
-            description = "Calculates city clusters. WIP - other cluster have to be added; db-based-config system is needed (per map)."
+            summary = "Determines clusters of structures",
+            description = "Calculates city clusters. WIP - other cluster have to be added; db-based-config system is needed (per map).",
+            security = @SecurityRequirement(name = HttpCommons.BEARER_AUTHENTICATION_REQUIREMENT)
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
+            @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK),
+            @ApiResponse(responseCode = HttpCommons.UNAUTHORIZED_CODE, description = HttpCommons.UNAUTHORIZED, content = @Content())
     })
-    @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @PostMapping(path = "/form", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity<ClusterListDto> generateClustersForm(
             @RequestParam(required = true)
             @NonNull final Map<String, String> payload
     ) {
-        log.debug("Requested POST /api/v1/clusters (FORM)");
+        log.debug("Requested POST /api/v1/clusters/form (FORM)");
 
         return generateClustersJSON(payloadParser.parseValidated(payload, MapClusterRequestDto.class));
     }
 
     @Operation(
-            summary = "Determines clusters of Town/City/Village and military relevant targets.",
-            description = "Calculates city clusters. WIP - other cluster have to be added; db-based-config system is needed (per map)."
+            summary = "Determines clusters of structures",
+            description = "Calculates city clusters. WIP - other cluster have to be added; db-based-config system is needed (per map).",
+            security = @SecurityRequirement(name = HttpCommons.BEARER_AUTHENTICATION_REQUIREMENT)
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
+            @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK),
+            @ApiResponse(responseCode = HttpCommons.UNAUTHORIZED_CODE, description = HttpCommons.UNAUTHORIZED, content = @Content())
     })
     @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ClusterListDto> generateClustersJSON(

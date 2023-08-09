@@ -7,8 +7,10 @@ import com.recom.event.event.async.cache.CacheResetAsyncEvent;
 import com.recom.service.AssertionService;
 import com.recom.service.configuration.ConfigurationRESTManagementService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.NonNull;
@@ -40,12 +42,15 @@ public class ConfigurationController {
     @NonNull
     private final ApplicationEventPublisher applicationEventPublisher;
 
+
     @Operation(
-            summary = "Get a list of overridable configuration settings.",
-            description = "Gets all or map specific configuration data, with default value and map specific overridden values."
+            summary = "Get a list of overridable configuration settings",
+            description = "Gets all or map specific configuration data, with default value and map specific overridden values.",
+            security = @SecurityRequirement(name = HttpCommons.BEARER_AUTHENTICATION_REQUIREMENT)
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
+            @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK),
+            @ApiResponse(responseCode = HttpCommons.UNAUTHORIZED_CODE, description = HttpCommons.UNAUTHORIZED, content = @Content())
     })
     @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<OverridableConfigurationDto>> getConfigurations(
@@ -66,11 +71,13 @@ public class ConfigurationController {
     }
 
     @Operation(
-            summary = "Set a list of overridable configuration settings.",
-            description = "Sets map specific configuration data, with map specific overridden values."
+            summary = "Set a list of overridable configuration settings",
+            description = "Sets map specific configuration data, with map specific overridden values.",
+            security = @SecurityRequirement(name = HttpCommons.BEARER_AUTHENTICATION_REQUIREMENT)
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
+            @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK),
+            @ApiResponse(responseCode = HttpCommons.UNAUTHORIZED_CODE, description = HttpCommons.UNAUTHORIZED, content = @Content())
     })
     @PutMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<OverridableConfigurationDto>> setConfigurations(

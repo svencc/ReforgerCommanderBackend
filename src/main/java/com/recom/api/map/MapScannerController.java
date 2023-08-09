@@ -6,8 +6,10 @@ import com.recom.dto.map.scanner.TransactionalEntityPackageDto;
 import com.recom.service.ReforgerPayloadParserService;
 import com.recom.service.map.scanner.MapEntityTransactionService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -37,8 +39,9 @@ public class MapScannerController {
 
 
     @Operation(
-            summary = "Starts a map-scanner transaction.",
-            description = "Starts a map-scanner session."
+            summary = "Starts a map-scanner transaction",
+            description = "Starts a map-scanner session.",
+            security = @SecurityRequirement(name = HttpCommons.BEARER_AUTHENTICATION_REQUIREMENT)
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
@@ -57,11 +60,13 @@ public class MapScannerController {
     }
 
     @Operation(
-            summary = "Ends a map-scanner transaction.",
-            description = "Ends a map-scanner session."
+            summary = "Ends a map-scanner transaction",
+            description = "Ends a map-scanner session.",
+            security = @SecurityRequirement(name = HttpCommons.BEARER_AUTHENTICATION_REQUIREMENT)
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
+            @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK),
+            @ApiResponse(responseCode = HttpCommons.UNAUTHORIZED_CODE, description = HttpCommons.UNAUTHORIZED, content = @Content())
     })
     @PostMapping(path = "/transaction/commit", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity<Void> commitTransaction(
@@ -77,11 +82,13 @@ public class MapScannerController {
     }
 
     @Operation(
-            summary = "Transfer map-entities-package.",
-            description = "Receives a scanned package of map-entities."
+            summary = "Transfer map-entities-package",
+            description = "Receives a scanned package of map-entities.",
+            security = @SecurityRequirement(name = HttpCommons.BEARER_AUTHENTICATION_REQUIREMENT)
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
+            @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK),
+            @ApiResponse(responseCode = HttpCommons.UNAUTHORIZED_CODE, description = HttpCommons.UNAUTHORIZED, content = @Content())
     })
     @PostMapping(path = "/transaction/entities", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity<Void> transmitEntityPackage(

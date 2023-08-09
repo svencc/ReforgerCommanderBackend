@@ -7,12 +7,14 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
 @Data
-@Builder
 @Schema
+@Builder
+@NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MapRendererRequestDto implements Serializable {
@@ -23,3 +25,4 @@ public class MapRendererRequestDto implements Serializable {
     private String mapName;
 
 }
+

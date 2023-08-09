@@ -1,13 +1,17 @@
 package com.recom.api.map;
 
 import com.recom.api.commons.HttpCommons;
+import com.recom.dto.map.cluster.MapClusterRequestDto;
 import com.recom.dto.map.renderer.MapRenderCommandsDto;
 import com.recom.dto.map.renderer.MapRendererRequestDto;
 import com.recom.service.ReforgerPayloadParserService;
 import com.recom.service.map.MapRendererService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -35,28 +39,32 @@ public class MapRendererController {
 
 
     @Operation(
-            summary = "Generates map render commands.",
-            description = "Calculates map render commands based on the given map."
+            summary = "Generates map render commands",
+            description = "Calculates map render commands based on the given map.",
+            security = @SecurityRequirement(name = HttpCommons.BEARER_AUTHENTICATION_REQUIREMENT)
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
+            @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK),
+            @ApiResponse(responseCode = HttpCommons.UNAUTHORIZED_CODE, description = HttpCommons.UNAUTHORIZED, content = @Content())
     })
-    @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @PostMapping(path = "/form", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity<MapRenderCommandsDto> generateMapRenderingsForm(
             @RequestParam(required = true)
             @NonNull final Map<String, String> payload
     ) {
-        log.debug("Requested POST /api/v1/map/renderer (FORM)");
+        log.debug("Requested POST /api/v1/map/renderer/form (FORM)");
 
         return generateMapRenderingsJSON(payloadParser.parseValidated(payload, MapRendererRequestDto.class));
     }
 
     @Operation(
-            summary = "Generates map render commands.",
-            description = "Calculates map render commands based on the given map."
+            summary = "Generates map render commands",
+            description = "Calculates map render commands based on the given map.",
+            security = @SecurityRequirement(name = HttpCommons.BEARER_AUTHENTICATION_REQUIREMENT)
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
+            @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK),
+            @ApiResponse(responseCode = HttpCommons.UNAUTHORIZED_CODE, description = HttpCommons.UNAUTHORIZED, content = @Content())
     })
     @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MapRenderCommandsDto> generateMapRenderingsJSON(
@@ -72,4 +80,5 @@ public class MapRendererController {
                 .cacheControl(CacheControl.noCache())
                 .body(mapRendererService.renderMap(mapRendererRequestDto));
     }
+
 }
