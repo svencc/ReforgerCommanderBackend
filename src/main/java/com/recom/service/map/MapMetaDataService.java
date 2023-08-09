@@ -2,13 +2,16 @@ package com.recom.service.map;
 
 import com.recom.dto.map.meta.MapMetaDto;
 import com.recom.persistence.mapEntity.MapEntityPersistenceLayer;
+import com.recom.service.DBCachedService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -16,13 +19,44 @@ import java.util.List;
 public class MapMetaDataService {
 
     @NonNull
-    private final MapEntityPersistenceLayer mapEntityPersistenceLayer;
+    public static final String PROVIDEMAPMETALIST_PROVIDEMAPMETALIST_CACHE = "MapMetaDataService.provideMapMetaList";
+    public static final String PROVIDEMAPMETALIST_PROVIDEMAPMETA_CACHE = "MapMetaDataService.provideMapMeta";
 
     @NonNull
-    @Cacheable(cacheNames = "MapMetaDataService.provideMapMetaList")
+    private final MapEntityPersistenceLayer mapEntityPersistenceLayer;
+    @NonNull
+    private final DBCachedService dbCachedService;
+
+    @NonNull
+    @Cacheable(cacheNames = PROVIDEMAPMETALIST_PROVIDEMAPMETALIST_CACHE)
     public List<MapMetaDto> provideMapMetaList() {
-        return mapEntityPersistenceLayer.findAllMapNames().stream()
-                .map((@NonNull final String mapName) -> MapMetaDto.builder()
+        return dbCachedService.proxyToDBCache(
+                PROVIDEMAPMETALIST_PROVIDEMAPMETALIST_CACHE,
+                "",
+                () -> mapEntityPersistenceLayer.findAllMapNames().stream()
+                        .map((@NonNull final String mapName) -> MapMetaDto.builder()
+                                .mapName(mapName)
+                                .entitiesCount(mapEntityPersistenceLayer.countEntitiesByMapName(mapName))
+                                .utilizedClasses(mapEntityPersistenceLayer.utilizedClassesByMapName(mapName))
+                                .utilizedResources(mapEntityPersistenceLayer.utilizedResourcesByMapName(mapName))
+                                .utilizedPrefabs(mapEntityPersistenceLayer.utilizedPrefabsByMapName(mapName))
+                                .utilizedMapMetaTypes(mapEntityPersistenceLayer.utilizedMapMetaTypeByMapName(mapName))
+                                .namedEntities(mapEntityPersistenceLayer.utilizedNamedEntitiesByMapName(mapName))
+                                .build()
+                        )
+                        .collect(Collectors.toCollection(ArrayList::new))
+
+        );
+    }
+
+    @NonNull
+    @Cacheable(cacheNames = PROVIDEMAPMETALIST_PROVIDEMAPMETA_CACHE)
+    public MapMetaDto provideMapMeta(@NonNull final String mapName) {
+        log.info("provideMapMeta({})", mapName);
+        return dbCachedService.proxyToDBCache(
+                PROVIDEMAPMETALIST_PROVIDEMAPMETA_CACHE,
+                mapName,
+                () -> MapMetaDto.builder()
                         .mapName(mapName)
                         .entitiesCount(mapEntityPersistenceLayer.countEntitiesByMapName(mapName))
                         .utilizedClasses(mapEntityPersistenceLayer.utilizedClassesByMapName(mapName))
@@ -31,23 +65,8 @@ public class MapMetaDataService {
                         .utilizedMapMetaTypes(mapEntityPersistenceLayer.utilizedMapMetaTypeByMapName(mapName))
                         .namedEntities(mapEntityPersistenceLayer.utilizedNamedEntitiesByMapName(mapName))
                         .build()
-                )
-                .toList();
-    }
 
-    @NonNull
-    @Cacheable(cacheNames = "MapMetaDataService.provideMapMeta")
-    public MapMetaDto provideMapMeta(@NonNull final String mapName) {
-        log.info("provideMapMeta({})", mapName);
-        return MapMetaDto.builder()
-                .mapName(mapName)
-                .entitiesCount(mapEntityPersistenceLayer.countEntitiesByMapName(mapName))
-                .utilizedClasses(mapEntityPersistenceLayer.utilizedClassesByMapName(mapName))
-                .utilizedResources(mapEntityPersistenceLayer.utilizedResourcesByMapName(mapName))
-                .utilizedPrefabs(mapEntityPersistenceLayer.utilizedPrefabsByMapName(mapName))
-                .utilizedMapMetaTypes(mapEntityPersistenceLayer.utilizedMapMetaTypeByMapName(mapName))
-                .namedEntities(mapEntityPersistenceLayer.utilizedNamedEntitiesByMapName(mapName))
-                .build();
+        );
     }
 
     @NonNull
