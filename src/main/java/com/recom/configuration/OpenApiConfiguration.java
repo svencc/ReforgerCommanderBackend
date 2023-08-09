@@ -1,4 +1,4 @@
-package com.recom.api.configuration;
+package com.recom.configuration;
 
 import com.recom.api.commons.HttpCommons;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;

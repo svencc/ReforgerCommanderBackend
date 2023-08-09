@@ -37,7 +37,7 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 @Tag(name = "MapCluster")
 @RequestMapping("/api/v1/map/clusters")
-public class ClustersController {
+public class MapClustersController {
 
     @NonNull
     private final AssertionService assertionService;
