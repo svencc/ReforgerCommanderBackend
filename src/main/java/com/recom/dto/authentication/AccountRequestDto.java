@@ -8,13 +8,15 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.UUID;
 
 import java.io.Serializable;
 
 @Data
-@Builder
 @Schema
+@Builder
+@NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AccountRequestDto implements Serializable {
@@ -28,3 +30,4 @@ public class AccountRequestDto implements Serializable {
     private String accessKey;
 
 }
+

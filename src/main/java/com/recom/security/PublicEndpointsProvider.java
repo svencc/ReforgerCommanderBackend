@@ -52,6 +52,7 @@ public class PublicEndpointsProvider {
     private static List<RequestMatcher> authenticateEndpoints() {
         return List.of(
                 AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/v1/authenticate"),
+                AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/v1/authenticate/form"),
                 AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/v1/authenticate/new-account")
         );
     }

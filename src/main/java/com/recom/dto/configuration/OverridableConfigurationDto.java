@@ -7,18 +7,16 @@ import com.recom.dto.configuration.OverridableConfigurationInterface;
 import com.recom.model.configuration.ConfigurationType;
 import com.recom.service.provider.StaticObjectMapperProvider;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.SneakyThrows;
+import lombok.*;
 import org.springframework.lang.Nullable;
 
 import java.io.Serializable;
 import java.util.List;
 
 @Data
-@Builder
 @Schema
+@Builder
+@NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class OverridableConfigurationDto implements Serializable, OverridableConfigurationInterface {
