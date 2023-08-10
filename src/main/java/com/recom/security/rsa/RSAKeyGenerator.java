@@ -45,7 +45,7 @@ public class RSAKeyGenerator {
     @NonNull
     private RSAKey hydrateKeyThroughFilesystem(@NonNull final String keyPath) throws Exception {
         if (keypairExists(keyPath)) {
-            log.info("| +- Keys exist.");
+            log.info("| +- Keys exist");
 
             final PublicKey publicKey = loadPublicKeyFromFile(keyPath);
             final PrivateKey privateKey = loadPrivateKeyFromFile(keyPath);
@@ -56,8 +56,8 @@ public class RSAKeyGenerator {
                     .keyID(uuid)
                     .build();
         } else {
-            log.info("| +- Keys do not exist.");
-            log.info("| +- Generate key pair.");
+            log.info("| +- Keys do not exist");
+            log.info("| +- Generate key pair");
 
             final KeyPair keyPair = generateKeypair();
             persistKeyToFile(keyPath, KeyType.PUBLIC, keyPair.getPublic().getEncoded());

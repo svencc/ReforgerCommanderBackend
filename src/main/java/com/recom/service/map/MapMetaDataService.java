@@ -30,7 +30,7 @@ public class MapMetaDataService {
     @NonNull
     @Cacheable(cacheNames = PROVIDEMAPMETALIST_PROVIDEMAPMETALIST_CACHE)
     public List<MapMetaDto> provideMapMetaList() {
-        return dbCachedService.proxyToDBCache(
+        return dbCachedService.proxyToDBCacheSafe(
                 PROVIDEMAPMETALIST_PROVIDEMAPMETALIST_CACHE,
                 "",
                 () -> mapEntityPersistenceLayer.findAllMapNames().stream()
@@ -53,7 +53,7 @@ public class MapMetaDataService {
     @Cacheable(cacheNames = PROVIDEMAPMETALIST_PROVIDEMAPMETA_CACHE)
     public MapMetaDto provideMapMeta(@NonNull final String mapName) {
         log.info("provideMapMeta({})", mapName);
-        return dbCachedService.proxyToDBCache(
+        return dbCachedService.proxyToDBCacheSafe(
                 PROVIDEMAPMETALIST_PROVIDEMAPMETA_CACHE,
                 mapName,
                 () -> MapMetaDto.builder()

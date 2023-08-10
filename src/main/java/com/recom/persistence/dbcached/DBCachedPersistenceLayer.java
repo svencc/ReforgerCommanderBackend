@@ -1,6 +1,7 @@
 package com.recom.persistence.dbcached;
 
 import com.recom.entity.DBCachedItem;
+import com.recom.exception.DBCachedDeserializationException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,17 @@ public class DBCachedPersistenceLayer {
     @NonNull
     private final DatabasePersistentCacheRepository databasePersistentCacheRepository;
 
+    public <V extends Serializable> void delete(
+            @NonNull final String cacheName,
+            @NonNull final String cacheKey
+    ) {
+        databasePersistentCacheRepository.findByCacheNameAndCacheKey(cacheName, cacheKey)
+                .ifPresent(cacheItem -> {
+                    log.debug("Delete cache item {} - {}", cacheName, cacheKey);
+                    databasePersistentCacheRepository.delete(cacheItem);
+                });
+    }
+
     public <V extends Serializable> void put(
             @NonNull final String cacheName,
             @NonNull final String cacheKey,
@@ -34,7 +46,7 @@ public class DBCachedPersistenceLayer {
             @NonNull final DBCachedItem existingCacheItem,
             @NonNull final V value
     ) {
-        log.info("Updating existing cache item {} - {}.", existingCacheItem.getCacheName(), existingCacheItem.getCacheKey());
+        log.debug("Updating existing cache item {} - {}", existingCacheItem.getCacheName(), existingCacheItem.getCacheKey());
         try (ByteArrayOutputStream byteArrayOutputStream = serializeObject(value)) {
             existingCacheItem.setCachedValue(byteArrayOutputStream.toByteArray());
             return existingCacheItem;
@@ -50,7 +62,7 @@ public class DBCachedPersistenceLayer {
             @NonNull final String cacheKey,
             @NonNull final V cachedValue
     ) {
-        log.info("Creating new cache item {} - {}.", cacheName, cacheKey);
+        log.debug("Creating new cache item {} - {}.", cacheName, cacheKey);
         try (ByteArrayOutputStream byteArrayOutputStream = serializeObject(cachedValue)) {
             return DBCachedItem.builder()
                     .cacheName(cacheName)
@@ -76,13 +88,12 @@ public class DBCachedPersistenceLayer {
     public <V extends Serializable> Optional<V> get(
             @NonNull final String cacheName,
             @NonNull final String cacheKey
-    ) {
-        log.info("Lookup cache item {} - {}.", cacheName, cacheKey);
+    ) throws DBCachedDeserializationException {
         final Optional<DBCachedItem> byCacheNameAndCacheKey = databasePersistentCacheRepository.findByCacheNameAndCacheKey(cacheName, cacheKey);
 
         byCacheNameAndCacheKey.ifPresentOrElse(
-                (__) -> log.info("Found cache item {} - {}.", cacheName, cacheKey),
-                () -> log.info("Cache item {} - {} not found.", cacheName, cacheKey)
+                (__) -> log.info("Cache hit {} - {}", cacheName, cacheKey),
+                () -> log.info("Cache miss {} - {}", cacheName, cacheKey)
         );
 
         return byCacheNameAndCacheKey.flatMap(cacheItem -> deserializeCacheValue(cacheKey, cacheItem.getCachedValue()));
@@ -92,12 +103,12 @@ public class DBCachedPersistenceLayer {
     private <V extends Serializable> Optional<V> deserializeCacheValue(
             @NonNull final String cacheKey,
             final byte[] serializedValue
-    ) {
+    ) throws DBCachedDeserializationException {
         try (ObjectInputStream inputStream = new ObjectInputStream(new ByteArrayInputStream(serializedValue))) {
             return Optional.ofNullable((V) inputStream.readObject());
         } catch (Exception e) {
             log.error("Error deserializing cache value with key {}!", cacheKey, e);
-            return Optional.empty();
+            throw new DBCachedDeserializationException(String.format("Unable to deserialize cacheKey %s1", cacheKey), e);
         }
     }
 

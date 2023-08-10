@@ -6,6 +6,7 @@ import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -16,8 +17,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -28,9 +28,11 @@ class DBCachedPersistenceLayerTest {
 
     @InjectMocks
     private DBCachedPersistenceLayer cachePersistenceLayer;
+    @Captor
+    private ArgumentCaptor<DBCachedItem> cacheItemCaptor;
 
     @Test
-    public void testPut_NonExistingCacheItem_ItemIsStored() {
+    public void testPut_withNonExistingCacheItem_thenItemIsStored() {
         // Arrange
         final String cacheName = "testCacheName";
         final String key = "testKey";
@@ -64,7 +66,7 @@ class DBCachedPersistenceLayerTest {
     }
 
     @Test
-    public void testGet_withValidCacheData_returnsValue() {
+    public void testGet_withValidCacheData_thenReturnValue() {
         // Arrange
         final String cacheName = "testCacheName";
         final String key = "testKey";
@@ -84,6 +86,46 @@ class DBCachedPersistenceLayerTest {
         // Assert
         assertTrue(result.isPresent());
         assertEquals(value, result.get());
+    }
+
+    @Test
+    public void testDelete_withExistingCacheItem_thenDeleteCacheItem() {
+        // Arrange
+        final String cacheName = "testCacheName";
+        final String key = "testKey";
+
+        final DBCachedItem cachedItem = DBCachedItem.builder()
+                .cacheName(cacheName)
+                .cacheKey(key)
+                .build();
+
+        when(repository.findByCacheNameAndCacheKey(eq(cacheName), eq(key))).thenReturn(Optional.of(cachedItem));
+
+        // Act
+        cachePersistenceLayer.delete(cacheName, key);
+
+        // Assert
+        verify(repository, times(1)).delete(cacheItemCaptor.capture());
+
+        final DBCachedItem capturedCacheItem = cacheItemCaptor.getValue();
+        assertNotNull(capturedCacheItem);
+        assertEquals(cacheName, capturedCacheItem.getCacheName());
+        assertEquals(key, capturedCacheItem.getCacheKey());
+    }
+
+    @Test
+    public void testDelete_withNonExistingCacheItem_thenDeleteNothing() {
+        // Arrange
+        final String cacheName = "testCacheName";
+        final String key = "testKey";
+
+        when(repository.findByCacheNameAndCacheKey(eq(cacheName), eq(key))).thenReturn(Optional.empty());
+
+        // Act
+        cachePersistenceLayer.delete(cacheName, key);
+
+        // Assert
+        verify(repository, never()).delete(any());
     }
 
 }

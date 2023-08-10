@@ -32,7 +32,7 @@ public class MapRenderCommandDto implements Serializable {
 
     @Schema
     @JsonProperty()
-    private List<Point2DDto> geometry;  // cluster polygon
+    private List<Point2DDto> geometryVertices;  // cluster polygon
 
     @Schema
     @JsonProperty()
@@ -52,7 +52,7 @@ public class MapRenderCommandDto implements Serializable {
 
     @Schema
     @JsonProperty()
-    private String zIndex; // all clusters have zIndex = 0
+    private Integer zIndex; // all clusters have zIndex = 0
 
     @Schema
     @JsonProperty()
