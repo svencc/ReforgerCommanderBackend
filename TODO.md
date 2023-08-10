@@ -45,6 +45,10 @@
 * jwt authentication implemented; add roles and permissions (also to db); after login account-token should make claims, from the database persisted roles/claims
     * add tests for RSAKeyGenerator.java
 * 
+* Create INITIAL ADMIN-USER on FIRST STARTUP if not exists (random password)
+    * secure authenticate/new-account endpoints
+    * add account management endpoints (delete, update, change password)
+* 
 * 
 * Error Handling
     * DB based error logging with route, payload, timestamp, request-ip in error logging table!
