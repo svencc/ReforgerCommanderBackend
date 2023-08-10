@@ -19,6 +19,14 @@ public class DBCachedPersistenceLayer {
     @NonNull
     private final DatabasePersistentCacheRepository databasePersistentCacheRepository;
 
+
+    public <V extends Serializable> boolean isInDBCache(
+            @NonNull final String cacheName,
+            @NonNull final String cacheKey
+    ) {
+        return databasePersistentCacheRepository.findByCacheNameAndCacheKey(cacheName, cacheKey).isPresent();
+    }
+
     public <V extends Serializable> void delete(
             @NonNull final String cacheName,
             @NonNull final String cacheKey

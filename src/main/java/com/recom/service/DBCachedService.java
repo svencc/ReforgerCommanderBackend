@@ -52,7 +52,6 @@ public class DBCachedService {
                             return value;
                         }
                 );
-
     }
 
 }

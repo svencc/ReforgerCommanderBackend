@@ -25,9 +25,9 @@ class DBCachedPersistenceLayerTest {
 
     @Mock
     private DatabasePersistentCacheRepository repository;
-
     @InjectMocks
-    private DBCachedPersistenceLayer cachePersistenceLayer;
+    private DBCachedPersistenceLayer serviceUnderTest;
+
     @Captor
     private ArgumentCaptor<DBCachedItem> cacheItemCaptor;
 
@@ -44,7 +44,7 @@ class DBCachedPersistenceLayerTest {
         final ArgumentCaptor<DBCachedItem> captor = ArgumentCaptor.forClass(DBCachedItem.class);
 
         // Act
-        cachePersistenceLayer.put(cacheName, key, value);
+        serviceUnderTest.put(cacheName, key, value);
 
         // Assert
         verify(repository, times(1)).save(captor.capture());
@@ -81,7 +81,7 @@ class DBCachedPersistenceLayerTest {
         when(repository.findByCacheNameAndCacheKey(eq(cacheName), eq(key))).thenReturn(Optional.of(cacheItem));
 
         // Act
-        Optional<String> result = cachePersistenceLayer.get(cacheName, key);
+        Optional<String> result = serviceUnderTest.get(cacheName, key);
 
         // Assert
         assertTrue(result.isPresent());
@@ -102,7 +102,7 @@ class DBCachedPersistenceLayerTest {
         when(repository.findByCacheNameAndCacheKey(eq(cacheName), eq(key))).thenReturn(Optional.of(cachedItem));
 
         // Act
-        cachePersistenceLayer.delete(cacheName, key);
+        serviceUnderTest.delete(cacheName, key);
 
         // Assert
         verify(repository, times(1)).delete(cacheItemCaptor.capture());
@@ -122,10 +122,44 @@ class DBCachedPersistenceLayerTest {
         when(repository.findByCacheNameAndCacheKey(eq(cacheName), eq(key))).thenReturn(Optional.empty());
 
         // Act
-        cachePersistenceLayer.delete(cacheName, key);
+        serviceUnderTest.delete(cacheName, key);
 
         // Assert
         verify(repository, never()).delete(any());
+    }
+
+    @Test
+    public void testIsInDBCache_withExistingCacheItem_thenReturnTrue() {
+        // Arrange
+        final String cacheName = "testCacheName";
+        final String key = "testKey";
+        final DBCachedItem cachedItem = DBCachedItem.builder()
+                .cacheName(cacheName)
+                .cacheKey(key)
+                .build();
+
+        when(repository.findByCacheNameAndCacheKey(eq(cacheName), eq(key))).thenReturn(Optional.of(cachedItem));
+
+        // Act
+        boolean result = serviceUnderTest.isInDBCache(cacheName, key);
+
+        // Assert
+        assertTrue(result);
+    }
+
+    @Test
+    public void testIsInDBCache_withNonExistingCacheItem_thenReturnFalse() {
+        // Arrange
+        final String cacheName = "testCacheName";
+        final String key = "testKey";
+
+        when(repository.findByCacheNameAndCacheKey(eq(cacheName), eq(key))).thenReturn(Optional.empty());
+
+        // Act
+        boolean result = serviceUnderTest.isInDBCache(cacheName, key);
+
+        // Assert
+        assertFalse(result);
     }
 
 }
