@@ -4,6 +4,7 @@ import com.recom.api.commons.HttpCommons;
 import com.recom.dto.map.cluster.ClusterDto;
 import com.recom.dto.map.cluster.ClusterListDto;
 import com.recom.dto.map.cluster.MapClusterRequestDto;
+import com.recom.exception.DBCachedDeserializationException;
 import com.recom.service.*;
 import com.recom.service.map.cluster.ClusteringService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,7 +16,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
@@ -24,9 +24,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -92,115 +92,55 @@ public class MapClustersController {
 
         assertionService.assertMapExists(clusterRequestDto.getMapName());
 
-
-
-
-
-
-
         if (dbCachedManager.isCached(ClusteringService.MAPENTITYPERSISTENCELAYER_GENERATECLUSTERS_CACHE, clusterRequestDto.getMapName())) {
-            final Optional<ClusterListDto> clusterList = dbCachedManager.get(ClusteringService.MAPENTITYPERSISTENCELAYER_GENERATECLUSTERS_CACHE, clusterRequestDto.getMapName());
-//            dbCachedManager.put(ClusteringService.MAPENTITYPERSISTENCELAYER_GENERATECLUSTERS_CACHE, clusterRequestDto.getMapName(), clusterList.get());
-
-//            return ResponseEntity.ok(clusterList.get());
-        } else {
-            final String mutexFormat = "ClustersController.generateClustersJSON#%1s";
-
-            boolean claimed = mutexService.claim(String.format(mutexFormat, clusterRequestDto.getMapName()));
-            if (claimed) {
-                log.info("Generating clusters for map {}.", clusterRequestDto.getMapName());
-
-                CompletableFuture.supplyAsync(() -> {
-                    final StopWatch stopwatch = new StopWatch();
-                    stopwatch.start();
-
-                    Optional<List<ClusterDto>> result = Optional.empty();
-                    try {
-                        result = Optional.of(clusteringService.generateClusters(clusterRequestDto.getMapName()));
-                    } catch (Exception e) {
-                        log.error("Async-Exception", e);
-                    } finally {
-                        mutexService.release(String.format(mutexFormat, clusterRequestDto.getMapName()));
-                        stopwatch.stop();
-                        log.info("Generated clusters for map {} in {} ms.", clusterRequestDto.getMapName(), stopwatch.getTotalTimeMillis());
-                    }
-
-                    return result;
-                }, executorProvider.provideClusterGeneratorExecutor());
+            try {
+                // if present in cache, return it
+                final Optional<ArrayList<ClusterDto>> clusterList = dbCachedManager.get(ClusteringService.MAPENTITYPERSISTENCELAYER_GENERATECLUSTERS_CACHE, clusterRequestDto.getMapName());
+                return clusterList.map((value) -> ResponseEntity.status(HttpStatus.OK)
+                                .cacheControl(CacheControl.noCache())
+                                .body(ClusterListDto.builder().clusterList(value).build())
+                        )
+                        .orElseGet(() -> ResponseEntity
+                                .status(HttpStatus.NOT_FOUND)
+                                .cacheControl(CacheControl.noCache())
+                                .build()
+                        );
+            } catch (DBCachedDeserializationException dbcde) {
+                log.error("Unable to deserialize cached value; Generating new one.");
+                // if present in cache, but deserialization failed, delete it and generate new one
+                dbCachedManager.delete(ClusteringService.MAPENTITYPERSISTENCELAYER_GENERATECLUSTERS_CACHE, clusterRequestDto.getMapName());
             }
-
-            return ResponseEntity.status(HttpStatus.ACCEPTED)
-                    .cacheControl(CacheControl.noCache())
-                    .build();
         }
 
+        // if not present in cache, generate it
+        final String mutexFormat = "ClustersController.generateClustersJSON#%1s";
 
+        boolean claimed = mutexService.claim(String.format(mutexFormat, clusterRequestDto.getMapName()));
+        if (claimed) {
+            log.info("Generating clusters for map {}.", clusterRequestDto.getMapName());
 
+            CompletableFuture.supplyAsync(() -> {
+                final StopWatch stopwatch = new StopWatch();
+                stopwatch.start();
 
+                Optional<List<ClusterDto>> result = Optional.empty();
+                try {
+                    result = Optional.of(clusteringService.generateClusters(clusterRequestDto.getMapName()));
+                } catch (Exception e) {
+                    log.error("Async-Exception", e);
+                } finally {
+                    mutexService.release(String.format(mutexFormat, clusterRequestDto.getMapName()));
+                    stopwatch.stop();
+                    log.info("Generated clusters for map {} in {} ms.", clusterRequestDto.getMapName(), stopwatch.getTotalTimeMillis());
+                }
 
-
-
-
-
-
-
-
-
-
-
-
-        final Optional<List<ClusterDto>> cachedValue = Optional.ofNullable(cacheManager.getCache(ClusteringService.MAPENTITYPERSISTENCELAYER_GENERATECLUSTERS_CACHE))
-                .flatMap(cache -> {
-                    try {
-                        final Optional<Cache.ValueWrapper> valueWrapper = Optional.ofNullable(cache.get(clusterRequestDto.getMapName()));
-                        if (valueWrapper.isPresent()) {
-                            return Optional.ofNullable((List<ClusterDto>) valueWrapper.get().get());
-                        } else {
-                            return Optional.empty();
-                        }
-                    } catch (NoSuchElementException noSuchElementException) {
-                        return Optional.empty();
-                    } catch (Exception e) {
-                        log.error(e.getMessage(), e);
-                        return Optional.empty();
-                    }
-                });
-
-        if (cachedValue.isPresent()) {
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .cacheControl(CacheControl.noCache())
-                    .body(ClusterListDto.builder().clusterList(cachedValue.get()).build());
-        } else {
-            final String mutexFormat = "ClustersController.generateClustersJSON#%1s";
-
-            boolean claimed = mutexService.claim(String.format(mutexFormat, clusterRequestDto.getMapName()));
-            if (claimed) {
-                log.info("Generating clusters for map {}.", clusterRequestDto.getMapName());
-
-                CompletableFuture.supplyAsync(() -> {
-                    final StopWatch stopwatch = new StopWatch();
-                    stopwatch.start();
-
-                    Optional<List<ClusterDto>> result = Optional.empty();
-                    try {
-                        result = Optional.of(clusteringService.generateClusters(clusterRequestDto.getMapName()));
-                    } catch (Exception e) {
-                        log.error("Async-Exception", e);
-                    } finally {
-                        mutexService.release(String.format(mutexFormat, clusterRequestDto.getMapName()));
-                        stopwatch.stop();
-                        log.info("Generated clusters for map {} in {} ms.", clusterRequestDto.getMapName(), stopwatch.getTotalTimeMillis());
-                    }
-
-                    return result;
-                }, executorProvider.provideClusterGeneratorExecutor());
-            }
-
-            return ResponseEntity.status(HttpStatus.ACCEPTED)
-                    .cacheControl(CacheControl.noCache())
-                    .build();
+                return result;
+            }, executorProvider.provideClusterGeneratorExecutor());
         }
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED)
+                .cacheControl(CacheControl.noCache())
+                .build();
     }
 
 }

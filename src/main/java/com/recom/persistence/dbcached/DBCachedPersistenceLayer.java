@@ -32,10 +32,12 @@ public class DBCachedPersistenceLayer {
             @NonNull final String cacheKey
     ) {
         databasePersistentCacheRepository.findByCacheNameAndCacheKey(cacheName, cacheKey)
-                .ifPresent(cacheItem -> {
-                    log.debug("Delete cache item {} - {}", cacheName, cacheKey);
-                    databasePersistentCacheRepository.delete(cacheItem);
-                });
+                .ifPresentOrElse(cacheItem -> {
+                            log.debug("Delete cache item {} - {}", cacheName, cacheKey);
+                            databasePersistentCacheRepository.delete(cacheItem);
+                        },
+                        () -> log.debug("Cache item {} - {} not found for deletion", cacheName, cacheKey)
+                );
     }
 
     public <V extends Serializable> void put(

@@ -178,4 +178,53 @@ class DBCachedManagerTest {
         verify(dbCachedPersistenceLayer).put(eq(cacheName), eq(cacheKey), eq(valueToCache));
     }
 
+    @Test
+    void testDelete_whenCacheExists_Successful() {
+        // Arrange
+        final String cacheName = "testCache";
+        final String cacheKey = "testKey";
+        final Cache cacheMock = mock(Cache.class);
+
+        when(cacheManager.getCache(eq(cacheName))).thenReturn(cacheMock);
+
+        // Act
+        serviceUnderTest.delete(cacheName, cacheKey);
+
+        // Assert
+        verify(cacheMock).evict(eq(cacheKey));
+        verify(dbCachedPersistenceLayer).delete(eq(cacheName), eq(cacheKey));
+    }
+
+    @Test
+    void testDelete_whenCacheNotExists_Successful() {
+        // Arrange
+        final String cacheName = "testCache";
+        final String cacheKey = "testKey";
+
+        when(cacheManager.getCache(eq(cacheName))).thenReturn(null);
+
+        // Act
+        serviceUnderTest.delete(cacheName, cacheKey);
+
+        // Assert
+        verify(dbCachedPersistenceLayer).delete(eq(cacheName), eq(cacheKey));
+    }
+
+    @Test
+    void testDelete_whenCacheManagerThrowsException_Successful() {
+        // Arrange
+        final String cacheName = "testCache";
+        final String cacheKey = "testKey";
+        final Cache cacheMock = mock(Cache.class);
+
+        when(cacheManager.getCache(eq(cacheName))).thenReturn(cacheMock);
+        doThrow(new RuntimeException("Cache evict failed")).when(cacheMock).evict(eq(cacheKey));
+
+        // Act
+        serviceUnderTest.delete(cacheName, cacheKey);
+
+        // Assert
+        verify(dbCachedPersistenceLayer).delete(eq(cacheName), eq(cacheKey));
+    }
+
 }

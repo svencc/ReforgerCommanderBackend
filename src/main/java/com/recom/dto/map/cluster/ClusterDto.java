@@ -30,6 +30,6 @@ public class ClusterDto implements Serializable {
 
     @Schema
     @JsonProperty()
-    private ConcaveHullDto concaveHull;
+    private ConcaveHullDto concaveHullx;
 
 }
