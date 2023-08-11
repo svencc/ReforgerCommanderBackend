@@ -20,14 +20,14 @@ public class DBCachedPersistenceLayer {
     private final DatabasePersistentCacheRepository databasePersistentCacheRepository;
 
 
-    public <V extends Serializable> boolean isInDBCache(
+    public boolean isInDBCache(
             @NonNull final String cacheName,
             @NonNull final String cacheKey
     ) {
         return databasePersistentCacheRepository.findByCacheNameAndCacheKey(cacheName, cacheKey).isPresent();
     }
 
-    public <V extends Serializable> void delete(
+    public void delete(
             @NonNull final String cacheName,
             @NonNull final String cacheKey
     ) {
@@ -41,11 +41,11 @@ public class DBCachedPersistenceLayer {
     public <V extends Serializable> void put(
             @NonNull final String cacheName,
             @NonNull final String cacheKey,
-            @NonNull final V cachedValue
+            @NonNull final V valueToCache
     ) {
         Optional.ofNullable(databasePersistentCacheRepository.findByCacheNameAndCacheKey(cacheName, cacheKey)
-                .map(existingCacheItem -> updateExistingCacheItem(existingCacheItem, cachedValue))
-                .orElseGet(() -> createNewCacheItem(cacheName, cacheKey, cachedValue))
+                .map(existingCacheItem -> updateExistingCacheItem(existingCacheItem, valueToCache))
+                .orElseGet(() -> createNewCacheItem(cacheName, cacheKey, valueToCache))
         ).ifPresent(databasePersistentCacheRepository::save);
     }
 
@@ -68,10 +68,10 @@ public class DBCachedPersistenceLayer {
     private <V extends Serializable> DBCachedItem createNewCacheItem(
             @NonNull final String cacheName,
             @NonNull final String cacheKey,
-            @NonNull final V cachedValue
+            @NonNull final V valueToCache
     ) {
         log.debug("Creating new cache item {} - {}.", cacheName, cacheKey);
-        try (ByteArrayOutputStream byteArrayOutputStream = serializeObject(cachedValue)) {
+        try (ByteArrayOutputStream byteArrayOutputStream = serializeObject(valueToCache)) {
             return DBCachedItem.builder()
                     .cacheName(cacheName)
                     .cacheKey(cacheKey)
