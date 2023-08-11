@@ -106,7 +106,7 @@ public class MapClustersController {
                                 .build()
                         );
             } catch (DBCachedDeserializationException dbcde) {
-                log.error("Unable to deserialize cached value; Generating new one.");
+                log.error("Unable to deserialize cached value; Generating new one");
                 // if present in cache, but deserialization failed, delete it and generate new one
                 dbCachedManager.delete(ClusteringService.MAPENTITYPERSISTENCELAYER_GENERATECLUSTERS_CACHE, clusterRequestDto.getMapName());
             }

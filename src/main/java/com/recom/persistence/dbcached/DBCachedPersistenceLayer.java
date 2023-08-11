@@ -116,8 +116,8 @@ public class DBCachedPersistenceLayer {
     ) throws DBCachedDeserializationException {
         try (ObjectInputStream inputStream = new ObjectInputStream(new ByteArrayInputStream(serializedValue))) {
             return Optional.ofNullable((V) inputStream.readObject());
-        } catch (Exception e) {
-            log.error("Error deserializing cache value with key {}!", cacheKey, e);
+        } catch (IOException | ClassNotFoundException e) {
+            log.error("Error deserializing cache value with key {}", cacheKey);
             throw new DBCachedDeserializationException(String.format("Unable to deserialize cacheKey %s1", cacheKey), e);
         }
     }
