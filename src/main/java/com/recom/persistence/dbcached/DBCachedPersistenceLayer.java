@@ -118,7 +118,7 @@ public class DBCachedPersistenceLayer {
             return Optional.ofNullable((V) inputStream.readObject());
         } catch (IOException | ClassNotFoundException e) {
             log.error("Error deserializing cache value with key {}", cacheKey);
-            throw new DBCachedDeserializationException(String.format("Unable to deserialize cacheKey %s1", cacheKey), e);
+            throw new DBCachedDeserializationException(String.format("Unable to deserialize cacheKey %s", cacheKey), e);
         }
     }
 

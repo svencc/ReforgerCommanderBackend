@@ -20,10 +20,10 @@ public class MutexService {
     @Synchronized("lock")
     public boolean claim(@NonNull final String resource) {
         if (semaphore.contains(resource)) {
-            log.warn(String.format("Cannot claim resource '%s1'", resource));
+            log.warn(String.format("Cannot claim resource '%s'", resource));
             return false;
         } else {
-            log.info(String.format("Claim resource '%s1'", resource));
+            log.info(String.format("Claim resource '%s'", resource));
             semaphore.add(resource);
             return true;
         }
@@ -32,7 +32,7 @@ public class MutexService {
     @Synchronized("lock")
     public void release(@NonNull final String resource) {
         if (semaphore.contains(resource)) {
-            log.info(String.format("Release resource '%s1'", resource));
+            log.info(String.format("Release resource '%s'", resource));
             semaphore.remove(resource);
         }
     }
