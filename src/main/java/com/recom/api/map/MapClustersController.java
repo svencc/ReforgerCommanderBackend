@@ -78,7 +78,7 @@ public class MapClustersController {
 
         assertionService.assertMapExists(clusterRequestDto.getMapName());
 
-        return asyncCacheableRequestProcessor.processRequestWithAsyncCache(
+        return asyncCacheableRequestProcessor.processRequest(
                 ClusteringService.MAPENTITYPERSISTENCELAYER_GENERATECLUSTERS_CACHE,
                 clusterRequestDto.getMapName(),
                 () -> clusteringService.generateClusters(clusterRequestDto.getMapName())

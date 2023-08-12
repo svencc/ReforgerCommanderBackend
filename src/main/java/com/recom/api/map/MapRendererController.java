@@ -72,7 +72,7 @@ public class MapRendererController {
     ) {
         log.debug("Requested POST /api/v1/map/renderer (JSON)");
 
-        return asyncCacheableRequestProcessor.processRequestWithAsyncCache(
+        return asyncCacheableRequestProcessor.processRequest(
                 MapRendererService.MAP_RENDERER_CACHE_NAME,
                 mapRendererRequestDto.getMapName(),
                 () -> mapRendererService.renderMap(mapRendererRequestDto.getMapName())

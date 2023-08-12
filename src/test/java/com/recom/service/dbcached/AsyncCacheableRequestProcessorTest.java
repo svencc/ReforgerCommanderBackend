@@ -43,7 +43,7 @@ class AsyncCacheableRequestProcessorTest {
         when(dbCachedManager.get(cacheName, cacheKey)).thenReturn(Optional.of("CachedValue"));
 
         // Act
-        final ResponseEntity<String> responseEntityToTest = serviceUnderTest.processRequestWithAsyncCache(cacheName, cacheKey, cacheLoader);
+        final ResponseEntity<String> responseEntityToTest = serviceUnderTest.processRequest(cacheName, cacheKey, cacheLoader);
 
         // Assert
         assertEquals(HttpStatus.OK, responseEntityToTest.getStatusCode());
@@ -66,7 +66,7 @@ class AsyncCacheableRequestProcessorTest {
         when(executorProvider.provideClusterGeneratorExecutor()).thenReturn(threadPoolTaskExecutor);
 
         // Act
-        final ResponseEntity<String> responseEntityToTest = serviceUnderTest.processRequestWithAsyncCache(cacheName, cacheKey, cacheLoader);
+        final ResponseEntity<String> responseEntityToTest = serviceUnderTest.processRequest(cacheName, cacheKey, cacheLoader);
 
         // Assert
         assertEquals(HttpStatus.ACCEPTED, responseEntityToTest.getStatusCode());
@@ -88,7 +88,7 @@ class AsyncCacheableRequestProcessorTest {
         when(mutexService.claim(anyString())).thenReturn(false);
 
         // Act
-        final ResponseEntity<String> responseEntityToTest = serviceUnderTest.processRequestWithAsyncCache(cacheName, cacheKey, cacheLoader);
+        final ResponseEntity<String> responseEntityToTest = serviceUnderTest.processRequest(cacheName, cacheKey, cacheLoader);
 
         // Assert
         assertEquals(HttpStatus.ACCEPTED, responseEntityToTest.getStatusCode());

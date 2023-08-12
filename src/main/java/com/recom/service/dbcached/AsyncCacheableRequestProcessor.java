@@ -30,7 +30,7 @@ public class AsyncCacheableRequestProcessor {
 
 
     @NonNull
-    public <T extends Serializable> ResponseEntity<T> processRequestWithAsyncCache(
+    public <T extends Serializable> ResponseEntity<T> processRequest(
             @NonNull final String cacheName,
             @NonNull final String cacheKey, // @TODO CacheKey Object
             @NonNull final Supplier<T> cacheLoader // @TODO CacheKey is Passed to CacheLoader (no supplier, another signature: CacheLoader -> Optional : cacheLoader(CacheKey))
