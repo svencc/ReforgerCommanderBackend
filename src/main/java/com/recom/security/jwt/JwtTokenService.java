@@ -19,15 +19,18 @@ public class JwtTokenService {
     @NonNull
     private final ConversionService conversionService;
 
-    public void assertAuthorizationHeaderIsPresent(@NonNull final Optional<String> authorizationHeader) throws HttpUnauthorizedException {
-        if (authorizationHeader.isEmpty()) {
-            throw new HttpUnauthorizedException("Authorization header is not present");
+    @NonNull
+    public String assertIsPresent(@NonNull final Optional<String> header) throws HttpUnauthorizedException {
+        if (header.isEmpty()) {
+            throw new HttpUnauthorizedException("Value is not present");
+        } else {
+            return header.get();
         }
     }
 
-    public void assertAuthorizationHeaderStartsWithBearer(@NonNull final String authorizationHeader) throws HttpUnauthorizedException {
+    public void assertAuthorizationStartsWithBearer(@NonNull final String authorizationHeader) throws HttpUnauthorizedException {
         if (!authorizationHeader.startsWith("Bearer ")) {
-            throw new HttpUnauthorizedException("Authorization header is not present");
+            throw new HttpUnauthorizedException("Authorization header is malformed");
         }
     }
 

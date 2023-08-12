@@ -6,7 +6,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.core.convert.ConversionException;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.core.convert.ConversionService;
 
@@ -29,23 +28,24 @@ class JwtTokenServiceTest {
 
 
     @Test
-    public void testAssertAuthorizationHeaderIsPresent_ValidHeader() {
+    public void testAssertHeaderIsPresent_ValidHeader() {
         // Arrange
         Optional<String> authorizationHeader = Optional.of("Bearer token");
 
         // Act & Assert
-        assertDoesNotThrow(() -> jwtTokenService.assertAuthorizationHeaderIsPresent(authorizationHeader));
+        assertDoesNotThrow(() -> jwtTokenService.assertIsPresent(authorizationHeader));
+        assertEquals("Bearer token", jwtTokenService.assertIsPresent(authorizationHeader));
     }
 
     @Test
-    public void testAssertAuthorizationHeaderIsPresent_InvalidHeader() {
+    public void testAssertHeaderIsPresent_InvalidHeader() {
         // Arrange
         Optional<String> authorizationHeader = Optional.empty();
 
         // Act & Assert
         HttpUnauthorizedException exception = assertThrows(HttpUnauthorizedException.class,
-                () -> jwtTokenService.assertAuthorizationHeaderIsPresent(authorizationHeader));
-        assertEquals("Authorization header is not present", exception.getMessage());
+                () -> jwtTokenService.assertIsPresent(authorizationHeader));
+        assertEquals("Value is not present", exception.getMessage());
     }
 
     @Test
@@ -54,7 +54,7 @@ class JwtTokenServiceTest {
         String authorizationHeader = "Bearer token";
 
         // Act & Assert
-        assertDoesNotThrow(() -> jwtTokenService.assertAuthorizationHeaderStartsWithBearer(authorizationHeader));
+        assertDoesNotThrow(() -> jwtTokenService.assertAuthorizationStartsWithBearer(authorizationHeader));
     }
 
     @Test
@@ -64,8 +64,8 @@ class JwtTokenServiceTest {
 
         // Act & Assert
         HttpUnauthorizedException exception = assertThrows(HttpUnauthorizedException.class,
-                () -> jwtTokenService.assertAuthorizationHeaderStartsWithBearer(authorizationHeader));
-        assertEquals("Authorization header is not present", exception.getMessage());
+                () -> jwtTokenService.assertAuthorizationStartsWithBearer(authorizationHeader));
+        assertEquals("Authorization header is malformed", exception.getMessage());
     }
 
     @Test

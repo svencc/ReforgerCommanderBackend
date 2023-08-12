@@ -12,8 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpMethod;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -21,11 +19,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.AnyRequestMatcher;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
@@ -40,8 +35,8 @@ public class RECOMJWTAuthenticationFilterTest {
         final AccountPersistenceLayer accountPersistenceLayer = mock(AccountPersistenceLayer.class);
         final RECOMAuthenticationMapper authenticationMapper = mock(RECOMAuthenticationMapper.class);
 
-        final HttpServletRequest request = new MockHttpServletRequest();
-        final HttpServletResponse response = new MockHttpServletResponse();
+        final HttpServletRequest request = mock(HttpServletRequest.class);
+        final HttpServletResponse response = mock(HttpServletResponse.class);
         final FilterChain filterChain = mock(FilterChain.class);
         final PublicEndpointsProvider publicEndpointsProvider = mock(PublicEndpointsProvider.class);
         when(publicEndpointsProvider.publicEndpointsMatcher()).thenReturn(AnyRequestMatcher.INSTANCE);
@@ -58,32 +53,34 @@ public class RECOMJWTAuthenticationFilterTest {
     }
 
     @Test
-    public void testDoFilterInternal_Authenticated() throws IOException, ServletException {
+    public void testDoFilterInternal_withJSONAuthentication_success() throws IOException, ServletException {
         // Arrange
         final UUID accountUuid = UUID.randomUUID();
-
         final HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getHeader(any())).thenReturn("Bearer TOKEN");
-
-        final HttpServletResponse response = new MockHttpServletResponse();
+        final HttpServletResponse response = mock(HttpServletResponse.class);
         final FilterChain filterChain = mock(FilterChain.class);
         final PublicEndpointsProvider publicEndpointsProvider = mock(PublicEndpointsProvider.class);
-        when(publicEndpointsProvider.publicEndpointsMatcher()).thenReturn(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/swagger-ui.html"));
-
-        final JwtDecoder jwtDecoder = mock(JwtDecoder.class);
-        final JwtTokenService jwtTokenService = mock(JwtTokenService.class);
-        when(jwtTokenService.extractToken(any())).thenReturn("TOKEN");
-        when(jwtTokenService.extractAndAssertSubjectIsUUID(any())).thenReturn(accountUuid);
-
         final AccountPersistenceLayer accountPersistenceLayer = mock(AccountPersistenceLayer.class);
         final RECOMAuthenticationMapper authenticationMapper = mock(RECOMAuthenticationMapper.class);
-
-
+        final JwtDecoder jwtDecoder = mock(JwtDecoder.class);
+        final JwtTokenService jwtTokenService = mock(JwtTokenService.class);
         final Jwt jwt = mock(Jwt.class);
-        when(jwt.getClaims()).thenReturn(Collections.singletonMap("sub", UUID.randomUUID().toString()));
-        when(jwtDecoder.decode(anyString())).thenReturn(jwt);
-
         final Account account = new Account();
+
+        when(publicEndpointsProvider.publicEndpointsMatcher()).thenReturn(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/swagger-ui.html"));
+
+        when(request.getHeader(eq("Content-Type"))).thenReturn("application/json");
+
+        final List<String> returnValues = new ArrayList<>();
+        returnValues.add("application/json");
+        returnValues.add("Bearer TOKEN");
+        when(jwtTokenService.assertIsPresent(any())).thenAnswer(invocation -> returnValues.remove(0));
+
+        when(jwtTokenService.extractToken(any())).thenReturn("TOKEN");
+        when(jwtDecoder.decode(eq("TOKEN"))).thenReturn(jwt);
+        when(jwt.getClaims()).thenReturn(Collections.singletonMap("sub", accountUuid));
+        jwtTokenService.assertClaimIsPresent(eq(accountUuid));
+        when(jwtTokenService.extractAndAssertSubjectIsUUID(any())).thenReturn(accountUuid);
         when(accountPersistenceLayer.findByUUID(eq(accountUuid))).thenReturn(Optional.of(account));
         when(authenticationMapper.toAuthentication(any(Account.class))).thenReturn(RECOMAuthentication.builder().authenticated(true).build());
 
@@ -100,12 +97,62 @@ public class RECOMJWTAuthenticationFilterTest {
     }
 
     @Test
-    public void testDoFilterInternal_Unauthenticated() throws IOException, ServletException {
+    public void testDoFilterInternal_withFORMAuthentication_success() throws IOException, ServletException {
         // Arrange
-        final HttpServletRequest request = new MockHttpServletRequest();
-        final HttpServletResponse response = new MockHttpServletResponse();
+        final UUID accountUuid = UUID.randomUUID();
+        final HttpServletRequest request = mock(HttpServletRequest.class);
+        final HttpServletResponse response = mock(HttpServletResponse.class);
         final FilterChain filterChain = mock(FilterChain.class);
         final PublicEndpointsProvider publicEndpointsProvider = mock(PublicEndpointsProvider.class);
+        final AccountPersistenceLayer accountPersistenceLayer = mock(AccountPersistenceLayer.class);
+        final RECOMAuthenticationMapper authenticationMapper = mock(RECOMAuthenticationMapper.class);
+        final JwtDecoder jwtDecoder = mock(JwtDecoder.class);
+        final JwtTokenService jwtTokenService = mock(JwtTokenService.class);
+        final Jwt jwt = mock(Jwt.class);
+        final Account account = new Account();
+
+        when(publicEndpointsProvider.publicEndpointsMatcher()).thenReturn(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/swagger-ui.html"));
+
+        when(request.getHeader(eq("Content-Type"))).thenReturn("application/x-www-form-urlencoded");
+
+        Map<String, String[]> parameterMap = new HashMap<>();
+        parameterMap.put("{\"Authorization\":\"Bearer TOKEN\"...}", new String[]{""});
+        when(request.getParameterMap()).thenReturn(parameterMap);
+
+        final List<String> returnValues = new ArrayList<>();
+        returnValues.add("application/x-www-form-urlencoded");
+        returnValues.add("Bearer TOKEN");
+        when(jwtTokenService.assertIsPresent(any())).thenAnswer(invocation -> returnValues.remove(0));
+
+        when(jwtTokenService.extractToken(any())).thenReturn("TOKEN");
+        when(jwtDecoder.decode(eq("TOKEN"))).thenReturn(jwt);
+        when(jwt.getClaims()).thenReturn(Collections.singletonMap("sub", accountUuid));
+        jwtTokenService.assertClaimIsPresent(eq(accountUuid));
+        when(jwtTokenService.extractAndAssertSubjectIsUUID(any())).thenReturn(accountUuid);
+        when(accountPersistenceLayer.findByUUID(eq(accountUuid))).thenReturn(Optional.of(account));
+        when(authenticationMapper.toAuthentication(any(Account.class))).thenReturn(RECOMAuthentication.builder().authenticated(true).build());
+
+        final RECOMJWTAuthenticationFilter filter = new TestRECOMJWTAuthenticationFilter(
+                jwtDecoder, publicEndpointsProvider, jwtTokenService, accountPersistenceLayer, authenticationMapper
+        );
+        filter.postConstruct();
+
+        // Act
+        filter.doFilterInternal(request, response, filterChain);
+
+        // Assert
+        verify(filterChain).doFilter(request, response);
+        assertTrue(SecurityContextHolder.getContext().getAuthentication().isAuthenticated());
+    }
+
+    @Test
+    public void testDoFilterInternal_Unauthenticated() throws IOException, ServletException {
+        // Arrange
+        final HttpServletRequest request = mock(HttpServletRequest.class);
+        final HttpServletResponse response = mock(HttpServletResponse.class);
+        final FilterChain filterChain = mock(FilterChain.class);
+        final PublicEndpointsProvider publicEndpointsProvider = mock(PublicEndpointsProvider.class);
+        when(request.getMethod()).thenReturn(HttpMethod.GET.name());
         when(publicEndpointsProvider.publicEndpointsMatcher()).thenReturn(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/swagger-ui.html"));
 
         final JwtDecoder jwtDecoder = mock(JwtDecoder.class);
@@ -113,16 +160,16 @@ public class RECOMJWTAuthenticationFilterTest {
         final AccountPersistenceLayer accountPersistenceLayer = mock(AccountPersistenceLayer.class);
         final RECOMAuthenticationMapper authenticationMapper = mock(RECOMAuthenticationMapper.class);
 
-        final RECOMJWTAuthenticationFilter filter = new TestRECOMJWTAuthenticationFilter(
+        final RECOMJWTAuthenticationFilter filterToTest = new TestRECOMJWTAuthenticationFilter(
                 jwtDecoder, publicEndpointsProvider, jwtTokenService, accountPersistenceLayer, authenticationMapper
         );
 
         // Act
-        filter.doFilterInternal(request, response, filterChain);
+        filterToTest.doFilterInternal(request, response, filterChain);
 
         // Assert
         verify(filterChain, never()).doFilter(request, response);
-        assertEquals(HttpServletResponse.SC_UNAUTHORIZED, response.getStatus());
+        verify(response, times(1)).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
 
