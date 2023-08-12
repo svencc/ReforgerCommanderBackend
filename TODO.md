@@ -1,9 +1,8 @@
 # TODO LIST
 *
 * DB-based Configuration System
-    * goal: do not render clusters; render generic polygons and text with color and z-index!
     * new db config values for type-colors, z-indexes, etc.
-*
+    * Open for Comments; see TODOS in AsyncCacheableRequestProcessor -> app cache management move to this class; do not use  @cacheable annotations anymore?
 *
 * try forest clustering again; will not work with convex hulls; we need to implement concave hulls!
 * forest heatmap rendering

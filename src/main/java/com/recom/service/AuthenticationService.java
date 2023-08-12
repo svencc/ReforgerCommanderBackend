@@ -16,7 +16,10 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.Instant;
+import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -55,12 +58,13 @@ public class AuthenticationService {
         }
 
         final Instant now = Instant.now();
+        final Duration expiresIn = recomSecurityProperties.getJwtExpirationTime();
+        final Instant expiresAt = now.plus(expiresIn);
         final JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer(recomSecurityProperties.getJwtIssuer())
                 .issuedAt(now)
-                .expiresAt(now.plus(recomSecurityProperties.getJwtExpirationTime()))
+                .expiresAt(expiresAt)
                 .subject(authenticationRequestDto.getAccountUUID())
-//                .claim("accessKey", authenticationRequestDto.getAccessKey())
                 .build();
 
         final String jwt = jwtEncoder.encode(JwtEncoderParameters.from(claims))
@@ -68,6 +72,9 @@ public class AuthenticationService {
 
         return AuthenticationResponseDto.builder()
                 .bearerToken(jwt)
+                .issuedAt(conversionService.convert(now, Date.class))
+                .expiresInSeconds(BigDecimal.valueOf(expiresIn.getSeconds()))
+                .expiresAt(conversionService.convert(expiresAt, Date.class))
                 .build();
     }
 
