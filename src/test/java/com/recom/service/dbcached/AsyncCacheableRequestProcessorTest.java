@@ -36,7 +36,7 @@ class AsyncCacheableRequestProcessorTest {
         // Arrange
         final String cacheName = "testCache";
         final String cacheKey = "testKey";
-        final Supplier<Optional<String>> cacheLoader = mock(Supplier.class);
+        final Supplier<String> cacheLoader = mock(Supplier.class);
 
 
         when(dbCachedManager.isCached(cacheName, cacheKey)).thenReturn(true);
@@ -56,11 +56,11 @@ class AsyncCacheableRequestProcessorTest {
         // Arrange
         final String cacheName = "testCache";
         final String cacheKey = "testKey";
-        final Supplier<Optional<String>> cacheLoader = mock(Supplier.class);
+        final Supplier<String> cacheLoader = mock(Supplier.class);
         final ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
         threadPoolTaskExecutor.initialize();
 
-        when(cacheLoader.get()).thenReturn(Optional.of("NewValue"));
+        when(cacheLoader.get()).thenReturn("NewValue");
         when(dbCachedManager.isCached(cacheName, cacheKey)).thenReturn(false);
         when(mutexService.claim(anyString())).thenReturn(true);
         when(executorProvider.provideClusterGeneratorExecutor()).thenReturn(threadPoolTaskExecutor);
@@ -82,7 +82,7 @@ class AsyncCacheableRequestProcessorTest {
         // Arrange
         final String cacheName = "testCache";
         final String cacheKey = "testKey";
-        final Supplier<Optional<String>> cacheLoader = mock(Supplier.class);
+        final Supplier<String> cacheLoader = mock(Supplier.class);
 
         when(dbCachedManager.isCached(cacheName, cacheKey)).thenReturn(false);
         when(mutexService.claim(anyString())).thenReturn(false);

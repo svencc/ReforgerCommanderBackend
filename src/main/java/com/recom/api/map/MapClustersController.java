@@ -84,6 +84,7 @@ public class MapClustersController {
                 clusterRequestDto.getMapName(),
                 () -> Optional.ofNullable(clusteringService.generateClusters(clusterRequestDto.getMapName()))
                         .map((value) -> ClusterListDto.builder().clusterList(value).build())
+                        .orElse(null)
         );
     }
 

@@ -33,7 +33,7 @@ public class AsyncCacheableRequestProcessor {
     public <T extends Serializable> ResponseEntity<T> processRequestWithAsyncCache(
             @NonNull final String cacheName,
             @NonNull final String cacheKey, // @TODO CacheKey Object
-            @NonNull final Supplier<Optional<T>> cacheLoader // @TODO CacheKey is Passed to CacheLoader (no supplier, another signature: CacheLoader -> Optional : cacheLoader(CacheKey))
+            @NonNull final Supplier<T> cacheLoader // @TODO CacheKey is Passed to CacheLoader (no supplier, another signature: CacheLoader -> Optional : cacheLoader(CacheKey))
     ) {
         if (dbCachedManager.isCached(cacheName, cacheKey)) {
             try {
@@ -65,7 +65,7 @@ public class AsyncCacheableRequestProcessor {
 
                 Optional<T> result = Optional.empty();
                 try {
-                    result = cacheLoader.get();
+                    result = Optional.ofNullable(cacheLoader.get());
                 } catch (Exception e) {
                     log.error("Async-Exception", e);
                 } finally {
