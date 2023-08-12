@@ -13,6 +13,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import static java.lang.Thread.sleep;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -52,7 +53,7 @@ class AsyncCacheableRequestProcessorTest {
     }
 
     @Test
-    void testProcessRequestWithAsyncCache_whenCacheMiss_returnAccepted() {
+    void testProcessRequestWithAsyncCache_whenCacheMiss_returnAccepted() throws InterruptedException {
         // Arrange
         final String cacheName = "testCache";
         final String cacheKey = "testKey";
@@ -74,6 +75,7 @@ class AsyncCacheableRequestProcessorTest {
 
         // Verify that the cache put method was called
         verify(dbCachedManager, times(1)).put(eq(cacheName), eq(cacheKey), eq("NewValue"));
+        sleep(1000);
         verify(cacheLoader, times(1)).get();
     }
 
