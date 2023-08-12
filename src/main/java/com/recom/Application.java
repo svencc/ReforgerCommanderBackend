@@ -1,5 +1,6 @@
 package com.recom;
 
+import com.recom.property.RECOMAsyncProperties;
 import com.recom.property.RECOMSecurityProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,7 +14,8 @@ import org.springframework.web.filter.CommonsRequestLoggingFilter;
 @EnableCaching
 @SpringBootApplication(scanBasePackages = {"com.recom"})
 @EnableConfigurationProperties({
-        RECOMSecurityProperties.class
+        RECOMSecurityProperties.class,
+        RECOMAsyncProperties.class
 })
 public class Application {
 

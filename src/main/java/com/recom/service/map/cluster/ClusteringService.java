@@ -8,7 +8,7 @@ import com.recom.dto.map.scanner.MapEntityDto;
 import com.recom.mapper.MapEntityMapper;
 import com.recom.model.map.ClusterConfiguration;
 import com.recom.persistence.mapEntity.MapEntityPersistenceLayer;
-import com.recom.service.DBCachedService;
+import com.recom.service.dbcached.DBCachedService;
 import com.recom.service.configuration.ConfigurationDescriptorProvider;
 import com.recom.service.configuration.ConfigurationValueProvider;
 import com.recom.util.JSNumberUtil;
@@ -69,7 +69,7 @@ public class ClusteringService {
     }
 
     @Cacheable(cacheNames = MAPENTITYPERSISTENCELAYER_GENERATECLUSTERS_CACHE)
-    public List<ClusterDto> generateClusters(
+    public ArrayList<ClusterDto> generateClusters(
             @NonNull final String mapName
     ) {
         final List<ClusterConfiguration> clusterConfigurations = List.of(

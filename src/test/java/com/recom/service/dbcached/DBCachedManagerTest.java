@@ -1,6 +1,7 @@
-package com.recom.service;
+package com.recom.service.dbcached;
 
 import com.recom.persistence.dbcached.DBCachedPersistenceLayer;
+import com.recom.service.dbcached.DBCachedManager;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

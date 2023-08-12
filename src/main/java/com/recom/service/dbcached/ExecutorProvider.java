@@ -1,4 +1,4 @@
-package com.recom.service;
+package com.recom.service.dbcached;
 
 import com.recom.configuration.AsyncConfiguration;
 import lombok.NonNull;
@@ -9,14 +9,14 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class ExecutorProvider {
+class ExecutorProvider {
 
     @NonNull
     private final ThreadPoolTaskExecutor clusterGeneratorExecutor;
 
     @NonNull
     public ExecutorProvider(
-            @Qualifier(AsyncConfiguration.CLUSTER_GENERATOR_EXECUTOR_BEAN) @NonNull final ThreadPoolTaskExecutor executor
+            @Qualifier(AsyncConfiguration.ASYNC_REQUEST_PROCESSOR_EXECUTOR_BEAN) @NonNull final ThreadPoolTaskExecutor executor
     ) {
         this.clusterGeneratorExecutor = executor;
     }
