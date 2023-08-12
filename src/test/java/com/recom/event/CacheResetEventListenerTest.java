@@ -2,6 +2,7 @@ package com.recom.event;
 
 import com.recom.event.event.async.cache.CacheResetAsyncEvent;
 import com.recom.event.event.sync.cache.CacheResetSyncEvent;
+import com.recom.service.dbcached.DBCachedManager;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -22,6 +23,8 @@ public class CacheResetEventListenerTest {
 
     @Mock
     private CacheManager cacheManager;
+    @Mock
+    private DBCachedManager dbCachedManager;
     @Mock
     private Cache cache;
     @InjectMocks
@@ -49,6 +52,7 @@ public class CacheResetEventListenerTest {
         // Assert
         verify(cacheManager, times(cacheNames.size())).getCache(cacheNameCaptor.capture());
         verify(cache, times(cacheNames.size())).clear();
+        verify(dbCachedManager, times(1)).clearAll();
 
         final List<String> capturedCacheNames = cacheNameCaptor.getAllValues();
         for (final String cacheName : cacheNames) {
@@ -71,6 +75,7 @@ public class CacheResetEventListenerTest {
         // Assert
         verify(cacheManager, times(cacheNames.size())).getCache(cacheNameCaptor.capture());
         verify(cache, times(cacheNames.size())).clear();
+        verify(dbCachedManager, times(1)).clearAll();
 
         final List<String> capturedCacheNames = cacheNameCaptor.getAllValues();
         for (String cacheName : cacheNames) {

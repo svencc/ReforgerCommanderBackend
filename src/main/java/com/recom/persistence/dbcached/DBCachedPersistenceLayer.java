@@ -122,4 +122,8 @@ public class DBCachedPersistenceLayer {
         }
     }
 
+    public void clearAll() {
+        databasePersistentCacheRepository.deleteAll();
+    }
+
 }

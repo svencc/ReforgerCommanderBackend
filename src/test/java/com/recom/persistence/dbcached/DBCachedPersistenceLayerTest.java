@@ -162,4 +162,15 @@ class DBCachedPersistenceLayerTest {
         assertFalse(result);
     }
 
+    @Test
+    public void testClearAll_success() {
+        // Arrange
+
+        // Act
+        serviceUnderTest.clearAll();
+
+        // Assert
+        verify(repository, times(1)).deleteAll();
+    }
+
 }

@@ -41,7 +41,7 @@ public class CacheController {
             @ApiResponse(responseCode = HttpCommons.UNAUTHORIZED_CODE, description = HttpCommons.UNAUTHORIZED, content = @Content())
     })
     @DeleteMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void>deleteCache() {
+    public ResponseEntity<Void> deleteCache() {
         log.info("Requested DELETE /api/v1/cache");
 
         applicationEventPublisher.publishEvent(new CacheResetSyncEvent());

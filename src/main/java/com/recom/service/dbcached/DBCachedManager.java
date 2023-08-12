@@ -86,4 +86,8 @@ public class DBCachedManager {
         dbCachedPersistenceLayer.delete(cacheName, cacheKey);
     }
 
+    public void clearAll() {
+        dbCachedPersistenceLayer.clearAll();
+    }
+
 }

@@ -2,6 +2,7 @@ package com.recom.event;
 
 import com.recom.event.event.async.cache.CacheResetAsyncEvent;
 import com.recom.event.event.sync.cache.CacheResetSyncEvent;
+import com.recom.service.dbcached.DBCachedManager;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,8 @@ public class CacheResetEventListener extends BaseRecomEventListener {
 
     @NonNull
     private final CacheManager cacheManager;
+    @NonNull
+    private final DBCachedManager dbCachedManager;
 
     @Async("CacheResetExecutor")
     @EventListener(classes = CacheResetAsyncEvent.class)
@@ -30,6 +33,7 @@ public class CacheResetEventListener extends BaseRecomEventListener {
 
     private void clearAllCaches() {
         cacheManager.getCacheNames().forEach(cacheName -> Optional.ofNullable(cacheManager.getCache(cacheName)).ifPresent(Cache::clear));
+        dbCachedManager.clearAll();
     }
 
     @EventListener(classes = CacheResetSyncEvent.class)

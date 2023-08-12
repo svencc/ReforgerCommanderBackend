@@ -228,4 +228,15 @@ class DBCachedManagerTest {
         verify(dbCachedPersistenceLayer).delete(eq(cacheName), eq(cacheKey));
     }
 
+    @Test
+    void testClearAll_Successful() {
+        // Arrange
+
+        // Act
+        serviceUnderTest.clearAll();
+
+        // Assert
+        verify(dbCachedPersistenceLayer).clearAll();
+    }
+
 }
