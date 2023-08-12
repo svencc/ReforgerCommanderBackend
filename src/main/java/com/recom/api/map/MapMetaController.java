@@ -3,6 +3,7 @@ package com.recom.api.map;
 import com.recom.api.commons.HttpCommons;
 import com.recom.dto.map.meta.MapMetaDto;
 import com.recom.service.AssertionService;
+import com.recom.service.dbcached.AsyncCacheableRequestProcessor;
 import com.recom.service.map.MapMetaDataService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -13,8 +14,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.CacheControl;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Optional;
 
 @Slf4j
@@ -36,6 +36,8 @@ public class MapMetaController {
     private final AssertionService assertionService;
     @NonNull
     private final MapMetaDataService mapMetaDataService;
+    @NonNull
+    private final AsyncCacheableRequestProcessor asyncCacheableRequestProcessor;
 
 
     @Operation(
@@ -48,7 +50,7 @@ public class MapMetaController {
             @ApiResponse(responseCode = HttpCommons.UNAUTHORIZED_CODE, description = HttpCommons.UNAUTHORIZED, content = @Content())
     })
     @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<MapMetaDto>> mapMeta(
+    public ResponseEntity<ArrayList<MapMetaDto>> mapMeta(
             @RequestParam(required = false, name = "mapName")
             @NonNull final Optional<String> mapNameOpt
     ) {
@@ -56,15 +58,23 @@ public class MapMetaController {
             log.debug("Requested GET /api/v1/map/meta?mapName={}", mapNameOpt.get());
             assertionService.assertMapExists(mapNameOpt.get());
 
-            return ResponseEntity.status(HttpStatus.OK)
-                    .cacheControl(CacheControl.noCache())
-                    .body(List.of(mapMetaDataService.provideMapMeta(mapNameOpt.get())));
+            return asyncCacheableRequestProcessor.processRequestWithAsyncCache(
+                    MapMetaDataService.PROVIDEMAPMETALIST_PROVIDEMAPMETA_CACHE,
+                    mapNameOpt.get(),
+                    () -> Optional.of(
+                            new ArrayList<>(Collections.singletonList(mapMetaDataService.provideMapMeta(mapNameOpt.get())))
+                    )
+            );
         } else {
             log.debug("Requested GET /api/v1/map/meta");
 
-            return ResponseEntity.status(HttpStatus.OK)
-                    .cacheControl(CacheControl.noCache())
-                    .body(mapMetaDataService.provideMapMetaList());
+            return asyncCacheableRequestProcessor.processRequestWithAsyncCache(
+                    MapMetaDataService.PROVIDEMAPMETALIST_PROVIDEMAPMETALIST_CACHE,
+                    "",
+                    () -> Optional.of(
+                            mapMetaDataService.provideMapMetaList()
+                    )
+            );
         }
     }
 

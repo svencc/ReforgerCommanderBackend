@@ -29,7 +29,7 @@ public class MapMetaDataService {
 
     @NonNull
     @Cacheable(cacheNames = PROVIDEMAPMETALIST_PROVIDEMAPMETALIST_CACHE)
-    public List<MapMetaDto> provideMapMetaList() {
+    public ArrayList<MapMetaDto> provideMapMetaList() {
         return dbCachedService.proxyToDBCacheSafe(
                 PROVIDEMAPMETALIST_PROVIDEMAPMETALIST_CACHE,
                 "",
