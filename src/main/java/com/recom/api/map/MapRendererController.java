@@ -1,14 +1,13 @@
 package com.recom.api.map;
 
 import com.recom.api.commons.HttpCommons;
-import com.recom.dto.map.cluster.MapClusterRequestDto;
 import com.recom.dto.map.renderer.MapRenderCommandsDto;
 import com.recom.dto.map.renderer.MapRendererRequestDto;
 import com.recom.service.ReforgerPayloadParserService;
+import com.recom.service.dbcached.AsyncCacheableRequestProcessor;
 import com.recom.service.map.MapRendererService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -16,8 +15,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.CacheControl;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +33,8 @@ public class MapRendererController {
     private final ReforgerPayloadParserService payloadParser;
     @NonNull
     private final MapRendererService mapRendererService;
+    @NonNull
+    private final AsyncCacheableRequestProcessor asyncCacheableRequestProcessor;
 
 
     @Operation(
@@ -73,12 +72,11 @@ public class MapRendererController {
     ) {
         log.debug("Requested POST /api/v1/map/renderer (JSON)");
 
-        // 202 Accepted logic - async processing
-        // Refactor ClustersController. Extract async processing to service
-
-        return ResponseEntity.status(HttpStatus.OK)
-                .cacheControl(CacheControl.noCache())
-                .body(mapRendererService.renderMap(mapRendererRequestDto));
+        return asyncCacheableRequestProcessor.processRequestWithAsyncCache(
+                MapRendererService.MAP_RENDERER_CACHE_NAME,
+                mapRendererRequestDto.getMapName(),
+                () -> mapRendererService.renderMap(mapRendererRequestDto.getMapName())
+        );
     }
 
 }

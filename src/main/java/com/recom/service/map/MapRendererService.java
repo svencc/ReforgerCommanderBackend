@@ -4,11 +4,11 @@ import com.recom.dto.map.cluster.ClusterDto;
 import com.recom.dto.map.renderer.MapRenderCommandDto;
 import com.recom.dto.map.renderer.MapRenderCommandType;
 import com.recom.dto.map.renderer.MapRenderCommandsDto;
-import com.recom.dto.map.renderer.MapRendererRequestDto;
 import com.recom.service.map.cluster.ClusteringService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MapRendererService {
 
+    public static final String MAP_RENDERER_CACHE_NAME = "MapRendererService.mapRenderCommands";
     public static final Integer Z_INDEX_GEOMETRY = 1;
     public static final Integer COLOR_GEOMETRY = 0x0000FF;
 
@@ -28,8 +29,9 @@ public class MapRendererService {
     private final ClusteringService clusteringService;
 
     @NonNull
-    public MapRenderCommandsDto renderMap(@NonNull final MapRendererRequestDto mapRendererRequestDto) {
-        final List<ClusterDto> clusterDtos = clusteringService.generateClusters(mapRendererRequestDto.getMapName());
+    @Cacheable(value = MAP_RENDERER_CACHE_NAME)
+    public MapRenderCommandsDto renderMap(@NonNull final String mapName) {
+        final List<ClusterDto> clusterDtos = clusteringService.generateClusters(mapName).getClusterList();
         final List<MapRenderCommandDto> renderCommands = clusterDtos.stream()
                 .map(cluster -> MapRenderCommandDto.builder()
                         .id(UUID.randomUUID())

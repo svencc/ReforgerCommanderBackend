@@ -21,7 +21,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-import java.util.Optional;
 
 
 @Deprecated
@@ -82,9 +81,7 @@ public class MapClustersController {
         return asyncCacheableRequestProcessor.processRequestWithAsyncCache(
                 ClusteringService.MAPENTITYPERSISTENCELAYER_GENERATECLUSTERS_CACHE,
                 clusterRequestDto.getMapName(),
-                () -> Optional.ofNullable(clusteringService.generateClusters(clusterRequestDto.getMapName()))
-                        .map((value) -> ClusterListDto.builder().clusterList(value).build())
-                        .orElse(null)
+                () -> clusteringService.generateClusters(clusterRequestDto.getMapName())
         );
     }
 
