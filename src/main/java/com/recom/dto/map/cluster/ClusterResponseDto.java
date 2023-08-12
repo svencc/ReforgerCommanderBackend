@@ -1,4 +1,4 @@
-package com.recom.dto.map.renderer;
+package com.recom.dto.map.cluster;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -9,27 +9,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.List;
 
+@Deprecated
 @Data
 @Schema
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MapRenderCommandsDto implements Serializable {
+public class ClusterResponseDto implements Serializable {
 
     @Schema
     @JsonProperty()
-    private List<MapRenderCommandDto> renderCommands;
-
-    @Schema
-    @JsonProperty(value = "zIndexMin")
-    private BigDecimal zIndexMin;
-
-    @Schema
-    @JsonProperty(value = "zIndexMax")
-    private BigDecimal zIndexMax;
+    private List<ClusterDto> clusterList;
 
 }

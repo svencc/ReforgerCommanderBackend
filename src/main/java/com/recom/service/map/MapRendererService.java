@@ -1,9 +1,8 @@
 package com.recom.service.map;
 
-import com.recom.dto.map.cluster.ClusterDto;
 import com.recom.dto.map.renderer.MapRenderCommandDto;
 import com.recom.dto.map.renderer.MapRenderCommandType;
-import com.recom.dto.map.renderer.MapRenderCommandsDto;
+import com.recom.dto.map.renderer.MapRenderResponseDto;
 import com.recom.service.map.cluster.ClusteringService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -30,9 +28,8 @@ public class MapRendererService {
 
     @NonNull
     @Cacheable(value = MAP_RENDERER_CACHE_NAME)
-    public MapRenderCommandsDto renderMap(@NonNull final String mapName) {
-        final List<ClusterDto> clusterDtos = clusteringService.generateClusters(mapName).getClusterList();
-        final List<MapRenderCommandDto> renderCommands = clusterDtos.stream()
+    public MapRenderResponseDto renderMap(@NonNull final String mapName) {
+        final List<MapRenderCommandDto> renderCommands = clusteringService.generateClusters(mapName).getClusterList().stream()
                 .map(cluster -> MapRenderCommandDto.builder()
                         .id(UUID.randomUUID())
                         .mapRenderCommandType(MapRenderCommandType.POLYGON)
@@ -43,20 +40,20 @@ public class MapRendererService {
                         .build())
                 .collect(Collectors.toList());
 
-        final Integer zIndexMin = renderCommands.stream()
-                .map(MapRenderCommandDto::getZIndex)
-                .min(Integer::compare)
-                .orElse(0);
+//        final Integer zIndexMin = renderCommands.stream()
+//                .map(MapRenderCommandDto::getZIndex)
+//                .min(Integer::compare)
+//                .orElse(0);
+//
+//        final Integer zIndexMax = renderCommands.stream()
+//                .map(MapRenderCommandDto::getZIndex)
+//                .max(Integer::compare)
+//                .orElse(0);
 
-        final Integer zIndexMax = renderCommands.stream()
-                .map(MapRenderCommandDto::getZIndex)
-                .max(Integer::compare)
-                .orElse(0);
-
-        return MapRenderCommandsDto.builder()
+        return MapRenderResponseDto.builder()
                 .renderCommands(renderCommands)
-                .zIndexMin(BigDecimal.valueOf(zIndexMin))
-                .zIndexMax(BigDecimal.valueOf(zIndexMax))
+//                .zIndexMin(BigDecimal.valueOf(zIndexMin))
+//                .zIndexMax(BigDecimal.valueOf(zIndexMax))
                 .build();
     }
 

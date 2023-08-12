@@ -52,12 +52,12 @@ public class MapRenderCommandDto implements Serializable {
 
     @Schema
     @JsonProperty()
-    private Integer zIndex; // all clusters have zIndex = 0
+    private Integer zIndex;
 
     @Schema
     @JsonProperty()
     @Builder.Default
-    private List<String> tags = new ArrayList<>();  // village / structure or so
+    private List<String> tags = new ArrayList<>();
 
     // density = area/points ; size (points of cluster)? area m2; <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< (META)
 

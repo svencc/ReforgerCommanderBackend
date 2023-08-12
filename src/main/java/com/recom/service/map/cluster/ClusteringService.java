@@ -2,7 +2,7 @@ package com.recom.service.map.cluster;
 
 import com.recom.dto.map.Point2DDto;
 import com.recom.dto.map.cluster.ClusterDto;
-import com.recom.dto.map.cluster.ClusterListDto;
+import com.recom.dto.map.cluster.ClusterResponseDto;
 import com.recom.dto.map.cluster.ConcaveHullDto;
 import com.recom.dto.map.cluster.ConvexHullDto;
 import com.recom.dto.map.scanner.MapEntityDto;
@@ -70,7 +70,7 @@ public class ClusteringService {
     }
 
     @Cacheable(cacheNames = MAPENTITYPERSISTENCELAYER_GENERATECLUSTERS_CACHE)
-    public ClusterListDto generateClusters(
+    public ClusterResponseDto generateClusters(
             @NonNull final String mapName
     ) {
         final List<ClusterConfiguration> clusterConfigurations = List.of(
@@ -119,7 +119,7 @@ public class ClusteringService {
                             })
                             .collect(Collectors.toCollection(ArrayList::new));
 
-                    return ClusterListDto.builder()
+                    return ClusterResponseDto.builder()
                             .clusterList(clusterList)
                             .build();
                 }

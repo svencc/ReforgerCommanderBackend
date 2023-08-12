@@ -1,7 +1,7 @@
 package com.recom.api.map;
 
 import com.recom.api.commons.HttpCommons;
-import com.recom.dto.map.cluster.ClusterListDto;
+import com.recom.dto.map.cluster.ClusterResponseDto;
 import com.recom.dto.map.cluster.MapClusterRequestDto;
 import com.recom.service.AssertionService;
 import com.recom.service.ReforgerPayloadParserService;
@@ -51,7 +51,7 @@ public class MapClustersController {
             @ApiResponse(responseCode = HttpCommons.UNAUTHORIZED_CODE, description = HttpCommons.UNAUTHORIZED, content = @Content())
     })
     @PostMapping(path = "/form", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity<ClusterListDto> generateClustersForm(
+    public ResponseEntity<ClusterResponseDto> generateClustersForm(
             @RequestParam(required = true)
             @NonNull final Map<String, String> payload
     ) {
@@ -70,7 +70,7 @@ public class MapClustersController {
             @ApiResponse(responseCode = HttpCommons.UNAUTHORIZED_CODE, description = HttpCommons.UNAUTHORIZED, content = @Content())
     })
     @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ClusterListDto> generateClustersJSON(
+    public ResponseEntity<ClusterResponseDto> generateClustersJSON(
             @RequestBody(required = true)
             @NonNull final MapClusterRequestDto clusterRequestDto
     ) {

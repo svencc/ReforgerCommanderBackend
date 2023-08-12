@@ -13,6 +13,7 @@ import lombok.experimental.SuperBuilder;
 import java.io.Serializable;
 import java.util.List;
 
+@Deprecated
 @Data
 @Schema
 @Builder

@@ -1,7 +1,7 @@
 package com.recom.api.map;
 
 import com.recom.api.commons.HttpCommons;
-import com.recom.dto.map.renderer.MapRenderCommandsDto;
+import com.recom.dto.map.renderer.MapRenderResponseDto;
 import com.recom.dto.map.renderer.MapRendererRequestDto;
 import com.recom.service.ReforgerPayloadParserService;
 import com.recom.service.dbcached.AsyncCacheableRequestProcessor;
@@ -47,7 +47,7 @@ public class MapRendererController {
             @ApiResponse(responseCode = HttpCommons.UNAUTHORIZED_CODE, description = HttpCommons.UNAUTHORIZED, content = @Content())
     })
     @PostMapping(path = "/form", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity<MapRenderCommandsDto> generateMapRenderingsForm(
+    public ResponseEntity<MapRenderResponseDto> generateMapRenderingsForm(
             @RequestParam(required = true)
             @NonNull final Map<String, String> payload
     ) {
@@ -66,7 +66,7 @@ public class MapRendererController {
             @ApiResponse(responseCode = HttpCommons.UNAUTHORIZED_CODE, description = HttpCommons.UNAUTHORIZED, content = @Content())
     })
     @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<MapRenderCommandsDto> generateMapRenderingsJSON(
+    public ResponseEntity<MapRenderResponseDto> generateMapRenderingsJSON(
             @RequestBody(required = true)
             @NonNull final MapRendererRequestDto mapRendererRequestDto
     ) {
