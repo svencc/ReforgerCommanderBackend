@@ -34,9 +34,6 @@ public class PublicEndpointsProvider {
         publicEndpoints.addAll(authenticateEndpoints());
         publicEndpoints.addAll(actuatorEndpoints());
 
-        publicEndpoints.add(AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/v1/map/clusters**"));
-        publicEndpoints.add(AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/v1/map/clusters/**"));
-
         return publicEndpoints;
     }
 
