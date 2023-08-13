@@ -16,7 +16,6 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
@@ -73,9 +72,8 @@ public class AuthenticationService {
         return AuthenticationResponseDto.builder()
                 .token(jwt)
                 .issuedAt(conversionService.convert(now, Date.class))
-                .expiresInSeconds(BigDecimal.valueOf(expiresIn.toSeconds()))
-                .expiresInMilliseconds(BigDecimal.valueOf(expiresIn.toMillis()))
-                .expiresAt(conversionService.convert(expiresAt, Date.class))
+                .expiresAt(expiresAt.getEpochSecond())
+                .expiresInSeconds(expiresIn.toSeconds())
                 .build();
     }
 

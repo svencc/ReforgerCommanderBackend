@@ -30,14 +30,10 @@ public class AuthenticationResponseDto implements Serializable {
 
     @Schema
     @JsonProperty()
-    private Date expiresAt;
+    private Long expiresAt;
 
     @Schema
     @JsonProperty()
-    private BigDecimal expiresInSeconds;
-
-    @Schema
-    @JsonProperty()
-    private BigDecimal expiresInMilliseconds;
+    private Long expiresInSeconds;
 
 }
