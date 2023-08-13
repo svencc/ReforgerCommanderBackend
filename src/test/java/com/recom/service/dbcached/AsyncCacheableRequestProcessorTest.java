@@ -75,7 +75,7 @@ class AsyncCacheableRequestProcessorTest {
 
         // Verify that the cache put method was called
         verify(dbCachedManager, times(1)).put(eq(cacheName), eq(cacheKey), eq("NewValue"));
-        sleep(1000);
+        sleep(100); // Wait for the async task (CompletableFuture) to finish
         verify(cacheLoader, times(1)).get();
     }
 
