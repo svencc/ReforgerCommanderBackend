@@ -34,6 +34,8 @@ public class PublicEndpointsProvider {
         publicEndpoints.addAll(authenticateEndpoints());
         publicEndpoints.addAll(actuatorEndpoints());
 
+        publicEndpoints.add(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/v1/time"));
+
         return publicEndpoints;
     }
 

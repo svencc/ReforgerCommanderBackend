@@ -1,5 +1,11 @@
 # TODO LIST
 *
+* We need a Time-Service to get the current time for the client-
+  * Client will call time service every second
+  * Client initializes on first startup with the startup timestamp
+    * with that we can calculate when an token will expire in future
+    * authenticaten token has 3 information: expiration time, issuer time, expires-in-seconds
+*
 * DB-based Configuration System
     * new db config values for type-colors, z-indexes, etc.
     * Open for Comments; see TODOS in AsyncCacheableRequestProcessor -> app cache management move to this class; do not use  @cacheable annotations anymore?

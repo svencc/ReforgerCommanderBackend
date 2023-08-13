@@ -22,7 +22,7 @@ public class AuthenticationResponseDto implements Serializable {
 
     @Schema
     @JsonProperty()
-    private String bearerToken;
+    private String token;
 
     @Schema
     @JsonProperty()

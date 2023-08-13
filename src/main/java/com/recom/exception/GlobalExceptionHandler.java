@@ -1,7 +1,6 @@
 package com.recom.exception;
 
 import com.recom.dto.ConstraintViolationEntryDto;
-import com.recom.dto.ServerErrorDto;
 import com.recom.dto.ServerMessageDto;
 import jakarta.validation.ConstraintViolationException;
 import lombok.NonNull;
@@ -67,12 +66,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(value = {ConfigurationNotReadableException.class})
-    public ResponseEntity<ServerErrorDto> handleConfigurationNotReadableException(@NonNull final ConfigurationNotReadableException exception) {
+    public ResponseEntity<ServerMessageDto> handleConfigurationNotReadableException(@NonNull final ConfigurationNotReadableException exception) {
         final String message = String.format("There is an issue with a configuration entry in the database! ConfigurationNotReadableException: %s", exception.getMessage());
         log.error(message, exception);
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ServerErrorDto.builder()
+                .body(ServerMessageDto.builder()
                         .message(message)
                         .build()
                 );

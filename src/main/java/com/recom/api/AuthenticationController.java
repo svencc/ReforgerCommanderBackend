@@ -25,11 +25,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @Slf4j
+@Validated
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "Authentication")
 @RequestMapping("/api/v1/authenticate")
-@Validated
 public class AuthenticationController {
 
     @NonNull
