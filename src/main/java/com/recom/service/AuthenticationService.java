@@ -73,7 +73,8 @@ public class AuthenticationService {
         return AuthenticationResponseDto.builder()
                 .bearerToken(jwt)
                 .issuedAt(conversionService.convert(now, Date.class))
-                .expiresInSeconds(BigDecimal.valueOf(expiresIn.getSeconds()))
+                .expiresInSeconds(BigDecimal.valueOf(expiresIn.toSeconds()))
+                .expiresInMilliseconds(BigDecimal.valueOf(expiresIn.toMillis()))
                 .expiresAt(conversionService.convert(expiresAt, Date.class))
                 .build();
     }

@@ -36,4 +36,8 @@ public class AuthenticationResponseDto implements Serializable {
     @JsonProperty()
     private BigDecimal expiresInSeconds;
 
+    @Schema
+    @JsonProperty()
+    private BigDecimal expiresInMilliseconds;
+
 }
