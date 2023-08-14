@@ -8,7 +8,6 @@ import org.springframework.core.convert.ConversionException;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,7 +19,7 @@ public class JwtTokenService {
     private final ConversionService conversionService;
 
     @NonNull
-    public String assertIsPresent(@NonNull final Optional<String> header) throws HttpUnauthorizedException {
+    public String passThroughIfPresent(@NonNull final Optional<String> header) throws HttpUnauthorizedException {
         if (header.isEmpty()) {
             throw new HttpUnauthorizedException("Value is not present");
         } else {
@@ -34,25 +33,13 @@ public class JwtTokenService {
         }
     }
 
-    public void assertTokenIsNotExpired(@Nullable final Object expiration) throws HttpUnauthorizedException {
-        if (expiration == null) {
-            throw new HttpUnauthorizedException("Token expiration is not present");
-        } else {
-            try {
-                final Instant expirationDate = conversionService.convert(expiration, Instant.class);
-                if (!Instant.now().isBefore(expirationDate)) {
-                    throw new HttpUnauthorizedException("Token is expired");
-                }
-            } catch (ConversionException e) {
-                throw new HttpUnauthorizedException("Invalid token; expiration is not a valid date");
-            }
-        }
-    }
-
-    public void assertClaimIsPresent(@Nullable final Object sub) throws HttpUnauthorizedException {
+    @NonNull
+    public String passThroughIfClaimIsPresent(@Nullable final Object sub) throws HttpUnauthorizedException {
         if (sub == null) {
-            throw new HttpUnauthorizedException("Token subject is not present");
+            throw new HttpUnauthorizedException("Claim is not present");
         }
+
+        return sub.toString();
     }
 
     @NonNull
@@ -60,18 +47,13 @@ public class JwtTokenService {
         try {
             return conversionService.convert(sub, UUID.class);
         } catch (ConversionException e) {
-            throw new HttpUnauthorizedException("Invalid token; expiration is not a valid date");
+            throw new HttpUnauthorizedException("Invalid token; subject is not an UUID!");
         }
     }
 
     @NonNull
-    public String extractToken(@NonNull final String authorizationHeaderOpt) {
-        return authorizationHeaderOpt.substring("Bearer".length()).trim();
-    }
-
-    @NonNull
-    public String validateAnProvideToken(@NonNull final String authorizationHeaderOpt) {
-        return authorizationHeaderOpt.substring("Bearer".length()).trim();
+    public String extractToken(@NonNull final String authorizationHeader) {
+        return authorizationHeader.substring("Bearer".length()).trim();
     }
 
 }

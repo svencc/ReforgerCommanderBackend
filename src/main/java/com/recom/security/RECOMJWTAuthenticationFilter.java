@@ -56,7 +56,7 @@ public class RECOMJWTAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
 
-            final String contentTypeHeader = jwtTokenService.assertIsPresent(Optional.ofNullable(request.getHeader("Content-Type")));
+            final String contentTypeHeader = jwtTokenService.passThroughIfPresent(Optional.ofNullable(request.getHeader("Content-Type")));
 
             Optional<String> authorizationOpt = Optional.empty();
             if (contentTypeHeader.equals("application/x-www-form-urlencoded")) {
@@ -65,13 +65,15 @@ public class RECOMJWTAuthenticationFilter extends OncePerRequestFilter {
                 authorizationOpt = Optional.ofNullable(request.getHeader("Authorization"));
             }
 
-            final String authorization = jwtTokenService.assertIsPresent(authorizationOpt);
+            // @TODO check if token is expired? necessary here?
+            // jwtTokenService.assertTokenIsNotExpired(jwt.getJWTClaimsSet().getClaims().get("exp"));
+
+            final String authorization = jwtTokenService.passThroughIfPresent(authorizationOpt);
             jwtTokenService.assertAuthorizationStartsWithBearer(authorization);
             final Jwt jwt = jwtDecoder.decode(jwtTokenService.extractToken(authorization));
 
-            jwtTokenService.assertClaimIsPresent(jwt.getClaims().get("sub"));
-
-            final UUID subjectUUID = jwtTokenService.extractAndAssertSubjectIsUUID(jwt.getClaims().get("sub").toString());
+            final String claim = jwtTokenService.passThroughIfClaimIsPresent(jwt.getClaims().get("sub"));
+            final UUID subjectUUID = jwtTokenService.extractAndAssertSubjectIsUUID(claim);
             final Optional<Account> account = accountPersistenceLayer.findByUUID(subjectUUID);
 
             if (account.isPresent()) {

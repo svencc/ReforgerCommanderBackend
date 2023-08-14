@@ -74,12 +74,12 @@ public class RECOMJWTAuthenticationFilterTest {
         final List<String> returnValues = new ArrayList<>();
         returnValues.add("application/json");
         returnValues.add("Bearer TOKEN");
-        when(jwtTokenService.assertIsPresent(any())).thenAnswer(invocation -> returnValues.remove(0));
+        when(jwtTokenService.passThroughIfPresent(any())).thenAnswer(invocation -> returnValues.remove(0));
 
         when(jwtTokenService.extractToken(any())).thenReturn("TOKEN");
         when(jwtDecoder.decode(eq("TOKEN"))).thenReturn(jwt);
         when(jwt.getClaims()).thenReturn(Collections.singletonMap("sub", accountUuid));
-        jwtTokenService.assertClaimIsPresent(eq(accountUuid));
+        jwtTokenService.passThroughIfClaimIsPresent(eq(accountUuid));
         when(jwtTokenService.extractAndAssertSubjectIsUUID(any())).thenReturn(accountUuid);
         when(accountPersistenceLayer.findByUUID(eq(accountUuid))).thenReturn(Optional.of(account));
         when(authenticationMapper.toAuthentication(any(Account.class))).thenReturn(RECOMAuthentication.builder().authenticated(true).build());
@@ -122,12 +122,12 @@ public class RECOMJWTAuthenticationFilterTest {
         final List<String> returnValues = new ArrayList<>();
         returnValues.add("application/x-www-form-urlencoded");
         returnValues.add("Bearer TOKEN");
-        when(jwtTokenService.assertIsPresent(any())).thenAnswer(invocation -> returnValues.remove(0));
+        when(jwtTokenService.passThroughIfPresent(any())).thenAnswer(invocation -> returnValues.remove(0));
 
         when(jwtTokenService.extractToken(any())).thenReturn("TOKEN");
         when(jwtDecoder.decode(eq("TOKEN"))).thenReturn(jwt);
         when(jwt.getClaims()).thenReturn(Collections.singletonMap("sub", accountUuid));
-        jwtTokenService.assertClaimIsPresent(eq(accountUuid));
+        jwtTokenService.passThroughIfClaimIsPresent(eq(accountUuid));
         when(jwtTokenService.extractAndAssertSubjectIsUUID(any())).thenReturn(accountUuid);
         when(accountPersistenceLayer.findByUUID(eq(accountUuid))).thenReturn(Optional.of(account));
         when(authenticationMapper.toAuthentication(any(Account.class))).thenReturn(RECOMAuthentication.builder().authenticated(true).build());

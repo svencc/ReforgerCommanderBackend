@@ -9,7 +9,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.core.convert.ConversionService;
 
-import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,23 +27,23 @@ class JwtTokenServiceTest {
 
 
     @Test
-    public void testAssertHeaderIsPresent_ValidHeader() {
+    public void testPassThroughIfPresent_withValue_thenPassThrough() {
         // Arrange
         Optional<String> authorizationHeader = Optional.of("Bearer token");
 
         // Act & Assert
-        assertDoesNotThrow(() -> jwtTokenService.assertIsPresent(authorizationHeader));
-        assertEquals("Bearer token", jwtTokenService.assertIsPresent(authorizationHeader));
+        assertDoesNotThrow(() -> jwtTokenService.passThroughIfPresent(authorizationHeader));
+        assertEquals("Bearer token", jwtTokenService.passThroughIfPresent(authorizationHeader));
     }
 
     @Test
-    public void testAssertHeaderIsPresent_InvalidHeader() {
+    public void testPassThroughIfPresent_withEmptyValue_thenThrowException() {
         // Arrange
         Optional<String> authorizationHeader = Optional.empty();
 
         // Act & Assert
         HttpUnauthorizedException exception = assertThrows(HttpUnauthorizedException.class,
-                () -> jwtTokenService.assertIsPresent(authorizationHeader));
+                () -> jwtTokenService.passThroughIfPresent(authorizationHeader));
         assertEquals("Value is not present", exception.getMessage());
     }
 
@@ -69,56 +68,23 @@ class JwtTokenServiceTest {
     }
 
     @Test
-    public void testAssertTokenIsNotExpired_ValidExpiration() {
-        // Arrange
-        final Long expiration = Instant.now().plusSeconds(3600).getEpochSecond(); // Expiration in the future
-        when(conversionService.convert(any(), eq(Instant.class))).thenReturn(Instant.now().plusSeconds(3600));
-
-        // Act & Assert
-        assertDoesNotThrow(() -> jwtTokenService.assertTokenIsNotExpired(expiration.toString()));
-    }
-
-    @Test
-    public void testAssertTokenIsNotExpired_NoExpiration() {
-        // Arrange
-        Object expiration = null;
-
-        // Act & Assert
-        HttpUnauthorizedException exception = assertThrows(HttpUnauthorizedException.class,
-                () -> jwtTokenService.assertTokenIsNotExpired(expiration));
-        assertEquals("Token expiration is not present", exception.getMessage());
-    }
-
-    @Test
-    public void testAssertTokenIsNotExpired_ExpiredToken() {
-        // Arrange
-        final Long expiration = Instant.now().minusSeconds(3600).getEpochSecond();  // Expiration in the past
-        when(conversionService.convert(any(), eq(Instant.class))).thenReturn(Instant.now().minusSeconds(3600));
-
-        // Act & Assert
-        HttpUnauthorizedException exception = assertThrows(HttpUnauthorizedException.class,
-                () -> jwtTokenService.assertTokenIsNotExpired(expiration));
-        assertEquals("Token is expired", exception.getMessage());
-    }
-
-    @Test
-    public void testAssertClaimIsPresent_ValidClaim() {
+    public void testPassThroughIfClaimIsPresent_withValidClaim_thenPassThrough() {
         // Arrange
         Object claim = "subject";
 
         // Act & Assert
-        assertDoesNotThrow(() -> jwtTokenService.assertClaimIsPresent(claim));
+        assertEquals(claim, jwtTokenService.passThroughIfClaimIsPresent(claim));
     }
 
     @Test
-    public void testAssertClaimIsPresent_NoClaim() {
+    public void testPassThroughIfClaimIsPresent_withNoClaim_thanThrowException() {
         // Arrange
         Object claim = null;
 
         // Act & Assert
         HttpUnauthorizedException exception = assertThrows(HttpUnauthorizedException.class,
-                () -> jwtTokenService.assertClaimIsPresent(claim));
-        assertEquals("Token subject is not present", exception.getMessage());
+                () -> jwtTokenService.passThroughIfClaimIsPresent(claim));
+        assertEquals("Claim is not present", exception.getMessage());
     }
 
     @Test
@@ -145,7 +111,7 @@ class JwtTokenServiceTest {
         // Act & Assert
         HttpUnauthorizedException exception = assertThrows(HttpUnauthorizedException.class,
                 () -> jwtTokenService.extractAndAssertSubjectIsUUID(sub));
-        assertEquals("Invalid token; expiration is not a valid date", exception.getMessage());
+        assertEquals("Invalid token; subject is not an UUID!", exception.getMessage());
     }
 
     @Test
@@ -155,18 +121,6 @@ class JwtTokenServiceTest {
 
         // Act
         String token = jwtTokenService.extractToken(authorizationHeader);
-
-        // Assert
-        assertEquals("token", token);
-    }
-
-    @Test
-    public void testValidateAnProvideToken() {
-        // Arrange
-        String authorizationHeader = "Bearer token";
-
-        // Act
-        String token = jwtTokenService.validateAnProvideToken(authorizationHeader);
 
         // Assert
         assertEquals("token", token);
