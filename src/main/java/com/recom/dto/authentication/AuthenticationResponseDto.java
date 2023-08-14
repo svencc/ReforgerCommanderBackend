@@ -9,7 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
@@ -30,7 +29,11 @@ public class AuthenticationResponseDto implements Serializable {
 
     @Schema
     @JsonProperty()
-    private Long expiresAt;
+    private Date expiresAt;
+
+    @Schema
+    @JsonProperty()
+    private Long expiresAtEpoch;
 
     @Schema
     @JsonProperty()

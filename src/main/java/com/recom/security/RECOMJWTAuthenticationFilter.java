@@ -56,12 +56,12 @@ public class RECOMJWTAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
 
-            final String contentTypeHeader = jwtTokenService.passThroughIfPresent(Optional.ofNullable(request.getHeader("Content-Type")));
+            final Optional<String> contentType = Optional.ofNullable(request.getHeader("Content-Type"));
 
             Optional<String> authorizationOpt = Optional.empty();
-            if (contentTypeHeader.equals("application/x-www-form-urlencoded")) {
+            if (contentType.isPresent() && contentType.get().equals("application/x-www-form-urlencoded")) {
                 authorizationOpt = extractAuthorizationFromBody(request);
-            } else if (contentTypeHeader.equals("application/json")) {
+            } else {
                 authorizationOpt = Optional.ofNullable(request.getHeader("Authorization"));
             }
 

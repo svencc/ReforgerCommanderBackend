@@ -72,7 +72,8 @@ public class AuthenticationService {
         return AuthenticationResponseDto.builder()
                 .token(jwt)
                 .issuedAt(conversionService.convert(now, Date.class))
-                .expiresAt(expiresAt.getEpochSecond())
+                .expiresAt(conversionService.convert(expiresAt, Date.class))
+                .expiresAtEpoch(expiresAt.getEpochSecond())
                 .expiresInSeconds(expiresIn.toSeconds())
                 .build();
     }
