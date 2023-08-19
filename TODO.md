@@ -1,5 +1,9 @@
 # TODO LIST
 *
+*
+* db migration scripts
+    * add map default account to db in init (same as used in postman collection)
+*
 * DB-based Configuration System
     * new db config values for type-colors, z-indexes, etc.
     * Open for Comments; see TODOS in AsyncCacheableRequestProcessor -> app cache management move to this class; do not use  @cacheable annotations anymore?
