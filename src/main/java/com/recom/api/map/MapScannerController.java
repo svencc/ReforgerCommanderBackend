@@ -51,7 +51,7 @@ public class MapScannerController {
             @RequestParam(required = true)
             @NonNull final Map<String, String> payload
     ) {
-        log.debug("Requested POST /api/v1/map/scanner/transaction/open");
+        log.info("Requested POST /api/v1/map/scanner/transaction/open");
 
         mapEntityTransactionService.openTransaction(payloadParser.parseValidated(payload, TransactionIdentifierDto.class));
         return ResponseEntity.status(HttpStatus.OK)
@@ -73,7 +73,7 @@ public class MapScannerController {
             @RequestParam(required = true)
             @NonNull final Map<String, String> payload
     ) {
-        log.debug("Requested POST /api/v1/map/scanner/transaction/commit");
+        log.info("Requested POST /api/v1/map/scanner/transaction/commit");
 
         mapEntityTransactionService.commitTransaction(payloadParser.parseValidated(payload, TransactionIdentifierDto.class));
         return ResponseEntity.status(HttpStatus.OK)
@@ -95,7 +95,7 @@ public class MapScannerController {
             @RequestParam(required = true)
             @NonNull final Map<String, String> payload
     ) {
-        log.debug("Requested POST /api/v1/map/scanner/transaction/entities");
+        log.info("Requested POST /api/v1/map/scanner/transaction/entities");
 
         mapEntityTransactionService.addMapEntitiesPackage(payloadParser.parseValidated(payload, TransactionalEntityPackageDto.class));
         return ResponseEntity.status(HttpStatus.OK)
