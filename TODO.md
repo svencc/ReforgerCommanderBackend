@@ -1,5 +1,16 @@
 # TODO LIST
 *
+* Command Framework
+* add real JSON endpoints in addition to the necessary "consuming = MediaType.APPLICATION_FORM_URLENCODED_VALUE" Endpoints ...
+* Transactions have to time out via scheduler after one hour
+*
+* normalize db/map entities table
+* use @Embeddable types for coordinates ...
+* map data immutable (do not offer setters); use @Access(AccessType.FIELD) for all unmodifiable entities!
+*
+*
+* use Hibernate Converter for converting List<String> to String and vice versa (list configuration values)?
+    * ???? maybe bad idea and not possible
 *
 * db migration scripts
     * add map default account to db in init (same as used in postman collection)
@@ -37,11 +48,6 @@
 * move from POST-get http methods to real GET Methods. we only need to pass MapName (and eventual token name) so we can
   get rid of the POST-Request-DTOs
 *
-* Command Framework
-* add real JSON endpoints in addition to the necessary "consuming = MediaType.APPLICATION_FORM_URLENCODED_VALUE" Endpoints ...
-* Transactions have to time out via scheduler after one hour
-*
-* normalize db/map entities table
 *
 * Use spring health actuator instead health controller ...
 *
@@ -79,5 +85,5 @@
 ------
 
 * ConcaveHull.java implements Point on its own; change to Point2D Implementation so we dont need to map this data
-    * but first we have to test if we want to keep the ConcaveHull implementation
+    * but first we have to test if we want to keep the ConcaveHull implementation~~
 

@@ -10,7 +10,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>com.rcb</groupId>
+    <groupId>com.recom</groupId>
     <artifactId>recom-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>RECOM Backend</name>
