@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/openjdk/jdk:17-mariner
+FROM eclipse-temurin:17-jdk
 
 USER root
 
@@ -10,13 +10,16 @@ RUN chmod +x bootstrap
 # copy ssh-daemon configuration
 COPY sshd_config /etc/ssh/sshd_config
 
-#RUN apk update \
-RUN yum update -y \
-    && yum clean all
+#RUN apt update \
+RUN apt update -y \
+    && apt upgrade -y \
+    && apt -y install openssh-server \
+    && apt autoremove -y \
+    && apt clean
 
-# Install OpenSSH and set the password for root to "Docker!".
-RUN yum -y install openssh \
-     && echo "root:Docker!" | chpasswd
+# Set up SSH keys
+RUN mkdir -p /root/.ssh
+COPY id_rsa.pub.template /root/.ssh/authorized_keys
 
 # Open port 2222 for SSH access
 EXPOSE 80 2222
