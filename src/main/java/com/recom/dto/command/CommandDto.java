@@ -28,10 +28,6 @@ public class CommandDto {
 
     @Schema
     @JsonProperty()
-    private String mapName;
-
-    @Schema
-    @JsonProperty()
     private CommandType commandType;
 
     @Schema(description = "Unix timestamp in milliseconds", example = "1691941419964")

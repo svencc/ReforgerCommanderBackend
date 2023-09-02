@@ -3,6 +3,7 @@ package com.recom.api.map;
 import com.recom.api.commons.HttpCommons;
 import com.recom.dto.map.renderer.MapRenderResponseDto;
 import com.recom.dto.map.renderer.MapRendererRequestDto;
+import com.recom.service.AssertionService;
 import com.recom.service.ReforgerPayloadParserService;
 import com.recom.service.dbcached.AsyncCacheableRequestProcessor;
 import com.recom.service.map.MapRendererService;
@@ -32,6 +33,8 @@ import java.util.Map;
 @RequestMapping("/api/v1/map/renderer")
 public class MapRendererController {
 
+    @NonNull
+    private final AssertionService assertionService;
     @NonNull
     private final ReforgerPayloadParserService payloadParser;
     @NonNull
@@ -74,6 +77,8 @@ public class MapRendererController {
             @NonNull @Valid final MapRendererRequestDto mapRendererRequestDto
     ) {
         log.debug("Requested POST /api/v1/map/renderer (JSON)");
+
+        assertionService.assertMapExists(mapRendererRequestDto.getMapName());
 
         return asyncCacheableRequestProcessor.processRequest(
                 MapRendererService.MAP_RENDERER_CACHE_NAME,
