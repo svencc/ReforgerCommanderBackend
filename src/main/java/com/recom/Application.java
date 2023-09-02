@@ -11,6 +11,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
 
+import java.util.Locale;
+import java.util.TimeZone;
+
 @EnableCaching
 @SpringBootApplication(scanBasePackages = {"com.recom"})
 @EnableConfigurationProperties({
@@ -20,11 +23,18 @@ import org.springframework.web.filter.CommonsRequestLoggingFilter;
 public class Application {
 
     public static void main(String[] args) {
+        // Set default locale to US
+        Locale.setDefault(Locale.US);
+        // Set default timezone to UTC
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+
+        // Start Spring Boot Application
         final ConfigurableApplicationContext context = SpringApplication.run(Application.class, args);
+
+        // Start Spring Context
         context.start();
     }
 
-    // Uncomment to log all requests to console
     // SET in application.properties -> logging.level.org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
     @Bean
     @Profile("local")

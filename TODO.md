@@ -1,7 +1,23 @@
 # TODO LIST
 *
 * Command Framework
-* add real JSON endpoints in addition to the necessary "consuming = MediaType.APPLICATION_FORM_URLENCODED_VALUE" Endpoints ...
+  * Table with commands
+    * MapName
+    * Command Type
+    * Timestamp
+    * Command Data / Payload
+  * API for fetching commands
+    * different flavours 
+      * fetch all
+      * fetch last command of each type
+      * fetch last command of type
+      * existing command types
+* 
+* 
+* 
+* 
+* 
+* 
 * Transactions have to time out via scheduler after one hour
 *
 * normalize db/map entities table

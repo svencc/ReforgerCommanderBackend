@@ -1,0 +1,21 @@
+'https://plantuml.com/de/sequence-diagram
+
+@startuml
+'header Command Poll Flow
+title Command Poll Flow
+
+participant  CLIENT
+participant  SERVER
+database DB
+
+CLIENT -> SERVER: authenticate
+SERVER --> CLIENT: send JWT Token
+
+
+CLIENT -> SERVER: Poll for Commands
+SERVER --> DB: Query for latest Commands
+DB --> SERVER: Send Commands
+
+CLIENT <-- SERVER: give Commands
+CLIENT --> CLIENT: execute Commands
+@enduml

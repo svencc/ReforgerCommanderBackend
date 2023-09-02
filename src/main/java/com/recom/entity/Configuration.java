@@ -25,7 +25,7 @@ import java.io.Serializable;
 public class Configuration implements Persistable<Long>, Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(insertable = true, updatable = false, nullable = false)
     private Long id;
 

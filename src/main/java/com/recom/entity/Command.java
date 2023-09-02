@@ -1,5 +1,6 @@
 package com.recom.entity;
 
+import com.recom.model.command.CommandType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Cache;
@@ -8,6 +9,7 @@ import org.hibernate.annotations.Nationalized;
 import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -16,11 +18,14 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(indexes = {
-        @Index(name = "IDX_cacheName_cacheKey", columnList = "cacheName, cacheKey", unique = true),
+        @Index(name = "IDX_mapName", columnList = "mapName", unique = false),
+        @Index(name = "IDX_mapName_commandType", columnList = "mapName, commandType", unique = false),
+        @Index(name = "IDX_mapName_commandType_timestamp", columnList = "mapName, commandType, timestamp", unique = true),
+        @Index(name = "IDX_mapName_timestamp", columnList = "mapName, timestamp", unique = false),
 })
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class DBCachedItem implements Persistable<Long>, Serializable {
+public class Command implements Persistable<Long>, Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -29,20 +34,22 @@ public class DBCachedItem implements Persistable<Long>, Serializable {
 
     @Nationalized
     @Column(insertable = true, updatable = false, nullable = false, length = 255)
-    private String cacheKey;
+    private String mapName;
 
-    @Nationalized
+    @Enumerated(EnumType.STRING)
     @Column(insertable = true, updatable = false, nullable = false, length = 255)
-    private String cacheName;
+    private CommandType commandType;
+
+    @Column(insertable = true, updatable = false, nullable = false, columnDefinition="DATETIME(6) DEFAULT NOW(6)")
+    private LocalDateTime timestamp;
 
     @Lob
-    @Column(insertable = true, updatable = true, nullable = false, columnDefinition = "LONGBLOB")
-    private byte[] cachedValue;
-
+    @Column(insertable = true, updatable = true, nullable = true, columnDefinition = "LONGTEXT")
+    private String payload;
 
     @Override
     public int hashCode() {
-        return DBCachedItem.class.hashCode();
+        return Command.class.hashCode();
     }
 
     @Override
@@ -54,7 +61,7 @@ public class DBCachedItem implements Persistable<Long>, Serializable {
         } else if (getClass() != obj.getClass()) {
             return false;
         } else {
-            final DBCachedItem other = (DBCachedItem) obj;
+            final Command other = (Command) obj;
             if (getId() == null) {
                 return false;
             } else return getId().equals(other.getId());

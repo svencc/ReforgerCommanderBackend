@@ -1,0 +1,22 @@
+@startuml
+'https://plantuml.com/state-diagram
+'https://github.com/pnavais/state-machine
+
+'https://www.baeldung.com/spring-state-machine
+'   https://github.com/64ink/spring-statemachine-chart-exporter
+'   https://plantuml.com/de/api
+'   https://plantuml.com/de/download
+
+'scale 500 width
+
+
+[*] --> INIT_NewGame : start game
+INIT_NewGame: generate basic commands (if not present)
+INIT_NewGame --> RUN : initialized
+RUN --> STOPPED : stop
+RUN --> PAUSE : pause
+PAUSE --> RUN : resume
+STOPPED --> [*] : end
+
+@enduml
+
