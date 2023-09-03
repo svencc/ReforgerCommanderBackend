@@ -1,4 +1,4 @@
-package lib.javaconcavehull.main.concavehull;
+package lib.concavehull;
 
 import lombok.Builder;
 import lombok.Data;

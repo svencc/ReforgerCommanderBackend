@@ -1,7 +1,6 @@
-package lib.main.alphashape;
+package lib.alphashape;
 
-import lib.javaconcavehull.main.alphashape.AlphaShapeConcaveHull;
-import lib.javaconcavehull.main.concavehull.Point;
+import lib.concavehull.Point;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

@@ -1,8 +1,8 @@
-package lib.javaconcavehull.main.alphashape;
+package lib.alphashape;
 
 import java.util.ArrayList;
 import java.util.List;
-import lib.javaconcavehull.main.concavehull.Point;
+import lib.concavehull.Point;
 
 public class QuickHull {
 

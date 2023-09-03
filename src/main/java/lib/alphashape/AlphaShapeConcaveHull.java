@@ -1,9 +1,8 @@
-package lib.javaconcavehull.main.alphashape;
+package lib.alphashape;
 
-import lib.javaconcavehull.main.concavehull.Point;
+import lib.concavehull.Point;
 import lombok.NonNull;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
-import org.apache.commons.math3.geometry.euclidean.twod.hull.MonotoneChain;
 
 import java.util.ArrayList;
 import java.util.Collection;

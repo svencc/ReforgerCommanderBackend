@@ -1,7 +1,7 @@
-package lib.main.convexhull;
+package lib.convexhull;
 
-import lib.javaconcavehull.main.concavehull.ConcaveHull;
-import lib.javaconcavehull.main.concavehull.Point;
+import lib.concavehull.ConcaveHull;
+import lib.concavehull.Point;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 

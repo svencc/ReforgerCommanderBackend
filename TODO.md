@@ -1,22 +1,12 @@
 # TODO LIST
 *
 * Command Framework
-  * Table with commands
-    * MapName
-    * Command Type
-    * Timestamp
-    * Command Data / Payload
   * API for fetching commands
     * different flavours 
       * fetch all
       * fetch last command of each type
       * fetch last command of type
       * existing command types
-* 
-* 
-* 
-* 
-* 
 * 
 * Transactions have to time out via scheduler after one hour
 *
