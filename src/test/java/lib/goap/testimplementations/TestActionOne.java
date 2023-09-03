@@ -2,54 +2,54 @@ package lib.goap.testimplementations;
 
 import lib.goap.GoapAction;
 import lib.goap.GoapState;
-import lib.goap.IGoapUnit;
+import lib.goap.unit.IGoapUnit;
+import lombok.NonNull;
 
 public class TestActionOne extends GoapAction {
 
     public TestActionOne(Object target) {
         super(target);
-
-        this.addPrecondition(new GoapState(0, "goal", false));
-        this.addEffect(new GoapState(0, "step", true));
+        addPrecondition(new GoapState(0, "goal", false));
+        addEffect(new GoapState(0, "step", true));
     }
 
     @Override
-    protected boolean isDone(IGoapUnit goapUnit) {
+    public boolean isDone(@NonNull final IGoapUnit goapUnit) {
         return true;
     }
 
     @Override
-    protected boolean performAction(IGoapUnit goapUnit) {
+    public boolean performAction(@NonNull final IGoapUnit goapUnit) {
         return true;
     }
 
     @Override
-    protected float generateBaseCost(IGoapUnit goapUnit) {
+    public float generateBaseCost(@NonNull final IGoapUnit goapUnit) {
         return 0;
     }
 
     @Override
-    protected float generateCostRelativeToTarget(IGoapUnit goapUnit) {
+    public float generateCostRelativeToTarget(@NonNull final IGoapUnit goapUnit) {
         return 0;
     }
 
     @Override
-    protected boolean checkProceduralPrecondition(IGoapUnit goapUnit) {
+    public boolean checkProceduralPrecondition(@NonNull final IGoapUnit goapUnit) {
         return true;
     }
 
     @Override
-    protected boolean requiresInRange(IGoapUnit goapUnit) {
+    public boolean requiresInRange(@NonNull final IGoapUnit goapUnit) {
         return false;
     }
 
     @Override
-    protected boolean isInRange(IGoapUnit goapUnit) {
+    public boolean isInRange(@NonNull final IGoapUnit goapUnit) {
         return false;
     }
 
     @Override
-    protected void reset() {
+    public void reset() {
 
     }
 

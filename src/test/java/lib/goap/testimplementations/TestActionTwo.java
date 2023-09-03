@@ -1,7 +1,8 @@
 package lib.goap.testimplementations;
 
 import lib.goap.GoapState;
-import lib.goap.IGoapUnit;
+import lib.goap.unit.IGoapUnit;
+import lombok.NonNull;
 
 public class TestActionTwo extends TestActionOne {
 
@@ -13,7 +14,7 @@ public class TestActionTwo extends TestActionOne {
     }
 
     @Override
-    protected float generateBaseCost(IGoapUnit goapUnit) {
+    public float generateBaseCost(@NonNull final IGoapUnit goapUnit) {
         return 1;
     }
 

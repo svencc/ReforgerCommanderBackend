@@ -1,5 +1,7 @@
 package lib.goap;
 
+import lib.goap.planner.GoapPlanner;
+import lib.goap.planner.GoapPlannerable;
 import lib.goap.testimplementations.TestUnit;
 import org.junit.jupiter.api.Test;
 
@@ -8,7 +10,7 @@ import java.util.Queue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-public class GoapPlannerTest {
+public class GoapPlannerBaseTest {
 
     // No Connections equals a null pointer.
     @Test
@@ -20,8 +22,8 @@ public class GoapPlannerTest {
     /**
      * @return the IGoapPlanner that is currently being tested.
      */
-    public static IGoapPlanner getTestingGoapPlanner() {
-        return new DefaultGoapPlanner();
+    public static GoapPlannerable getTestingGoapPlanner() {
+        return new GoapPlanner();
     }
 
     // Connection between start and nodeOne leads to no goal

@@ -1,286 +1,260 @@
 package lib.goap;
 
+import lib.goap.unit.IGoapUnit;
+import lombok.Getter;
+import lombok.NonNull;
+import org.springframework.lang.Nullable;
+
 import java.util.HashSet;
 
-/**
- * GoapAction.java --- Superclass for all actions a unit can perform
- * 
- * @author P H - 28.01.2017
- */
+@Getter
 public abstract class GoapAction {
 
-	protected Object target = null;
+    @Nullable
+    protected final Object target;
+    @Getter
+    @NonNull
+    private final HashSet<GoapState> preconditions = new HashSet<>();
+    @Getter
+    @NonNull
+    private final HashSet<GoapState> effects = new HashSet<>();
 
-	private HashSet<GoapState> preconditions = new HashSet<GoapState>();
-	private HashSet<GoapState> effects = new HashSet<GoapState>();
+    /**
+     * @param target the target of the action. Since "Object" is being used this is
+     *               NOT type safe!
+     */
+    public GoapAction(@NonNull final Object target) {
+        this.target = target;
+    }
 
-	/**
-	 * @param target
-	 *            the target of the action. Since "Object" is being used this is
-	 *            NOT type safe!
-	 */
-	public GoapAction(Object target) {
-		this.target = target;
-	}
+    /**
+     * Checks if the current action of the GoapAction Queue is finished. Gets
+     * called until it returns true.
+     *
+     * @param goapUnit the unit the action is checked for.
+     * @return true or false depending on the success of the action. Returning
+     * true causes the swap to the next action in the Queue.
+     */
+    public abstract boolean isDone(@NonNull final IGoapUnit goapUnit);
 
-	// -------------------- Functions
+    /**
+     * Gets called when the action is going to be executed by the Unit.
+     *
+     * @param goapUnit the GoapUnit that is trying to execute the action.
+     * @return true or false depending if the action was successful.
+     */
+    public abstract boolean performAction(@NonNull final IGoapUnit goapUnit);
 
-	/**
-	 * Checks if the current action of the GoapAction Queue is finished. Gets
-	 * called until it returns true.
-	 *
-	 * @param goapUnit
-	 *            the unit the action is checked for.
-	 * @return true or false depending on the success of the action. Returning
-	 *         true causes the swap to the next action in the Queue.
-	 */
-	protected abstract boolean isDone(IGoapUnit goapUnit);
+    /**
+     * This function will be called for each GoapAction in the generation of
+     * each Graph to determine the cost for each node in the graph. The two
+     * functions called in this function have to be implemented by the Subclass
+     * to get the sum of both costs. Differentiating between the base cost and
+     * the cost relative to the target gives a proper representation of the work
+     * the unit has to do i.e. if it has to travel a large distance to reach its
+     * target.
+     *
+     * @param goapUnit the unit whose action cost is being calculated.
+     * @return the calculated action cost.
+     */
+    public float generateCost(@NonNull final IGoapUnit goapUnit) {
+        return generateBaseCost(goapUnit) + generateCostRelativeToTarget(goapUnit);
+    }
 
-	/**
-	 * Gets called when the action is going to be executed by the Unit.
-	 * 
-	 * @param goapUnit
-	 *            the GoapUnit that is trying to execute the action.
-	 * @return true or false depending if the action was successful.
-	 */
-	protected abstract boolean performAction(IGoapUnit goapUnit);
+    /**
+     * Defines the base cost of the action.
+     *
+     * @param goapUnit the unit the action is being executed from.
+     * @return the base cost of the action which is added to the cost relative
+     * to the target.
+     */
+    public abstract float generateBaseCost(@NonNull final IGoapUnit goapUnit);
 
-	/**
-	 * This function will be called for each GoapAction in the generation of
-	 * each Graph to determine the cost for each node in the graph. The two
-	 * functions called in this function have to be implemented by the Subclass
-	 * to get the sum of both costs. Differentiating between the base cost and
-	 * the cost relative to the target gives a proper representation of the work
-	 * the unit has to do i.e. if it has to travel a large distance to reach its
-	 * target.
-	 *
-	 * @param goapUnit
-	 *            the unit whose action cost is being calculated.
-	 * @return the calculated action cost.
-	 */
-	float generateCost(IGoapUnit goapUnit) {
-		return generateBaseCost(goapUnit) + generateCostRelativeToTarget(goapUnit);
-	}
+    /**
+     * Defines the relative cost of the action.
+     *
+     * @param goapUnit the unit the action is being executed from.
+     * @return the relative cost of the action in relation to the current
+     * target, which is added to the base cost.
+     */
+    public abstract float generateCostRelativeToTarget(@NonNull final IGoapUnit goapUnit);
 
-	/**
-	 * Defines the base cost of the action.
-	 * 
-	 * @param goapUnit
-	 *            the unit the action is being executed from.
-	 * @return the base cost of the action which is added to the cost relative
-	 *         to the target.
-	 */
-	protected abstract float generateBaseCost(IGoapUnit goapUnit);
+    /**
+     * Gets called to determine if the preconditions of an action are met. If
+     * they are not, the action will not be taken in consideration for the
+     * generation of the action graph.
+     *
+     * @param goapUnit the unit the action is being executed from.
+     * @return true or false depending on if the action can be taken in the first
+     * place.
+     */
+    public abstract boolean checkProceduralPrecondition(@NonNull final IGoapUnit goapUnit);
 
-	/**
-	 * Defines the relative cost of the action.
-	 * 
-	 * @param goapUnit
-	 *            the unit the action is being executed from.
-	 * @return the relative cost of the action in relation to the current
-	 *         target, which is added to the base cost.
-	 */
-	protected abstract float generateCostRelativeToTarget(IGoapUnit goapUnit);
+    /**
+     * Defines if the unit needs to be in a certain range in relation to the
+     * target to execute the action.
+     *
+     * @param goapUnit the unit the action is being executed from.
+     * @return true or false depending on if the action requires the unit to be in
+     * a certain range near the target.
+     */
+    public abstract boolean requiresInRange(@NonNull final IGoapUnit goapUnit);
 
-	/**
-	 * Gets called to determine if the preconditions of an action are met. If
-	 * they are not, the action will not be taken in consideration for the
-	 * generation of the action graph.
-	 * 
-	 * @param goapUnit
-	 *            the unit the action is being executed from.
-	 * @return true or false depending if the action can be taken in the first
-	 *         place.
-	 */
-	protected abstract boolean checkProceduralPrecondition(IGoapUnit goapUnit);
+    /**
+     * Function to determine if the unit is in a certain range. Only gets called
+     * if the action requires to be in range relative to the target.
+     *
+     * @param goapUnit the unit the action is being executed from.
+     * @return true or false depending on if the unit is in range to execute the
+     * action.
+     * @see #requiresInRange(IGoapUnit goapUnit)
+     */
+    public abstract boolean isInRange(@NonNull final IGoapUnit goapUnit);
 
-	/**
-	 * Defines if the unit needs to be in a certain range in relation to the
-	 * target to execute the action.
-	 * 
-	 * @param goapUnit
-	 *            the unit the action is being executed from.
-	 * @return true or false depending if the action requires the unit to be in
-	 *         a certain range near the target.
-	 */
-	protected abstract boolean requiresInRange(IGoapUnit goapUnit);
+    /**
+     * Function used to reset an action. Gets called once the Action finishes
+     * or, if the GoapUnit class was used, when the Stack on the FSM gets
+     * reset.
+     */
+    public abstract void reset();
 
-	/**
-	 * Function to determine if the unit is in a certain range. Only gets called
-	 * if the action requires to be in range relative to the target.
-	 * 
-	 * @see #requiresInRange(IGoapUnit goapUnit)
-	 * 
-	 * @param goapUnit
-	 *            the unit the action is being executed from.
-	 * @return true or false depending if the unit is in range to execute the
-	 *         action.
-	 */
-	protected abstract boolean isInRange(IGoapUnit goapUnit);
+    /**
+     * Overloaded function for convenience.
+     *
+     * @param importance the importance of the precondition being added.
+     * @param effect     the effect of the precondition being added.
+     * @param value      the value of the precondition being added.
+     * @see #addPrecondition(GoapState precondition)
+     */
+    public void addPrecondition(
+            final int importance,
+            @NonNull final String effect,
+            @NonNull final Object value
+    ) {
+        addPrecondition(new GoapState(importance, effect, value));
+    }
 
-	/**
-	 * Function used to reset an action. Gets called once the Action finishes
-	 * or, if the GoapUnit class was used, when the Stack on the FSM gets
-	 * reseted.
-	 */
-	protected abstract void reset();
+    /**
+     * Add a precondition, which is not already in the HashSet.
+     *
+     * @param precondition which is going to be added to the action.
+     */
+    public void addPrecondition(@NonNull final GoapState precondition) {
+        boolean alreadyInList = false;
 
-	// ------------------------------ Getter / Setter
+        for (final GoapState goapState : this.preconditions) {
+            if (goapState.equals(precondition)) {
+                alreadyInList = true;
+            }
+        }
 
-	protected HashSet<GoapState> getPreconditions() {
-		return this.preconditions;
-	}
+        if (!alreadyInList) {
+            preconditions.add(precondition);
+        }
+    }
 
-	protected HashSet<GoapState> getEffects() {
-		return this.effects;
-	}
+    /**
+     * Overloaded function for convenience.
+     *
+     * @param precondition the precondition that is being removed.
+     * @return true or false depending on if the precondition was removed
+     * successfully.
+     * @see #removePrecondition(String preconditionEffect)
+     */
+    public boolean removePrecondition(@NonNull final GoapState precondition) {
+        return removePrecondition(precondition.effect);
+    }
 
-	// ------------------------------ Others
+    /**
+     * Remove a precondition from the HashSet.
+     *
+     * @param preconditionEffect the effect which is going to be removed.
+     * @return true or false depending on if the precondition was removed.
+     */
+    public boolean removePrecondition(@NonNull final String preconditionEffect) {
+        GoapState stateToBeRemoved = null;
 
-	// ------------------------------ Preconditions
-	/**
-	 * Overloaded function for convenience.
-	 * 
-	 * @param importance
-	 *            the importance of the precondition being added.
-	 * @param effect
-	 *            the effect of the precondition being added.
-	 * @param value
-	 *            the value of the precondition being added.
-	 * @see #addPrecondition(GoapState precondition)
-	 */
-	protected void addPrecondition(int importance, String effect, Object value) {
-		this.addPrecondition(new GoapState(importance, effect, value));
-	}
+        for (final GoapState goapState : this.effects) {
+            if (goapState.effect.equals(preconditionEffect)) {
+                stateToBeRemoved = goapState;
+            }
+        }
 
-	/**
-	 * Add a precondition, which is not already in the HashSet.
-	 * 
-	 * @param precondition
-	 *            which is going to be added to the action.
-	 */
-	protected void addPrecondition(GoapState precondition) {
-		boolean alreadyInList = false;
+        if (stateToBeRemoved != null) {
+            preconditions.remove(stateToBeRemoved);
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-		for (GoapState goapState : this.preconditions) {
-			if (goapState.equals(precondition)) {
-				alreadyInList = true;
-			}
-		}
+    /**
+     * Overloaded function for convenience.
+     *
+     * @param importance the importance of the effect being added.
+     * @param effect     the effect of the effect being added.
+     * @param value      the value of the effect being added.
+     * @see #addEffect(GoapState effect)
+     */
+    public void addEffect(
+            final int importance,
+            @NonNull final String effect,
+            @NonNull final Object value
+    ) {
+        addEffect(new GoapState(importance, effect, value));
+    }
 
-		if (!alreadyInList) {
-			this.preconditions.add(precondition);
-		}
-	}
+    /**
+     * Add an effect, which is not already in the HashSet
+     *
+     * @param effect the effect which is going to be added to the action.
+     */
+    public void addEffect(@NonNull final GoapState effect) {
+        boolean alreadyInList = false;
 
-	/**
-	 * Overloaded function for convenience.
-	 * 
-	 * @param precondition
-	 *            the precondition that is being removed.
-	 * @see #removePrecondition(String preconditionEffect)
-	 * @return true or false depending if the precondition was removed
-	 *         successfully.
-	 */
-	protected boolean removePrecondition(GoapState precondition) {
-		return this.removePrecondition(precondition.effect);
-	}
+        for (final GoapState goapState : this.effects) {
+            if (goapState.equals(effect)) {
+                alreadyInList = true;
+            }
+        }
 
-	/**
-	 * Remove a precondition from the HashSet.
-	 * 
-	 * @param preconditionEffect
-	 *            the effect which is going to be removed.
-	 * @return true or false depending if the precondition was removed.
-	 */
-	protected boolean removePrecondition(String preconditionEffect) {
-		GoapState stateToBeRemoved = null;
+        if (!alreadyInList) {
+            this.effects.add(effect);
+        }
+    }
 
-		for (GoapState goapState : this.effects) {
-			if (goapState.effect.equals(preconditionEffect)) {
-				stateToBeRemoved = goapState;
-			}
-		}
+    /**
+     * Overloaded function for convenience.
+     *
+     * @param effect the effect that is being removed.
+     * @return true or false depending on if the effect was removed successfully.
+     * @see #removeEffect(String effectEffect)
+     */
+    public boolean removeEffect(@NonNull final GoapState effect) {
+        return this.removeEffect(effect.effect);
+    }
 
-		if (stateToBeRemoved != null) {
-			this.preconditions.remove(stateToBeRemoved);
-			return true;
-		} else {
-			return false;
-		}
-	}
+    /**
+     * Remove an effect from the HashSet.
+     *
+     * @param effectEffect the effect which is going to be removed.
+     * @return true or false depending on if the effect was removed.
+     */
+    public boolean removeEffect(@NonNull final String effectEffect) {
+        GoapState stateToBeRemoved = null;
 
-	// ------------------------------ Effects
+        for (final GoapState goapState : this.effects) {
+            if (goapState.effect.equals(effectEffect)) {
+                stateToBeRemoved = goapState;
+            }
+        }
 
-	/**
-	 * Overloaded function for convenience.
-	 * 
-	 * @param importance
-	 *            the importance of the effect being added.
-	 * @param effect
-	 *            the effect of the effect being added.
-	 * @param value
-	 *            the value of the effect being added.
-	 * @see #addEffect(GoapState effect)
-	 */
-	protected void addEffect(int importance, String effect, Object value) {
-		this.addEffect(new GoapState(importance, effect, value));
-	}
+        if (stateToBeRemoved != null) {
+            this.effects.remove(stateToBeRemoved);
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-	/**
-	 * Add a effect, which is not already in the HashSet
-	 * 
-	 * @param effect
-	 *            the effect which is going to be added to the action.
-	 */
-	protected void addEffect(GoapState effect) {
-		boolean alreadyInList = false;
-
-		for (GoapState goapState : this.effects) {
-			if (goapState.equals(effect)) {
-				alreadyInList = true;
-			}
-		}
-
-		if (!alreadyInList) {
-			this.effects.add(effect);
-		}
-	}
-
-	/**
-	 * Overloaded function for convenience.
-	 * 
-	 * @param effect
-	 *            the effect that is being removed.
-	 * @see #removeEffect(String effectEffect)
-	 * @return true or false depending if the effect was removed successfully.
-	 * 
-	 */
-	protected boolean removeEffect(GoapState effect) {
-		return this.removeEffect(effect.effect);
-	}
-
-	/**
-	 * Remove a effect from the HashSet.
-	 * 
-	 * @param effectEffect
-	 *            the effect which is going to be removed.
-	 * @return true or false depending if the effect was removed.
-	 */
-	protected boolean removeEffect(String effectEffect) {
-		GoapState stateToBeRemoved = null;
-
-		for (GoapState goapState : this.effects) {
-			if (goapState.effect.equals(effectEffect)) {
-				stateToBeRemoved = goapState;
-			}
-		}
-
-		if (stateToBeRemoved != null) {
-			this.effects.remove(stateToBeRemoved);
-			return true;
-		} else {
-			return false;
-		}
-	}
 }

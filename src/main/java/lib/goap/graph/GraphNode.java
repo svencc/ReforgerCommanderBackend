@@ -1,35 +1,44 @@
-package lib.goap;
+package lib.goap.graph;
 
-import lib.goap.graph.WeightedEdge;
-import lib.goap.graph.WeightedPath;
+import lib.goap.GoapAction;
+import lib.goap.GoapState;
+import lombok.Getter;
+import lombok.NonNull;
+import org.springframework.lang.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-/**
- * GraphNode.java --- Vertex on the used DefaultGraph / -Planner.
- *
- * @author P H - 28.01.2017
- */
 public class GraphNode {
 
-    GoapAction action = null;
-
-    HashSet<GoapState> preconditions;
-    HashSet<GoapState> effects;
-    List<WeightedPath<GraphNode, WeightedEdge>> pathsToThisNode = new ArrayList<WeightedPath<GraphNode, WeightedEdge>>();
-    private HashMap<WeightedPath<GraphNode, WeightedEdge>, HashSet<GoapState>> storedEffectStates = new HashMap<>();
+    @NonNull
+    private final HashMap<WeightedPath<GraphNode, WeightedEdge>, HashSet<GoapState>> storedEffectStates = new HashMap<>();
+    @Getter
+    @NonNull
+    private final List<WeightedPath<GraphNode, WeightedEdge>> pathsToThisNode = new ArrayList<>();
+    @Getter
+    @Nullable
+    private GoapAction action = null;
+    @Getter
+    @Nullable
+    private HashSet<GoapState> preconditions;
+    @Getter
+    @Nullable
+    private HashSet<GoapState> effects;
 
     /**
      * @param preconditions the HashSet of preconditions the node has. Each preconditions
-     *                      has to be met before another node can be connected to this
+     *                      have to be met before another node can be connected to this
      *                      node.
      * @param effects       the HashSet of effects the node has on the graph. Effects get
      *                      added together along the graph to hopefully meet a goalState.
      */
-    GraphNode(HashSet<GoapState> preconditions, HashSet<GoapState> effects) {
+    public GraphNode(
+            @Nullable final HashSet<GoapState> preconditions,
+            @Nullable final HashSet<GoapState> effects
+    ) {
         this.preconditions = preconditions;
         this.effects = effects;
     }
@@ -38,7 +47,7 @@ public class GraphNode {
      * @param goapAction the action whose effects and preconditions are being used to
      *                   define the node.
      */
-    GraphNode(GoapAction goapAction) {
+    public GraphNode(@Nullable final GoapAction goapAction) {
         if (goapAction != null) {
             this.preconditions = goapAction.getPreconditions();
             this.effects = goapAction.getEffects();
@@ -53,7 +62,7 @@ public class GraphNode {
      *
      * @param newGraphNode the node whose properties are going to be copied.
      */
-    void overwriteOwnProperties(GraphNode newGraphNode) {
+    public void overwriteOwnProperties(@Nullable final GraphNode newGraphNode) {
         if (newGraphNode != null) {
             this.action = newGraphNode.action;
             this.preconditions = newGraphNode.preconditions;
@@ -70,15 +79,17 @@ public class GraphNode {
      * @param pathToPreviousNode the path with which the previous node is accessed.
      * @param newPath            the path with which the node is accessed.
      */
-    void addGraphPath(WeightedPath<GraphNode, WeightedEdge> pathToPreviousNode,
-                      WeightedPath<GraphNode, WeightedEdge> newPath) {
-        List<GraphNode> newPathNodeList = newPath.getVertexList();
+    public void addGraphPath(
+            @Nullable final WeightedPath<GraphNode, WeightedEdge> pathToPreviousNode,
+            @NonNull final WeightedPath<GraphNode, WeightedEdge> newPath
+    ) {
+        final List<GraphNode> newPathNodeList = newPath.getVertexList();
         boolean notInSet = true;
 
-        if (this.pathsToThisNode.isEmpty()) {
+        if (pathsToThisNode.isEmpty()) {
             notInSet = true;
         } else {
-            for (WeightedPath<GraphNode, WeightedEdge> storedPath : this.pathsToThisNode) {
+            for (final WeightedPath<GraphNode, WeightedEdge> storedPath : pathsToThisNode) {
                 List<GraphNode> nodeList = storedPath.getVertexList();
                 boolean isSamePath = true;
 
@@ -97,9 +108,9 @@ public class GraphNode {
         }
 
         if (notInSet) {
-            this.pathsToThisNode.add(newPath);
+            pathsToThisNode.add(newPath);
             if (newPath.getEndVertex().action != null) {
-                this.storedEffectStates.put(newPath, addPathEffectsTogether(pathToPreviousNode, newPath));
+                storedEffectStates.put(newPath, addPathEffectsTogether(pathToPreviousNode, newPath));
             }
         }
     }
@@ -114,23 +125,25 @@ public class GraphNode {
      * @param path               the path on which all effects are getting added together.
      * @return the HashSet of effects at the last node in the path.
      */
-    private HashSet<GoapState> addPathEffectsTogether(WeightedPath<GraphNode, WeightedEdge> pathToPreviousNode,
-                                                      WeightedPath<GraphNode, WeightedEdge> path) {
+    private HashSet<GoapState> addPathEffectsTogether(
+            @Nullable final WeightedPath<GraphNode, WeightedEdge> pathToPreviousNode,
+            @NonNull final WeightedPath<GraphNode, WeightedEdge> path
+    ) {
         HashSet<GoapState> combinedNodeEffects;
-        List<GoapState> statesToBeRemoved = new ArrayList<GoapState>();
+        final List<GoapState> statesToBeRemoved = new ArrayList<>();
 
         // No path leading to the previous node = node is starting point =>
         // sublist of all effects
         if (pathToPreviousNode == null) {
-            combinedNodeEffects = new HashSet<GoapState>(path.getStartVertex().effects);
+            combinedNodeEffects = new HashSet<>(path.getStartVertex().effects);
         } else {
-            combinedNodeEffects = new HashSet<GoapState>(
+            combinedNodeEffects = new HashSet<>(
                     pathToPreviousNode.getEndVertex().getEffectState(pathToPreviousNode));
         }
 
         // Mark effects to be removed
-        for (GoapState nodeWorldState : combinedNodeEffects) {
-            for (GoapState pathNodeEffect : this.effects) {
+        for (final GoapState nodeWorldState : combinedNodeEffects) {
+            for (final GoapState pathNodeEffect : effects) {
                 if (nodeWorldState.effect.equals(pathNodeEffect.effect)) {
                     statesToBeRemoved.add(nodeWorldState);
                 }
@@ -138,20 +151,21 @@ public class GraphNode {
         }
 
         // Remove marked effects from the state
-        for (GoapState stateToRemove : statesToBeRemoved) {
+        for (final GoapState stateToRemove : statesToBeRemoved) {
             combinedNodeEffects.remove(stateToRemove);
         }
 
         // Add all effects from the current node to the HashSet
-        for (GoapState effect : this.effects) {
+        for (final GoapState effect : this.effects) {
             combinedNodeEffects.add(effect);
         }
+
         return combinedNodeEffects;
     }
 
-    // ------------------------------ Getter / Setter
-
-    HashSet<GoapState> getEffectState(WeightedPath<GraphNode, WeightedEdge> pathKey) {
+    @NonNull
+    public HashSet<GoapState> getEffectState(@NonNull final WeightedPath<GraphNode, WeightedEdge> pathKey) {
         return this.storedEffectStates.get(pathKey);
     }
+
 }

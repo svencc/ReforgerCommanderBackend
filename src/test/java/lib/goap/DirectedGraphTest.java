@@ -10,64 +10,65 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class DirectedGraphTest {
 
-	@Test
-	public void vertices() {
-		// Arrange
-		final int vertexCount = 5;
+    @Test
+    public void vertices() {
+        // Arrange
+        final int vertexCount = 5;
 
-		// Act
-		final DirectedGraph<Integer, Edge> g = createBasicTestGraph(vertexCount);
+        // Act
+        final DirectedGraph<Integer, Edge> g = createBasicTestGraph(vertexCount);
 
-		// Assert
-		assertNotEquals(null, g);
-		assertNotEquals(null, g.getVertices());
-		assertFalse(g.getVertices().isEmpty());
-		assertEquals(vertexCount, g.getVertices().size());
-	}
+        // Assert
+        assertNotEquals(null, g);
+        assertNotEquals(null, g.getVertices());
+        assertFalse(g.getVertices().isEmpty());
+        assertEquals(vertexCount, g.getVertices().size());
+    }
 
-	@Test
-	public void edges() {
-		// Arrange
-		final int vertexCount = 5;
-		final int edgeCount = 2;
+    @NonNull
+    public static DirectedGraph<Integer, Edge> createBasicTestGraph(final int vertexCount) {
+        final DirectedGraph<Integer, Edge> directedGraph = new DirectedGraph<>();
 
-		// Act
-		final DirectedGraph<Integer, Edge> g = createBasicConnectedTestGraph(vertexCount, edgeCount);
+        for (int i = 0; i < vertexCount; i++) {
+            directedGraph.addVertex(i);
+        }
 
-		// Assert
-		assertTrue(g.containsEdge(0, 1));
-		assertFalse(g.containsEdge(3, 4));
-		assertTrue(g.getEdges().size() == edgeCount);
+        return directedGraph;
+    }
 
-		g.removeEdge(0, 1);
+    @Test
+    public void edges() {
+        // Arrange
+        final int vertexCount = 5;
+        final int edgeCount = 2;
 
-		assertFalse(g.containsEdge(0, 1));
-		assertFalse(g.getEdges().isEmpty());
-		assertTrue(g.getEdges().size() == (edgeCount - 1));
-	}
+        // Act
+        final DirectedGraph<Integer, Edge> graphToTest = createBasicConnectedTestGraph(vertexCount, edgeCount);
 
-	@NonNull
-	public static DirectedGraph<Integer, Edge> createBasicTestGraph(final int vertexCount) {
-		final DirectedGraph<Integer, Edge> g = new DirectedGraph<Integer, Edge>();
+        // Assert
+        assertTrue(graphToTest.containsEdge(0, 1));
+        assertFalse(graphToTest.containsEdge(3, 4));
+        assertTrue(graphToTest.getEdges().size() == edgeCount);
 
-		for (int i = 0; i < vertexCount; i++) {
-			g.addVertex(i);
-		}
+        graphToTest.removeEdge(0, 1);
 
-		return g;
-	}
+        assertFalse(graphToTest.containsEdge(0, 1));
+        assertFalse(graphToTest.getEdges().isEmpty());
+        assertTrue(graphToTest.getEdges().size() == (edgeCount - 1));
+    }
 
-	@NonNull
-	public static DirectedGraph<Integer, Edge> createBasicConnectedTestGraph(
-			final int vertexCount,
-			final int edgeCount
-	) {
-		final DirectedGraph<Integer, Edge> g = createBasicTestGraph(vertexCount);
+    @NonNull
+    public static DirectedGraph<Integer, Edge> createBasicConnectedTestGraph(
+            final int vertexCount,
+            final int edgeCount
+    ) {
+        final DirectedGraph<Integer, Edge> basicTestGraph = createBasicTestGraph(vertexCount);
 
-		for (int i = 0; i < edgeCount; i++) {
-			g.addEdge(i, i + 1, new Edge());
-		}
-		return g;
-	}
+        for (int i = 0; i < edgeCount; i++) {
+            basicTestGraph.addEdge(i, i + 1, new Edge());
+        }
+
+        return basicTestGraph;
+    }
 
 }

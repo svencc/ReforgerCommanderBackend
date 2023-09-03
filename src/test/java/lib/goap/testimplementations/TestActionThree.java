@@ -1,10 +1,11 @@
 package lib.goap.testimplementations;
 
 import lib.goap.GoapState;
-import lib.goap.IGoapUnit;
+import lib.goap.unit.IGoapUnit;
+import lombok.NonNull;
 
 public class TestActionThree extends TestActionOne {
-    public TestActionThree(Object target) {
+    public TestActionThree(@NonNull final Object target) {
         super(target);
 
         this.addPrecondition(new GoapState(0, "goal", false));
@@ -12,7 +13,7 @@ public class TestActionThree extends TestActionOne {
     }
 
     @Override
-    protected float generateBaseCost(IGoapUnit goapUnit) {
+    public float generateBaseCost(@NonNull final IGoapUnit goapUnit) {
         return 0;
     }
 }
