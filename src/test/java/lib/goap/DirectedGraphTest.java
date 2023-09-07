@@ -20,9 +20,9 @@ public class DirectedGraphTest {
 
         // Assert
         assertNotEquals(null, g);
-        assertNotEquals(null, g.getVertices());
-        assertFalse(g.getVertices().isEmpty());
-        assertEquals(vertexCount, g.getVertices().size());
+        assertNotEquals(null, g.getNodes());
+        assertFalse(g.getNodes().isEmpty());
+        assertEquals(vertexCount, g.getNodes().size());
     }
 
     @NonNull
@@ -30,7 +30,7 @@ public class DirectedGraphTest {
         final DirectedGraph<Integer, Edge> directedGraph = new DirectedGraph<>();
 
         for (int i = 0; i < vertexCount; i++) {
-            directedGraph.addVertex(i);
+            directedGraph.addNode(i);
         }
 
         return directedGraph;

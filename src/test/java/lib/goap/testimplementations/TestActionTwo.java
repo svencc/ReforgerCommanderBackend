@@ -1,6 +1,6 @@
 package lib.goap.testimplementations;
 
-import lib.goap.GoapState;
+import lib.goap.state.GoapState;
 import lib.goap.unit.IGoapUnit;
 import lombok.NonNull;
 

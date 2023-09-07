@@ -1,6 +1,6 @@
 package lib.goap.fsm.states;
 
-import lib.goap.GoapAction;
+import lib.goap.action.GoapActionBase;
 import lib.goap.UnperformableActionException;
 import lib.goap.fsm.FSM;
 import lib.goap.unit.IGoapUnit;
@@ -15,11 +15,11 @@ public class PerformActionState implements FSMStateful {
     private final FSM fsm;
     @Getter
     @NonNull
-    private final Queue<GoapAction> currentActions;
+    private final Queue<GoapActionBase> currentActions;
 
     public PerformActionState(
             @NonNull final FSM fsm,
-            @NonNull final Queue<GoapAction> currentActions
+            @NonNull final Queue<GoapActionBase> currentActions
     ) {
         this.fsm = fsm;
         this.currentActions = currentActions;
@@ -52,7 +52,7 @@ public class PerformActionState implements FSMStateful {
             }
 
             if (!currentActions.isEmpty()) {
-                final GoapAction currentAction = currentActions.peek();
+                final GoapActionBase currentAction = currentActions.peek();
 
                 // No Exception since handling this is user specific.
                 if (currentAction.getTarget() == null) {

@@ -1,6 +1,6 @@
 package lib.goap.fsm;
 
-import lib.goap.GoapAction;
+import lib.goap.action.GoapActionBase;
 import lib.goap.agent.FSMPlanEventListenable;
 import lib.goap.fsm.states.FSMStateful;
 import lib.goap.fsm.states.PerformActionState;
@@ -49,7 +49,7 @@ public final class FSM {
         planEventListeners.forEach(FSMPlanEventListenable::onPlanFinished);
     }
 
-    private synchronized void dispatchPlanFailedEvent(@NonNull final Queue<GoapAction> actions) {
+    private synchronized void dispatchPlanFailedEvent(@NonNull final Queue<GoapActionBase> actions) {
         planEventListeners.forEach(listener -> listener.onPlanFailed(actions));
     }
 

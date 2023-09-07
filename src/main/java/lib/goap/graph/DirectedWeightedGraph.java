@@ -2,10 +2,9 @@ package lib.goap.graph;
 
 import lombok.NonNull;
 
-public class DirectedWeightedGraph<VertexType, EdgeType extends WeightedEdge>
-        extends DirectedGraph<VertexType, EdgeType>
-        implements IWeightedGraph<VertexType, EdgeType>
-{
+public class DirectedWeightedGraph<NodeType, EdgeType extends WeightedEdge>
+        extends DirectedGraph<NodeType, EdgeType>
+        implements IWeightedGraph<NodeType, EdgeType> {
 
     @Override
     public double getEdgeWeight(@NonNull final WeightedEdge edge) {

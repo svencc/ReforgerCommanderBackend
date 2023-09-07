@@ -4,7 +4,6 @@ import lib.goap.graph.DirectedGraph;
 import lib.goap.graph.Edge;
 import lib.goap.graph.Path;
 import lib.goap.graph.PathFactory;
-import lombok.NonNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.lang.Nullable;
 
@@ -28,12 +27,12 @@ public class PathTest {
         // Assert
         assertTrue(pathToTest.isPresent());
         assertNotEquals(null, pathToTest.get());
-        assertTrue(pathToTest.get().getVertexList().size() > 0);
-        assertTrue(pathToTest.get().getVertexList().size() == (edgeCount + 1));
+        assertTrue(pathToTest.get().getNodeList().size() > 0);
+        assertTrue(pathToTest.get().getNodeList().size() == (edgeCount + 1));
         assertTrue(pathToTest.get().getEdgeList().size() > 0);
         assertTrue(pathToTest.get().getEdgeList().size() == edgeCount);
-        assertEquals(Integer.valueOf(0), pathToTest.get().getStartVertex());
-        assertEquals(Integer.valueOf(edgeCount), pathToTest.get().getEndVertex());
+        assertEquals(Integer.valueOf(0), pathToTest.get().getStartNode());
+        assertEquals(Integer.valueOf(edgeCount), pathToTest.get().getEndNode());
     }
 
     @Nullable

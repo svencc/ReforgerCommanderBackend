@@ -1,6 +1,6 @@
 package lib.goap.fsm.states;
 
-import lib.goap.GoapAction;
+import lib.goap.action.GoapActionBase;
 import lib.goap.unit.IGoapUnit;
 import lombok.Getter;
 import lombok.NonNull;
@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 class MoveToState implements FSMStateful {
 
     @NonNull
-    private final GoapAction currentAction;
+    private final GoapActionBase currentAction;
 
     /**
      * Move to the target of the currentAction until the unit is in range to perform the action itself.
@@ -21,6 +21,7 @@ class MoveToState implements FSMStateful {
      */
     @Override
     public boolean isStateStillPerforming(@NonNull final IGoapUnit goapUnit) {
+        // @TODO RETHINK METHODS NAME!!!
         boolean stillMoving = true;
 
         if ((currentAction.requiresInRange(goapUnit) && currentAction.isInRange(goapUnit)) || currentAction.getTarget() == null) {
@@ -28,7 +29,6 @@ class MoveToState implements FSMStateful {
         } else {
             goapUnit.moveTo(currentAction.getTarget());
         }
-
         return stillMoving;
     }
 

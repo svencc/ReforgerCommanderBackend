@@ -1,13 +1,14 @@
 package lib.goap.testimplementations;
 
-import lib.goap.GoapAction;
-import lib.goap.GoapState;
+import lib.goap.action.GoapActionBase;
+import lib.goap.state.GoapState;
+import lib.goap.target.GoatTargetable;
 import lib.goap.unit.IGoapUnit;
 import lombok.NonNull;
 
-public class TestActionOne extends GoapAction {
+public class TestActionOne extends GoapActionBase {
 
-    public TestActionOne(Object target) {
+    public TestActionOne(@NonNull final GoatTargetable target) {
         super(target);
         addPrecondition(new GoapState(0, "goal", false));
         addEffect(new GoapState(0, "step", true));

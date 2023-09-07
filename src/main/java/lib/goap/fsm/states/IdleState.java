@@ -1,6 +1,6 @@
 package lib.goap.fsm.states;
 
-import lib.goap.GoapAction;
+import lib.goap.action.GoapActionBase;
 import lib.goap.agent.PlanCreatedEventListenable;
 import lib.goap.planner.GoapPlannerable;
 import lib.goap.unit.IGoapUnit;
@@ -29,7 +29,7 @@ public class IdleState implements FSMStateful {
      */
     @Override
     public boolean isStateStillPerforming(@NonNull final IGoapUnit goapUnit) {
-        final Queue<GoapAction> plannedQueue = goapPlanner.plan(goapUnit);
+        final Queue<GoapActionBase> plannedQueue = goapPlanner.plan(goapUnit);
 
         if (plannedQueue != null) {
             dispatchNewPlanCreatedEvent(plannedQueue);
@@ -40,7 +40,7 @@ public class IdleState implements FSMStateful {
         return true;
     }
 
-    private synchronized void dispatchNewPlanCreatedEvent(@NonNull final Queue<GoapAction> plan) {
+    private synchronized void dispatchNewPlanCreatedEvent(@NonNull final Queue<GoapActionBase> plan) {
         planCreatedListeners.forEach(listener -> listener.onPlanCreated(plan));
     }
 

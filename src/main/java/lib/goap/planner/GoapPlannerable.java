@@ -1,6 +1,6 @@
 package lib.goap.planner;
 
-import lib.goap.GoapAction;
+import lib.goap.action.GoapActionBase;
 import lib.goap.unit.IGoapUnit;
 import lombok.NonNull;
 
@@ -15,6 +15,6 @@ public interface GoapPlannerable {
      * @return a created GoapAction Queue or null, if no Actions and goals
      * match.
      */
-    Queue<GoapAction> plan(@NonNull final IGoapUnit goapUnit);
+    Queue<GoapActionBase> plan(@NonNull final IGoapUnit goapUnit);
 
 }

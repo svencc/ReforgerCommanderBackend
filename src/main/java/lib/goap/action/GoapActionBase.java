@@ -1,29 +1,27 @@
-package lib.goap;
+package lib.goap.action;
 
+import lib.goap.state.GoapState;
+import lib.goap.target.GoatTargetable;
 import lib.goap.unit.IGoapUnit;
 import lombok.Getter;
 import lombok.NonNull;
-import org.springframework.lang.Nullable;
 
 import java.util.HashSet;
 
 @Getter
-public abstract class GoapAction {
+public abstract class GoapActionBase {
 
-    @Nullable
-    protected final Object target;
-    @Getter
+    @NonNull
+    protected final GoatTargetable target;
     @NonNull
     private final HashSet<GoapState> preconditions = new HashSet<>();
-    @Getter
     @NonNull
     private final HashSet<GoapState> effects = new HashSet<>();
 
     /**
-     * @param target the target of the action. Since "Object" is being used this is
-     *               NOT type safe!
+     * @param target the target of the action. Can be null.
      */
-    public GoapAction(@NonNull final Object target) {
+    public GoapActionBase(@NonNull final GoatTargetable target) {
         this.target = target;
     }
 
@@ -41,7 +39,7 @@ public abstract class GoapAction {
      * Gets called when the action is going to be executed by the Unit.
      *
      * @param goapUnit the GoapUnit that is trying to execute the action.
-     * @return true or false depending if the action was successful.
+     * @return true or false depending on if the action was successful.
      */
     public abstract boolean performAction(@NonNull final IGoapUnit goapUnit);
 
@@ -119,22 +117,6 @@ public abstract class GoapAction {
     public abstract void reset();
 
     /**
-     * Overloaded function for convenience.
-     *
-     * @param importance the importance of the precondition being added.
-     * @param effect     the effect of the precondition being added.
-     * @param value      the value of the precondition being added.
-     * @see #addPrecondition(GoapState precondition)
-     */
-    public void addPrecondition(
-            final int importance,
-            @NonNull final String effect,
-            @NonNull final Object value
-    ) {
-        addPrecondition(new GoapState(importance, effect, value));
-    }
-
-    /**
      * Add a precondition, which is not already in the HashSet.
      *
      * @param precondition which is going to be added to the action.
@@ -142,27 +124,16 @@ public abstract class GoapAction {
     public void addPrecondition(@NonNull final GoapState precondition) {
         boolean alreadyInList = false;
 
-        for (final GoapState goapState : this.preconditions) {
+        for (final GoapState goapState : preconditions) {
             if (goapState.equals(precondition)) {
                 alreadyInList = true;
+                break;
             }
         }
 
         if (!alreadyInList) {
             preconditions.add(precondition);
         }
-    }
-
-    /**
-     * Overloaded function for convenience.
-     *
-     * @param precondition the precondition that is being removed.
-     * @return true or false depending on if the precondition was removed
-     * successfully.
-     * @see #removePrecondition(String preconditionEffect)
-     */
-    public boolean removePrecondition(@NonNull final GoapState precondition) {
-        return removePrecondition(precondition.effect);
     }
 
     /**
@@ -174,8 +145,8 @@ public abstract class GoapAction {
     public boolean removePrecondition(@NonNull final String preconditionEffect) {
         GoapState stateToBeRemoved = null;
 
-        for (final GoapState goapState : this.effects) {
-            if (goapState.effect.equals(preconditionEffect)) {
+        for (final GoapState goapState : effects) {
+            if (goapState.getEffect().equals(preconditionEffect)) {
                 stateToBeRemoved = goapState;
             }
         }
@@ -188,21 +159,6 @@ public abstract class GoapAction {
         }
     }
 
-    /**
-     * Overloaded function for convenience.
-     *
-     * @param importance the importance of the effect being added.
-     * @param effect     the effect of the effect being added.
-     * @param value      the value of the effect being added.
-     * @see #addEffect(GoapState effect)
-     */
-    public void addEffect(
-            final int importance,
-            @NonNull final String effect,
-            @NonNull final Object value
-    ) {
-        addEffect(new GoapState(importance, effect, value));
-    }
 
     /**
      * Add an effect, which is not already in the HashSet
@@ -212,14 +168,15 @@ public abstract class GoapAction {
     public void addEffect(@NonNull final GoapState effect) {
         boolean alreadyInList = false;
 
-        for (final GoapState goapState : this.effects) {
+        for (final GoapState goapState : effects) {
             if (goapState.equals(effect)) {
                 alreadyInList = true;
+                break;
             }
         }
 
         if (!alreadyInList) {
-            this.effects.add(effect);
+            effects.add(effect);
         }
     }
 
@@ -231,7 +188,7 @@ public abstract class GoapAction {
      * @see #removeEffect(String effectEffect)
      */
     public boolean removeEffect(@NonNull final GoapState effect) {
-        return this.removeEffect(effect.effect);
+        return removeEffect(effect.getEffect());
     }
 
     /**
@@ -243,18 +200,21 @@ public abstract class GoapAction {
     public boolean removeEffect(@NonNull final String effectEffect) {
         GoapState stateToBeRemoved = null;
 
-        for (final GoapState goapState : this.effects) {
-            if (goapState.effect.equals(effectEffect)) {
+        for (final GoapState goapState : effects) {
+            if (goapState.getEffect().equals(effectEffect)) {
                 stateToBeRemoved = goapState;
             }
         }
 
         if (stateToBeRemoved != null) {
-            this.effects.remove(stateToBeRemoved);
+            effects.remove(stateToBeRemoved);
             return true;
         } else {
             return false;
         }
     }
+
+    @Override
+    public abstract int hashCode();
 
 }

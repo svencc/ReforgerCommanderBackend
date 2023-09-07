@@ -1,6 +1,9 @@
 package lib.goap.graph;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Setter
 @Getter
@@ -8,6 +11,6 @@ import lombok.*;
 @AllArgsConstructor
 public class WeightedEdge extends Edge {
 
-	private double weight = 0.;
+    private double weight = 0.;
 
 }

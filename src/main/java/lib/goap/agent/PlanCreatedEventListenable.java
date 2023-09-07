@@ -1,6 +1,6 @@
 package lib.goap.agent;
 
-import lib.goap.GoapAction;
+import lib.goap.action.GoapActionBase;
 
 import java.util.Queue;
 
@@ -14,6 +14,6 @@ public interface PlanCreatedEventListenable {
      * @param plan the plan that the Planner has created and is ready to be
      *             executed.
      */
-    void onPlanCreated(Queue<GoapAction> plan);
+    void onPlanCreated(Queue<GoapActionBase> plan);
 
 }

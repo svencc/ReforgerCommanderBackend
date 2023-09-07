@@ -1,7 +1,7 @@
 package lib.goap.agent;
 
-import lib.goap.GoapAction;
-import lib.goap.GoapState;
+import lib.goap.action.GoapActionBase;
+import lib.goap.state.GoapState;
 import lib.goap.fsm.FSM;
 import lib.goap.fsm.states.IdleState;
 import lib.goap.fsm.states.PerformActionState;
@@ -42,7 +42,7 @@ public abstract class GoapAgentBase implements ImportantUnitChangeEventListenabl
     }
 
     @Override
-    public void onPlanCreated(@NonNull final Queue<GoapAction> plan) {
+    public void onPlanCreated(@NonNull final Queue<GoapActionBase> plan) {
         assignedGoapUnit.goapPlanFound(plan);
         fsm.popStack();
         fsm.pushStack(new PerformActionState(fsm, plan));
@@ -50,19 +50,19 @@ public abstract class GoapAgentBase implements ImportantUnitChangeEventListenabl
 
     @Override
     public void onImportantUnitGoalChange(@NonNull final GoapState newGoalState) {
-        newGoalState.importance = Integer.MAX_VALUE;
+        newGoalState.setImportance(Integer.MAX_VALUE);
         fsm.pushStack(idleState);
     }
 
     @Override
     public void onImportantUnitStackResetChange() {
-        assignedGoapUnit.getAvailableActions().forEach(GoapAction::reset);
+        assignedGoapUnit.getAvailableActions().forEach(GoapActionBase::reset);
         fsm.clearStack();
         fsm.pushStack(idleState);
     }
 
     @Override
-    public void onPlanFailed(@NonNull final Queue<GoapAction> actions) {
+    public void onPlanFailed(@NonNull final Queue<GoapActionBase> actions) {
         assignedGoapUnit.goapPlanFailed(actions);
     }
 

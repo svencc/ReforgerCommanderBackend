@@ -42,7 +42,7 @@ public class DirectedWeightedGraphTest {
         final DirectedWeightedGraph<Integer, WeightedEdge> g = new DirectedWeightedGraph<Integer, WeightedEdge>();
 
         for (int i = 0; i < vertexCount; i++) {
-            g.addVertex(i);
+            g.addNode(i);
         }
 
         return g;

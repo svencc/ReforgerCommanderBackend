@@ -1,7 +1,9 @@
 package lib.goap.testimplementations;
 
-import lib.goap.GoapAction;
-import lib.goap.GoapState;
+import lib.goap.action.GoapActionBase;
+import lib.goap.state.GoapState;
+import lib.goap.state.WorldAspect;
+import lib.goap.target.NullTarget;
 import lib.goap.unit.GoapUnitBase;
 import lombok.NonNull;
 
@@ -9,19 +11,19 @@ import java.util.Queue;
 
 public class TestUnit extends GoapUnitBase {
 
-    public TestActionOne tOne = new TestActionOne(1);
-    public TestActionTwo tTwo = new TestActionTwo(1);
-    public TestActionThree tThree = new TestActionThree(1);
+    public TestActionOne tOne = new TestActionOne(new NullTarget());
+    public TestActionTwo tTwo = new TestActionTwo(new NullTarget());
+    public TestActionThree tThree = new TestActionThree(new NullTarget());
     public GoapState goalS = new GoapState(1, "goal", true);
-    public GoapState worldS = new GoapState(0, "goal", false);
+    public WorldAspect worldS = (WorldAspect) new GoapState("goal", false);
 
     @Override
-    public void goapPlanFound(@NonNull final Queue<GoapAction> actions) {
+    public void goapPlanFound(@NonNull final Queue<GoapActionBase> actions) {
 
     }
 
     @Override
-    public void goapPlanFailed(@NonNull final Queue<GoapAction> actions) {
+    public void goapPlanFailed(@NonNull final Queue<GoapActionBase> actions) {
 
     }
 
@@ -45,11 +47,11 @@ public class TestUnit extends GoapUnitBase {
         this.addGoalState(goal);
     }
 
-    public void addWS(@NonNull final GoapState worldState) {
-        this.addWorldState(worldState);
+    public void addWS(@NonNull final WorldAspect worldAspect) {
+        this.addWorldStateAspect(worldAspect);
     }
 
-    public void addAA(@NonNull final GoapAction action) {
+    public void addAA(@NonNull final GoapActionBase action) {
         this.addAvailableAction(action);
     }
 

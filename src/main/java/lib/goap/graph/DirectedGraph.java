@@ -9,53 +9,53 @@ import java.util.HashSet;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor
-public class DirectedGraph<VertexType, EdgeType extends Edge> implements IGraph<VertexType, EdgeType> {
+public class DirectedGraph<NodeType, EdgeType extends Edge> implements IGraph<NodeType, EdgeType> {
 
     @NonNull
-    protected final HashMap<VertexType, HashMap<VertexType, EdgeType>> graphContent = new HashMap<>();
+    protected final HashMap<NodeType, HashMap<NodeType, EdgeType>> graphContent = new HashMap<>();
 
 
     @Override
-    public void addVertex(@NonNull final VertexType vertex) {
-        this.graphContent.put(vertex, new HashMap<>());
+    public void addNode(@NonNull final NodeType node) {
+        graphContent.put(node, new HashMap<>());
     }
 
     @Override
     public void addEdge(
-            @NonNull final VertexType firstVertex,
-            @NonNull final VertexType secondVertex,
+            @NonNull final NodeType firstNode,
+            @NonNull final NodeType secondNode,
             @NonNull final EdgeType edge
     ) {
-        graphContent.get(firstVertex).put(secondVertex, edge);
+        graphContent.get(firstNode).put(secondNode, edge);
     }
 
     @Override
     public boolean containsEdge(
-            @NonNull final VertexType firstVertex,
-            @NonNull final VertexType secondVertex
+            @NonNull final NodeType firstNode,
+            @NonNull final NodeType secondNode
     ) {
-        return graphContent.get(firstVertex).containsKey(secondVertex);
+        return graphContent.get(firstNode).containsKey(secondNode);
     }
 
     @Override
     public void removeEdge(
-            @NonNull final VertexType firstVertex,
-            @NonNull final VertexType secondVertex
+            @NonNull final NodeType firstNode,
+            @NonNull final NodeType secondNode
     ) {
-        graphContent.get(firstVertex).remove(secondVertex);
+        graphContent.get(firstNode).remove(secondNode);
     }
 
 
     @NonNull
     @Override
-    public HashSet<VertexType> getVertices() {
-        return new HashSet<>(this.graphContent.keySet());
+    public HashSet<NodeType> getNodes() {
+        return new HashSet<>(graphContent.keySet());
     }
 
     @NonNull
     @Override
     public HashSet<EdgeType> getEdges() {
-        return this.graphContent.values()
+        return graphContent.values()
                 .stream()
                 .flatMap(map -> map.values().stream())
                 .collect(Collectors.toCollection(HashSet::new));
@@ -64,10 +64,10 @@ public class DirectedGraph<VertexType, EdgeType extends Edge> implements IGraph<
     @Nullable
     @Override
     public EdgeType getEdge(
-            @NonNull final VertexType firstVertex,
-            @NonNull final VertexType secondVertex
+            @NonNull final NodeType firstNode,
+            @NonNull final NodeType secondNode
     ) {
-        return graphContent.get(firstVertex).getOrDefault(secondVertex, null);
+        return graphContent.get(firstNode).getOrDefault(secondNode, null);
     }
 
 }

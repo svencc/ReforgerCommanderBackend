@@ -1,13 +1,14 @@
 package lib.goap.unit;
 
-import lib.goap.GoapAction;
-import lib.goap.GoapState;
+import lib.goap.action.GoapActionBase;
 import lib.goap.agent.ImportantUnitChangeEventListenable;
+import lib.goap.state.GoapState;
+import lib.goap.state.WorldAspect;
 import lombok.NonNull;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Queue;
+import java.util.Set;
 
 public interface IGoapUnit {
 
@@ -16,14 +17,14 @@ public interface IGoapUnit {
      *
      * @param actions the actions the unit hat to take in order to archive the goal.
      */
-    void goapPlanFound(@NonNull final Queue<GoapAction> actions);
+    void goapPlanFound(@NonNull final Queue<GoapActionBase> actions);
 
     /**
      * Gets called when a plan failed to execute.
      *
      * @param actions the remaining actions in the action Queue that failed.
      */
-    void goapPlanFailed(@NonNull final Queue<GoapAction> actions);
+    void goapPlanFailed(@NonNull final Queue<GoapActionBase> actions);
 
     /**
      * Gets called when a plan was finished.
@@ -41,11 +42,14 @@ public interface IGoapUnit {
      */
     void moveTo(@NonNull final Object target);
 
-    HashSet<GoapState> getWorldState();
+    @NonNull
+    Set<WorldAspect> getWorldState();
 
+    @NonNull
     List<GoapState> getGoalState();
 
-    HashSet<GoapAction> getAvailableActions();
+    @NonNull
+    Set<GoapActionBase> getAvailableActions();
 
     void addImportantUnitGoalChangeListener(@NonNull final ImportantUnitChangeEventListenable listener);
 

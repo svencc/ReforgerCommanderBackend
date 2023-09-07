@@ -2,7 +2,7 @@ package lib.goap.graph;
 
 import lombok.NonNull;
 
-public interface IWeightedGraph<VertexType, EdgeType> extends IGraph<VertexType, EdgeType> {
+public interface IWeightedGraph<NodeType, EdgeType> extends IGraph<NodeType, EdgeType> {
 
     /**
      * Function for retrieving the weight of a specific edge inside the

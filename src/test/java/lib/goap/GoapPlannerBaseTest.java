@@ -1,5 +1,6 @@
 package lib.goap;
 
+import lib.goap.action.GoapActionBase;
 import lib.goap.planner.GoapPlanner;
 import lib.goap.planner.GoapPlannerable;
 import lib.goap.testimplementations.TestUnit;
@@ -39,6 +40,7 @@ public class GoapPlannerBaseTest {
 
     public static TestUnit generateBaseTestUnit() {
         final TestUnit tUnit = new TestUnit();
+        tUnit.addWorldStateAspekt
         tUnit.addWS(tUnit.worldS);
         tUnit.addGS(tUnit.goalS);
 
@@ -104,7 +106,7 @@ public class GoapPlannerBaseTest {
         tUnit.addAA(tUnit.tTwo);
 
         // Act
-        final Queue<GoapAction> q = getTestingGoapPlanner().plan(tUnit);
+        final Queue<GoapActionBase> q = getTestingGoapPlanner().plan(tUnit);
 
         // Assert
         // tOne -> tTwo -> end
@@ -123,7 +125,7 @@ public class GoapPlannerBaseTest {
         tUnit.addAA(tUnit.tThree);
 
         // Act
-        final Queue<GoapAction> q = getTestingGoapPlanner().plan(tUnit);
+        final Queue<GoapActionBase> q = getTestingGoapPlanner().plan(tUnit);
 
         // Assert
         // tOne -> tTwo -> end

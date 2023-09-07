@@ -8,15 +8,15 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class Path<VertexType, EdgeType extends Edge> {
+public class Path<NodeType, EdgeType extends Edge> {
 
     @NonNull
-    private final List<VertexType> vertexList;
+    private final List<NodeType> nodeList;
     @NonNull
     private final List<EdgeType> edgeList;
     @NonNull
-    private final VertexType startVertex;
+    private final NodeType startNode;
     @NonNull
-    private final VertexType endVertex;
+    private final NodeType endNode;
 
 }

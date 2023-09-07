@@ -1,6 +1,6 @@
 package lib.goap.agent;
 
-import lib.goap.GoapState;
+import lib.goap.state.GoapState;
 
 public interface ImportantUnitChangeEventListenable {
 
