@@ -1,4 +1,4 @@
 package lib.goap.target;
 
-public class NullTarget implements GoatTargetable {
+public class NullTarget implements GoapTargetable {
 }

@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.NonNull;
 
 @Data
-public class GoapState implements Stateful, Important {
+public class GoapState implements Stateful, Important, WorldAspect {
 
     @NonNull
     private Integer importance;

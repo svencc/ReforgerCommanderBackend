@@ -1,11 +1,12 @@
 package lib.goap.testimplementations;
 
 import lib.goap.state.GoapState;
+import lib.goap.target.GoapTargetable;
 import lib.goap.unit.IGoapUnit;
 import lombok.NonNull;
 
 public class TestActionThree extends TestActionOne {
-    public TestActionThree(@NonNull final Object target) {
+    public TestActionThree(@NonNull final GoapTargetable target) {
         super(target);
 
         this.addPrecondition(new GoapState(0, "goal", false));

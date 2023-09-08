@@ -1,18 +1,20 @@
 package lib.goap.action;
 
 import lib.goap.state.GoapState;
-import lib.goap.target.GoatTargetable;
+import lib.goap.target.GoapTargetable;
 import lib.goap.unit.IGoapUnit;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 
 import java.util.HashSet;
 
 @Getter
+@EqualsAndHashCode
 public abstract class GoapActionBase {
 
     @NonNull
-    protected final GoatTargetable target;
+    protected final GoapTargetable target;
     @NonNull
     private final HashSet<GoapState> preconditions = new HashSet<>();
     @NonNull
@@ -21,7 +23,7 @@ public abstract class GoapActionBase {
     /**
      * @param target the target of the action. Can be null.
      */
-    public GoapActionBase(@NonNull final GoatTargetable target) {
+    public GoapActionBase(@NonNull final GoapTargetable target) {
         this.target = target;
     }
 
@@ -213,8 +215,5 @@ public abstract class GoapActionBase {
             return false;
         }
     }
-
-    @Override
-    public abstract int hashCode();
 
 }

@@ -40,7 +40,6 @@ public class GoapPlannerBaseTest {
 
     public static TestUnit generateBaseTestUnit() {
         final TestUnit tUnit = new TestUnit();
-        tUnit.addWorldStateAspekt
         tUnit.addWS(tUnit.worldS);
         tUnit.addGS(tUnit.goalS);
 
