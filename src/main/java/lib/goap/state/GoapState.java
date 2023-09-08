@@ -7,7 +7,7 @@ import lombok.NonNull;
 public class GoapState implements Stateful, Important {
 
     @NonNull
-    private final Integer importance;
+    private Integer importance;
     @NonNull
     private final String effect;
     @NonNull
