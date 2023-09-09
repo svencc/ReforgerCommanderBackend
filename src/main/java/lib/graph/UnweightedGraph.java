@@ -1,6 +1,5 @@
 package lib.graph;
 
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import java.util.List;
@@ -11,7 +10,10 @@ public class UnweightedGraph<VERTEX_TYPE> extends BaseGraph<VERTEX_TYPE, Edge> {
         super(vertices);
     }
 
-    public void addEdge(final int from, final int to) {
+    public void addEdge(
+            final int from,
+            final int to
+    ) {
         addEdge(new Edge(from, to));
     }
 
