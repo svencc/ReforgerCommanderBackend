@@ -1,11 +1,8 @@
 package lib.graph;
 
-import lib.maze.Node;
-import lib.maze.searchstrategy.BSFStrategy;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -96,17 +93,14 @@ class WeightedGraphTest {
     void testCityGraph_withBSFSearchAlgorithm() {
         // Arrange
         final WeightedGraph<String> cityGraph = createUSMapGraph();
-        final BSFStrategy bsfSearch = new BSFStrategy();
 
         // Act
-        final Optional<Node<String>> path = bsfSearch.search("Boston", (v) -> v.equals("Miami"), cityGraph::neighborsOf);
+        final List<WeightedEdge> mst = cityGraph.mst(0);
 
-        if (path.isEmpty()) {
-            fail("No path from Boston to Miami");
+        if (mst.isEmpty()) {
+            fail("failed to find a minimum spanning tree");
         } else {
-            System.out.println("Route from Boston to Miami:");
-            final List<String> nodeList = Node.nodeToPath(path.get());
-            System.out.println(nodeList);
+            System.out.println(cityGraph.stringifyWeightedPath(mst));
         }
     }
 
