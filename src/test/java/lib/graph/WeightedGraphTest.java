@@ -3,37 +3,41 @@ package lib.graph;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Locale;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class WeightedGraphTest {
 
     @Test
     void testCityGraph_toStringMethod() {
+        Locale.setDefault(Locale.US);
+
         // Arrange (15 biggest cities in USA)
         final WeightedGraph<String> cityGraph = createUSMapGraph();
         final String expectedGraphString = """
-                Seattle -> [(Chicago, 1737,00), (San Francisco, 678,00)]
-                San Francisco -> [(Seattle, 678,00), (Riverside, 386,00), (Los Angeles, 348,00)]
-                Los Angeles -> [(San Francisco, 348,00), (Riverside, 50,00), (Phoenix, 357,00)]
-                Riverside -> [(San Francisco, 386,00), (Los Angeles, 50,00), (Phoenix, 307,00), (Chicago, 1704,00)]
-                Phoenix -> [(Los Angeles, 357,00), (Riverside, 307,00), (Dallas, 887,00), (Houston, 1015,00)]
-                Chicago -> [(Seattle, 1737,00), (Riverside, 1704,00), (Dallas, 805,00), (Atlanta, 588,00), (Detroit, 238,00)]
-                Boston -> [(Detroit, 613,00), (New York, 190,00)]
-                New York -> [(Detroit, 482,00), (Boston, 190,00), (Philadelphia, 81,00)]
-                Atlanta -> [(Dallas, 721,00), (Houston, 702,00), (Chicago, 588,00), (Washington, 543,00), (Miami, 604,00)]
-                Miami -> [(Houston, 968,00), (Atlanta, 604,00), (Washington, 923,00)]
-                Dallas -> [(Phoenix, 887,00), (Chicago, 805,00), (Atlanta, 721,00), (Houston, 225,00)]
-                Houston -> [(Phoenix, 1015,00), (Dallas, 225,00), (Atlanta, 702,00), (Miami, 968,00)]
-                Detroit -> [(Chicago, 238,00), (Boston, 613,00), (Washington, 396,00), (New York, 482,00)]
-                Philadelphia -> [(New York, 81,00), (Washington, 123,00)]
-                Washington -> [(Atlanta, 543,00), (Miami, 923,00), (Detroit, 396,00), (Philadelphia, 123,00)]
+                Seattle -> [(Chicago, 1737.00), (San Francisco, 678.00)]
+                San Francisco -> [(Seattle, 678.00), (Riverside, 386.00), (Los Angeles, 348.00)]
+                Los Angeles -> [(San Francisco, 348.00), (Riverside, 50.00), (Phoenix, 357.00)]
+                Riverside -> [(San Francisco, 386.00), (Los Angeles, 50.00), (Phoenix, 307.00), (Chicago, 1704.00)]
+                Phoenix -> [(Los Angeles, 357.00), (Riverside, 307.00), (Dallas, 887.00), (Houston, 1015.00)]
+                Chicago -> [(Seattle, 1737.00), (Riverside, 1704.00), (Dallas, 805.00), (Atlanta, 588.00), (Detroit, 238.00)]
+                Boston -> [(Detroit, 613.00), (New York, 190.00)]
+                New York -> [(Detroit, 482.00), (Boston, 190.00), (Philadelphia, 81.00)]
+                Atlanta -> [(Dallas, 721.00), (Houston, 702.00), (Chicago, 588.00), (Washington, 543.00), (Miami, 604.00)]
+                Miami -> [(Houston, 968.00), (Atlanta, 604.00), (Washington, 923.00)]
+                Dallas -> [(Phoenix, 887.00), (Chicago, 805.00), (Atlanta, 721.00), (Houston, 225.00)]
+                Houston -> [(Phoenix, 1015.00), (Dallas, 225.00), (Atlanta, 702.00), (Miami, 968.00)]
+                Detroit -> [(Chicago, 238.00), (Boston, 613.00), (Washington, 396.00), (New York, 482.00)]
+                Philadelphia -> [(New York, 81.00), (Washington, 123.00)]
+                Washington -> [(Atlanta, 543.00), (Miami, 923.00), (Detroit, 396.00), (Philadelphia, 123.00)]
                 """.stripIndent();
 
         // Act & Assert
         assertEquals(15, cityGraph.getVertexCount());
         assertEquals(52, cityGraph.getEdgeCount());
-        assertTrue(cityGraph.toString().contains(expectedGraphString));
+        assertEquals(expectedGraphString, cityGraph.toString());
 
         System.out.println(cityGraph);
     }

@@ -7,7 +7,8 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class UnweightedGraphTest {
 
@@ -36,7 +37,7 @@ class UnweightedGraphTest {
         // Act & Assert
         assertEquals(15, cityGraph.getVertexCount());
         assertEquals(52, cityGraph.getEdgeCount());
-        assertTrue(cityGraph.toString().contains(expectedGraphString));
+        assertEquals(expectedGraphString, cityGraph.toString());
         System.out.println(cityGraph);
     }
 
