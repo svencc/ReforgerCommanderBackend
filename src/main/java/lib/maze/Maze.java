@@ -16,7 +16,7 @@ public class Maze {
     private final Cell[][] grid;
 
     @Builder
-    public Maze(
+    private Maze(
             final int rows,
             final int columns,
             @NonNull final MazeLocation start,
@@ -38,6 +38,16 @@ public class Maze {
         // fill the start and goal locations
         grid[start.getRow()][start.getColumn()] = Cell.START;
         grid[goal.getRow()][goal.getColumn()] = Cell.GOAL;
+    }
+
+    public static Maze randomMaze(
+            final int rows,
+            final int columns,
+            @NonNull final MazeLocation start,
+            @NonNull final MazeLocation goal,
+            final double sparseness
+    ) {
+        return new Maze(rows, columns, start, goal, sparseness);
     }
 
     private void randomlyFill(double sparseness) {
@@ -155,6 +165,36 @@ public class Maze {
         }
 
         return successors;
+    }
+
+    public void mark(@NonNull final List<MazeLocation> path) {
+        for (final MazeLocation mazeLocation : path) {
+            grid[mazeLocation.getRow()][mazeLocation.getColumn()] = Cell.PATH;
+        }
+        grid[start.getRow()][start.getColumn()] = Cell.START;
+        grid[goal.getRow()][goal.getColumn()] = Cell.GOAL;
+    }
+
+    public void clear(@NonNull final List<MazeLocation> path) {
+        for (final MazeLocation mazeLocation : path) {
+            grid[mazeLocation.getRow()][mazeLocation.getColumn()] = Cell.EMPTY;
+        }
+        grid[start.getRow()][start.getColumn()] = Cell.START;
+        grid[goal.getRow()][goal.getColumn()] = Cell.GOAL;
+    }
+
+    public double euclideanDistance(@NonNull final MazeLocation location) {
+        int xDistance = location.getColumn() - goal.getColumn();
+        int yDistance = location.getRow() - goal.getRow();
+
+        return Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
+    }
+
+    public double manhattanDistance(@NonNull final MazeLocation location) {
+        int xDistance = Math.abs(location.getColumn() - goal.getColumn());
+        int yDistance = Math.abs(location.getRow() - goal.getRow());
+
+        return xDistance + yDistance;
     }
 
 }
