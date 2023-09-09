@@ -1,0 +1,59 @@
+@startuml
+title Action Plan for eating a steak \n(Goal Oriented Action Planning)
+
+'aWorldState : PRECONDITIONS:
+'aWorldState : hungry = false
+'aWorldState : --
+'aWorldState : EFFECTS:
+'aWorldState : hungry = true
+
+
+
+state StartNode #LightGreen
+StartNode : EFFECTS:
+StartNode : hungry = true
+StartNode : hasSteak = false
+StartNode : fridgeExists = true
+
+note right of StartNode
+    Character is hungry
+end note
+
+
+StartNode --> HasSteak : Action: getSteak (move to TARGET: fridge)
+
+
+HasSteak : PRECONDITIONS:
+HasSteak : - hasSteak = false
+HasSteak : - fridgeExists = true
+HasSteak : --
+HasSteak : EFFECTS:
+HasSteak : - hasSteak = true
+HasSteak : --
+HasSteak : TARGET:
+HasSteak : - Fridge
+
+note right of HasSteak
+    Character has a steak
+end note
+
+
+HasSteak --> Goal : Action: eatSteak
+
+state Goal #Crimson
+Goal : PRECONDITIONS
+Goal : - hasSteak = true
+Goal : - hungry = true
+Goal : --
+Goal : EFFECTS:
+Goal : - hasSteak = false
+Goal : - hungry = false
+Goal : TARGET:
+Goal : - Character
+
+note right of Goal
+    Character is not hungry
+end note
+
+@enduml
+

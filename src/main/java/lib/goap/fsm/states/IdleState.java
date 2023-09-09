@@ -29,7 +29,7 @@ public class IdleState implements FSMStateful {
      */
     @Override
     public boolean isStateStillPerforming(@NonNull final IGoapUnit goapUnit) {
-        final Queue<GoapActionBase> plannedQueue = goapPlanner.plan(goapUnit);
+        final Queue<GoapActionBase> plannedQueue = goapPlanner.planActions(goapUnit);
 
         if (plannedQueue != null) {
             dispatchNewPlanCreatedEvent(plannedQueue);

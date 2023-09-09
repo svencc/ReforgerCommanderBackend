@@ -17,7 +17,7 @@ public class GoapPlannerBaseTest {
     @Test
     public void noConnectionsNullPointer() {
         // Act & Assert
-        assertEquals(null, getTestingGoapPlanner().plan(new TestUnit()));
+        assertEquals(null, getTestingGoapPlanner().planActions(new TestUnit()));
     }
 
     /**
@@ -35,7 +35,7 @@ public class GoapPlannerBaseTest {
         tUnit.addAA(tUnit.tOne);
 
         // Act & Assert
-        assertEquals(null, getTestingGoapPlanner().plan(tUnit));
+        assertEquals(null, getTestingGoapPlanner().planActions(tUnit));
     }
 
     public static TestUnit generateBaseTestUnit() {
@@ -54,7 +54,7 @@ public class GoapPlannerBaseTest {
         tUnit.addAA(tUnit.tTwo);
 
         // Act & Assert
-        assertEquals(null, getTestingGoapPlanner().plan(tUnit));
+        assertEquals(null, getTestingGoapPlanner().planActions(tUnit));
     }
 
     // Single node connected from start to goal
@@ -65,8 +65,8 @@ public class GoapPlannerBaseTest {
         tUnit.addAA(tUnit.tThree);
 
         // Act & Assert
-        assertNotEquals(null, getTestingGoapPlanner().plan(tUnit));
-        assertEquals(1, getTestingGoapPlanner().plan(tUnit).size());
+        assertNotEquals(null, getTestingGoapPlanner().planActions(tUnit));
+        assertEquals(1, getTestingGoapPlanner().planActions(tUnit).size());
     }
 
     // Connection between two nodes from start to goal
@@ -78,8 +78,8 @@ public class GoapPlannerBaseTest {
         tUnit.addAA(tUnit.tTwo);
 
         // Act & Assert
-        assertNotEquals(null, getTestingGoapPlanner().plan(tUnit));
-        assertEquals(2, getTestingGoapPlanner().plan(tUnit).size());
+        assertNotEquals(null, getTestingGoapPlanner().planActions(tUnit));
+        assertEquals(2, getTestingGoapPlanner().planActions(tUnit).size());
     }
 
     // Shortest path with all three nodes
@@ -92,8 +92,8 @@ public class GoapPlannerBaseTest {
         tUnit.addAA(tUnit.tThree);
 
         // Act & Assert
-        assertNotEquals(null, getTestingGoapPlanner().plan(tUnit));
-        assertEquals(1, getTestingGoapPlanner().plan(tUnit).size());
+        assertNotEquals(null, getTestingGoapPlanner().planActions(tUnit));
+        assertEquals(1, getTestingGoapPlanner().planActions(tUnit).size());
     }
 
     // Connection Test
@@ -105,7 +105,7 @@ public class GoapPlannerBaseTest {
         tUnit.addAA(tUnit.tTwo);
 
         // Act
-        final Queue<GoapActionBase> q = getTestingGoapPlanner().plan(tUnit);
+        final Queue<GoapActionBase> q = getTestingGoapPlanner().planActions(tUnit);
 
         // Assert
         // tOne -> tTwo -> end
@@ -124,7 +124,7 @@ public class GoapPlannerBaseTest {
         tUnit.addAA(tUnit.tThree);
 
         // Act
-        final Queue<GoapActionBase> q = getTestingGoapPlanner().plan(tUnit);
+        final Queue<GoapActionBase> q = getTestingGoapPlanner().planActions(tUnit);
 
         // Assert
         // tOne -> tTwo -> end

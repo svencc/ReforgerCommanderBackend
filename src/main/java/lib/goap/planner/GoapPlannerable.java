@@ -15,6 +15,6 @@ public interface GoapPlannerable {
      * @return a created GoapAction Queue or null, if no Actions and goals
      * match.
      */
-    Queue<GoapActionBase> plan(@NonNull final IGoapUnit goapUnit);
+    Queue<GoapActionBase> planActions(@NonNull final IGoapUnit goapUnit);
 
 }

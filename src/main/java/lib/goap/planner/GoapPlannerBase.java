@@ -6,6 +6,7 @@ import lib.goap.state.GoapState;
 import lib.goap.unit.IGoapUnit;
 import lombok.Getter;
 import lombok.NonNull;
+import org.hibernate.mapping.Array;
 import org.springframework.lang.Nullable;
 
 import java.util.*;
@@ -159,7 +160,7 @@ public abstract class GoapPlannerBase implements GoapPlannerable {
      * perform to archive the desired goalState OR null, if no plan was
      * generated.
      */
-    public Queue<GoapActionBase> plan(@NonNull final IGoapUnit goapUnit) {
+    public Queue<GoapActionBase> planActions(@NonNull final IGoapUnit goapUnit) {
         Queue<GoapActionBase> createdPlan = null;
         this.goapUnit = goapUnit;
         startNode = new Node();
@@ -167,17 +168,16 @@ public abstract class GoapPlannerBase implements GoapPlannerable {
 
         try {
             sortGoalStates();
-
             // The Integer.MaxValue indicates that the goal was passed by the
             // changeGoalImmediatly function. An empty Queue is returned instead
             // of null because null would result in the IdleState to call this
             // function again. An empty Queue is finished in one cycle with no
             // effect at all.
-            if (goapUnit.getGoalState().get(0).getImportance() == Integer.MAX_VALUE) {
-                final List<GoapState> goalState = new ArrayList<>();
-                goalState.add(goapUnit.getGoalState().get(0));
 
-                createdPlan = searchGraphForActionQueue(createGraph(goalState));
+            // if the topGoalState has the highest importance, then it is the one and only goalState
+            if (goapUnit.getGoalState().get(0).getImportance() == Integer.MAX_VALUE) {
+                final GoapState topGoalState = goapUnit.getGoalState().get(0);
+                createdPlan = searchGraphForActionQueue(createGraph(List.of(topGoalState)));
 
                 if (createdPlan == null) {
                     createdPlan = new LinkedList<>();
@@ -197,18 +197,13 @@ public abstract class GoapPlannerBase implements GoapPlannerable {
     /**
      * Function for sorting a goapUnits goalStates (descending). The most
      * important goal has the highest importance value.
-     *
-     * @return the sorted goal list of the goapUnit.
      */
-    protected List<GoapState> sortGoalStates() {
+    protected void sortGoalStates() {
         goapUnit.getGoalState().sort(Comparator.comparing(GoapState::getImportance, Comparator.nullsLast(Comparator.reverseOrder())));
-
         // @TODO ist das richtig herum sortiert??????????
 //        if (goapUnit.getGoalState().size() > 1) {
 //            goapUnit.getGoalState().sort((o1, o2) -> o2.getImportance().compareTo(o1.getImportance()));
 //        }
-
-        return goapUnit.getGoalState();
     }
 
     /**
