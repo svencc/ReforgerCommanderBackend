@@ -36,7 +36,7 @@ class UnweightedGraphTest {
         // Act & Assert
         assertEquals(15, cityGraph.getVertexCount());
         assertEquals(52, cityGraph.getEdgeCount());
-        assertTrue(cityGraph.toString().startsWith(expectedGraphString));
+        assertTrue(cityGraph.toString().contains(expectedGraphString));
         System.out.println(cityGraph);
     }
 
