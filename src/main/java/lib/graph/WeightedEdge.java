@@ -1,8 +1,10 @@
 package lib.graph;
 
 
+import lombok.Getter;
 import lombok.NonNull;
 
+@Getter
 public class WeightedEdge extends Edge implements Comparable<WeightedEdge> {
 
     protected final double weight;

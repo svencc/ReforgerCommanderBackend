@@ -1,20 +1,22 @@
 package lib.graph;
 
-import lib.maze.searchstrategy.JarnikMSTStrategy;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 
 public class WeightedGraphTest {
 
+    @BeforeAll
+    static void setup() {
+        Locale.setDefault(Locale.US);
+    }
+
     @Test
     void testCityGraph_toStringMethod() {
-        Locale.setDefault(Locale.US);
-
         // Arrange (15 biggest cities in USA)
         final WeightedGraph<String> cityGraph = createUSMapGraph();
         final String expectedGraphString = """
