@@ -6,29 +6,38 @@ Concept of GOAP running AI Commander in RECOM
 
 # Introduction
 In the dynamic world of strategy games, artificial intelligence (AI) is a pivotal factor in crafting an immersive and challenging player experience. 
+
 One of the techniques utilized in the development of AI for strategy games is Goal-Oriented Action Planning (GOAP), a planning system that enables AI agents to respond flexibly and intelligently to the ever-changing conditions in the game world.
+
 GOAP is based on three core components: **goals**, **actions** and **world state**.
 Let's delve into these elements in detail.
 
 ## Goals
 **Goals** represent the specific intentions or states that an AI agent seeks to achieve. In a strategy game, the goals could be diverse, ranging from gathering certain resources to conquering strategic points on the map. 
+
 Defining clear and reachable goals is the first step in developing an effective GOAP system, as they dictate the direction and focus of the AI agents.
 
 ## Actions
 **Actions** are the concrete steps that an AI agent can take to reach its goals. 
+
 Each action has certain prerequisites and produces specific effects in the game world. 
+
 For instance, a "gather" action might require the agent to be near a resource source and have the effect of increasing the agent's resources. 
+
 Actions are the building blocks of GOAP plans, and their careful definition allows AI agents to devise complex and intelligent strategies.
 
 ## World-State
 The **World-State** is a representation of the current state of the game world, encompassing all relevant information that the AI agents need to make decisions. 
+
 The world-state could include information about the position and health status of units, the state of technology research, control over various territories, and other vital data. 
+
 The world-state serves as the foundation for the AI agents' planning, enabling them to understand and anticipate the impacts of their actions on the game world.
 
 ## Agents
 In the context of Goal-Oriented Action Planning (GOAP) and artificial intelligence (AI) more broadly, an "agent" refers to an entity that can perceive its environment through **sensors** and act upon that environment through **actuators** based on a set of rules, a plan, or a policy derived from an AI algorithm.
 
 In the domain of strategy games, an agent could be a character or unit controlled by the game's AI system. 
+
 These agents have the following characteristics:
 1. **Autonomy**: Agents have a degree of autonomy, which allows them to perform tasks without constant guidance from the player or the developer.
 2. **Reactivity**: Agents can perceive changes in their environment (the game world) and react to them in real-time, adjusting their behavior and strategies based on the current state of the world.
@@ -37,14 +46,18 @@ These agents have the following characteristics:
 5. **Learning and Adaptability**: Although not always a requirement, in more advanced AI systems, agents can learn from their experiences and adapt their behavior over time to become more effective at achieving their goals.
 
 In summary, an agent in the context of GOAP is a virtual entity that can perceive its environment and take actions to achieve its goals based on its understanding of the world state and the set of available actions. 
+
 It is the central actor in the GOAP system, utilizing the planning system to navigate and interact with the game world dynamically and intelligently.
 
 In the context of artificial intelligence and robotics, "sensors" and "actuators" are critical components that enables interaction with the environment. 
-Let's delve into each term individually:
+
+Let's delve into each term individually.
 
 ### Sensors
 Sensors are devices or mechanisms that allow an agent (like a robot or a virtual entity in a video game) to perceive its surroundings or environment. 
+
 They collect data from the environment, which the agent can then use to make informed decisions. 
+
 In the context of video games, sensors might be virtual constructs that allow an AI agent to gather information about the game world. 
 
 Here are some examples:
@@ -55,6 +68,7 @@ Here are some examples:
 
 ### Actuators
 Actuators are devices or mechanisms that allow an agent to interact with its environment by performing actions based on the data received from the sensors. 
+
 In video games, actuators might represent the set of possible actions that an AI agent can perform in the game world. 
 
 Here are some examples:
@@ -64,14 +78,17 @@ Here are some examples:
 4. **Combat Actuators**: In strategy games, these might allow the agent to engage in combat, using weapons or abilities to attack enemies.
 
 In summary, **sensors** and **actuators** work in tandem to realize intelligent behavior in AI agents, with **sensors** providing the data needed to make decisions and **actuators** allowing the agent to carry out actions based on those decisions. 
+
 They are fundamental to the functioning of any AI system, enabling the perception-action cycle that is central to AI behavior.
 
 ## Conclusion
 Through the adept combination of goals, actions, and understanding of the world-state, the GOAP system empowers AI agents in strategy games to create adaptive and realistic plans. 
+
 Implementing GOAP requires careful consideration and elaboration of these three elements to create an AI that is both challenging and convincing.
 
 # Goals
 Goals describe the primary objectives AI agents aim to achieve in strategy games, steering their actions and strategies throughout the gameplay.
+
 They are central in guiding the AI to success, providing clear targets to work towards. 
 
 Here are some common goals utilized in GOAP systems:
@@ -84,6 +101,7 @@ Here are some common goals utilized in GOAP systems:
 
 # Actions
 Actions are the specific steps AI agents take to achieve their goals in strategy games. 
+
 They define the capabilities of the agents, dictating how they interact with the game environment to fulfill their objectives. 
 
 Below, we outline a range of actions commonly integrated into GOAP systems:
@@ -107,9 +125,11 @@ Here are some examples:
 
 # Effects - The Bridge Between Actions and Goals
 **Effects** in a GOAP strategy game system refer to the effects that certain actions have on the world states. 
+
 They are the concrete results or changes caused by performing an action in the game world.
 
 For example, the action of collecting resources could have the effect of increasing the resource level. 
+
 Effects are an integral part of the planning process because they allow the GOAP Planner to evaluate the potential impact of various actions and create a plan that changes the World-States in a way that achieves a specific goal.
 
 Effects are therefore central to the functioning of a GOAP system, as they form the bridge between actions and goals by defining how actions change world states and thus influence the achievability of goals.
@@ -123,10 +143,12 @@ Here are some examples of effects that could be used in a GOAP system:
 - **Population Change**: Changes in the population size through birth, death, or recruitment of units.
 
 These world states and effects would serve as the basis for the AI's planning and decision-making. 
+
 Actions in a GOAP system would be defined in terms of their impacts on these world states and effects, and the planner would try to find a sequence of actions that alters the world states in a way that achieves a specific goal.
 
 # Actions and Preconditions
 In the context of GOAP (Goal-Oriented Action Planning), "actions" refer to the specific tasks or operations that an AI agent can perform in the game environment. 
+
 Each action is defined not just by its outcome but also by its "preconditions," which are the specific circumstances or states that must be met for the action to be carried out.
 
 Example: Let's consider a simple action in a strategy game: "**Gather Wood**."
@@ -137,6 +159,7 @@ Example: Let's consider a simple action in a strategy game: "**Gather Wood**."
 - **Effect**: Increase in the agent's wood resource.
 
 In this scenario, the action cannot be initiated unless all the preconditions are satisfied. 
+
 Once the action is successfully completed, it will have a defined effect on the world state, which, in this case, is an increase in the agent's wood resource.
 
 # Introducing the GOAP Planner
