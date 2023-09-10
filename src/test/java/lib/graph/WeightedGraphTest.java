@@ -1,5 +1,6 @@
 package lib.graph;
 
+import lib.maze.searchstrategy.JarnikMSTStrategy;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.Locale;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
-class WeightedGraphTest {
+public class WeightedGraphTest {
 
     @Test
     void testCityGraph_toStringMethod() {
@@ -42,7 +43,7 @@ class WeightedGraphTest {
         System.out.println(cityGraph);
     }
 
-    private WeightedGraph<String> createUSMapGraph() {
+    public static WeightedGraph<String> createUSMapGraph() {
         final WeightedGraph<String> cityGraph = new WeightedGraph<>(
                 List.of(
                         "Seattle",
@@ -91,21 +92,6 @@ class WeightedGraphTest {
         cityGraph.addEdge("Philadelphia", "Washington", 123);
 
         return cityGraph;
-    }
-
-    @Test
-    void testCityGraph_withBSFSearchAlgorithm() {
-        // Arrange
-        final WeightedGraph<String> cityGraph = createUSMapGraph();
-
-        // Act
-        final List<WeightedEdge> mst = cityGraph.mst(0);
-
-        if (mst.isEmpty()) {
-            fail("failed to find a minimum spanning tree");
-        } else {
-            System.out.println(cityGraph.stringifyWeightedPath(mst));
-        }
     }
 
 }
