@@ -46,6 +46,8 @@ public abstract class GeAction {
          */
     }
 
+    // @TODO: I guess it would be better to pass a Predicate or Provider here instead of a state;
+    // One implementation could be to pass a CheckState Predicate here!
     public boolean isAchievableGiven(@NonNull final GeWorldStates worldStates) {
         return preconditions.stream()
                 .allMatch(
@@ -53,6 +55,8 @@ public abstract class GeAction {
                                 .orElse(0) >= precondition.getValue()
                 );
     }
+
+
 
     public abstract boolean prePerform();
 
