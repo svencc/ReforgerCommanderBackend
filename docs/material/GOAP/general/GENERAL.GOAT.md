@@ -68,7 +68,7 @@ In Orkin´s implementation, he used a FSM with 3 states which were:
 * MoveTo
 * PerformAction
 
-![3-state-GOAT-FSM](3-state-GOAT-FSM.png "3-state-GOAT-FSM")
+![3-state-GOAT-FSM](3-state-GOAP-FSM.png "3-state-GOAT-FSM")
 
 The idle state is the default state an agent starts at.
 
