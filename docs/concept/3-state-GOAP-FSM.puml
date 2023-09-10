@@ -1,0 +1,13 @@
+@startuml
+[*] --> Idle
+
+Idle --> MoveTo
+Idle --> PerformAction
+
+PerformAction --> Idle
+
+MoveTo --> PerformAction
+
+PerformAction --> [*]
+@enduml
+

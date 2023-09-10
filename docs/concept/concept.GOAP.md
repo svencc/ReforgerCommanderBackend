@@ -183,6 +183,41 @@ Here is a step-by-step breakdown of the tasks executed by a GOAP planner:
   - After the execution of the plan, the planner receives feedback on the outcome, which is used to make adjustments for future planning, enabling a learning and adaptive AI system.
   - Through this process, the GOAP planner enables AI agents to navigate complex game environments with a high degree of autonomy and intelligence, creating a dynamic and immersive gaming experience.
 
+# GOAP FSM
+In AI development for video games and other simulations, Goal-Oriented Action Planning (GOAP) often works in conjunction with Finite State Machines (FSM) to create intelligent and adaptable agent behaviors. 
+
+Let's delve into how GOAP utilizes FSM.
+
+## Finite State Machines (FSM)
+Before we get into how GOAP uses FSM, it's essential to understand what an FSM is. 
+
+A Finite State Machine is a mathematical model of computation used to design algorithms. 
+
+In the context of AI in video games, an FSM would represent different states that an AI agent can be in, with transitions between these states being triggered by events or conditions.
+
+## Integration with GOAP
+In a GOAP system, FSM can be used to manage the high-level states of an AI agent, such as "Idle," "Gathering Resources," "Building," or "Attacking." 
+
+Each of these states can then leverage the GOAP system to dynamically generate a plan of actions to achieve the goals associated with that state.
+
+Here is how GOAP integrates with FSM:
+
+- **State Representation:** Each state in the FSM represents a different behavior or objective for the AI agent. The GOAP system can be invoked to generate a plan of actions to achieve the goal associated with the current state.
+- **Dynamic Transition:** FSM allows for dynamic transitions between different states based on the outcomes of the actions executed through the GOAP plans. For instance, if the "Gathering Resources" plan is completed successfully, the FSM might transition the agent to a "Building" state.
+- **Real-Time Adaptability:** The combination of GOAP and FSM allows for real-time adaptability. If the world state changes in a way that makes the current plan unachievable, the GOAP system can generate a new plan, and the FSM can potentially transition the agent to a different state to adapt to the new circumstances.
+- **Hierarchical Planning:** By using FSM and GOAP together, developers can create a hierarchical planning system where the FSM manages high-level goals and states, while the GOAP system handles the detailed planning of the actions needed to achieve those goals.
+
+## Example
+
+Let's consider a simple example in a strategy game:
+- **Idle State:** The agent starts in an idle state with no specific goal.
+- **Resource Gathering State:** Based on the world state, the FSM transitions the agent to a resource-gathering state. The GOAP system then generates a plan of actions to gather the necessary resources.
+- **Building State:** Once the resources are gathered, the FSM transitions the agent to a building state, where the GOAP system generates a new plan to construct a building using the gathered resources.
+
+## Conclusion
+
+By integrating GOAP with FSM, developers can create AI agents that have both the high-level strategic decision-making capabilities provided by FSM and the dynamic, goal-oriented planning capabilities provided by GOAP, resulting in AI agents that can behave intelligently and adaptively in a complex, changing environment.
+
 # Glossary
 | Term                | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 |---------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
