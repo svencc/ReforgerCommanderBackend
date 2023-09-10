@@ -3,11 +3,12 @@ package lib.gecom;
 import lombok.Builder;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Builder
+@SuperBuilder
 @RequiredArgsConstructor
 public abstract class GeAction {
 
