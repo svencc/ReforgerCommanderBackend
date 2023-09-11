@@ -1,9 +1,11 @@
 package lib.gecom;
 
 
+import lombok.Getter;
 import lombok.NonNull;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class GePlanner {
 
@@ -58,26 +60,70 @@ public class GePlanner {
         return new LinkedList<GeAction>(result);
     }
 
-    private boolean buildGraph(GeNode start, List<GeNode> leaves, List<GeAction> usableActions, HashMap<String, Integer> goal) {
-// @TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-// @TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-// @TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-// @TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-// @TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-// @TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-// @TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-// @TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-// @TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-// @TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-// @TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-// @TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-// @TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-// @TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-        return false;
+    private boolean buildGraph(
+            @NonNull final GeNode parent,
+            @NonNull final List<GeNode> leaves,
+            @NonNull final List<GeAction> usableActions,
+            @NonNull final HashMap<String, Integer> goal
+    ) {
+        boolean foundPath = false;
+
+        // copy the effects of the compatible action to the new state (copied from parent state) for be next node
+        // for each compatible action, add we branch of from this node and add a new branch / node to the graph
+        for (final GeAction action : usableActions) {
+            if (action.isAchievableGiven(parent.getState())) {
+                final HashMap<String, Integer> currentState = (HashMap<String, Integer>) parent.getState().clone(); // copy the state! (depp clone is not necessary because String and Integers are immutable)
+                for (final Map.Entry<String, Integer> effect : action.getAfterEffects().entrySet()) {
+                    if (currentState.containsKey(effect.getKey())) {
+                        currentState.put(effect.getKey(), effect.getValue());
+                    }
+                }
+
+                final GeNode derivedNodeFromPerformedAction = new GeNode(parent, currentState, action, parent.cost + action.getCost());
+
+                if (goalAchieved(goal, currentState)) {
+                    // stop building the graph and return the path; as we found a path
+                    leaves.add(derivedNodeFromPerformedAction);
+                    foundPath = true;
+                } else {
+                    // we remove the current action from the list of usable actions
+                    final List<GeAction> subsetOfActions = subsetOfActions(usableActions, action); // subset of actions without the current action
+                    // we recursively call this method again with the new node and the new subset of actions
+                    final boolean found = buildGraph(derivedNodeFromPerformedAction, leaves, subsetOfActions, goal);
+                    if (found) {
+                        foundPath = true;
+                    }
+                }
+            }
+        }
+
+        return foundPath;
+    }
+
+    private boolean goalAchieved(
+            @NonNull final HashMap<String, Integer> goal,
+            @NonNull final HashMap<String, Integer> stateToCompareWith
+    ) {
+        // Check if all keys from 'goal' are present in 'stateToCompareWith'
+        // We can be confident that the values are the same because we are simply updating the state with the effects of
+        // the action.
+        return stateToCompareWith.keySet().containsAll(goal.keySet());
+    }
+
+    @NonNull
+    private List<GeAction> subsetOfActions(
+            @NonNull final List<GeAction> usableActions,
+            @NonNull final GeAction actionToRemove
+    ) {
+        return usableActions.stream()
+//                .filter(action -> !action.getName().equals(actionToRemove.getName()))
+                .filter(action -> action.equals(actionToRemove))
+                .collect(Collectors.toList());
     }
 
 
     //@TODO can we use our old node?
+    @Getter
     public class GeNode {
         @NonNull
         public final GeNode parent;
@@ -95,7 +141,8 @@ public class GePlanner {
                 @NonNull final Float cost
         ) {
             this.parent = parent;
-            this.state = (HashMap<String, Integer>) state.clone(); // @TODO make a copy!
+//            this.state = (HashMap<String, Integer>) state.clone(); // @TODO make a copy!
+            this.state = state;
             this.action = action;
             this.cost = cost;
         }
