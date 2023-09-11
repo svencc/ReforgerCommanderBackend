@@ -62,7 +62,7 @@ public class GePlanner {
 
     private boolean buildGraph(
             @NonNull final GeNode parent,
-            @NonNull final List<GeNode> leaves,
+            @NonNull final List<GeNode> foundPlans,
             @NonNull final List<GeAction> usableActions,
             @NonNull final HashMap<String, Integer> goal
     ) {
@@ -83,13 +83,13 @@ public class GePlanner {
 
                 if (goalAchieved(goal, currentState)) {
                     // stop building the graph and return the path; as we found a path
-                    leaves.add(derivedNodeFromPerformedAction);
+                    foundPlans.add(derivedNodeFromPerformedAction);
                     foundPath = true;
                 } else {
                     // we remove the current action from the list of usable actions
                     final List<GeAction> subsetOfActions = subsetOfActions(usableActions, action); // subset of actions without the current action
                     // we recursively call this method again with the new node and the new subset of actions
-                    final boolean found = buildGraph(derivedNodeFromPerformedAction, leaves, subsetOfActions, goal);
+                    final boolean found = buildGraph(derivedNodeFromPerformedAction, foundPlans, subsetOfActions, goal);
                     if (found) {
                         foundPath = true;
                     }
