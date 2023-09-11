@@ -1,9 +1,6 @@
 package lib.gecom;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.util.HashMap;
@@ -14,11 +11,15 @@ public abstract class GeAction {
 
     @Getter
     @NonNull
+    private final GeAgent agent;
+    @Getter
+    @NonNull
     private final String name;
     @Getter
     @NonNull
     @Builder.Default
     private final Float cost = 1.0f;
+    @Getter
     @NonNull
     @Builder.Default
     private final GeTargetable target = new GeNullTarget();
@@ -35,9 +36,10 @@ public abstract class GeAction {
     private final HashMap<String, Integer> afterEffects = new HashMap<>();
     @NonNull
     private final GeWorldStates agentBelieves;
-
+    @Setter
+    @Getter
     @Builder.Default
-    public boolean actionRunning = false;
+    private boolean moving = false;
 
     public boolean isAchievable() {
         return true;

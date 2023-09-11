@@ -1,31 +1,46 @@
 package lib.gecom;
 
+import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 import java.util.HashMap;
 
-public class GeSubgoal {
+@Getter
+@Setter
+public class GeSubgoal implements Comparable<GeSubgoal> {
+
 
     @NonNull
-    public final HashMap<String, Integer> subgoals = new HashMap<>();
-    public final boolean removeAfterSatisfaction;
+    public final HashMap<String, Integer> statesToReach = new HashMap<>();
+    public final boolean intendedToRemoveAfterSatisfaction;
+    @NonNull
+    public Integer priority = 0;
 
     public GeSubgoal(
             @NonNull final String subgoal,
             final int value,
-            final boolean removeAfterSatisfaction
+            final boolean intendedToRemoveAfterSatisfaction
     ) {
-        this.subgoals.put(subgoal, value);
-        this.removeAfterSatisfaction = removeAfterSatisfaction;
+        this.statesToReach.put(subgoal, value);
+        this.intendedToRemoveAfterSatisfaction = intendedToRemoveAfterSatisfaction;
     }
 
     public GeSubgoal(
             @NonNull final String subgoal,
             final int value
     ) {
-        this.subgoals.put(subgoal, value);
-        this.removeAfterSatisfaction = true;
+        this.statesToReach.put(subgoal, value);
+        this.intendedToRemoveAfterSatisfaction = true;
     }
 
+
+    @Override
+    public int compareTo(@NonNull final GeSubgoal other) {
+        final Integer mine = this.priority;
+        final Integer theirs = other.priority;
+
+        return mine.compareTo(theirs);
+    }
 
 }
