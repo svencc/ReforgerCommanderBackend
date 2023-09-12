@@ -1,20 +1,20 @@
 package lib.gecom;
 
 
+import lib.gecom.action.GeAction;
 import lombok.Getter;
 import lombok.NonNull;
 import org.springframework.lang.Nullable;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class GePlanner {
 
     @NonNull
     public Optional<Queue<GeAction>> plan(
+            @NonNull final HashMap<String, Integer> agentsBelieves,
             @NonNull final List<GeAction> possibleActions,
-            @NonNull final HashMap<String, Integer> goal, // @TODO do we have state objects? what are those Maps?????
-            @NonNull final GeWorldStates worldStates
+            @NonNull final HashMap<String, Integer> goal
     ) {
         final List<GeAction> usableActions = new ArrayList<>();
         possibleActions.forEach(possibleAction -> {
@@ -24,7 +24,7 @@ public class GePlanner {
         });
 
         final List<GeNode> leaves = new ArrayList<>();
-        final GeNode start = new GeNode(null, GeWorld.getInstance().getWorldStates().getStates(), null, 0f);
+        final GeNode start = new GeNode(null, agentsBelieves, null, 0f);
 
         boolean success = buildGraph(start, leaves, usableActions, goal);
 
@@ -46,7 +46,7 @@ public class GePlanner {
         }
 
         // @TODO return a list of actions (linked list)
-        List<GeAction> result = new ArrayList<>();
+        final List<GeAction> result = new ArrayList<>();
         GeNode node = cheapest;
         while (node != null) {
             if (node.action != null) {
@@ -71,7 +71,7 @@ public class GePlanner {
         // copy the effects of the compatible action to the new state (copied from parent state) for be next node
         // for each compatible action, add we branch of from this node and add a new branch / node to the graph
         for (final GeAction action : usableActions) {
-            if (action.isAchievableGiven(parent.getState())) {
+            if (action.arePreconditionsMet(parent.getState())) {
                 final HashMap<String, Integer> currentState = (HashMap<String, Integer>) parent.getState().clone(); // copy the state! (depp clone is not necessary because String and Integers are immutable)
                 for (final Map.Entry<String, Integer> effect : action.getAfterEffects().entrySet()) {
                     if (currentState.containsKey(effect.getKey())) {
@@ -104,10 +104,16 @@ public class GePlanner {
             @NonNull final HashMap<String, Integer> goal,
             @NonNull final HashMap<String, Integer> stateToCompareWith
     ) {
-        // Check if all keys from 'goal' are present in 'stateToCompareWith'
-        // We can be confident that the values are the same because we are simply updating the state with the effects of
-        // the action.
-        return stateToCompareWith.keySet().containsAll(goal.keySet());
+        return goal.entrySet().stream()
+                .allMatch(
+                        precondition -> {
+                            if (!stateToCompareWith.containsKey(precondition.getKey())) {
+                                return false;
+                            } else {
+                                return stateToCompareWith.get(precondition.getKey()).equals(precondition.getValue());
+                            }
+                        }
+                );
     }
 
     @NonNull
@@ -115,10 +121,10 @@ public class GePlanner {
             @NonNull final List<GeAction> usableActions,
             @NonNull final GeAction actionToRemove
     ) {
-        return usableActions.stream()
-//                .filter(action -> !action.getName().equals(actionToRemove.getName()))
-                .filter(action -> action.equals(actionToRemove))
-                .collect(Collectors.toList());
+        final ArrayList<GeAction> copy = new ArrayList<>(usableActions);
+        copy.removeIf(action -> action.equals(actionToRemove));
+
+        return copy;
     }
 
 

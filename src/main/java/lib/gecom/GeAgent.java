@@ -1,17 +1,20 @@
 package lib.gecom;
 
+import lib.gecom.action.GeAction;
+import lombok.Getter;
 import lombok.NonNull;
 
 import java.util.*;
 
 public class GeAgent {
 
+    @Getter
     @NonNull
     private final List<GeAction> possibleActions = new ArrayList<>();
     @NonNull
     private final PriorityQueue<GeSubgoal> prioritizedSubgoals = new PriorityQueue<>();
     @NonNull
-    private final GePlanner planner;
+    private final GePlanner planner; // Get Rid of Planner in Agent? Or assign one global Planner instance vie Constructor DI?
     @NonNull
     private final Queue<GeAction> plan = new LinkedList<>();
     @NonNull
@@ -69,10 +72,11 @@ public class GeAgent {
             return;
         }
 
-        final GeWorldStates agentsBelieves = GeWorld.getInstance().getWorldStates();
+//        final GeWorldStates agentsBelieves = GeWorld.getInstance().getWorldStates();
+        final HashMap<String, Integer> agentsBelieves = new HashMap<>();
         if (currentActionStack.isEmpty()) {
             for (GeSubgoal subgoal : prioritizedSubgoals) {
-                final Optional<Queue<GeAction>> plan = planner.plan(possibleActions, subgoal.getStatesToReach(), agentsBelieves);
+                final Optional<Queue<GeAction>> plan = planner.plan(agentsBelieves, possibleActions, subgoal.getStatesToReach());
                 if (plan.isPresent()) {
                     currentActionStack.addAll(plan.get());
                     currentGoal = subgoal;

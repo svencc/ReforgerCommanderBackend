@@ -1,5 +1,8 @@
-package lib.gecom;
+package lib.gecom.action;
 
+import lib.gecom.GeAgent;
+import lib.gecom.GeNullTarget;
+import lib.gecom.GeTargetable;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -7,7 +10,7 @@ import java.util.HashMap;
 
 @SuperBuilder
 @RequiredArgsConstructor
-public abstract class GeAction {
+public abstract class GeAction implements GeActionable {
 
     @Getter
     @NonNull
@@ -34,8 +37,9 @@ public abstract class GeAction {
     @NonNull
     @Builder.Default
     private final HashMap<String, Integer> afterEffects = new HashMap<>();
-    @NonNull
-    private final GeWorldStates agentBelieves;
+    //    @NonNull
+//    @Builder.Default
+//    private final GeWorldStates worldState = new GeWorldStates(); // required to calculate isAchievable!
     @Setter
     @Getter
     @Builder.Default
@@ -43,22 +47,12 @@ public abstract class GeAction {
 
     public boolean isAchievable() {
         return true;
-        /*
-        return preconditions.stream()
-                .allMatch(
-                        precondition -> agentBelieves.getState(precondition.getKey())
-                                .orElse(0) >= precondition.getValue()
-                );
-         */
     }
 
-    // @TODO: I guess it would be better to pass a Predicate or Provider here instead of a state;
-    // One implementation could be to pass a CheckState Predicate here!
-    public boolean isAchievableGiven(@NonNull final HashMap<String, Integer> state) {
+    public boolean arePreconditionsMet(@NonNull final HashMap<String, Integer> state) {
         return preconditions.entrySet().stream()
-                .allMatch(
-                        precondition -> state.getOrDefault(precondition.getKey(), 0) >= precondition.getValue()
-                );
+                .allMatch(entry -> state.containsKey(entry.getKey()) && state.get(entry.getKey()).equals(entry.getValue()));
+
     }
 
 
