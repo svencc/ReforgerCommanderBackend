@@ -72,9 +72,12 @@ public class GeAgent {
         final GeWorldStates agentsBelieves = GeWorld.getInstance().getWorldStates();
         if (currentActionStack.isEmpty()) {
             for (GeSubgoal subgoal : prioritizedSubgoals) {
-                currentActionStack.addAll(planner.plan(possibleActions, subgoal.getStatesToReach(), agentsBelieves));
-                currentGoal = subgoal;
-                break;
+                final Optional<Queue<GeAction>> plan = planner.plan(possibleActions, subgoal.getStatesToReach(), agentsBelieves);
+                if (plan.isPresent()) {
+                    currentActionStack.addAll(plan.get());
+                    currentGoal = subgoal;
+                    break;
+                }
             }
         }
 

@@ -3,15 +3,15 @@ package lib.gecom;
 
 import lombok.Getter;
 import lombok.NonNull;
+import org.springframework.lang.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class GePlanner {
 
-    //@TODO priority queue? compare by costs?
     @NonNull
-    public Queue<GeAction> plan(
+    public Optional<Queue<GeAction>> plan(
             @NonNull final List<GeAction> possibleActions,
             @NonNull final HashMap<String, Integer> goal, // @TODO do we have state objects? what are those Maps?????
             @NonNull final GeWorldStates worldStates
@@ -31,7 +31,7 @@ public class GePlanner {
         if (!success) {
             System.out.println("No solution found!");
             // @TODO throw exception? and log!
-            return null;
+            return Optional.empty();
         }
 
         // TODO look to dijkstra's algorithm.... for the following:
@@ -57,7 +57,7 @@ public class GePlanner {
         Collections.reverse(result); // TEST THAT
 
         // could return a PriorityQueue with nodes; it is then sorted
-        return new LinkedList<GeAction>(result);
+        return Optional.of(new LinkedList<GeAction>(result));
     }
 
     private boolean buildGraph(
@@ -125,19 +125,19 @@ public class GePlanner {
     //@TODO can we use our old node?
     @Getter
     public class GeNode {
-        @NonNull
+        @Nullable
         public final GeNode parent;
         @NonNull
         public final HashMap<String, Integer> state;
-        @NonNull
+        @Nullable
         public final GeAction action;
         @NonNull
         public Float cost;
 
         public GeNode(
-                @NonNull final GeNode parent,
+                @Nullable final GeNode parent,
                 @NonNull final HashMap<String, Integer> state,
-                @NonNull final GeAction action,
+                @Nullable final GeAction action,
                 @NonNull final Float cost
         ) {
             this.parent = parent;

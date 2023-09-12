@@ -1,5 +1,12 @@
 package lib.gecom;
 
+import lombok.NonNull;
+
+import java.util.Optional;
+
 public interface GeTargetable {
-    Object getTargetPosition();
+
+    @NonNull
+    Optional<Object> getTargetPosition();
+
 }
