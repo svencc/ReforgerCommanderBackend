@@ -49,7 +49,7 @@ public class GeAgent {
         // This can include moving the agent, checking for collisions, or other ongoing operations.
 
         // i think moving has to be in the agents FSM and should not be part of the action (currentAction.isMoving())
-        if (!currentActionStack.isEmpty() && currentAction.isMoving()) {
+        if (!currentActionStack.isEmpty() && currentAction.isActionRunning()) {
             // agent is on target position and has to run the action
             if (false) {
                 // TODO ::::
@@ -57,12 +57,12 @@ public class GeAgent {
                 if (!isExecutingAction) {
                     isExecutingAction = true;
                     currentAction.prePerform();
-                    currentAction.setMoving(true);
+                    currentAction.setActionRunning(true);
 
                     // ------ wait action duration ------ //
                     // so it sounds like we have to wait for the action duration and trigger than a listener!
 
-                    currentAction.setMoving(false);
+                    currentAction.setActionRunning(false);
                     currentAction.postPerform();
                     isExecutingAction = false;
 
@@ -90,16 +90,16 @@ public class GeAgent {
         // move to target position
         if (!currentActionStack.isEmpty()) {
             if (currentAction.prePerform()) {
-                currentAction.setMoving(true);
+                currentAction.setActionRunning(true);
 //                currentActionStack.pop();
                 currentAction = currentActionStack.peek();
-                currentAction.setMoving(true);
+                currentAction.setActionRunning(true);
 //                currentAction.getAgent().setDestination(currentAction.getTarget().getTargetPosition());
             } else {
                 // ------ wait action duration ------ //
                 // so it sounds like we have to wait for the action duration and trigger than a listener!
 
-                currentAction.setMoving(false);
+                currentAction.setActionRunning(false);
                 currentAction.postPerform();
                 currentActionStack.pop();
             }

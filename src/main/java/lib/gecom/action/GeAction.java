@@ -43,7 +43,7 @@ public abstract class GeAction implements GeActionable {
     @Setter
     @Getter
     @Builder.Default
-    private boolean moving = false;
+    private boolean actionRunning = false;
 
     public boolean isAchievable() {
         return true;
