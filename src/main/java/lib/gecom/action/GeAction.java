@@ -52,7 +52,6 @@ public abstract class GeAction implements GeActionable {
     public boolean arePreconditionsMet(@NonNull final HashMap<String, Integer> state) {
         return preconditions.entrySet().stream()
                 .allMatch(entry -> state.containsKey(entry.getKey()) && state.get(entry.getKey()).equals(entry.getValue()));
-
     }
 
 

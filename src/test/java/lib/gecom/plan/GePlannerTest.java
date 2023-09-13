@@ -1,6 +1,9 @@
-package lib.gecom;
+package lib.gecom.plan;
 
+import lib.gecom.GeAgent;
 import lib.gecom.action.GeAction;
+import lib.gecom.plan.GePlan;
+import lib.gecom.plan.GePlanner;
 import lombok.experimental.SuperBuilder;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +23,7 @@ class GePlannerTest {
         final GePlanner planner = new GePlanner();
 
         // Act
-        final Optional<Queue<GeAction>> planToTest = planner.planCheapest(agentsBelieves, possibleActions, goal);
+        final Optional<GePlan> planToTest = planner.planCheapest(agentsBelieves, possibleActions, goal);
 
         // Assert
         assertTrue(planToTest.isEmpty());
@@ -36,7 +39,7 @@ class GePlannerTest {
         final GePlanner planner = new GePlanner();
 
         // Act
-        final Optional<Queue<GeAction>> planToTest = planner.planCheapest(agentsBelieves, possibleActions, goal);
+        final Optional<GePlan> planToTest = planner.planCheapest(agentsBelieves, possibleActions, goal);
 
         // Assert
         assertTrue(planToTest.isEmpty());
@@ -68,12 +71,12 @@ class GePlannerTest {
 
         // Act
         final GePlanner planner = new GePlanner();
-        final Optional<Queue<GeAction>> planToTest = planner.planCheapest(agentsBelieves, possibleActions, goal);
+        final Optional<GePlan> planToTest = planner.planCheapest(agentsBelieves, possibleActions, goal);
 
         // Assert
         assertFalse(planToTest.isEmpty());
-        assertEquals(1, planToTest.get().size());
-        assertTrue(planToTest.get().contains(action));
+        assertEquals(1, planToTest.get().getActions().size());
+        assertTrue(planToTest.get().getActions().contains(action));
     }
 
     @Test
@@ -93,33 +96,33 @@ class GePlannerTest {
 
         // Create an action that fulfills the goal
         final GeAgent agent = new GeAgent(possibleActions);
-        final GeAction action1 = TestAction.builder()
+        final GeAction findSomethingToEat = TestAction.builder()
                 .name("find-something-to-eat")
                 .agent(agent) // @TODO dependency of action to agent is not good. Decouple it. I dont know if the action should be bound to an agent Makes sense if action has an internal state!
                 .build();
-        action1.getPreconditions().put("has-something-to-eat", 0);
-        action1.getAfterEffects().put("has-something-to-eat", 1);
-        possibleActions.add(action1);
+        findSomethingToEat.getPreconditions().put("has-something-to-eat", 0);
+        findSomethingToEat.getAfterEffects().put("has-something-to-eat", 1);
+        possibleActions.add(findSomethingToEat);
 
-        final GeAction action2 = TestAction.builder()
+        final GeAction eat = TestAction.builder()
                 .name("eat")
                 .agent(agent) // @TODO dependency of action to agent is not good. Decouple it. I dont know if the action should be bound to an agent Makes sense if action has an internal state!
                 .build();
-        action2.getPreconditions().put("has-something-to-eat", 1);
-        action2.getAfterEffects().put("i-am-hungry", 0);
-        action2.getAfterEffects().put("has-something-to-eat", 0);
-        possibleActions.add(action2);
+        eat.getPreconditions().put("has-something-to-eat", 1);
+        eat.getAfterEffects().put("i-am-hungry", 0);
+        eat.getAfterEffects().put("has-something-to-eat", 0);
+        possibleActions.add(eat);
 
         // Act
         final GePlanner planner = new GePlanner();
-        final Optional<Queue<GeAction>> planToTest = planner.planCheapest(agentsBelieves, possibleActions, goal);
+        final Optional<GePlan> planToTest = planner.planCheapest(agentsBelieves, possibleActions, goal);
 
         // Assert
         assertFalse(planToTest.isEmpty());
-        assertEquals(2, planToTest.get().size());
-        assertTrue(planToTest.get().containsAll(possibleActions));
-        assertEquals(action1, planToTest.get().poll());
-        assertEquals(action2, planToTest.get().poll());
+        assertEquals(2, planToTest.get().getActions().size());
+        assertTrue(planToTest.get().getActions().containsAll(possibleActions));
+        assertEquals(findSomethingToEat, planToTest.get().getActions().poll());
+        assertEquals(eat, planToTest.get().getActions().poll());
     }
 
     @Test
@@ -139,22 +142,22 @@ class GePlannerTest {
 
         // Create an action that fulfills the goal
         final GeAgent agent = new GeAgent(possibleActions);
-        final GeAction action1 = TestAction.builder()
+        final GeAction findSomethingToEat = TestAction.builder()
                 .name("find-something-to-eat")
                 .agent(agent) // @TODO dependency of action to agent is not good. Decouple it. I dont know if the action should be bound to an agent Makes sense if action has an internal state!
                 .build();
-        action1.getPreconditions().put("has-something-to-eat", 0);
-        action1.getAfterEffects().put("has-something-to-eat", 1);
-        possibleActions.add(action1);
+        findSomethingToEat.getPreconditions().put("has-something-to-eat", 0);
+        findSomethingToEat.getAfterEffects().put("has-something-to-eat", 1);
+        possibleActions.add(findSomethingToEat);
 
-        final GeAction action2 = TestAction.builder()
+        final GeAction eat = TestAction.builder()
                 .name("eat")
                 .agent(agent) // @TODO dependency of action to agent is not good. Decouple it. I dont know if the action should be bound to an agent Makes sense if action has an internal state!
                 .build();
-        action2.getPreconditions().put("has-something-to-eat", 1);
-        action2.getAfterEffects().put("i-am-hungry", 0);
-        action2.getAfterEffects().put("has-something-to-eat", 0);
-        possibleActions.add(action2);
+        eat.getPreconditions().put("has-something-to-eat", 1);
+        eat.getAfterEffects().put("i-am-hungry", 0);
+        eat.getAfterEffects().put("has-something-to-eat", 0);
+        possibleActions.add(eat);
 
         final GeAction action3 = TestAction.builder()
                 .name("hunt")
@@ -167,14 +170,68 @@ class GePlannerTest {
 
         // Act
         final GePlanner planner = new GePlanner();
-        final Optional<Queue<GeAction>> planToTest = planner.planCheapest(agentsBelieves, possibleActions, goal);
+        final Optional<GePlan> planToTest = planner.planCheapest(agentsBelieves, possibleActions, goal);
 
         // Assert
         assertFalse(planToTest.isEmpty());
-        assertEquals(2, planToTest.get().size());
-        assertTrue(planToTest.get().containsAll(List.of(action1, action2)));
-        assertEquals(action1, planToTest.get().poll());
-        assertEquals(action2, planToTest.get().poll());
+        assertEquals(2, planToTest.get().getActions().size());
+        assertTrue(planToTest.get().getActions().containsAll(List.of(findSomethingToEat, eat)));
+        assertEquals(findSomethingToEat, planToTest.get().getActions().poll());
+        assertEquals(eat, planToTest.get().getActions().poll());
+    }
+
+    @Test
+    void plan_withTwoConcurrentAchievableBranches_gives2Plans() {
+        // Arrange
+        // Believes:
+        final HashMap<String, Integer> agentsBelieves = new HashMap<>();
+        agentsBelieves.put("i-am-hungry", 1);
+        agentsBelieves.put("has-something-to-eat", 0);
+
+        // List of possible actions:
+        final List<GeAction> possibleActions = new ArrayList<>();
+
+        // Goal
+        final HashMap<String, Integer> goal = new HashMap<>();
+        goal.put("i-am-hungry", 0);
+
+        // Create an action that fulfills the goal
+        final GeAgent agent = new GeAgent(possibleActions);
+        final GeAction findSomethingToEat = TestAction.builder()
+                .name("find-something-to-eat")
+                .agent(agent) // @TODO dependency of action to agent is not good. Decouple it. I dont know if the action should be bound to an agent Makes sense if action has an internal state!
+                .build();
+        findSomethingToEat.getPreconditions().put("has-something-to-eat", 0);
+        findSomethingToEat.getAfterEffects().put("has-something-to-eat", 1);
+        possibleActions.add(findSomethingToEat);
+
+        final GeAction eat = TestAction.builder()
+                .name("eat")
+                .agent(agent) // @TODO dependency of action to agent is not good. Decouple it. I dont know if the action should be bound to an agent Makes sense if action has an internal state!
+                .build();
+        eat.getPreconditions().put("has-something-to-eat", 1);
+        eat.getAfterEffects().put("i-am-hungry", 0);
+        eat.getAfterEffects().put("has-something-to-eat", 0);
+        possibleActions.add(eat);
+
+        final GeAction hunt = TestAction.builder()
+                .name("hunt")
+                .agent(agent) // @TODO dependency of action to agent is not good. Decouple it. I dont know if the action should be bound to an agent Makes sense if action has an internal state!
+                .cost(10.0f)
+                .build();
+        hunt.getPreconditions().put("has-something-to-eat", 0);
+        hunt.getAfterEffects().put("has-something-to-eat", 1);
+        possibleActions.add(hunt);
+
+        // Act
+        final GePlanner planner = new GePlanner();
+        final PriorityQueue<GePlan> multiplePlansToTest = planner.plan(agentsBelieves, possibleActions, goal);
+
+        // Assert
+        assertFalse(multiplePlansToTest.isEmpty());
+        assertEquals(2, multiplePlansToTest.size());
+        assertTrue(multiplePlansToTest.poll().getActions().containsAll(List.of(findSomethingToEat, eat)));
+        assertTrue(multiplePlansToTest.poll().getActions().containsAll(List.of(hunt, eat)));
     }
 
     @SuperBuilder

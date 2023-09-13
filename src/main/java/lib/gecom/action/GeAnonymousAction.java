@@ -38,9 +38,7 @@ public class GeAnonymousAction implements GeActionable {
     @Override
     public boolean arePreconditionsMet(@NonNull final HashMap<String, Integer> state) {
         return preconditions.entrySet().stream()
-                .allMatch(
-                        precondition -> state.getOrDefault(precondition.getKey(), 0) >= precondition.getValue()
-                );
+                .allMatch(entry -> state.containsKey(entry.getKey()) && state.get(entry.getKey()).equals(entry.getValue()));
     }
 
     public boolean prePerform() {

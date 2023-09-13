@@ -1,6 +1,8 @@
 package lib.gecom;
 
 import lib.gecom.action.GeAction;
+import lib.gecom.plan.GePlan;
+import lib.gecom.plan.GePlanner;
 import lombok.Getter;
 import lombok.NonNull;
 
@@ -76,9 +78,9 @@ public class GeAgent {
         final HashMap<String, Integer> agentsBelieves = new HashMap<>();
         if (currentActionStack.isEmpty()) {
             for (GeSubgoal subgoal : prioritizedSubgoals) {
-                final Optional<Queue<GeAction>> plan = planner.planCheapest(agentsBelieves, possibleActions, subgoal.getStatesToReach());
+                final Optional<GePlan> plan = planner.planCheapest(agentsBelieves, possibleActions, subgoal.getStatesToReach());
                 if (plan.isPresent()) {
-                    currentActionStack.addAll(plan.get());
+                    currentActionStack.addAll(plan.get().getActions());
                     currentGoal = subgoal;
                     break;
                 }

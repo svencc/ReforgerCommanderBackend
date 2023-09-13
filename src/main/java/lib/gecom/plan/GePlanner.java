@@ -1,55 +1,35 @@
-package lib.gecom;
+package lib.gecom.plan;
 
 
 import lib.gecom.action.GeAction;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.Nullable;
 
 import java.util.*;
 
+@Slf4j
 public class GePlanner {
 
     @NonNull
-    public Optional<Queue<GeAction>> planCheapest(
+    public Optional<GePlan> planCheapest(
             @NonNull final HashMap<String, Integer> agentsBelieves,
             @NonNull final List<GeAction> possibleActions,
             @NonNull final HashMap<String, Integer> goal
     ) {
-        final List<GeNode> leaves = plan(agentsBelieves, possibleActions, goal);
+        final PriorityQueue<GePlan> plans = plan(agentsBelieves, possibleActions, goal);
 
-        if (leaves.isEmpty()) {
+        if (plans.isEmpty()) {
             return Optional.empty();
+        } else {
+            return plans.stream()
+                    .min(Comparable::compareTo);
         }
-
-        // look for cheapest; @TODO look to dijkstra's algorithm
-        // iam sure there is a better way to do this than here!
-
-        GeNode cheapest = null;
-        for (GeNode leaf : leaves) {
-            if (cheapest == null) {
-                cheapest = leaf;
-            } else if (leaf.cost < cheapest.cost) {
-                cheapest = leaf;
-            }
-        }
-
-        // @TODO return a list of actions (linked list)
-        final List<GeAction> result = new ArrayList<>();
-        GeNode node = cheapest;
-        while (node != null) {
-            if (node.action != null) {
-                result.add(node.action);
-            }
-            node = node.parent;
-        }
-        Collections.reverse(result); // TEST THAT
-
-        // could return a PriorityQueue with nodes; it is then sorted
-        return Optional.of(new LinkedList<GeAction>(result));
     }
 
-    public List<GeNode> plan(
+    //    public List<GeNode> plan(
+    public PriorityQueue<GePlan> plan(
             @NonNull final HashMap<String, Integer> agentsBelieves,
             @NonNull final List<GeAction> possibleActions,
             @NonNull final HashMap<String, Integer> goal
@@ -67,36 +47,30 @@ public class GePlanner {
         boolean success = buildGraph(start, leaves, usableActions, goal);
 
         if (!success) {
-            System.out.println("No solution found!");
-            // @TODO throw exception? and log!
-            return List.of();
+            log.error("No solution found!");
+            return new PriorityQueue<>();
         }
 
-        return leaves;
+        final PriorityQueue<GePlan> plans = new PriorityQueue<>();
+        for (@NonNull final GeNode currentPlansLastNode : leaves) {
+            final ArrayList<GeAction> currentPlansActions = new ArrayList<>();
+            GeNode node = currentPlansLastNode;
+            while (node != null) {
+                if (node.action != null) {
+                    currentPlansActions.add(node.action);
+                }
+                node = node.parent;
+            }
+            Collections.reverse(currentPlansActions);
+            final GePlan plan = GePlan.builder()
+                    .actions(new LinkedList<>(currentPlansActions))
+                    .cost(currentPlansLastNode.cost)
+                    .build();
 
-//        // TODO look to dijkstra's algorithm.... for the following:
-//        GeNode cheapest = null;
-//        for (GeNode leaf : leaves) {
-//            if (cheapest == null) {
-//                cheapest = leaf;
-//            } else if (leaf.cost < cheapest.cost) {
-//                cheapest = leaf;
-//            }
-//        }
-//
-//        // @TODO return a list of actions (linked list)
-//        final List<GeAction> result = new ArrayList<>();
-//        GeNode node = cheapest;
-//        while (node != null) {
-//            if (node.action != null) {
-//                result.add(node.action);
-//            }
-//            node = node.parent;
-//        }
-//        Collections.reverse(result); // TEST THAT
-//
-//        // could return a PriorityQueue with nodes; it is then sorted
-//        return Optional.of(new LinkedList<GeAction>(result));
+            plans.add(plan);
+        }
+
+        return plans;
     }
 
     private boolean buildGraph(
@@ -144,15 +118,7 @@ public class GePlanner {
             @NonNull final HashMap<String, Integer> stateToCompareWith
     ) {
         return goal.entrySet().stream()
-                .allMatch(
-                        precondition -> {
-                            if (!stateToCompareWith.containsKey(precondition.getKey())) {
-                                return false;
-                            } else {
-                                return stateToCompareWith.get(precondition.getKey()).equals(precondition.getValue());
-                            }
-                        }
-                );
+                .allMatch(precondition -> stateToCompareWith.containsKey(precondition.getKey()) && stateToCompareWith.get(precondition.getKey()).equals(precondition.getValue()));
     }
 
     @NonNull
