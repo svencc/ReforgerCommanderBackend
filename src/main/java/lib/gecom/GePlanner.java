@@ -11,30 +11,19 @@ import java.util.*;
 public class GePlanner {
 
     @NonNull
-    public Optional<Queue<GeAction>> plan(
+    public Optional<Queue<GeAction>> planCheapest(
             @NonNull final HashMap<String, Integer> agentsBelieves,
             @NonNull final List<GeAction> possibleActions,
             @NonNull final HashMap<String, Integer> goal
     ) {
-        final List<GeAction> usableActions = new ArrayList<>();
-        possibleActions.forEach(possibleAction -> {
-            if (possibleAction.isAchievable()) {
-                usableActions.add(possibleAction);
-            }
-        });
+        final List<GeNode> leaves = plan(agentsBelieves, possibleActions, goal);
 
-        final List<GeNode> leaves = new ArrayList<>();
-        final GeNode start = new GeNode(null, agentsBelieves, null, 0f);
-
-        boolean success = buildGraph(start, leaves, usableActions, goal);
-
-        if (!success) {
-            System.out.println("No solution found!");
-            // @TODO throw exception? and log!
+        if (leaves.isEmpty()) {
             return Optional.empty();
         }
 
-        // TODO look to dijkstra's algorithm.... for the following:
+        // look for cheapest; @TODO look to dijkstra's algorithm
+        // iam sure there is a better way to do this than here!
 
         GeNode cheapest = null;
         for (GeNode leaf : leaves) {
@@ -58,6 +47,56 @@ public class GePlanner {
 
         // could return a PriorityQueue with nodes; it is then sorted
         return Optional.of(new LinkedList<GeAction>(result));
+    }
+
+    public List<GeNode> plan(
+            @NonNull final HashMap<String, Integer> agentsBelieves,
+            @NonNull final List<GeAction> possibleActions,
+            @NonNull final HashMap<String, Integer> goal
+    ) {
+        final List<GeAction> usableActions = new ArrayList<>();
+        possibleActions.forEach(possibleAction -> {
+            if (possibleAction.isAchievable()) {
+                usableActions.add(possibleAction);
+            }
+        });
+
+        final List<GeNode> leaves = new ArrayList<>();
+        final GeNode start = new GeNode(null, agentsBelieves, null, 0f);
+
+        boolean success = buildGraph(start, leaves, usableActions, goal);
+
+        if (!success) {
+            System.out.println("No solution found!");
+            // @TODO throw exception? and log!
+            return List.of();
+        }
+
+        return leaves;
+
+//        // TODO look to dijkstra's algorithm.... for the following:
+//        GeNode cheapest = null;
+//        for (GeNode leaf : leaves) {
+//            if (cheapest == null) {
+//                cheapest = leaf;
+//            } else if (leaf.cost < cheapest.cost) {
+//                cheapest = leaf;
+//            }
+//        }
+//
+//        // @TODO return a list of actions (linked list)
+//        final List<GeAction> result = new ArrayList<>();
+//        GeNode node = cheapest;
+//        while (node != null) {
+//            if (node.action != null) {
+//                result.add(node.action);
+//            }
+//            node = node.parent;
+//        }
+//        Collections.reverse(result); // TEST THAT
+//
+//        // could return a PriorityQueue with nodes; it is then sorted
+//        return Optional.of(new LinkedList<GeAction>(result));
     }
 
     private boolean buildGraph(

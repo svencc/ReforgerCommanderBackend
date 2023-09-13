@@ -76,7 +76,7 @@ public class GeAgent {
         final HashMap<String, Integer> agentsBelieves = new HashMap<>();
         if (currentActionStack.isEmpty()) {
             for (GeSubgoal subgoal : prioritizedSubgoals) {
-                final Optional<Queue<GeAction>> plan = planner.plan(agentsBelieves, possibleActions, subgoal.getStatesToReach());
+                final Optional<Queue<GeAction>> plan = planner.planCheapest(agentsBelieves, possibleActions, subgoal.getStatesToReach());
                 if (plan.isPresent()) {
                     currentActionStack.addAll(plan.get());
                     currentGoal = subgoal;
