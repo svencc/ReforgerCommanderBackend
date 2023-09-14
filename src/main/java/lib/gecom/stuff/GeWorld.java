@@ -1,4 +1,4 @@
-package lib.gecom;
+package lib.gecom.stuff;
 
 import lombok.Getter;
 

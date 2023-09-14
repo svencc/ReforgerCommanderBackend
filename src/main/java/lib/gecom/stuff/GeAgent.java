@@ -1,4 +1,4 @@
-package lib.gecom;
+package lib.gecom.stuff;
 
 import lib.gecom.action.GeAction;
 import lib.gecom.plan.GePlan;

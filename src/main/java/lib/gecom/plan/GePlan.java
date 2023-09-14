@@ -26,4 +26,5 @@ public class GePlan implements Comparable<GePlan> {
 
         return mine.compareTo(theirs);
     }
+
 }

@@ -1,5 +1,6 @@
-package lib.gecom;
+package lib.gecom.stuff;
 
+import lib.gecom.GeTargetable;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 

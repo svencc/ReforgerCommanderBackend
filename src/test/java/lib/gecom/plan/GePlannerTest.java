@@ -1,9 +1,6 @@
 package lib.gecom.plan;
 
-import lib.gecom.GeAgent;
 import lib.gecom.action.GeAction;
-import lib.gecom.plan.GePlan;
-import lib.gecom.plan.GePlanner;
 import lombok.experimental.SuperBuilder;
 import org.junit.jupiter.api.Test;
 
@@ -60,10 +57,8 @@ class GePlannerTest {
         goal.put("goal", 1);
 
         // Create an action that fulfills the goal
-        final GeAgent agent = new GeAgent(possibleActions);
         final GeAction action = TestAction.builder()
                 .name("SetGoalToOneAction")
-                .agent(agent) // @TODO dependency of action to agent is not good. Decouple it. I dont know if the action should be bound to an agent Makes sense if action has an internal state!
                 .build();
         action.getPreconditions().put("goal", 0);
         action.getAfterEffects().put("goal", 1);
@@ -95,10 +90,8 @@ class GePlannerTest {
         goal.put("i-am-hungry", 0);
 
         // Create an action that fulfills the goal
-        final GeAgent agent = new GeAgent(possibleActions);
         final GeAction findSomethingToEat = TestAction.builder()
                 .name("find-something-to-eat")
-                .agent(agent) // @TODO dependency of action to agent is not good. Decouple it. I dont know if the action should be bound to an agent Makes sense if action has an internal state!
                 .build();
         findSomethingToEat.getPreconditions().put("has-something-to-eat", 0);
         findSomethingToEat.getAfterEffects().put("has-something-to-eat", 1);
@@ -106,7 +99,6 @@ class GePlannerTest {
 
         final GeAction eat = TestAction.builder()
                 .name("eat")
-                .agent(agent) // @TODO dependency of action to agent is not good. Decouple it. I dont know if the action should be bound to an agent Makes sense if action has an internal state!
                 .build();
         eat.getPreconditions().put("has-something-to-eat", 1);
         eat.getAfterEffects().put("i-am-hungry", 0);
@@ -141,10 +133,8 @@ class GePlannerTest {
         goal.put("i-am-hungry", 0);
 
         // Create an action that fulfills the goal
-        final GeAgent agent = new GeAgent(possibleActions);
         final GeAction findSomethingToEat = TestAction.builder()
                 .name("find-something-to-eat")
-                .agent(agent) // @TODO dependency of action to agent is not good. Decouple it. I dont know if the action should be bound to an agent Makes sense if action has an internal state!
                 .build();
         findSomethingToEat.getPreconditions().put("has-something-to-eat", 0);
         findSomethingToEat.getAfterEffects().put("has-something-to-eat", 1);
@@ -152,7 +142,6 @@ class GePlannerTest {
 
         final GeAction eat = TestAction.builder()
                 .name("eat")
-                .agent(agent) // @TODO dependency of action to agent is not good. Decouple it. I dont know if the action should be bound to an agent Makes sense if action has an internal state!
                 .build();
         eat.getPreconditions().put("has-something-to-eat", 1);
         eat.getAfterEffects().put("i-am-hungry", 0);
@@ -161,7 +150,6 @@ class GePlannerTest {
 
         final GeAction action3 = TestAction.builder()
                 .name("hunt")
-                .agent(agent) // @TODO dependency of action to agent is not good. Decouple it. I dont know if the action should be bound to an agent Makes sense if action has an internal state!
                 .cost(10.0f)
                 .build();
         action3.getPreconditions().put("has-something-to-eat", 0);
@@ -196,10 +184,8 @@ class GePlannerTest {
         goal.put("i-am-hungry", 0);
 
         // Create an action that fulfills the goal
-        final GeAgent agent = new GeAgent(possibleActions);
         final GeAction findSomethingToEat = TestAction.builder()
                 .name("find-something-to-eat")
-                .agent(agent) // @TODO dependency of action to agent is not good. Decouple it. I dont know if the action should be bound to an agent Makes sense if action has an internal state!
                 .build();
         findSomethingToEat.getPreconditions().put("has-something-to-eat", 0);
         findSomethingToEat.getAfterEffects().put("has-something-to-eat", 1);
@@ -207,7 +193,6 @@ class GePlannerTest {
 
         final GeAction eat = TestAction.builder()
                 .name("eat")
-                .agent(agent) // @TODO dependency of action to agent is not good. Decouple it. I dont know if the action should be bound to an agent Makes sense if action has an internal state!
                 .build();
         eat.getPreconditions().put("has-something-to-eat", 1);
         eat.getAfterEffects().put("i-am-hungry", 0);
@@ -216,7 +201,6 @@ class GePlannerTest {
 
         final GeAction hunt = TestAction.builder()
                 .name("hunt")
-                .agent(agent) // @TODO dependency of action to agent is not good. Decouple it. I dont know if the action should be bound to an agent Makes sense if action has an internal state!
                 .cost(10.0f)
                 .build();
         hunt.getPreconditions().put("has-something-to-eat", 0);

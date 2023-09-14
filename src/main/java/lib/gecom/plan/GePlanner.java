@@ -28,7 +28,7 @@ public class GePlanner {
         }
     }
 
-    //    public List<GeNode> plan(
+    @NonNull
     public PriorityQueue<GePlan> plan(
             @NonNull final HashMap<String, Integer> agentsBelieves,
             @NonNull final List<GeAction> possibleActions,
@@ -41,10 +41,10 @@ public class GePlanner {
             }
         });
 
-        final List<GeNode> leaves = new ArrayList<>();
-        final GeNode start = new GeNode(null, agentsBelieves, null, 0f);
+        final List<GePlanningNode> leaves = new ArrayList<>();
+        final GePlanningNode startNode = new GePlanningNode(null, agentsBelieves, null, 0f);
 
-        boolean success = buildGraph(start, leaves, usableActions, goal);
+        boolean success = buildGraph(startNode, leaves, usableActions, goal);
 
         if (!success) {
             log.error("No solution found!");
@@ -52,9 +52,9 @@ public class GePlanner {
         }
 
         final PriorityQueue<GePlan> plans = new PriorityQueue<>();
-        for (@NonNull final GeNode currentPlansLastNode : leaves) {
+        for (@NonNull final GePlanner.GePlanningNode currentPlansLastNode : leaves) {
             final ArrayList<GeAction> currentPlansActions = new ArrayList<>();
-            GeNode node = currentPlansLastNode;
+            GePlanningNode node = currentPlansLastNode;
             while (node != null) {
                 if (node.action != null) {
                     currentPlansActions.add(node.action);
@@ -74,8 +74,8 @@ public class GePlanner {
     }
 
     private boolean buildGraph(
-            @NonNull final GeNode parent,
-            @NonNull final List<GeNode> foundPlans,
+            @NonNull final GePlanner.GePlanningNode parent,
+            @NonNull final List<GePlanningNode> foundPlans,
             @NonNull final List<GeAction> usableActions,
             @NonNull final HashMap<String, Integer> goal
     ) {
@@ -92,7 +92,7 @@ public class GePlanner {
                     }
                 }
 
-                final GeNode derivedNodeFromPerformedAction = new GeNode(parent, currentState, action, parent.cost + action.getCost());
+                final GePlanningNode derivedNodeFromPerformedAction = new GePlanningNode(parent, currentState, action, parent.cost + action.getCost());
 
                 if (goalAchieved(goal, currentState)) {
                     // stop building the graph and return the path; as we found a path
@@ -133,11 +133,10 @@ public class GePlanner {
     }
 
 
-    //@TODO can we use our old node?
     @Getter
-    public class GeNode {
+    private static class GePlanningNode {
         @Nullable
-        public final GeNode parent;
+        public final GePlanningNode parent;
         @NonNull
         public final HashMap<String, Integer> state;
         @Nullable
@@ -145,14 +144,13 @@ public class GePlanner {
         @NonNull
         public Float cost;
 
-        public GeNode(
-                @Nullable final GeNode parent,
+        public GePlanningNode(
+                @Nullable final GePlanningNode parent,
                 @NonNull final HashMap<String, Integer> state,
                 @Nullable final GeAction action,
                 @NonNull final Float cost
         ) {
             this.parent = parent;
-//            this.state = (HashMap<String, Integer>) state.clone(); // @TODO make a copy!
             this.state = state;
             this.action = action;
             this.cost = cost;
