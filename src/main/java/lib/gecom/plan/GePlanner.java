@@ -86,7 +86,7 @@ public class GePlanner {
         for (final GeAction action : usableActions) {
             if (action.arePreconditionsMet(parent.getState())) {
                 final HashMap<String, Integer> currentState = (HashMap<String, Integer>) parent.getState().clone(); // copy the state! (depp clone is not necessary because String and Integers are immutable)
-                for (final Map.Entry<String, Integer> effect : action.getAfterEffects().entrySet()) {
+                for (final Map.Entry<String, Integer> effect : action.getEffects().entrySet()) {
                     if (currentState.containsKey(effect.getKey())) {
                         currentState.put(effect.getKey(), effect.getValue());
                     }
@@ -135,12 +135,16 @@ public class GePlanner {
 
     @Getter
     private static class GePlanningNode {
+
         @Nullable
         public final GePlanningNode parent;
+
         @NonNull
         public final HashMap<String, Integer> state;
+
         @Nullable
         public final GeAction action;
+
         @NonNull
         public Float cost;
 

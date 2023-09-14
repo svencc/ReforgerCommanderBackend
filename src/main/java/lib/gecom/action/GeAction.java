@@ -1,41 +1,49 @@
 package lib.gecom.action;
 
-import lib.gecom.stuff.GeNullTarget;
 import lib.gecom.GeTargetable;
-import lombok.*;
-import lombok.experimental.SuperBuilder;
+import lib.gecom.stuff.GeNullTarget;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
 
 import java.util.HashMap;
 
 @Getter
-@SuperBuilder
-@RequiredArgsConstructor
 public abstract class GeAction {
 
     @NonNull
     private final String name;
+
     @NonNull
-    @Builder.Default
-    private final Float cost = 1.0f;
-    @NonNull
-    @Builder.Default
-    private final GeTargetable target = new GeNullTarget();
-    @NonNull
-    @Builder.Default
-    private final Float duration = 0.0f;
-    @NonNull
-    @Builder.Default
     private final HashMap<String, Integer> preconditions = new HashMap<>();
+
     @NonNull
-    @Builder.Default
-    private final HashMap<String, Integer> afterEffects = new HashMap<>();
-//    @NonNull
-//    @Builder.Default
-//    private final GeWorldStates worldState = new GeWorldStates(); // required to calculate isAchievable!
-    @Getter
+    private final HashMap<String, Integer> effects = new HashMap<>();
+
+    @NonNull
+    private Float duration = 0.0f;
+
+    @NonNull
+    private Float cost = 1.0f;
+
+    @NonNull
+    private GeTargetable target = new GeNullTarget();
+
     @Setter
-    @Builder.Default
     private boolean actionRunning = false;
+
+
+    public GeAction(@NonNull final String name) {
+        this.name = name;
+    }
+
+    public GeAction(
+            @NonNull final String name,
+            @NonNull final Float cost
+    ) {
+        this.name = name;
+        this.cost = cost;
+    }
 
     public boolean isAchievable() {
         return true;
@@ -49,6 +57,5 @@ public abstract class GeAction {
     public abstract boolean prePerform();
 
     public abstract boolean postPerform();
-
 
 }

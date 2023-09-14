@@ -1,50 +1,56 @@
-package lib.gecom.stuff;
+package lib.gecom.agent;
 
 import lib.gecom.action.GeAction;
 import lib.gecom.plan.GePlan;
 import lib.gecom.plan.GePlanner;
+import lib.gecom.stuff.GeGoal;
 import lombok.Getter;
 import lombok.NonNull;
+import org.springframework.lang.Nullable;
 
 import java.util.*;
 
+@Getter
 public class GeAgent {
 
-    @Getter
     @NonNull
     private final List<GeAction> possibleActions = new ArrayList<>();
+
     @NonNull
-    private final PriorityQueue<GeSubgoal> prioritizedSubgoals = new PriorityQueue<>();
+    private final PriorityQueue<GeGoal> goals = new PriorityQueue<>();
+
     @NonNull
-    private final GePlanner planner; // Get Rid of Planner in Agent? Or assign one global Planner instance vie Constructor DI?
+    private final HashMap<String, Integer> agentsBelieves = new HashMap<>();
+
+    @NonNull
+    private final GePlanner planner;
+
     @NonNull
     private final Queue<GeAction> plan = new LinkedList<>();
+
     @NonNull
     private final Stack<GeAction> currentActionStack = new Stack<>();
+
+    @Nullable
     private GeAction currentAction;
-    private GeSubgoal currentGoal;
+
+    @Nullable
+    private GeGoal currentGoal;
 
     private boolean isExecutingAction = false;
 
-    public GeAgent(final List<GeAction> possibleActions) {
-        if (possibleActions.isEmpty()) {
-            this.possibleActions.addAll(possibleActions);
-        }
-
-        planner = new GePlanner();
-    }
-
-    public void addSubgoal(@NonNull final GeSubgoal subgoal) {
-        prioritizedSubgoals.add(subgoal);
+    
+    public GeAgent(@NonNull final GePlanner planner) {
+        this.planner = planner;
     }
 
     // Agents seem to implement these methods (Unity; maybe this will be useful for us later)
-    public void Start() {
+    public void start() {
         // This is where the agent is initially set up.
         // This can include initializing variables or setting up components.
     }
 
-    public void Update() {
+    public void update() {
         // Here updates are performed for the agent in every frame.
         // This can include moving the agent, checking for collisions, or other ongoing operations.
 
@@ -77,7 +83,7 @@ public class GeAgent {
 //        final GeWorldStates agentsBelieves = GeWorld.getInstance().getWorldStates();
         final HashMap<String, Integer> agentsBelieves = new HashMap<>();
         if (currentActionStack.isEmpty()) {
-            for (GeSubgoal subgoal : prioritizedSubgoals) {
+            for (GeGoal subgoal : goals) {
                 final Optional<GePlan> plan = planner.planCheapest(agentsBelieves, possibleActions, subgoal.getStatesToReach());
                 if (plan.isPresent()) {
                     currentActionStack.addAll(plan.get().getActions());

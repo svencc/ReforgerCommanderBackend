@@ -1,7 +1,7 @@
 package lib.gecom.plan;
 
+import lib.gecom.TestAction;
 import lib.gecom.action.GeAction;
-import lombok.experimental.SuperBuilder;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
@@ -57,11 +57,9 @@ class GePlannerTest {
         goal.put("goal", 1);
 
         // Create an action that fulfills the goal
-        final GeAction action = TestAction.builder()
-                .name("SetGoalToOneAction")
-                .build();
+        final GeAction action = new TestAction("SetGoalToOneAction");
         action.getPreconditions().put("goal", 0);
-        action.getAfterEffects().put("goal", 1);
+        action.getEffects().put("goal", 1);
         possibleActions.add(action);
 
         // Act
@@ -90,19 +88,15 @@ class GePlannerTest {
         goal.put("i-am-hungry", 0);
 
         // Create an action that fulfills the goal
-        final GeAction findSomethingToEat = TestAction.builder()
-                .name("find-something-to-eat")
-                .build();
+        final GeAction findSomethingToEat = new TestAction("find-something-to-eat");
         findSomethingToEat.getPreconditions().put("has-something-to-eat", 0);
-        findSomethingToEat.getAfterEffects().put("has-something-to-eat", 1);
+        findSomethingToEat.getEffects().put("has-something-to-eat", 1);
         possibleActions.add(findSomethingToEat);
 
-        final GeAction eat = TestAction.builder()
-                .name("eat")
-                .build();
+        final GeAction eat = new TestAction("eat");
         eat.getPreconditions().put("has-something-to-eat", 1);
-        eat.getAfterEffects().put("i-am-hungry", 0);
-        eat.getAfterEffects().put("has-something-to-eat", 0);
+        eat.getEffects().put("i-am-hungry", 0);
+        eat.getEffects().put("has-something-to-eat", 0);
         possibleActions.add(eat);
 
         // Act
@@ -133,27 +127,20 @@ class GePlannerTest {
         goal.put("i-am-hungry", 0);
 
         // Create an action that fulfills the goal
-        final GeAction findSomethingToEat = TestAction.builder()
-                .name("find-something-to-eat")
-                .build();
+        final GeAction findSomethingToEat = new TestAction("find-something-to-eat");
         findSomethingToEat.getPreconditions().put("has-something-to-eat", 0);
-        findSomethingToEat.getAfterEffects().put("has-something-to-eat", 1);
+        findSomethingToEat.getEffects().put("has-something-to-eat", 1);
         possibleActions.add(findSomethingToEat);
 
-        final GeAction eat = TestAction.builder()
-                .name("eat")
-                .build();
+        final GeAction eat = new TestAction("eat");
         eat.getPreconditions().put("has-something-to-eat", 1);
-        eat.getAfterEffects().put("i-am-hungry", 0);
-        eat.getAfterEffects().put("has-something-to-eat", 0);
+        eat.getEffects().put("i-am-hungry", 0);
+        eat.getEffects().put("has-something-to-eat", 0);
         possibleActions.add(eat);
 
-        final GeAction action3 = TestAction.builder()
-                .name("hunt")
-                .cost(10.0f)
-                .build();
+        final GeAction action3 = new TestAction("hunt", 10.0f);
         action3.getPreconditions().put("has-something-to-eat", 0);
-        action3.getAfterEffects().put("has-something-to-eat", 1);
+        action3.getEffects().put("has-something-to-eat", 1);
         possibleActions.add(action3);
 
         // Act
@@ -184,27 +171,20 @@ class GePlannerTest {
         goal.put("i-am-hungry", 0);
 
         // Create an action that fulfills the goal
-        final GeAction findSomethingToEat = TestAction.builder()
-                .name("find-something-to-eat")
-                .build();
+        final GeAction findSomethingToEat = new TestAction("find-something-to-eat");
         findSomethingToEat.getPreconditions().put("has-something-to-eat", 0);
-        findSomethingToEat.getAfterEffects().put("has-something-to-eat", 1);
+        findSomethingToEat.getEffects().put("has-something-to-eat", 1);
         possibleActions.add(findSomethingToEat);
 
-        final GeAction eat = TestAction.builder()
-                .name("eat")
-                .build();
+        final GeAction eat = new TestAction("eat");
         eat.getPreconditions().put("has-something-to-eat", 1);
-        eat.getAfterEffects().put("i-am-hungry", 0);
-        eat.getAfterEffects().put("has-something-to-eat", 0);
+        eat.getEffects().put("i-am-hungry", 0);
+        eat.getEffects().put("has-something-to-eat", 0);
         possibleActions.add(eat);
 
-        final GeAction hunt = TestAction.builder()
-                .name("hunt")
-                .cost(10.0f)
-                .build();
+        final GeAction hunt = new TestAction("hunt", 10.0f);
         hunt.getPreconditions().put("has-something-to-eat", 0);
-        hunt.getAfterEffects().put("has-something-to-eat", 1);
+        hunt.getEffects().put("has-something-to-eat", 1);
         possibleActions.add(hunt);
 
         // Act
@@ -218,18 +198,6 @@ class GePlannerTest {
         assertTrue(multiplePlansToTest.poll().getActions().containsAll(List.of(hunt, eat)));
     }
 
-    @SuperBuilder
-    public static class TestAction extends GeAction {
-        @Override
-        public boolean prePerform() {
-            return false;
-        }
-
-        @Override
-        public boolean postPerform() {
-            return false;
-        }
-    }
 
     // @TODO Responsibilities:
         /*
