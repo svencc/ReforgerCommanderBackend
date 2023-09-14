@@ -32,6 +32,9 @@ public class GeAgent {
     private final Stack<GeAction> currentActionStack = new Stack<>();
 
     @Nullable
+    GeFSM fsm;
+
+    @Nullable
     private GeAction currentAction;
 
     @Nullable
@@ -39,8 +42,8 @@ public class GeAgent {
 
     private boolean isExecutingAction = false;
 
-    
-    public GeAgent(@NonNull final GePlanner planner) {
+
+    GeAgent(@NonNull final GePlanner planner) {
         this.planner = planner;
     }
 

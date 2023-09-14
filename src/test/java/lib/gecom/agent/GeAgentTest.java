@@ -24,7 +24,7 @@ class GeAgentTest {
 
         final GePlanner gePlanner = new GePlanner();
 
-        final GeAgent agentToTest = new GeAgent(gePlanner);
+        final GeAgent agentToTest = GeAgentFactory.createAgent(gePlanner);
         agentToTest.getPossibleActions().add(eat);
         agentToTest.getAgentsBelieves().put("hungry", 1);
         agentToTest.getGoals().add(getFull);
