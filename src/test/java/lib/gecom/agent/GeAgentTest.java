@@ -19,8 +19,6 @@ class GeAgentTest {
         eat.getPreconditions().put("hungry", 1);
         eat.getEffects().put("hungry", 0);
 
-        final List<GeAction> listOfPossibleActions = List.of(eat);
-
         final GeGoal getFull = GeGoal.builder().build();
         getFull.getStatesToReach().put("hungry", 0);
 
