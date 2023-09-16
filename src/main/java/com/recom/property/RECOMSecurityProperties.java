@@ -15,9 +15,9 @@ public class RECOMSecurityProperties {
     private Duration jwtExpirationTime;
     private Optional<String> keyPath;
 
-    public Optional<String> getKeyPath() {
+    public Optional<Path> getKeyPath() {
         if (keyPath.isPresent() && !keyPath.get().isEmpty()) {
-            return Optional.of(keyPath.get());
+            return Optional.of(Path.of(keyPath.get()));
         } else {
             return Optional.empty();
         }

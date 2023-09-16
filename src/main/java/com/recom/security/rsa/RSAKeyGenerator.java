@@ -7,8 +7,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.FileSystemResource;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -43,7 +46,7 @@ public class RSAKeyGenerator {
     }
 
     @NonNull
-    private RSAKey hydrateKeyThroughFilesystem(@NonNull final String keyPath) throws Exception {
+    private RSAKey hydrateKeyThroughFilesystem(@NonNull final Path keyPath) throws Exception {
         if (keypairExists(keyPath)) {
             log.info("| +- Keys exist");
 
@@ -89,19 +92,20 @@ public class RSAKeyGenerator {
         return generator.generateKeyPair();
     }
 
-    private boolean keypairExists(@NonNull final String keyPath) {
-        final File publicKeyFile = new File(Paths.get(keyPath, KeyType.PUBLIC.name().toLowerCase()).toString());
-        final File privateKeyFile = new File(Paths.get(keyPath, KeyType.PRIVATE.name().toLowerCase()).toString());
+    private boolean keypairExists(@NonNull final Path keyPath) {
+        final File publicKeyFile = new File(Paths.get(keyPath.toString(), KeyType.PUBLIC.name().toLowerCase()).toString());
+        final File privateKeyFile = new File(Paths.get(keyPath.toString(), KeyType.PRIVATE.name().toLowerCase()).toString());
 
         return publicKeyFile.exists() && privateKeyFile.exists();
     }
 
     @NonNull
-    private PublicKey loadPublicKeyFromFile(@NonNull final String filePath) throws IOException, GeneralSecurityException {
-        final Path keyPath = Paths.get(filePath, KeyType.PUBLIC.name().toLowerCase());
-        log.info("| +- Load public key: '{}'", keyPath);
+    private PublicKey loadPublicKeyFromFile(@NonNull final Path filePath) throws IOException, GeneralSecurityException {
+        final Path keyPath = Paths.get(filePath.toString(), KeyType.PUBLIC.name().toLowerCase());
+        log.info("| +- Load public key: '{}'", keyPath.toAbsolutePath());
 
-        final byte[] keyBytes = Files.readAllBytes(keyPath);
+        final FileSystemResource fileSystemResource = new FileSystemResource(keyPath);
+        final byte[] keyBytes = fileSystemResource.getContentAsByteArray();
         final X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
         final KeyFactory keyFactory = KeyFactory.getInstance(Algorithm.RSA.name());
 
@@ -109,11 +113,12 @@ public class RSAKeyGenerator {
     }
 
     @NonNull
-    private PrivateKey loadPrivateKeyFromFile(@NonNull final String filePath) throws IOException, GeneralSecurityException {
-        final Path keyPath = Paths.get(filePath, KeyType.PRIVATE.name().toLowerCase());
-        log.info("| +- Load private key: '{}'", keyPath);
+    private PrivateKey loadPrivateKeyFromFile(@NonNull final Path filePath) throws IOException, GeneralSecurityException {
+        final Path keyPath = Paths.get(filePath.toString(), KeyType.PRIVATE.name().toLowerCase());
+        log.info("| +- Load private key: '{}'", keyPath.toAbsolutePath());
 
-        final byte[] keyBytes = Files.readAllBytes(keyPath);
+        final FileSystemResource fileSystemResource = new FileSystemResource(keyPath);
+        final byte[] keyBytes = fileSystemResource.getContentAsByteArray();
         final PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
         final KeyFactory keyFactory = KeyFactory.getInstance(Algorithm.RSA.name());
 
@@ -121,9 +126,9 @@ public class RSAKeyGenerator {
     }
 
     @NonNull
-    private String loadUUIDFromFile(@NonNull final String filePath) throws IOException, GeneralSecurityException {
-        final Path keyPath = Paths.get(filePath, "uuid");
-        log.info("| +- Load uuid: '{}'", keyPath);
+    private String loadUUIDFromFile(@NonNull final Path filePath) throws IOException, GeneralSecurityException {
+        final Path keyPath = Paths.get(filePath.toString(), "uuid");
+        log.info("| +- Load uuid: '{}'", keyPath.toAbsolutePath());
 
         final byte[] uuidBytes = Files.readAllBytes(keyPath);
 
@@ -131,16 +136,17 @@ public class RSAKeyGenerator {
     }
 
     private void persistKeyToFile(
-            @NonNull final String keyPath,
+            @NonNull final Path keyPath,
             @NonNull final KeyType keyType,
             final byte[] keyBytes
     ) throws IOException {
-        final String filePath = Paths.get(keyPath, keyType.name().toLowerCase()).toString();
+        final Path filePath = Paths.get(keyPath.toString(), keyType.name().toLowerCase());
 
-        new File(filePath).getParentFile().mkdirs();
+        final FileSystemResource fileSystemResource = new FileSystemResource(filePath);
+        fileSystemResource.getFile().getParentFile().mkdirs();
 
-        try (FileOutputStream fos = new FileOutputStream(filePath)) {
-            log.info("| +- Save {} key: '{}'", keyType.name().toLowerCase(), filePath);
+        try (final OutputStream fos = fileSystemResource.getOutputStream()) {
+            log.info("| +- Save {} key: '{}'", keyType.name().toLowerCase(), filePath.toAbsolutePath());
             fos.write(keyBytes);
         } catch (IOException e) {
             throw new IOException(e);
@@ -148,15 +154,16 @@ public class RSAKeyGenerator {
     }
 
     private void persistUUIDToFile(
-            @NonNull final String keyPath,
+            @NonNull final Path keyPath,
             @NonNull final String uuid
     ) throws IOException {
-        final String filePath = Paths.get(keyPath, "uuid").toString();
+        final Path filePath = Paths.get(keyPath.toString(), "uuid");
 
-        new File(filePath).getParentFile().mkdirs();
+        final FileSystemResource fileSystemResource = new FileSystemResource(filePath);
+        fileSystemResource.getFile().getParentFile().mkdir();
 
-        try (FileOutputStream fos = new FileOutputStream(filePath)) {
-            log.info("| +- Save uuid: '{}'", filePath);
+        try (final OutputStream fos = fileSystemResource.getOutputStream()) {
+            log.info("| +- Save uuid: '{}'", filePath.toAbsolutePath());
             fos.write(uuid.getBytes());
         } catch (IOException e) {
             throw new IOException(e);
