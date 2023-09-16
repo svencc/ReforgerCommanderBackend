@@ -4,8 +4,10 @@ import lib.gecom.action.GeAction;
 import lib.gecom.plan.GePlan;
 import lib.gecom.plan.GePlanner;
 import lib.gecom.stuff.GeGoal;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import org.springframework.lang.Nullable;
 
 import java.util.*;
@@ -21,18 +23,16 @@ public class GeAgent {
 
     @NonNull
     private final HashMap<String, Integer> agentsBelieves = new HashMap<>();
-
-    @NonNull
-    private final GePlanner planner;
-
     @NonNull
     private final Queue<GeAction> plan = new LinkedList<>();
-
     @NonNull
     private final Stack<GeAction> currentActionStack = new Stack<>();
-
     @Nullable
-    GeFSM fsm;
+    @Setter(AccessLevel.PACKAGE)
+    private GePlanner planner;
+    @Nullable
+    @Setter(AccessLevel.PACKAGE)
+    private GeFSM fsm;
 
     @Nullable
     private GeAction currentAction;
@@ -43,12 +43,14 @@ public class GeAgent {
     private boolean isExecutingAction = false;
 
 
-    GeAgent(@NonNull final GePlanner planner) {
-        this.planner = planner;
-    }
+//    GeAgent(@NonNull final GePlanner planner, @NonNull final GeFSM fsm) {
+//        this.planner = planner;
+//        this.fsm = fsm;
+//    }
 
     // Agents seem to implement these methods (Unity; maybe this will be useful for us later)
     public void start() {
+        fsm.start();
         // This is where the agent is initially set up.
         // This can include initializing variables or setting up components.
     }
