@@ -55,13 +55,13 @@ public class ConfigurationController {
     @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<OverridableConfigurationDto>> getConfigurations(
             @RequestParam(required = false, name = "mapName")
-            @NonNull final Optional<String> mapNameOpt
+            @NonNull final Optional<String> maybeMapName
     ) {
         log.debug("Requested GET /api/v1/map/configuration");
 
-        mapNameOpt.ifPresent(assertionService::assertMapExists);
+        maybeMapName.ifPresent(assertionService::assertMapExists);
 
-        return mapNameOpt.map((final String mapName) -> ResponseEntity.status(HttpStatus.OK)
+        return maybeMapName.map((final String mapName) -> ResponseEntity.status(HttpStatus.OK)
                         .cacheControl(CacheControl.noCache())
                         .body(configurationRESTManagementService.provideAllExistingConfigurationValues(mapName)))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.OK)

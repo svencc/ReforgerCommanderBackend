@@ -40,8 +40,8 @@ public class AsyncCacheableRequestProcessor {
     ) {
         if (dbCachedManager.isCached(cacheName, cacheKey)) {
             try {
-                Optional<T> cachedValue = dbCachedManager.get(cacheName, cacheKey);
-                return cachedValue.map(value -> ResponseEntity.status(HttpStatus.OK)
+                final Optional<T> maybeCachedValue = dbCachedManager.get(cacheName, cacheKey);
+                return maybeCachedValue.map(value -> ResponseEntity.status(HttpStatus.OK)
                                 .cacheControl(CacheControl.noCache())
                                 .body(value)
                         )

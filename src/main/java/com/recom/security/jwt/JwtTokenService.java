@@ -19,11 +19,11 @@ public class JwtTokenService {
     private final ConversionService conversionService;
 
     @NonNull
-    public String passThroughIfPresent(@NonNull final Optional<String> header) throws HttpUnauthorizedException {
-        if (header.isEmpty()) {
+    public String passThroughIfPresent(@NonNull final Optional<String> maybe) throws HttpUnauthorizedException {
+        if (maybe.isEmpty()) {
             throw new HttpUnauthorizedException("Value is not present");
         } else {
-            return header.get();
+            return maybe.get();
         }
     }
 

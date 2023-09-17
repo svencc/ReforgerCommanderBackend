@@ -36,10 +36,10 @@ class GePlannerTest {
         final GePlanner planner = new GePlanner();
 
         // Act
-        final Optional<GePlan> planToTest = planner.planCheapest(agentsBelieves, possibleActions, goal);
+        final Optional<GePlan> maybePlanToTest = planner.planCheapest(agentsBelieves, possibleActions, goal);
 
         // Assert
-        assertTrue(planToTest.isEmpty());
+        assertTrue(maybePlanToTest.isEmpty());
     }
 
     @Test
@@ -64,12 +64,12 @@ class GePlannerTest {
 
         // Act
         final GePlanner planner = new GePlanner();
-        final Optional<GePlan> planToTest = planner.planCheapest(agentsBelieves, possibleActions, goal);
+        final Optional<GePlan> maybePlanToTest = planner.planCheapest(agentsBelieves, possibleActions, goal);
 
         // Assert
-        assertFalse(planToTest.isEmpty());
-        assertEquals(1, planToTest.get().getActions().size());
-        assertTrue(planToTest.get().getActions().contains(action));
+        assertFalse(maybePlanToTest.isEmpty());
+        assertEquals(1, maybePlanToTest.get().getActions().size());
+        assertTrue(maybePlanToTest.get().getActions().contains(action));
     }
 
     @Test
@@ -101,14 +101,14 @@ class GePlannerTest {
 
         // Act
         final GePlanner planner = new GePlanner();
-        final Optional<GePlan> planToTest = planner.planCheapest(agentsBelieves, possibleActions, goal);
+        final Optional<GePlan> maybePlanToTest = planner.planCheapest(agentsBelieves, possibleActions, goal);
 
         // Assert
-        assertFalse(planToTest.isEmpty());
-        assertEquals(2, planToTest.get().getActions().size());
-        assertTrue(planToTest.get().getActions().containsAll(possibleActions));
-        assertEquals(findSomethingToEat, planToTest.get().getActions().poll());
-        assertEquals(eat, planToTest.get().getActions().poll());
+        assertFalse(maybePlanToTest.isEmpty());
+        assertEquals(2, maybePlanToTest.get().getActions().size());
+        assertTrue(maybePlanToTest.get().getActions().containsAll(possibleActions));
+        assertEquals(findSomethingToEat, maybePlanToTest.get().getActions().poll());
+        assertEquals(eat, maybePlanToTest.get().getActions().poll());
     }
 
     @Test
@@ -145,14 +145,14 @@ class GePlannerTest {
 
         // Act
         final GePlanner planner = new GePlanner();
-        final Optional<GePlan> planToTest = planner.planCheapest(agentsBelieves, possibleActions, goal);
+        final Optional<GePlan> maybePlanToTest = planner.planCheapest(agentsBelieves, possibleActions, goal);
 
         // Assert
-        assertFalse(planToTest.isEmpty());
-        assertEquals(2, planToTest.get().getActions().size());
-        assertTrue(planToTest.get().getActions().containsAll(List.of(findSomethingToEat, eat)));
-        assertEquals(findSomethingToEat, planToTest.get().getActions().poll());
-        assertEquals(eat, planToTest.get().getActions().poll());
+        assertFalse(maybePlanToTest.isEmpty());
+        assertEquals(2, maybePlanToTest.get().getActions().size());
+        assertTrue(maybePlanToTest.get().getActions().containsAll(List.of(findSomethingToEat, eat)));
+        assertEquals(findSomethingToEat, maybePlanToTest.get().getActions().poll());
+        assertEquals(eat, maybePlanToTest.get().getActions().poll());
     }
 
     @Test

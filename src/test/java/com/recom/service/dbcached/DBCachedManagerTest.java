@@ -104,11 +104,11 @@ class DBCachedManagerTest {
         when(cacheMock.get(eq(cacheKey))).thenReturn(cacheValueWrapperMock);
 
         // Act
-        Optional<Serializable> result = serviceUnderTest.get(cacheName, cacheKey);
+        Optional<Serializable> maybeResult = serviceUnderTest.get(cacheName, cacheKey);
 
         // Assert
-        assertTrue(result.isPresent());
-        assertEquals(cachedValue, result.get());
+        assertTrue(maybeResult.isPresent());
+        assertEquals(cachedValue, maybeResult.get());
     }
 
     @Test
@@ -122,11 +122,11 @@ class DBCachedManagerTest {
         when(dbCachedPersistenceLayer.<Serializable>get(eq(cacheName), eq(cacheKey))).thenReturn(Optional.of(dbValue));
 
         // Act
-        Optional<Serializable> result = serviceUnderTest.get(cacheName, cacheKey);
+        Optional<Serializable> maybeResult = serviceUnderTest.get(cacheName, cacheKey);
 
         // Assert
-        assertTrue(result.isPresent());
-        assertEquals(dbValue, result.get());
+        assertTrue(maybeResult.isPresent());
+        assertEquals(dbValue, maybeResult.get());
     }
 
     @Test
@@ -139,10 +139,10 @@ class DBCachedManagerTest {
         when(dbCachedPersistenceLayer.<Serializable>get(eq(cacheName), eq(cacheKey))).thenReturn(Optional.empty());
 
         // Act
-        Optional<Serializable> result = serviceUnderTest.get(cacheName, cacheKey);
+        Optional<Serializable> maybeResult = serviceUnderTest.get(cacheName, cacheKey);
 
         // Assert
-        assertTrue(result.isEmpty());
+        assertTrue(maybeResult.isEmpty());
     }
 
     @Test

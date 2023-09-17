@@ -113,12 +113,12 @@ public class ConfigurationMapToolsService {
             @NonNull final RegisteredListConfigurationValueDescriptor<T> configurationValueDescribable,
             @NonNull final List<T> mergedList
     ) {
-        final Optional<Configuration> configurationOpt = configurationValueProvider.queryMostConcreteConfiguration(mapName, configurationValueDescribable);
+        final Optional<Configuration> maybeConfiguration = configurationValueProvider.queryMostConcreteConfiguration(mapName, configurationValueDescribable);
 
-        if (isDefaultListValue.test(configurationOpt)) {
-            configurationOpt.get().setValue(StaticObjectMapperProvider.provide().writeValueAsString(mergedList));
+        if (isDefaultListValue.test(maybeConfiguration)) {
+            maybeConfiguration.get().setValue(StaticObjectMapperProvider.provide().writeValueAsString(mergedList));
 
-            configurationPersistenceLayer.save(configurationOpt.get());
+            configurationPersistenceLayer.save(maybeConfiguration.get());
         } else {
             // @TODO this is a candidate for a service ... this code is already duplicated multiple times.
             final Configuration.ConfigurationBuilder configurationBuilder = Configuration.builder()

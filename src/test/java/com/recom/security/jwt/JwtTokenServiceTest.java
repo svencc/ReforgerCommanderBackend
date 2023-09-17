@@ -29,21 +29,21 @@ class JwtTokenServiceTest {
     @Test
     public void testPassThroughIfPresent_withValue_thenPassThrough() {
         // Arrange
-        Optional<String> authorizationHeader = Optional.of("Bearer token");
+        Optional<String> maybeAuthorizationHeader = Optional.of("Bearer token");
 
         // Act & Assert
-        assertDoesNotThrow(() -> jwtTokenService.passThroughIfPresent(authorizationHeader));
-        assertEquals("Bearer token", jwtTokenService.passThroughIfPresent(authorizationHeader));
+        assertDoesNotThrow(() -> jwtTokenService.passThroughIfPresent(maybeAuthorizationHeader));
+        assertEquals("Bearer token", jwtTokenService.passThroughIfPresent(maybeAuthorizationHeader));
     }
 
     @Test
     public void testPassThroughIfPresent_withEmptyValue_thenThrowException() {
         // Arrange
-        Optional<String> authorizationHeader = Optional.empty();
+        Optional<String> maybeAuthorizationHeader = Optional.empty();
 
         // Act & Assert
         HttpUnauthorizedException exception = assertThrows(HttpUnauthorizedException.class,
-                () -> jwtTokenService.passThroughIfPresent(authorizationHeader));
+                () -> jwtTokenService.passThroughIfPresent(maybeAuthorizationHeader));
         assertEquals("Value is not present", exception.getMessage());
     }
 

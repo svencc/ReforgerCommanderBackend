@@ -99,14 +99,14 @@ public class DBCachedPersistenceLayer {
             @NonNull final String cacheName,
             @NonNull final String cacheKey
     ) throws DBCachedDeserializationException {
-        final Optional<DBCachedItem> byCacheNameAndCacheKey = databasePersistentCacheRepository.findByCacheNameAndCacheKey(cacheName, cacheKey);
+        final Optional<DBCachedItem> maybeCachedItem = databasePersistentCacheRepository.findByCacheNameAndCacheKey(cacheName, cacheKey);
 
-        byCacheNameAndCacheKey.ifPresentOrElse(
+        maybeCachedItem.ifPresentOrElse(
                 (__) -> log.info("Cache hit {} - {}", cacheName, cacheKey),
                 () -> log.info("Cache miss {} - {}", cacheName, cacheKey)
         );
 
-        return byCacheNameAndCacheKey.flatMap(cacheItem -> deserializeCacheValue(cacheKey, cacheItem.getCachedValue()));
+        return maybeCachedItem.flatMap(cacheItem -> deserializeCacheValue(cacheKey, cacheItem.getCachedValue()));
     }
 
     @NonNull

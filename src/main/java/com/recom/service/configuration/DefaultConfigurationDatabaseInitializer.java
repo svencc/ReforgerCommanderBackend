@@ -67,11 +67,11 @@ public class DefaultConfigurationDatabaseInitializer implements PostStartExecuta
             final String namespace = registeredDefaultValue.getNamespace();
             final String name = registeredDefaultValue.getName();
 
-            final Optional<Configuration> existingConfigurationOpt = findConfigurationInIndexedMap(indexedExistingConfigurationList, namespace, name);
-            if (existingConfigurationOpt.isPresent()) {
-                existingConfigurationOpt.get().setValue(registeredDefaultValue.getDefaultValue());
-                existingConfigurationOpt.get().setType(registeredDefaultValue.getType());
-                configurationsToUpdate.add(existingConfigurationOpt.get());
+            final Optional<Configuration> maybeExistingConfiguration = findConfigurationInIndexedMap(indexedExistingConfigurationList, namespace, name);
+            if (maybeExistingConfiguration.isPresent()) {
+                maybeExistingConfiguration.get().setValue(registeredDefaultValue.getDefaultValue());
+                maybeExistingConfiguration.get().setType(registeredDefaultValue.getType());
+                configurationsToUpdate.add(maybeExistingConfiguration.get());
             } else {
                 Configuration newConfiguration = Configuration.builder()
                         .namespace(registeredDefaultValue.getNamespace())

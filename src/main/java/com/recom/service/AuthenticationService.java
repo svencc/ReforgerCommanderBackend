@@ -48,11 +48,11 @@ public class AuthenticationService {
 
     @NonNull
     public AuthenticationResponseDto authenticateWith(@NonNull final AuthenticationRequestDto authenticationRequestDto) {
-        final Account account = Optional.ofNullable(conversionService.convert(authenticationRequestDto.getAccountUUID(), UUID.class))
+        final Account maybeAccount = Optional.ofNullable(conversionService.convert(authenticationRequestDto.getAccountUUID(), UUID.class))
                 .flatMap(accountPersistenceLayer::findByUUID)
                 .orElseThrow(() -> new HttpUnauthorizedException("Account not found"));
 
-        if (!account.getAccessKey().equals(authenticationRequestDto.getAccessKey())) {
+        if (!maybeAccount.getAccessKey().equals(authenticationRequestDto.getAccessKey())) {
             throw new HttpUnauthorizedException("Invalid access key");
         }
 

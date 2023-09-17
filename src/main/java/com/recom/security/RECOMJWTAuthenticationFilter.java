@@ -56,28 +56,28 @@ public class RECOMJWTAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
 
-            final Optional<String> contentType = Optional.ofNullable(request.getHeader("Content-Type"));
+            final Optional<String> maybeContentType = Optional.ofNullable(request.getHeader("Content-Type"));
 
-            Optional<String> authorizationOpt = Optional.empty();
-            if (contentType.isPresent() && contentType.get().equals("application/x-www-form-urlencoded")) {
-                authorizationOpt = extractAuthorizationFromBody(request);
+            Optional<String> maybeAuthorization = Optional.empty();
+            if (maybeContentType.isPresent() && maybeContentType.get().equals("application/x-www-form-urlencoded")) {
+                maybeAuthorization = extractAuthorizationFromBody(request);
             } else {
-                authorizationOpt = Optional.ofNullable(request.getHeader("Authorization"));
+                maybeAuthorization = Optional.ofNullable(request.getHeader("Authorization"));
             }
 
             // @TODO check if token is expired? necessary here?
             // jwtTokenService.assertTokenIsNotExpired(jwt.getJWTClaimsSet().getClaims().get("exp"));
 
-            final String authorization = jwtTokenService.passThroughIfPresent(authorizationOpt);
+            final String authorization = jwtTokenService.passThroughIfPresent(maybeAuthorization);
             jwtTokenService.assertAuthorizationStartsWithBearer(authorization);
             final Jwt jwt = jwtDecoder.decode(jwtTokenService.extractToken(authorization));
 
             final String claim = jwtTokenService.passThroughIfClaimIsPresent(jwt.getClaims().get("sub"));
             final UUID subjectUUID = jwtTokenService.extractAndAssertSubjectIsUUID(claim);
-            final Optional<Account> account = accountPersistenceLayer.findByUUID(subjectUUID);
+            final Optional<Account> maybeAccount = accountPersistenceLayer.findByUUID(subjectUUID);
 
-            if (account.isPresent()) {
-                SecurityContextHolder.getContext().setAuthentication(authenticationMapper.toAuthentication(account.get()));
+            if (maybeAccount.isPresent()) {
+                SecurityContextHolder.getContext().setAuthentication(authenticationMapper.toAuthentication(maybeAccount.get()));
                 filterChain.doFilter(request, response);
             }
         } catch (Throwable e) {
@@ -87,10 +87,10 @@ public class RECOMJWTAuthenticationFilter extends OncePerRequestFilter {
 
     @NonNull
     private Optional<String> extractAuthorizationFromBody(@NonNull final HttpServletRequest request) {
-        final Optional<String> requestData = request.getParameterMap().keySet().stream().findFirst();
+        final Optional<String> maybeRequestData = request.getParameterMap().keySet().stream().findFirst();
 
-        if (requestData.isPresent()) {
-            final Matcher matcher = pattern.matcher(requestData.get());
+        if (maybeRequestData.isPresent()) {
+            final Matcher matcher = pattern.matcher(maybeRequestData.get());
             if (matcher.find()) {
                 return Optional.of(matcher.group(1));
             }

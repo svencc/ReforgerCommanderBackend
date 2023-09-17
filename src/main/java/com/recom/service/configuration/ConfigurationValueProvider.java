@@ -34,10 +34,10 @@ public class ConfigurationValueProvider {
             @NonNull final String mapName,
             @NonNull final RegisteredBooleanConfigurationValueDescriptor descriptor
     ) {
-        final Optional<Configuration> mostConcrete = queryMostConcreteConfiguration(mapName, descriptor);
+        final Optional<Configuration> maybeMostConcrete = queryMostConcreteConfiguration(mapName, descriptor);
 
-        if (mostConcrete.isPresent() && mostConcrete.get().getType().equals(ConfigurationType.BOOLEAN)) {
-            return Boolean.valueOf(mostConcrete.get().getValue());
+        if (maybeMostConcrete.isPresent() && maybeMostConcrete.get().getType().equals(ConfigurationType.BOOLEAN)) {
+            return Boolean.valueOf(maybeMostConcrete.get().getValue());
         } else {
             throw new InvalidParameterException();
         }
@@ -76,10 +76,10 @@ public class ConfigurationValueProvider {
             @NonNull final String mapName,
             @NonNull final RegisteredStringConfigurationValueDescriptor descriptor
     ) {
-        final Optional<Configuration> mostConcrete = queryMostConcreteConfiguration(mapName, descriptor);
+        final Optional<Configuration> maybeMostConcrete = queryMostConcreteConfiguration(mapName, descriptor);
 
-        if (mostConcrete.isPresent() && mostConcrete.get().getType().equals(ConfigurationType.STRING)) {
-            return mostConcrete.get().getValue();
+        if (maybeMostConcrete.isPresent() && maybeMostConcrete.get().getType().equals(ConfigurationType.STRING)) {
+            return maybeMostConcrete.get().getValue();
         }
 
         throw generateConfigurationNotReadableException(descriptor, Optional.empty());
@@ -88,9 +88,9 @@ public class ConfigurationValueProvider {
     @NonNull
     private ConfigurationNotReadableException generateConfigurationNotReadableException(
             @NonNull final BaseRegisteredConfigurationValueDescribable descriptor,
-            @NonNull final Optional<Configuration> mostConcrete
+            @NonNull final Optional<Configuration> maybeMostConcrete
     ) {
-        return mostConcrete.map(configuration -> new ConfigurationNotReadableException(
+        return maybeMostConcrete.map(configuration -> new ConfigurationNotReadableException(
                 String.format("queryValue %s : %s type '%s' is not readable or value '%s' is not convertible!",
                         descriptor.getNamespace(),
                         descriptor.getName(),
@@ -112,10 +112,10 @@ public class ConfigurationValueProvider {
             @NonNull final String mapName,
             @NonNull final RegisteredListConfigurationValueDescriptor<TYPE> descriptor
     ) {
-        final Optional<Configuration> mostConcrete = queryMostConcreteConfiguration(mapName, descriptor);
+        final Optional<Configuration> maybeMostConcrete = queryMostConcreteConfiguration(mapName, descriptor);
 
-        if (mostConcrete.isPresent() && mostConcrete.get().getType().equals(ConfigurationType.LIST)) {
-            return objectMapper.readValue(mostConcrete.get().getValue(), new TypeReference<List<TYPE>>() {
+        if (maybeMostConcrete.isPresent() && maybeMostConcrete.get().getType().equals(ConfigurationType.LIST)) {
+            return objectMapper.readValue(maybeMostConcrete.get().getValue(), new TypeReference<List<TYPE>>() {
             });
         }
 
@@ -127,17 +127,17 @@ public class ConfigurationValueProvider {
             @NonNull final String mapName,
             @NonNull final RegisteredIntegerConfigurationValueDescriptor descriptor
     ) {
-        final Optional<Configuration> mostConcrete = queryMostConcreteConfiguration(mapName, descriptor);
+        final Optional<Configuration> maybeMostConcrete = queryMostConcreteConfiguration(mapName, descriptor);
 
-        if (mostConcrete.isPresent() && mostConcrete.get().getType().equals(ConfigurationType.INTEGER)) {
+        if (maybeMostConcrete.isPresent() && maybeMostConcrete.get().getType().equals(ConfigurationType.INTEGER)) {
             try {
-                return Integer.valueOf(mostConcrete.get().getValue());
+                return Integer.valueOf(maybeMostConcrete.get().getValue());
             } catch (final NumberFormatException ignore) {
                 // we throw an error at the end of function
             }
         }
 
-        throw generateConfigurationNotReadableException(descriptor, mostConcrete);
+        throw generateConfigurationNotReadableException(descriptor, maybeMostConcrete);
     }
 
     @NonNull
@@ -145,17 +145,23 @@ public class ConfigurationValueProvider {
             @NonNull final String mapName,
             @NonNull final RegisteredDoubleConfigurationValueDescriptor descriptor
     ) {
-        final Optional<Configuration> mostConcrete = queryMostConcreteConfiguration(mapName, descriptor);
+        final Optional<Configuration> maybeMostConcrete = queryMostConcreteConfiguration(mapName, descriptor);
 
-        if (mostConcrete.isPresent() && mostConcrete.get().getType().equals(ConfigurationType.DOUBLE)) {
+        if (maybeMostConcrete.isPresent() && maybeMostConcrete.get().getType().equals(ConfigurationType.DOUBLE)) {
             try {
-                return Double.valueOf(mostConcrete.get().getValue());
+                return Double.valueOf(maybeMostConcrete.get().getValue());
             } catch (final NumberFormatException ignore) {
-                // we throw an error at the end of function
+                log.error("queryValue {} : {} type '{}' is not readable or value '{}' is not convertible!",
+                        descriptor.getNamespace(),
+                        descriptor.getName(),
+                        descriptor.getType(),
+                        maybeMostConcrete.get().getValue()
+                );
+                // @TODO we throw an error at the end of function
             }
         }
 
-        throw generateConfigurationNotReadableException(descriptor, mostConcrete);
+        throw generateConfigurationNotReadableException(descriptor, maybeMostConcrete);
     }
 
     @NonNull

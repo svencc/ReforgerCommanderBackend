@@ -50,15 +50,15 @@ public class MapMetaController {
     @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<MapMetaDto>> mapMeta(
             @RequestParam(required = false, name = "mapName")
-            @NonNull final Optional<String> mapNameOpt
+            @NonNull final Optional<String> maybeMapName
     ) {
-        if (mapNameOpt.isPresent()) {
-            log.debug("Requested GET /api/v1/map/meta?mapName={}", mapNameOpt.get());
-            assertionService.assertMapExists(mapNameOpt.get());
+        if (maybeMapName.isPresent()) {
+            log.debug("Requested GET /api/v1/map/meta?mapName={}", maybeMapName.get());
+            assertionService.assertMapExists(maybeMapName.get());
 
             return ResponseEntity.status(HttpStatus.OK)
                     .cacheControl(CacheControl.noCache())
-                    .body(List.of(mapMetaDataService.provideMapMeta(mapNameOpt.get())));
+                    .body(List.of(mapMetaDataService.provideMapMeta(maybeMapName.get())));
         } else {
             log.debug("Requested GET /api/v1/map/meta");
 

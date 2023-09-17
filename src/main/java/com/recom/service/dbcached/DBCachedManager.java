@@ -48,15 +48,15 @@ public class DBCachedManager {
                     }
                 })
                 .orElseGet(() -> {
-                            final Optional<V> dbCachedValue = dbCachedPersistenceLayer.<V>get(cacheName, cacheKey);
-                            dbCachedValue.ifPresent((value -> {
+                            final Optional<V> maybeDbCachedValue = dbCachedPersistenceLayer.<V>get(cacheName, cacheKey);
+                            maybeDbCachedValue.ifPresent((value -> {
                                 final Cache cache = cacheManager.getCache(cacheName);
                                 if (cache != null) {
                                     cache.put(cacheKey, value);
                                 }
                             }));
 
-                            return dbCachedValue.orElse(null);
+                            return maybeDbCachedValue.orElse(null);
                         }
                 ));
     }
