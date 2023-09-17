@@ -26,7 +26,10 @@ public abstract class FSMState implements HasSubject<RequestTransitionChangeEven
 
     public abstract void execute(@NonNull final GeAgent agent);
 
-    public void transitionFrom(@NonNull final FSMState fromState) {
+    public void transitionFrom(
+            @NonNull final FSMState fromState,
+            @NonNull final GeAgent agent
+    ) {
 
     }
 

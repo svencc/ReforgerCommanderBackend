@@ -60,6 +60,7 @@ class GeAgentTest {
 
         // Act && Assert
         agentToTest.stop();
+        assertFalse(agentToTest.getFsm().getMaybeCurrentState().isPresent());
 
         // Assert
         assertEquals(0, agentToTest.getAgentsBelieves().get("hungry"));

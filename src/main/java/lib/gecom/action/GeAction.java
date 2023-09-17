@@ -26,6 +26,7 @@ public abstract class GeAction {
     @NonNull
     private Float cost = 1.0f;
 
+    @Getter
     @NonNull
     private GeTargetable target = new GeNullTarget();
 

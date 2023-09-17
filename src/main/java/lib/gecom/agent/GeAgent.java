@@ -31,12 +31,13 @@ public class GeAgent {
     @Nullable
     @Setter(AccessLevel.PACKAGE)
     private GeFSM fsm;
+    @Setter
     @Nullable
     private GeAction currentAction;
     @Nullable
     private GeGoal currentGoal;
 
-    private boolean isExecutingAction = false; // @TODO -> von FSM abfragen!
+//    private boolean isExecutingAction = false; // @TODO -> von FSM abfragen!
     private boolean wasStarted = false;
     private boolean wasStopped = false;
 

@@ -22,6 +22,10 @@ public class TransitionRequestObserver extends ObserverTemplate<RequestTransitio
     ) {
         if (event instanceof RequestTransitionChangeEvent transitionChangeEvent) {
             fsm.requestTransition(transitionChangeEvent.getTo());
+            if (transitionChangeEvent.isFsmReprocess()) {
+                System.out.println("... reprocessing FSM");
+                fsm.process();
+            }
         }
     }
 

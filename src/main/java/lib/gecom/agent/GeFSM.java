@@ -87,8 +87,9 @@ public class GeFSM {
                 final FSMState newStoppableCurrentState = maybeCurrentState.get();
                 newStoppableCurrentState.exit();
                 ((Stoppable) newStoppableCurrentState).stop();
-                running = false;
                 stopped = true;
+                running = false;
+                maybeCurrentState = Optional.empty();
             }
         }
     }
@@ -116,10 +117,10 @@ public class GeFSM {
             @NonNull final FSMState toState
     ) throws IllegalStateException {
         fromState.exit();
-        toState.transitionFrom(fromState);
-
         maybeCurrentState = Optional.of(toState);
+
         toState.enter();
+        maybeCurrentState.get().transitionFrom(fromState, agent);
     }
 
     public void process() {

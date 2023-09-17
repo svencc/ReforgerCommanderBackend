@@ -14,6 +14,6 @@ public class RequestTransitionChangeEvent implements Note<RequestTransitionChang
     @NonNull
     private final FSMStates to;
 
-    private final boolean fsmReexecute;
+    private final boolean fsmReprocess;
 
 }
