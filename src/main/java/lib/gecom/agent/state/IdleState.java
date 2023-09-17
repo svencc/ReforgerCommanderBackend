@@ -1,7 +1,6 @@
 package lib.gecom.agent.state;
 
 import lib.gecom.agent.GeAgent;
-import lib.clipboard.goap.unit.IGoapUnit;
 import lombok.NonNull;
 
 public class IdleState extends FSMState implements Startable, Stoppable {
@@ -25,14 +24,10 @@ public class IdleState extends FSMState implements Startable, Stoppable {
     }
 
     @Override
-    public void update() {
-super.getSubject().reportMyDeath();
+    public void update(@NonNull final GeAgent agent) {
+        System.out.println("IdleState.update");
     }
 
-    @Override
-    public boolean isStateStillPerforming(@NonNull IGoapUnit goapUnit) throws Exception {
-        return false;
-    }
 
     @Override
     public void start() {

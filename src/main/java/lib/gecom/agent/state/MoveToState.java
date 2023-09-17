@@ -1,7 +1,7 @@
 package lib.gecom.agent.state;
 
 import lib.gecom.agent.GeAgent;
-import lib.clipboard.goap.unit.IGoapUnit;
+import lib.gecom.agent.GeFSM;
 import lombok.Getter;
 import lombok.NonNull;
 
@@ -27,13 +27,8 @@ public class MoveToState extends FSMState {
     }
 
     @Override
-    public void update() {
-
-    }
-
-    @Override
-    public boolean isStateStillPerforming(@NonNull IGoapUnit goapUnit) throws Exception {
-        return false;
+    public void update(@NonNull final GeAgent agent) {
+        System.out.println("MoveToState.update");
     }
 
 }

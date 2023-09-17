@@ -1,7 +1,6 @@
 package lib.gecom.agent;
 
 import lib.gecom.action.GeAction;
-import lib.gecom.plan.GePlan;
 import lib.gecom.plan.GePlanner;
 import lib.gecom.stuff.GeGoal;
 import lombok.AccessLevel;
@@ -76,65 +75,84 @@ public class GeAgent {
     }
 
     public void update() {
-        // Here updates are performed for the agent in every frame.
-        // This can include moving the agent, checking for collisions, or other ongoing operations.
-
-        // i think moving has to be in the agents FSM and should not be part of the action (currentAction.isMoving())
-        if (!currentActionStack.isEmpty() && currentAction.isActionRunning()) {
-            // agent is on target position and has to run the action
-            if (false) {
-                // TODO ::::
-//            if (currentAction.getAgent().hasPath() && currentAction.getAgent().remainingDistance() <= 1f) {
-                if (!isExecutingAction) {
-                    isExecutingAction = true;
-                    currentAction.prePerform();
-                    currentAction.setActionRunning(true);
-
-                    // ------ wait action duration ------ //
-                    // so it sounds like we have to wait for the action duration and trigger than a listener!
-
-                    currentAction.setActionRunning(false);
-                    currentAction.postPerform();
-                    isExecutingAction = false;
-
-                    currentActionStack.pop();
-                }
-            }
-
-            // agent is not on target position and has to move
+        boolean agentIsRunnable = wasStarted && !wasStopped && fsm != null && planner != null;
+        if (!agentIsRunnable) {
             return;
         }
+        // @TODO plan should be injected from external; isn´t it?????
+//        planner.planCheapest(agentsBelieves, possibleActions, currentGoal.getStatesToReach()).ifPresent(plan -> {
+//            currentActionStack.addAll(plan.getActions());
+//            currentAction = currentActionStack.peek();
+//            currentAction.setActionRunning(true);
+//        });
 
-//        final GeWorldStates agentsBelieves = GeWorld.getInstance().getWorldStates();
-        final HashMap<String, Integer> agentsBelieves = new HashMap<>();
-        if (currentActionStack.isEmpty()) {
-            for (GeGoal subgoal : goals) {
-                final Optional<GePlan> plan = planner.planCheapest(agentsBelieves, possibleActions, subgoal.getStatesToReach());
-                if (plan.isPresent()) {
-                    currentActionStack.addAll(plan.get().getActions());
-                    currentGoal = subgoal;
-                    break;
-                }
-            }
-        }
-
-        // move to target position
         if (!currentActionStack.isEmpty()) {
-            if (currentAction.prePerform()) {
-                currentAction.setActionRunning(true);
-//                currentActionStack.pop();
+            if (currentAction == null) {
                 currentAction = currentActionStack.peek();
                 currentAction.setActionRunning(true);
-//                currentAction.getAgent().setDestination(currentAction.getTarget().getTargetPosition());
-            } else {
-                // ------ wait action duration ------ //
-                // so it sounds like we have to wait for the action duration and trigger than a listener!
-
-                currentAction.setActionRunning(false);
-                currentAction.postPerform();
-                currentActionStack.pop();
             }
+            fsm.process();
         }
+
+
+//
+//
+//        // i think moving has to be in the agents FSM and should not be part of the action (currentAction.isMoving())
+//        if (!currentActionStack.isEmpty() && currentAction.isActionRunning()) {
+//            // agent is on target position and has to run the action
+//            if (false) {
+//                // TODO ::::
+////            if (currentAction.getAgent().hasPath() && currentAction.getAgent().remainingDistance() <= 1f) {
+//                if (!isExecutingAction) {
+//                    isExecutingAction = true;
+//                    currentAction.prePerform();
+//                    currentAction.setActionRunning(true);
+//
+//                    // ------ wait action duration ------ //
+//                    // so it sounds like we have to wait for the action duration and trigger than a listener!
+//
+//                    currentAction.setActionRunning(false);
+//                    currentAction.postPerform();
+//                    isExecutingAction = false;
+//
+//                    currentActionStack.pop();
+//                }
+//            }
+//
+//            // agent is not on target position and has to move
+//            return;
+//        }
+//
+////        final GeWorldStates agentsBelieves = GeWorld.getInstance().getWorldStates();
+//        final HashMap<String, Integer> agentsBelieves = new HashMap<>();
+//        if (currentActionStack.isEmpty()) {
+//            for (GeGoal subgoal : goals) {
+//                final Optional<GePlan> plan = planner.planCheapest(agentsBelieves, possibleActions, subgoal.getStatesToReach());
+//                if (plan.isPresent()) {
+//                    currentActionStack.addAll(plan.get().getActions());
+//                    currentGoal = subgoal;
+//                    break;
+//                }
+//            }
+//        }
+//
+//        // move to target position
+//        if (!currentActionStack.isEmpty()) {
+//            if (currentAction.prePerform()) {
+//                currentAction.setActionRunning(true);
+////                currentActionStack.pop();
+//                currentAction = currentActionStack.peek();
+//                currentAction.setActionRunning(true);
+////                currentAction.getAgent().setDestination(currentAction.getTarget().getTargetPosition());
+//            } else {
+//                // ------ wait action duration ------ //
+//                // so it sounds like we have to wait for the action duration and trigger than a listener!
+//
+//                currentAction.setActionRunning(false);
+//                currentAction.postPerform();
+//                currentActionStack.pop();
+//            }
+//        }
     }
 
 }

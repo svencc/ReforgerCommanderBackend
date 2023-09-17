@@ -1,7 +1,6 @@
 package lib.gecom.agent.state;
 
 import lib.gecom.agent.GeAgent;
-import lib.clipboard.goap.unit.IGoapUnit;
 import lombok.Getter;
 import lombok.NonNull;
 
@@ -26,13 +25,9 @@ public class PerformActionState extends FSMState {
     }
 
     @Override
-    public void update() {
+    public void update(@NonNull final GeAgent agent) {
+        System.out.println("PerformActionState.update");
 
-    }
-
-    @Override
-    public boolean isStateStillPerforming(@NonNull IGoapUnit goapUnit) throws Exception {
-        return false;
     }
 
 }

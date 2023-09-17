@@ -57,7 +57,7 @@ class GeAgentTest {
         agentToTest.stop();
 
         // Assert
-//        assertEquals(0, agentToTest.getAgentsBelieves().get("hungry"));
+        assertEquals(0, agentToTest.getAgentsBelieves().get("hungry"));
     }
 
 }
