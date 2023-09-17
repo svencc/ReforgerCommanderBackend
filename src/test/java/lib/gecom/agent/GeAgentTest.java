@@ -1,6 +1,7 @@
 package lib.gecom.agent;
 
 import lib.gecom.TestAction;
+import lib.gecom.agent.state.PerformActionState;
 import lib.gecom.plan.GePlanner;
 import lib.gecom.stuff.GeGoal;
 import org.junit.jupiter.api.Test;
@@ -51,13 +52,17 @@ class GeAgentTest {
         agentToTest.start();
 
         // Act && Assert
-        agentToTest.update();
+        agentToTest.update(); // remain in idle (after start); nothing happens in IdleState
+        agentToTest.calculateActionPlan();
+        agentToTest.update(); // with an action plan present, fsm should switch to PerformActionState
+        assertTrue(agentToTest.getFsm().getMaybeCurrentState().isPresent());
+        assertTrue(agentToTest.getFsm().getMaybeCurrentState().get().getClass().equals(PerformActionState.class));
 
         // Act && Assert
         agentToTest.stop();
 
         // Assert
-//        assertEquals(0, agentToTest.getAgentsBelieves().get("hungry"));
+        assertEquals(0, agentToTest.getAgentsBelieves().get("hungry"));
     }
 
 }

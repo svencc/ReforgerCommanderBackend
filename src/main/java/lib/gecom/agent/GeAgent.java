@@ -1,6 +1,7 @@
 package lib.gecom.agent;
 
 import lib.gecom.action.GeAction;
+import lib.gecom.plan.GePlan;
 import lib.gecom.plan.GePlanner;
 import lib.gecom.stuff.GeGoal;
 import lombok.AccessLevel;
@@ -79,18 +80,11 @@ public class GeAgent {
         if (!agentIsRunnable) {
             return;
         }
-        // @TODO plan should be injected from external; isn´t it?????
-//        planner.planCheapest(agentsBelieves, possibleActions, currentGoal.getStatesToReach()).ifPresent(plan -> {
-//            currentActionStack.addAll(plan.getActions());
-//            currentAction = currentActionStack.peek();
-//            currentAction.setActionRunning(true);
-//        });
-
-        if (!currentActionStack.isEmpty()) {
-            if (currentAction == null) {
-                currentAction = currentActionStack.peek();
-                currentAction.setActionRunning(true);
-            }
+        if (currentAction == null && !currentActionStack.isEmpty()) {
+            currentAction = currentActionStack.peek();
+        }
+        if (currentAction != null) {
+            currentAction.setActionRunning(true);
             fsm.process();
         }
 
@@ -153,6 +147,21 @@ public class GeAgent {
 //                currentActionStack.pop();
 //            }
 //        }
+    }
+
+    public boolean calculateActionPlan() {
+        if (currentActionStack.isEmpty()) {
+            for (final GeGoal goal : goals) {
+                final Optional<GePlan> plan = planner.planCheapest(agentsBelieves, possibleActions, goal.getStatesToReach());
+                if (plan.isPresent()) {
+                    currentActionStack.addAll(plan.get().getActions());
+                    currentGoal = goal;
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
 }

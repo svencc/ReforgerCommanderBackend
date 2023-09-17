@@ -1,9 +1,6 @@
 package lib.gecom.agent;
 
-import lib.gecom.agent.state.FSMState;
-import lib.gecom.agent.state.IdleState;
-import lib.gecom.agent.state.MoveToState;
-import lib.gecom.agent.state.PerformActionState;
+import lib.gecom.agent.state.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -23,14 +20,12 @@ class GeFSMTest {
     void beforeEach() {
         agent = new GeAgent();
 
-        idleState = new IdleState(agent);
-        performActionState = new PerformActionState(agent);
-        moveToState = new MoveToState(agent);
-
-        fsmToTest = new GeFSM(agent);
+        idleState = new IdleState();
+        performActionState = new PerformActionState();
+        moveToState = new MoveToState();
 
         final List<FSMState> states = List.of(idleState, performActionState, moveToState);
-        fsmToTest.getStates().addAll(states);
+        fsmToTest = new GeFSM(agent, states);
     }
 
     @Test
@@ -48,25 +43,9 @@ class GeFSMTest {
     }
 
     @Test
-    void start_failedDueToNoStartableState() {
-        // Arrange
-        fsmToTest.getStates().remove(idleState);
-
-        // Act
-        // exception accepted:
-        assertThrows(IllegalStateException.class, () -> fsmToTest.start());
-    }
-
-    @Test
-    void stop_failedDueToNoStoppableState() {
-        // Arrange
-        fsmToTest.start();
-        fsmToTest.transitionToState(performActionState);
-        fsmToTest.getStates().remove(idleState);
-
-        // Act
-        // exception accepted:
-        assertThrows(IllegalStateException.class, () -> fsmToTest.stop());
+    void failedCreation_withoutStartableState() {
+        // Arrange, Act & Assert
+        assertThrows(IllegalStateException.class, () -> new GeFSM(agent, List.of(new PerformActionState(), new MoveToState())));
     }
 
     @Test
@@ -77,7 +56,8 @@ class GeFSMTest {
 
         // Act
         fsmToTest.start();
-        fsmToTest.transitionToState(performActionState);
+//        fsmToTest.transitionToState(FSMStates.PERFORMABLE);
+        fsmToTest.requestTransition(FSMStates.PERFORMABLE);
         fsmToTest.stop();
 
         // Assert
@@ -92,7 +72,7 @@ class GeFSMTest {
 
         // Assert
         assertTrue(fsmToTest.getMaybeCurrentState().isPresent());
-        fsmToTest.transitionToState(performActionState);
+        fsmToTest.requestTransition(FSMStates.PERFORMABLE);
         assertTrue(fsmToTest.getMaybeCurrentState().get() instanceof PerformActionState);
     }
 
@@ -116,14 +96,8 @@ class GeFSMTest {
 
         // Assert
         assertTrue(fsmToTest.getMaybeCurrentState().isPresent());
-        fsmToTest.requestTransition(fsmToTest.getMaybeCurrentState().get(), performActionState);
+        fsmToTest.requestTransition(FSMStates.PERFORMABLE);
         assertTrue(fsmToTest.getMaybeCurrentState().get() instanceof PerformActionState);
-    }
-
-    @Test
-    void getStates() {
-        assertEquals(3, fsmToTest.getStates().size());
-        assertTrue(fsmToTest.getStates().containsAll(List.of(idleState, performActionState, moveToState)));
     }
 
     @Test

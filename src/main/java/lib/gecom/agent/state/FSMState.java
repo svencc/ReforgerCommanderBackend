@@ -12,15 +12,11 @@ public abstract class FSMState implements HasSubject<RequestTransitionChangeEven
     @Getter
     private final Subject<RequestTransitionChangeEvent> subject = new Subject<>();
 
-    public boolean transitionFromPerformable(
-            @NonNull final FSMState fromState
-    ) {
+    public boolean transitionFromPerformable(@NonNull final FSMState fromState) {
         return true;
     }
 
-    public boolean isTransitionToPerformable(
-            @NonNull final FSMState toState
-    ) {
+    public boolean isTransitionToPerformable(@NonNull final FSMState toState) {
         return true;
     }
 
@@ -28,7 +24,7 @@ public abstract class FSMState implements HasSubject<RequestTransitionChangeEven
 
     public abstract void exit();
 
-    public abstract void update(@NonNull final GeAgent agent);
+    public abstract void execute(@NonNull final GeAgent agent);
 
     public void transitionFrom(@NonNull final FSMState fromState) {
 

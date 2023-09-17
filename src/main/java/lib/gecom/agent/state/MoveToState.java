@@ -6,15 +6,7 @@ import lombok.Getter;
 import lombok.NonNull;
 
 @Getter
-public class MoveToState extends FSMState {
-
-    @NonNull
-    private final GeAgent agent;
-
-    public MoveToState(@NonNull final GeAgent agent) {
-        super();
-        this.agent = agent;
-    }
+public class MoveToState extends FSMState implements Movable {
 
     @Override
     public void enter() {
@@ -27,7 +19,7 @@ public class MoveToState extends FSMState {
     }
 
     @Override
-    public void update(@NonNull final GeAgent agent) {
+    public void execute(@NonNull final GeAgent agent) {
         System.out.println("MoveToState.update");
     }
 

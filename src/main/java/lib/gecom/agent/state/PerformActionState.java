@@ -5,14 +5,7 @@ import lombok.Getter;
 import lombok.NonNull;
 
 @Getter
-public class PerformActionState extends FSMState {
-
-    private final GeAgent agent;
-
-    public PerformActionState(@NonNull final GeAgent agent) {
-        super();
-        this.agent = agent;
-    }
+public class PerformActionState extends FSMState implements Performable {
 
     @Override
     public void enter() {
@@ -25,7 +18,7 @@ public class PerformActionState extends FSMState {
     }
 
     @Override
-    public void update(@NonNull final GeAgent agent) {
+    public void execute(@NonNull final GeAgent agent) {
         System.out.println("PerformActionState.update");
 
     }

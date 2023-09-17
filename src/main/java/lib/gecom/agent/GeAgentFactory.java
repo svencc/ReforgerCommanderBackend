@@ -16,14 +16,13 @@ public class GeAgentFactory {
         final GeAgent agent = new GeAgent();
         agent.setPlanner(planner);
 
-        final GeFSM fsm = new GeFSM(agent);
-
         final List<FSMState> states = List.of(
-                new IdleState(agent),
-                new PerformActionState(agent),
-                new MoveToState(agent)
+                new IdleState(),
+                new PerformActionState(),
+                new MoveToState()
         );
-        fsm.getStates().addAll(states);
+        final GeFSM fsm = new GeFSM(agent, states);
+
         agent.setFsm(fsm);
 
         return agent;

@@ -21,7 +21,7 @@ public class TransitionRequestObserver extends ObserverTemplate<RequestTransitio
             @NonNull final Note<RequestTransitionChangeEvent> event
     ) {
         if (event instanceof RequestTransitionChangeEvent transitionChangeEvent) {
-            fsm.requestTransition(transitionChangeEvent.getFrom(), transitionChangeEvent.getTo());
+            fsm.requestTransition(transitionChangeEvent.getTo());
         }
     }
 
