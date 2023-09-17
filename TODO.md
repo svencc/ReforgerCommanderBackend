@@ -15,9 +15,6 @@
 * map data immutable (do not offer setters); use @Access(AccessType.FIELD) for all unmodifiable entities!
 *
 *
-* use Hibernate Converter for converting List<String> to String and vice versa (list configuration values)?
-    * ???? maybe bad idea and not possible
-*
 * db migration scripts
     * add map default account to db in init (same as used in postman collection)
 *
