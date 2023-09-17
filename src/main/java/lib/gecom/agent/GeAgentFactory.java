@@ -25,7 +25,6 @@ public class GeAgentFactory {
         );
         fsm.getStates().addAll(states);
         agent.setFsm(fsm);
-        agent.start();
 
         return agent;
     }

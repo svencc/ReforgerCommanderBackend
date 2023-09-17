@@ -17,10 +17,8 @@ public class GeAgent {
 
     @NonNull
     private final List<GeAction> possibleActions = new ArrayList<>();
-
     @NonNull
     private final PriorityQueue<GeGoal> goals = new PriorityQueue<>();
-
     @NonNull
     private final HashMap<String, Integer> agentsBelieves = new HashMap<>();
     @NonNull
@@ -33,26 +31,48 @@ public class GeAgent {
     @Nullable
     @Setter(AccessLevel.PACKAGE)
     private GeFSM fsm;
-
     @Nullable
     private GeAction currentAction;
-
     @Nullable
     private GeGoal currentGoal;
 
-    private boolean isExecutingAction = false;
+    private boolean isExecutingAction = false; // @TODO -> von FSM abfragen!
+    private boolean wasStarted = false;
+    private boolean wasStopped = false;
 
 
-//    GeAgent(@NonNull final GePlanner planner, @NonNull final GeFSM fsm) {
-//        this.planner = planner;
-//        this.fsm = fsm;
-//    }
+    public boolean wasStarted() {
+        return wasStarted;
+    }
 
-    // Agents seem to implement these methods (Unity; maybe this will be useful for us later)
-    public void start() {
+    public boolean wasStopped() {
+        return wasStopped;
+    }
+
+    public boolean isRunning() throws IllegalStateException {
+        checkPreconditions();
+        return fsm.isRunning();
+    }
+
+    private void checkPreconditions() throws IllegalStateException {
+        if (fsm == null) {
+            throw new IllegalStateException("FSM is not set");
+        }
+        if (planner == null) {
+            throw new IllegalStateException("Planner is not set");
+        }
+    }
+
+    public void start() throws IllegalStateException {
+        checkPreconditions();
+        wasStarted = true;
         fsm.start();
-        // This is where the agent is initially set up.
-        // This can include initializing variables or setting up components.
+    }
+
+    public void stop() throws IllegalStateException {
+        checkPreconditions();
+        wasStopped = true;
+        fsm.stop();
     }
 
     public void update() {

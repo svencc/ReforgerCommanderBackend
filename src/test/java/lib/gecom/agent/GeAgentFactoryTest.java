@@ -18,6 +18,8 @@ class GeAgentFactoryTest {
 
         // Assert
         assertNotNull(geAgent);
+        assertFalse(geAgent.wasStarted());
+        assertFalse(geAgent.wasStopped());
     }
 
 }

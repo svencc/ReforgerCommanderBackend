@@ -25,10 +25,10 @@ public class GeFSM {
     private FSMState currentState;
 
     @Getter
-    private boolean hasStarted = false;
+    private boolean running = false;
 
     @Getter
-    private boolean hasStopped = false;
+    private boolean halted = false;
 
     public GeFSM(@NonNull final GeAgent agent) {
         this.agent = agent;
@@ -51,7 +51,7 @@ public class GeFSM {
 
             ((Startable) currentState).start();
             currentState.enter();
-            hasStarted = true;
+            running = true;
         }
     }
 
@@ -64,7 +64,8 @@ public class GeFSM {
             if (currentState instanceof Stoppable) {
                 currentState.exit();
                 ((Stoppable) currentState).stop();
-                hasStopped = true;
+                running = false;
+                halted = true;
             }
         } else {
             final List<FSMState> stoppableCandidates = states.stream()
@@ -80,7 +81,7 @@ public class GeFSM {
                 currentState = stopableState;
                 currentState.exit();
                 ((Stoppable) currentState).stop();
-                hasStopped = true;
+                halted = true;
             }
         }
     }
