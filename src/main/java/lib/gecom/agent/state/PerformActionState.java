@@ -2,6 +2,7 @@ package lib.gecom.agent.state;
 
 import lib.gecom.action.GeAction;
 import lib.gecom.agent.GeAgent;
+import lib.gecom.agent.event.RequestTransitionChangeEvent;
 import lib.gecom.stuff.GeNullTarget;
 import lombok.Getter;
 import lombok.NonNull;
@@ -35,7 +36,6 @@ public class PerformActionState extends FSMState implements Performable {
         profile();
         if (!agent.getCurrentActionStack().isEmpty()) {
             if (agent.getCurrentActionStack().peek().getTarget() instanceof GeNullTarget) {
-                // dont move; execute action
                 System.out.println("... executing action without moving");
                 agent.setCurrentAction(agent.getCurrentActionStack().pop());
                 final GeAction currentAction = agent.getCurrentAction();
@@ -53,6 +53,8 @@ public class PerformActionState extends FSMState implements Performable {
             } else {
                 // check agent position and target position: calculate distance
                 // then move ...
+                System.out.println("... agent has to move before performing the action");
+                getSubject().notifyObserversWith(new RequestTransitionChangeEvent(FSMStates.MOVABLE, true));
                 // ... or execute action
             }
         }
