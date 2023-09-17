@@ -1,19 +1,34 @@
-package lib.gecom.agent;
+package lib.gecom.agent.state;
 
-import lib.goap.action.GoapActionBase;
+import lib.gecom.agent.GeAgent;
 import lib.goap.unit.IGoapUnit;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 
 @Getter
-class MoveToState implements FSMStateful {
+public class MoveToState extends FSMState {
 
     @NonNull
     private final GeAgent agent;
 
     public MoveToState(@NonNull final GeAgent agent) {
+        super();
         this.agent = agent;
+    }
+
+    @Override
+    public void enter() {
+
+    }
+
+    @Override
+    public void exit() {
+
+    }
+
+    @Override
+    public void update() {
+
     }
 
     @Override

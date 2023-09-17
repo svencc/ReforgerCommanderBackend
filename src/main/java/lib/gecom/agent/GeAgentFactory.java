@@ -1,5 +1,9 @@
 package lib.gecom.agent;
 
+import lib.gecom.agent.state.FSMState;
+import lib.gecom.agent.state.IdleState;
+import lib.gecom.agent.state.MoveToState;
+import lib.gecom.agent.state.PerformActionState;
 import lib.gecom.plan.GePlanner;
 import lombok.NonNull;
 
@@ -14,7 +18,7 @@ public class GeAgentFactory {
 
         final GeFSM fsm = new GeFSM(agent);
 
-        final List<FSMStateful> states = List.of(
+        final List<FSMState> states = List.of(
                 new IdleState(agent),
                 new PerformActionState(agent),
                 new MoveToState(agent)

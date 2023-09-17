@@ -93,3 +93,10 @@
 * ConcaveHull.java implements Point on its own; change to Point2D Implementation so we dont need to map this data
     * but first we have to test if we want to keep the ConcaveHull implementation~~
 
+
+------
+separate libs / dependencies / common shared code
+* dbcached
+* observables
+* hint: https://stackoverflow.com/questions/2585220/how-to-configure-a-subproject-dependency-in-maven-without-deploying-jars
+* eventually create java modules?

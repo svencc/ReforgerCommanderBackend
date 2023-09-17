@@ -1,20 +1,33 @@
-package lib.gecom.agent;
+package lib.gecom.agent.state;
 
-import lib.goap.UnperformableActionException;
-import lib.goap.action.GoapActionBase;
-import lib.goap.fsm.FSM;
+import lib.gecom.agent.GeAgent;
 import lib.goap.unit.IGoapUnit;
 import lombok.Getter;
 import lombok.NonNull;
 
-import java.util.Queue;
-
-class PerformActionState implements FSMStateful {
+@Getter
+public class PerformActionState extends FSMState {
 
     private final GeAgent agent;
 
     public PerformActionState(@NonNull final GeAgent agent) {
+        super();
         this.agent = agent;
+    }
+
+    @Override
+    public void enter() {
+
+    }
+
+    @Override
+    public void exit() {
+
+    }
+
+    @Override
+    public void update() {
+
     }
 
     @Override
