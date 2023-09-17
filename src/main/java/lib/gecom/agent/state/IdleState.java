@@ -1,7 +1,7 @@
 package lib.gecom.agent.state;
 
 import lib.gecom.agent.GeAgent;
-import lib.goap.unit.IGoapUnit;
+import lib.clipboard.goap.unit.IGoapUnit;
 import lombok.NonNull;
 
 public class IdleState extends FSMState implements Startable, Stoppable {
