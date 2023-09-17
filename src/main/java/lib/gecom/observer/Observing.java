@@ -2,7 +2,7 @@ package lib.gecom.observer;
 
 import lombok.NonNull;
 
-public interface Observing<NOTE_TYPE> {
+public interface Observing<NOTE_TYPE> extends AutoCloseable {
 
     void observe(@NonNull final Subject<NOTE_TYPE> subject);
 
@@ -11,5 +11,6 @@ public interface Observing<NOTE_TYPE> {
             @NonNull final Note<NOTE_TYPE> note
     );
 
-    void takeDeadthNoticeFrom(@NonNull final Subject<NOTE_TYPE> subject);
+    void takeDeathNoticeFrom(@NonNull final Subject<NOTE_TYPE> subject);
+
 }

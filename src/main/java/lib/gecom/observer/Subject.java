@@ -28,7 +28,7 @@ public class Subject<NOTE_TYPE> implements Subjective<NOTE_TYPE>, AutoCloseable 
 
     @Override
     public void reportMyDeath() {
-        observersWatchingMe.forEach(observer -> observer.takeDeadthNoticeFrom(this));
+        observersWatchingMe.forEach(observer -> observer.takeDeathNoticeFrom(this));
     }
 
     @Override
