@@ -1,5 +1,5 @@
 # TODO LIST
-*
+
 * Command Framework
   * API for fetching commands
     * different flavours 
@@ -7,6 +7,9 @@
       * fetch last command of each type
       * fetch last command of type
       * existing command types
+* 
+* GOAP: MOVE ACTION
+* 
 * 
 * Transactions have to time out via scheduler after one hour
 *

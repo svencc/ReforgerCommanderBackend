@@ -55,8 +55,9 @@ class GeAgentTest {
         agentToTest.update(); // remain in idle (after start); nothing happens in IdleState
         agentToTest.calculateActionPlan();
         agentToTest.update(); // with an action plan present, fsm should switch to PerformActionState
+        assertNotNull(agentToTest.getFsm());
         assertTrue(agentToTest.getFsm().getMaybeCurrentState().isPresent());
-        assertTrue(agentToTest.getFsm().getMaybeCurrentState().get().getClass().equals(PerformActionState.class));
+        assertEquals(PerformActionState.class, agentToTest.getFsm().getMaybeCurrentState().get().getClass());
 
         // Act && Assert
         agentToTest.stop();
