@@ -1,6 +1,6 @@
 package com.recom.entity;
 
-import com.recom.model.command.CommandType;
+import com.recom.model.message.MessageType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Cache;
@@ -19,13 +19,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Table(indexes = {
         @Index(name = "IDX_mapName", columnList = "mapName", unique = false),
-        @Index(name = "IDX_mapName_commandType", columnList = "mapName, commandType", unique = false),
-        @Index(name = "IDX_mapName_commandType_timestamp", columnList = "mapName, commandType, timestamp", unique = true),
+        @Index(name = "IDX_mapName_messageType", columnList = "mapName, messageType", unique = false),
+        @Index(name = "IDX_mapName_messageType_timestamp", columnList = "mapName, messageType, timestamp", unique = true),
         @Index(name = "IDX_mapName_timestamp", columnList = "mapName, timestamp", unique = false),
 })
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Command implements Persistable<Long>, Serializable {
+public class Message implements Persistable<Long>, Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -38,7 +38,7 @@ public class Command implements Persistable<Long>, Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(insertable = true, updatable = false, nullable = false, length = 255)
-    private CommandType commandType;
+    private MessageType messageType;
 
     @Column(insertable = true, updatable = false, nullable = false, columnDefinition="DATETIME(6) DEFAULT NOW(6)")
     private LocalDateTime timestamp;
@@ -49,7 +49,7 @@ public class Command implements Persistable<Long>, Serializable {
 
     @Override
     public int hashCode() {
-        return Command.class.hashCode();
+        return Message.class.hashCode();
     }
 
     @Override
@@ -61,7 +61,7 @@ public class Command implements Persistable<Long>, Serializable {
         } else if (getClass() != obj.getClass()) {
             return false;
         } else {
-            final Command other = (Command) obj;
+            final Message other = (Message) obj;
             if (getId() == null) {
                 return false;
             } else return getId().equals(other.getId());

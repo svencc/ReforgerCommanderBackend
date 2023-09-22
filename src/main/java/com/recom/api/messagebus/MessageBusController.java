@@ -1,9 +1,9 @@
-package com.recom.api.commandbus;
+package com.recom.api.messagebus;
 
 import com.recom.api.commons.HttpCommons;
-import com.recom.dto.command.CommandBusRequestDto;
-import com.recom.dto.command.CommandBusResponseDto;
-import com.recom.persistence.command.CommandPersistenceLayer;
+import com.recom.dto.message.MessageBusRequestDto;
+import com.recom.dto.message.MessageBusResponseDto;
+import com.recom.persistence.message.MessagePersistenceLayer;
 import com.recom.service.AssertionService;
 import com.recom.service.ReforgerPayloadParserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,20 +29,20 @@ import java.util.Map;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "CommandBus")
-@RequestMapping("/api/v1/command-bus")
-public class CommandBusController {
+@Tag(name = "MessageBus")
+@RequestMapping("/api/v1/message-bus")
+public class MessageBusController {
 
     @NonNull
     private final AssertionService assertionService;
     @NonNull
     private final ReforgerPayloadParserService payloadParser;
     @NonNull
-    private final CommandPersistenceLayer commandPersistenceLayer;
+    private final MessagePersistenceLayer messagePersistenceLayer;
 
     @Operation(
-            summary = "Get a list of commands",
-            description = "Gets all map specific, latest commands of a type.",
+            summary = "Get a list of messages",
+            description = "Gets all map specific, latest message of a type.",
             security = @SecurityRequirement(name = HttpCommons.BEARER_AUTHENTICATION_REQUIREMENT)
     )
     @ApiResponses(value = {
@@ -50,18 +50,18 @@ public class CommandBusController {
             @ApiResponse(responseCode = HttpCommons.UNAUTHORIZED_CODE, description = HttpCommons.UNAUTHORIZED, content = @Content())
     })
     @PostMapping(path = "/form", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity<CommandBusResponseDto> getCommandsForm(
+    public ResponseEntity<MessageBusResponseDto> getMessagesForm(
             @RequestParam(required = true)
             @NonNull final Map<String, String> payload
     ) {
         log.debug("Requested POST /api/v1/map/renderer/form (FORM)");
 
-        return getCommandsJSON(payloadParser.parseValidated(payload, CommandBusRequestDto.class));
+        return getMessagesJSON(payloadParser.parseValidated(payload, MessageBusRequestDto.class));
     }
 
     @Operation(
-            summary = "Get a list of commands",
-            description = "Gets all map specific, latest commands of a type.",
+            summary = "Get a list of messages",
+            description = "Gets all map specific, latest message of a type.",
             security = @SecurityRequirement(name = HttpCommons.BEARER_AUTHENTICATION_REQUIREMENT)
     )
     @ApiResponses(value = {
@@ -69,19 +69,19 @@ public class CommandBusController {
             @ApiResponse(responseCode = HttpCommons.UNAUTHORIZED_CODE, description = HttpCommons.UNAUTHORIZED, content = @Content())
     })
     @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CommandBusResponseDto> getCommandsJSON(
+    public ResponseEntity<MessageBusResponseDto> getMessagesJSON(
             @RequestBody(required = true)
-            @NonNull @Valid final CommandBusRequestDto mapRendererRequestDto
+            @NonNull @Valid final MessageBusRequestDto mapRendererRequestDto
     ) {
-        log.debug("Requested POST /api/v1/map/command-bus (JSON)");
+        log.debug("Requested POST /api/v1/map/message-bus (JSON)");
 
 //        assertionService.assertMapExists(mapRendererRequestDto.getMapName());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
                 .body(
-                        CommandBusResponseDto.builder()
-                                .commands(commandPersistenceLayer.findAllMapSpecificCommands(mapRendererRequestDto.getMapName()))
+                        MessageBusResponseDto.builder()
+                                .messages(messagePersistenceLayer.findAllMapSpecificMessages(mapRendererRequestDto.getMapName()))
                                 .build()
                 );
     }

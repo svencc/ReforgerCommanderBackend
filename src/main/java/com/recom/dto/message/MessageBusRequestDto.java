@@ -1,4 +1,4 @@
-package com.recom.dto.command;
+package com.recom.dto.message;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,7 +17,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CommandBusRequestDto implements Serializable {
+public class MessageBusRequestDto implements Serializable {
 
     @NotBlank
     @Schema

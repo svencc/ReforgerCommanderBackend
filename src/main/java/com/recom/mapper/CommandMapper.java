@@ -1,14 +1,12 @@
 package com.recom.mapper;
 
-import com.recom.dto.command.CommandDto;
-import com.recom.entity.Command;
+import com.recom.dto.message.CommandDto;
+import com.recom.entity.Message;
 import lombok.NonNull;
-import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.lang.Nullable;
 
 import java.time.LocalDateTime;
@@ -26,6 +24,6 @@ public interface CommandMapper {
     }
 
     @Mapping(source = "timestamp", target = "timestampEpochMilliseconds", qualifiedByName = "timestampToTimestampEpochMilliseconds")
-    CommandDto toDto(final Command entity);
+    CommandDto toDto(final Message entity);
 
 }

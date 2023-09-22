@@ -1,11 +1,15 @@
 @startuml
 'https://plantuml.com/sequence-diagram
 
+header Message Bus
+title Message Bus Sequence Diagram
+
 autonumber
 
-Alice -> Bob: Authentication Request
-Bob --> Alice: Authentication Response
+REFORGER -> RECOM: Authentication Request
+REFORGER -> RECOM: Authentication Response
+REFORGER -> RECOM: Another authentication Request
+REFORGER <-- RECOM: another authentication Response
 
-Alice -> Bob: Another authentication Request
-Alice <-- Bob: another authentication Response
+
 @enduml

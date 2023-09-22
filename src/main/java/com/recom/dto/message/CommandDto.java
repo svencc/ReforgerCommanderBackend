@@ -1,18 +1,13 @@
-package com.recom.dto.command;
+package com.recom.dto.message;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.recom.model.command.CommandType;
+import com.recom.model.message.MessageType;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Nationalized;
 
 @Data
 @Schema
@@ -28,7 +23,7 @@ public class CommandDto {
 
     @Schema
     @JsonProperty()
-    private CommandType commandType;
+    private MessageType messageType;
 
     @Schema(description = "Unix timestamp in milliseconds", example = "1691941419964")
     @JsonProperty()
