@@ -62,7 +62,6 @@ public class PublicEndpointsProvider {
     @NonNull
     private static List<RequestMatcher> actuatorEndpoints() {
         return List.of(
-                AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/health"),
                 AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/actuator"),
                 AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/actuator/health")
         );
