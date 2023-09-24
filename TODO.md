@@ -4,7 +4,13 @@
   * gets Messages and persists them to DB (add caching)
   * Messages are fetched by the client via REST
   * We mark messages as requested, confirmed, complied
-  * 
+    * send: game started with map
+    * 
+    * server: mapScanner subsystem: is map scanned?
+      * yes: ok -
+      * no: start map scan
+    * map renderer subsystem: map exists?
+      * yes: render cluster
 
 * Message Framework
   * API for fetching commands
