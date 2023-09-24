@@ -1,8 +1,8 @@
 package com.recom.persistence.message;
 
-import com.recom.dto.message.CommandDto;
+import com.recom.dto.message.MessageDto;
 import com.recom.entity.Message;
-import com.recom.mapper.CommandMapper;
+import com.recom.mapper.MessageMapper;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionService;
@@ -21,9 +21,9 @@ public class MessagePersistenceLayer {
 
     @NonNull
 //    @Cacheable(cacheNames = "CommandPersistenceLayer.findAllMapSpecificCommands") // @TODO there is some work to do, to cache the commands ...
-    public List<CommandDto> findAllMapSpecificMessages(@NonNull final String mapName) {
+    public List<MessageDto> findAllMapSpecificMessages(@NonNull final String mapName) {
         return messageRepository.findAllByMapName(mapName).stream()
-                .map(CommandMapper.INSTANCE::toDto)
+                .map(MessageMapper.INSTANCE::toDto)
                 .toList();
     }
 

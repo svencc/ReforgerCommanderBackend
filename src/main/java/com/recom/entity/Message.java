@@ -10,6 +10,7 @@ import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -25,12 +26,12 @@ import java.time.LocalDateTime;
 })
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Message implements Persistable<Long>, Serializable {
+public class Message implements Persistable<UUID>, Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(insertable = true, updatable = false, nullable = false)
-    private Long id;
+    private UUID uuid;
 
     @Nationalized
     @Column(insertable = true, updatable = false, nullable = false, length = 255)
@@ -40,12 +41,16 @@ public class Message implements Persistable<Long>, Serializable {
     @Column(insertable = true, updatable = false, nullable = false, length = 255)
     private MessageType messageType;
 
-    @Column(insertable = true, updatable = false, nullable = false, columnDefinition="DATETIME(6) DEFAULT NOW(6)")
-    private LocalDateTime timestamp;
-
     @Lob
     @Column(insertable = true, updatable = true, nullable = true, columnDefinition = "LONGTEXT")
     private String payload;
+
+    @Column(insertable = true, updatable = false, nullable = false, columnDefinition = "DATETIME(6) DEFAULT NOW(6)")
+    private LocalDateTime timestamp;
+
+    @Column(insertable = true, updatable = false, nullable = false, columnDefinition = "DATETIME(6) DEFAULT NOW(6)")
+    private LocalDateTime timestampConfirmation;
+
 
     @Override
     public int hashCode() {
@@ -69,8 +74,8 @@ public class Message implements Persistable<Long>, Serializable {
     }
 
     @Override
-    public Long getId() {
-        return id;
+    public UUID getId() {
+        return uuid;
     }
 
     @Override

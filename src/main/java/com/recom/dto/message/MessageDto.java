@@ -9,17 +9,19 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @Schema
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CommandDto {
+public class MessageDto {
 
     @Schema
     @JsonProperty()
-    private Long id;
+    private UUID uuid;
 
     @Schema
     @JsonProperty()
@@ -28,6 +30,10 @@ public class CommandDto {
     @Schema(description = "Unix timestamp in milliseconds", example = "1691941419964")
     @JsonProperty()
     private Long timestampEpochMilliseconds;
+
+    @Schema(description = "Unix timestamp in milliseconds", example = "1691941419964")
+    @JsonProperty()
+    private Long timestampConfirmationEpochMilliseconds;
 
     @Schema
     @JsonProperty()

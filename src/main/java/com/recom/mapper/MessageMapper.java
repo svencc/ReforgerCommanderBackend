@@ -1,6 +1,6 @@
 package com.recom.mapper;
 
-import com.recom.dto.message.CommandDto;
+import com.recom.dto.message.MessageDto;
 import com.recom.entity.Message;
 import lombok.NonNull;
 import org.mapstruct.Mapper;
@@ -13,9 +13,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 @Mapper
-public interface CommandMapper {
+public interface MessageMapper {
 
-    CommandMapper INSTANCE = Mappers.getMapper(CommandMapper.class);
+    MessageMapper INSTANCE = Mappers.getMapper(MessageMapper.class);
 
     @NonNull
     @Named("timestampToTimestampEpochMilliseconds")
@@ -24,6 +24,7 @@ public interface CommandMapper {
     }
 
     @Mapping(source = "timestamp", target = "timestampEpochMilliseconds", qualifiedByName = "timestampToTimestampEpochMilliseconds")
-    CommandDto toDto(final Message entity);
+    @Mapping(source = "timestampConfirmation", target = "timestampConfirmationEpochMilliseconds", qualifiedByName = "timestampToTimestampEpochMilliseconds")
+    MessageDto toDto(final Message entity);
 
 }

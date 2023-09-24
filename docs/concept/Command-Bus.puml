@@ -6,10 +6,22 @@ title Message Bus Sequence Diagram
 
 autonumber
 
-REFORGER -> RECOM: Authentication Request
-REFORGER -> RECOM: Authentication Response
-REFORGER -> RECOM: Another authentication Request
-REFORGER <-- RECOM: another authentication Response
+REFORGER -> RECOM: Request Messages since {time}
+REFORGER <-- RECOM: Response with latest messages after requested time
+note right
+Message List:
+- Current Time
+- Message Recipient
+- Message Type
+- Message Data
+- Message Time
+end note
+
+REFORGER -> RECOM: Request Messages since {time}
+REFORGER <-- RECOM: Response with latest messages after requested time
+
+REFORGER -> RECOM: confirm message with UUID {uuid}
+
 
 
 @enduml
