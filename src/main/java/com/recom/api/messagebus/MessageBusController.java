@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Map;
 
 @Slf4j
@@ -32,6 +35,8 @@ import java.util.Map;
 @Tag(name = "MessageBus")
 @RequestMapping("/api/v1/message-bus")
 public class MessageBusController {
+
+    private final static Duration RECOM_CURL_TIMEOUT = Duration.ofSeconds(60); // 12 seconds seems to be the maximum on REFORGER side!
 
     @NonNull
     private final AssertionService assertionService;
@@ -59,6 +64,9 @@ public class MessageBusController {
         return getMessagesJSON(payloadParser.parseValidated(payload, MessageBusRequestDto.class));
     }
 
+    @SneakyThrows
+
+
     @Operation(
             summary = "Get a list of messages",
             description = "Gets all map specific, latest message of a type.",
@@ -75,15 +83,24 @@ public class MessageBusController {
     ) {
         log.debug("Requested POST /api/v1/map/message-bus (JSON)");
 
-//        assertionService.assertMapExists(mapRendererRequestDto.getMapName());
+        assertionService.assertMapExists(mapRendererRequestDto.getMapName());
+        log.debug("...");
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .cacheControl(CacheControl.noCache())
-                .body(
-                        MessageBusResponseDto.builder()
-                                .messages(messagePersistenceLayer.findAllMapSpecificMessages(mapRendererRequestDto.getMapName()))
-                                .build()
-                );
+        Thread.sleep(RECOM_CURL_TIMEOUT);
+
+        if (false) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                    .cacheControl(CacheControl.noCache())
+                    .build();
+        } else {
+            return ResponseEntity.status(HttpStatus.OK)
+                    .cacheControl(CacheControl.noCache())
+                    .body(
+                            MessageBusResponseDto.builder()
+                                    .messages(messagePersistenceLayer.findAllMapSpecificMessages(mapRendererRequestDto.getMapName()))
+                                    .build()
+                    );
+        }
     }
 
 }
