@@ -1,11 +1,16 @@
 package com.recom.api.messagebus;
 
 import com.recom.api.commons.HttpCommons;
+import com.recom.configuration.AsyncConfiguration;
 import com.recom.dto.message.MessageBusRequestDto;
 import com.recom.dto.message.MessageBusResponseDto;
+import com.recom.dto.message.MessageDto;
+import com.recom.observer.Notification;
 import com.recom.persistence.message.MessagePersistenceLayer;
 import com.recom.service.AssertionService;
 import com.recom.service.ReforgerPayloadParserService;
+import com.recom.service.messagebus.MessageBusService;
+import com.recom.service.messagebus.MessageLongPollObserver;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -17,16 +22,20 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.CacheControl;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.async.DeferredResult;
+import org.springframework.web.context.request.async.WebAsyncTask;
+import org.springframework.web.servlet.function.ServerRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
 
 import java.time.Duration;
-import java.time.Instant;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Validated
@@ -44,6 +53,10 @@ public class MessageBusController {
     private final ReforgerPayloadParserService payloadParser;
     @NonNull
     private final MessagePersistenceLayer messagePersistenceLayer;
+    @NonNull
+    private final MessageBusService messageBusService;
+    @NonNull
+    private final AsyncConfiguration asyncConfiguration;
 
     @Operation(
             summary = "Get a list of messages",
@@ -55,7 +68,7 @@ public class MessageBusController {
             @ApiResponse(responseCode = HttpCommons.UNAUTHORIZED_CODE, description = HttpCommons.UNAUTHORIZED, content = @Content())
     })
     @PostMapping(path = "/form", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity<MessageBusResponseDto> getMessagesForm(
+    public ResponseBodyEmitter getMessagesForm(
             @RequestParam(required = true)
             @NonNull final Map<String, String> payload
     ) {
@@ -77,7 +90,7 @@ public class MessageBusController {
             @ApiResponse(responseCode = HttpCommons.UNAUTHORIZED_CODE, description = HttpCommons.UNAUTHORIZED, content = @Content())
     })
     @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<MessageBusResponseDto> getMessagesJSON(
+    public ResponseBodyEmitter getMessagesJSON(
             @RequestBody(required = true)
             @NonNull @Valid final MessageBusRequestDto mapRendererRequestDto
     ) {
@@ -86,21 +99,46 @@ public class MessageBusController {
         assertionService.assertMapExists(mapRendererRequestDto.getMapName());
         log.debug("...");
 
-        Thread.sleep(RECOM_CURL_TIMEOUT);
+        final ResponseBodyEmitter responseBodyEmitter = new ResponseBodyEmitter();
+        final MessageLongPollObserver messageLongPollObserver = MessageLongPollObserver.builder()
+                .timeout(RECOM_CURL_TIMEOUT.toMillis())
+                .asyncTaskExecutor(asyncConfiguration.provideClusterGeneratorExecutor())
+                .responseBodyEmitter(responseBodyEmitter)
+                .build();
+        messageLongPollObserver.observe(messageBusService.getSubject());
 
-        if (false) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                    .cacheControl(CacheControl.noCache())
-                    .build();
-        } else {
-            return ResponseEntity.status(HttpStatus.OK)
-                    .cacheControl(CacheControl.noCache())
-                    .body(
+        CompletableFuture.runAsync(() -> {
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException ignored) {
+                log.error("Interrupted Exception");
+            }
+            messageLongPollObserver.takeNotice(
+                    messageBusService.getSubject(),
+                    new Notification<>(
                             MessageBusResponseDto.builder()
-                                    .messages(messagePersistenceLayer.findAllMapSpecificMessages(mapRendererRequestDto.getMapName()))
+                                    .messages(List.of(MessageDto.builder().uuid(UUID.randomUUID()).build()))
+//                                    .messages(messagePersistenceLayer.findAllMapSpecificMessages(mapRendererRequestDto.getMapName()))
                                     .build()
-                    );
-        }
+                    )
+            );
+        }, asyncConfiguration.provideVirtualThreadPerTaskExecutor());
+
+        return responseBodyEmitter;
+
+//        if (false) {
+//            return ResponseEntity.status(HttpStatus.NO_CONTENT)
+//                    .cacheControl(CacheControl.noCache())
+//                    .build();
+//        } else {
+//            return ResponseEntity.status(HttpStatus.OK)
+//                    .cacheControl(CacheControl.noCache())
+//                    .body(
+//                            MessageBusResponseDto.builder()
+//                                    .messages(messagePersistenceLayer.findAllMapSpecificMessages(mapRendererRequestDto.getMapName()))
+//                                    .build()
+//                    );
+//        }
     }
 
 }

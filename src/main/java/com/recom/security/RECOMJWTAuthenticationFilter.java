@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -36,6 +37,8 @@ public class RECOMJWTAuthenticationFilter extends OncePerRequestFilter {
     private final AccountPersistenceLayer accountPersistenceLayer;
     @NonNull
     private final RECOMAuthenticationMapper authenticationMapper;
+    @NonNull
+    private final RequestAttributeSecurityContextRepository repository = new RequestAttributeSecurityContextRepository();
 
     private Pattern pattern;
 
@@ -78,6 +81,7 @@ public class RECOMJWTAuthenticationFilter extends OncePerRequestFilter {
 
             if (maybeAccount.isPresent()) {
                 SecurityContextHolder.getContext().setAuthentication(authenticationMapper.toAuthentication(maybeAccount.get()));
+                repository.saveContext(SecurityContextHolder.getContext(), request, response);
                 filterChain.doFilter(request, response);
             }
         } catch (Throwable e) {

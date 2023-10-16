@@ -9,10 +9,15 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
+import org.springframework.core.task.support.TaskExecutorAdapter;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Slf4j
 @EnableAsync
@@ -21,6 +26,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 public class AsyncConfiguration implements AsyncConfigurer {
 
     public static final String ASYNC_REQUEST_PROCESSOR_EXECUTOR_BEAN = "AsyncRequestProcessor";
+    public static final String VIRTUAL_THREAD_PER_TASK_EXECUTOR_BEAN = "VirtualThreadPerTaskExecutor";
 
     @NonNull
     private final RECOMAsyncProperties recomAsyncProperties;
@@ -42,7 +48,7 @@ public class AsyncConfiguration implements AsyncConfigurer {
     // Additional Async Executor(s)
     @Bean("AsyncMapTransactionExecutor")
     @Qualifier(value = "AsyncMapTransactionExecutor")
-    public ThreadPoolTaskExecutor getprovide() {
+    public ThreadPoolTaskExecutor getAsyncMapTransactionExecutor() {
         final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(1);
         executor.setMaxPoolSize(1);
@@ -54,7 +60,7 @@ public class AsyncConfiguration implements AsyncConfigurer {
 
     @Bean("ConfigurationSystemExecutor")
     @Qualifier(value = "ConfigurationSystemExecutor")
-    public ThreadPoolTaskExecutor provideAsyncConfigurationSystemExecutor() {
+    public ThreadPoolTaskExecutor provideConfigurationSystemExecutor() {
         final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(1);
         executor.setMaxPoolSize(1);
@@ -66,7 +72,7 @@ public class AsyncConfiguration implements AsyncConfigurer {
 
     @Bean("CacheResetExecutor")
     @Qualifier(value = "CacheResetExecutor")
-    public ThreadPoolTaskExecutor provideCacheResetExecutorExecutor() {
+    public ThreadPoolTaskExecutor provideCacheResetExecutor() {
         final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(1);
         executor.setMaxPoolSize(1);
@@ -86,6 +92,12 @@ public class AsyncConfiguration implements AsyncConfigurer {
         executor.initialize();
 
         return executor;
+    }
+
+    @Bean(VIRTUAL_THREAD_PER_TASK_EXECUTOR_BEAN)
+    @Qualifier(value = VIRTUAL_THREAD_PER_TASK_EXECUTOR_BEAN)
+    public AsyncTaskExecutor provideVirtualThreadPerTaskExecutor() {
+        return new TaskExecutorAdapter(Executors.newVirtualThreadPerTaskExecutor());
     }
 
 }
