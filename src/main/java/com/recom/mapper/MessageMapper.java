@@ -17,14 +17,12 @@ public interface MessageMapper {
 
     MessageMapper INSTANCE = Mappers.getMapper(MessageMapper.class);
 
-    @NonNull
     @Named("timestampToTimestampEpochMilliseconds")
     static long timestampToTimestampEpochMilliseconds(@Nullable final LocalDateTime timestamp) {
         return timestamp.toInstant(ZoneOffset.UTC).toEpochMilli();
     }
 
     @Mapping(source = "timestamp", target = "timestampEpochMilliseconds", qualifiedByName = "timestampToTimestampEpochMilliseconds")
-    @Mapping(source = "timestampConfirmation", target = "timestampConfirmationEpochMilliseconds", qualifiedByName = "timestampToTimestampEpochMilliseconds")
     MessageDto toDto(final Message entity);
 
 }
