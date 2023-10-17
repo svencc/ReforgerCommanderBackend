@@ -67,9 +67,6 @@ public class MessageBusController {
         return getMessagesJSON(payloadParser.parseValidated(payload, MessageBusRequestDto.class));
     }
 
-    @SneakyThrows
-
-
     @Operation(
             summary = "Get a list of messages",
             description = "Gets all map specific, latest message of a type.",
