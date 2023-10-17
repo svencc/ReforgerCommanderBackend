@@ -8,7 +8,7 @@ import java.util.List;
 public abstract class ObserverTemplate<T> implements Observing<T> {
 
     @NonNull
-    private final List<Subjective<T>> subjects = new ArrayList<>();
+    protected final List<Subjective<T>> subjects = new ArrayList<>();
 
     @Override
     public void observe(@NonNull final Subjective<T> subject) {

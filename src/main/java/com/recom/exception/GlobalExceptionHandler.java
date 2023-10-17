@@ -127,4 +127,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
     }
 
+    @ExceptionHandler(value = {HttpTimeoutException.class})
+    public ResponseEntity<List<Void>> handleHttpTimeoutException(@NonNull final HttpTimeoutException exception) {
+        return ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT).build();
+    }
+
 }

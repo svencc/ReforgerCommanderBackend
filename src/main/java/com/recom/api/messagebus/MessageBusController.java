@@ -45,7 +45,7 @@ import java.util.concurrent.CompletableFuture;
 @RequestMapping("/api/v1/message-bus")
 public class MessageBusController {
 
-    private final static Duration RECOM_CURL_TIMEOUT = Duration.ofSeconds(60); // 12 seconds seems to be the maximum on REFORGER side!
+    private final static Duration RECOM_CURL_TIMEOUT = Duration.ofSeconds(5); // 12 seconds seems to be the maximum on REFORGER side!
 
     @NonNull
     private final AssertionService assertionService;
@@ -95,50 +95,17 @@ public class MessageBusController {
             @NonNull @Valid final MessageBusRequestDto mapRendererRequestDto
     ) {
         log.debug("Requested POST /api/v1/map/message-bus (JSON)");
-
         assertionService.assertMapExists(mapRendererRequestDto.getMapName());
-        log.debug("...");
 
-        final ResponseBodyEmitter responseBodyEmitter = new ResponseBodyEmitter();
         final MessageLongPollObserver messageLongPollObserver = MessageLongPollObserver.builder()
                 .timeout(RECOM_CURL_TIMEOUT.toMillis())
                 .asyncTaskExecutor(asyncConfiguration.provideClusterGeneratorExecutor())
-                .responseBodyEmitter(responseBodyEmitter)
                 .build();
         messageLongPollObserver.observe(messageBusService.getSubject());
+        
+        messageLongPollObserver.schedlueTestResponse(Duration.ofSeconds(5), messageBusService.getSubject(), asyncConfiguration);
 
-        CompletableFuture.runAsync(() -> {
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException ignored) {
-                log.error("Interrupted Exception");
-            }
-            messageLongPollObserver.takeNotice(
-                    messageBusService.getSubject(),
-                    new Notification<>(
-                            MessageBusResponseDto.builder()
-                                    .messages(List.of(MessageDto.builder().uuid(UUID.randomUUID()).build()))
-//                                    .messages(messagePersistenceLayer.findAllMapSpecificMessages(mapRendererRequestDto.getMapName()))
-                                    .build()
-                    )
-            );
-        }, asyncConfiguration.provideVirtualThreadPerTaskExecutor());
-
-        return responseBodyEmitter;
-
-//        if (false) {
-//            return ResponseEntity.status(HttpStatus.NO_CONTENT)
-//                    .cacheControl(CacheControl.noCache())
-//                    .build();
-//        } else {
-//            return ResponseEntity.status(HttpStatus.OK)
-//                    .cacheControl(CacheControl.noCache())
-//                    .body(
-//                            MessageBusResponseDto.builder()
-//                                    .messages(messagePersistenceLayer.findAllMapSpecificMessages(mapRendererRequestDto.getMapName()))
-//                                    .build()
-//                    );
-//        }
+        return messageLongPollObserver.provideResponseEmitter();
     }
 
 }
