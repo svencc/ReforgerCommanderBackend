@@ -21,6 +21,10 @@ public class MessageBusResponseDto implements Serializable {
 
     @Schema
     @JsonProperty()
+    private String mapName;
+
+    @Schema
+    @JsonProperty()
     private List<MessageDto> messages;
 
 }

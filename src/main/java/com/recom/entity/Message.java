@@ -45,11 +45,8 @@ public class Message implements Persistable<UUID>, Serializable {
     @Column(insertable = true, updatable = true, nullable = true, columnDefinition = "LONGTEXT")
     private String payload;
 
-    @Column(insertable = true, updatable = false, nullable = false, columnDefinition = "DATETIME(6) DEFAULT NOW(6)")
+    @Column(insertable = true, updatable = false, nullable = true, columnDefinition = "DATETIME(6) DEFAULT NOW(6)")
     private LocalDateTime timestamp;
-
-    @Column(insertable = true, updatable = false, nullable = false, columnDefinition = "DATETIME(6) DEFAULT NOW(6)")
-    private LocalDateTime timestampConfirmation;
 
 
     @Override

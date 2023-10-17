@@ -3,9 +3,6 @@ package com.recom.api.messagebus;
 import com.recom.api.commons.HttpCommons;
 import com.recom.configuration.AsyncConfiguration;
 import com.recom.dto.message.MessageBusRequestDto;
-import com.recom.dto.message.MessageBusResponseDto;
-import com.recom.dto.message.MessageDto;
-import com.recom.observer.Notification;
 import com.recom.persistence.message.MessagePersistenceLayer;
 import com.recom.service.AssertionService;
 import com.recom.service.ReforgerPayloadParserService;
@@ -22,20 +19,13 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.async.DeferredResult;
-import org.springframework.web.context.request.async.WebAsyncTask;
-import org.springframework.web.servlet.function.ServerRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
 
 import java.time.Duration;
-import java.util.List;
 import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Validated
@@ -68,7 +58,7 @@ public class MessageBusController {
             @ApiResponse(responseCode = HttpCommons.UNAUTHORIZED_CODE, description = HttpCommons.UNAUTHORIZED, content = @Content())
     })
     @PostMapping(path = "/form", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseBodyEmitter getMessagesForm(
+    public ResponseEntity<ResponseBodyEmitter> getMessagesForm(
             @RequestParam(required = true)
             @NonNull final Map<String, String> payload
     ) {
@@ -90,7 +80,7 @@ public class MessageBusController {
             @ApiResponse(responseCode = HttpCommons.UNAUTHORIZED_CODE, description = HttpCommons.UNAUTHORIZED, content = @Content())
     })
     @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseBodyEmitter getMessagesJSON(
+    public ResponseEntity<ResponseBodyEmitter> getMessagesJSON(
             @RequestBody(required = true)
             @NonNull @Valid final MessageBusRequestDto mapRendererRequestDto
     ) {
@@ -100,12 +90,19 @@ public class MessageBusController {
         final MessageLongPollObserver messageLongPollObserver = MessageLongPollObserver.builder()
                 .timeout(RECOM_CURL_TIMEOUT.toMillis())
                 .asyncTaskExecutor(asyncConfiguration.provideClusterGeneratorExecutor())
+                .messagePersistenceLayer(messagePersistenceLayer)
                 .build();
         messageLongPollObserver.observe(messageBusService.getSubject());
-        
-        messageLongPollObserver.schedlueTestResponse(Duration.ofSeconds(5), messageBusService.getSubject(), asyncConfiguration);
 
-        return messageLongPollObserver.provideResponseEmitter();
+        messageLongPollObserver.scheduleTestResponse(mapRendererRequestDto.getMapName(), Duration.ofSeconds(5), messageBusService.getSubject(), asyncConfiguration);
+
+        final HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .headers(httpHeaders)
+                .cacheControl(CacheControl.noCache())
+                .body(messageLongPollObserver.provideResponseEmitter());
     }
 
 }
