@@ -125,7 +125,7 @@ public class ConfigurationRESTManagementService {
                         if (override.getType() == ConfigurationType.LIST) {
                             try {
                                 existingOverride.setValue(StaticObjectMapperProvider.provide().writeValueAsString(override.getMapOverriddenListValue()));
-                            } catch (JsonProcessingException e) {
+                            } catch (final JsonProcessingException e) {
                                 throw new RuntimeException(e);
                             }
                         }
@@ -143,7 +143,7 @@ public class ConfigurationRESTManagementService {
                         if (override.getType() == ConfigurationType.LIST) {
                             try {
                                 configurationBuilder.value(StaticObjectMapperProvider.provide().writeValueAsString(override.getMapOverriddenListValue()));
-                            } catch (JsonProcessingException e) {
+                            } catch (final JsonProcessingException e) {
                                 throw new RuntimeException(e);
                             }
                         }

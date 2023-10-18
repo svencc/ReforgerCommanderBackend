@@ -79,7 +79,7 @@ public abstract class GoapPlannerBase implements GoapPlannerable {
             graph.setEdgeWeight(graph.getEdge(firstVertex, secondVertex), weight);
 
             return true;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
 
             return false;
@@ -186,7 +186,7 @@ public abstract class GoapPlannerBase implements GoapPlannerable {
             } else {
                 createdPlan = searchGraphForActionQueue(createGraph());
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
 
@@ -284,7 +284,7 @@ public abstract class GoapPlannerBase implements GoapPlannerable {
                     possibleActions.add(goapAction);
                 }
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
 

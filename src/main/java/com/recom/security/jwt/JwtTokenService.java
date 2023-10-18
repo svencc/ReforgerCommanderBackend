@@ -46,7 +46,7 @@ public class JwtTokenService {
     public UUID extractAndAssertSubjectIsUUID(@NonNull final String sub) throws HttpUnauthorizedException {
         try {
             return conversionService.convert(sub, UUID.class);
-        } catch (ConversionException e) {
+        } catch (final ConversionException e) {
             throw new HttpUnauthorizedException("Invalid token; subject is not an UUID!");
         }
     }

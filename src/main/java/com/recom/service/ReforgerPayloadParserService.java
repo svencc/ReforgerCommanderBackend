@@ -45,7 +45,7 @@ public class ReforgerPayloadParserService {
             validateInput(parsed);
 
             return parsed;
-        } catch (NoSuchElementException | JsonProcessingException e) {
+        } catch (final NoSuchElementException | JsonProcessingException e) {
             log.error("Cannot parse a Reforger JSON DTO {}", String.join(";\n", payload.keySet()), e);
             throw new HttpBadRequestException(e.getMessage());
         }

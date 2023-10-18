@@ -20,8 +20,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Table(indexes = {
         @Index(name = "IDX_mapName", columnList = "mapName", unique = false),
-        @Index(name = "IDX_mapName_messageType", columnList = "mapName, messageType", unique = false),
-        @Index(name = "IDX_mapName_messageType_timestamp", columnList = "mapName, messageType, timestamp", unique = true),
+        @Index(name = "IDX_mapName_messageType_timestamp", columnList = "mapName, messageType, timestamp", unique = false),
         @Index(name = "IDX_mapName_timestamp", columnList = "mapName, timestamp", unique = false),
 })
 @Cacheable
@@ -29,7 +28,7 @@ import java.util.UUID;
 public class Message implements Persistable<UUID>, Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+//    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(insertable = true, updatable = false, nullable = false)
     private UUID uuid;
 

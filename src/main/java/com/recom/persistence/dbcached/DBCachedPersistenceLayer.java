@@ -60,7 +60,7 @@ public class DBCachedPersistenceLayer {
         try (ByteArrayOutputStream byteArrayOutputStream = serializeObject(value)) {
             existingCacheItem.setCachedValue(byteArrayOutputStream.toByteArray());
             return existingCacheItem;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             log.error("Error serializing cache value with key {}!", existingCacheItem.getCacheKey(), e);
             return null;
         }
@@ -79,7 +79,7 @@ public class DBCachedPersistenceLayer {
                     .cacheKey(cacheKey)
                     .cachedValue(byteArrayOutputStream.toByteArray())
                     .build();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             log.error("Error serializing cache value with key {}!", cacheKey, e);
             return null;
         }
@@ -116,7 +116,7 @@ public class DBCachedPersistenceLayer {
     ) throws DBCachedDeserializationException {
         try (ObjectInputStream inputStream = new ObjectInputStream(new ByteArrayInputStream(serializedValue))) {
             return Optional.ofNullable((V) inputStream.readObject());
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (final IOException | ClassNotFoundException e) {
             log.error("Error deserializing cache value with key {}", cacheKey);
             throw new DBCachedDeserializationException(String.format("Unable to deserialize cacheKey %s", cacheKey), e);
         }

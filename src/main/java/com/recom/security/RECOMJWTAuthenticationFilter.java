@@ -84,7 +84,7 @@ public class RECOMJWTAuthenticationFilter extends OncePerRequestFilter {
                 repository.saveContext(SecurityContextHolder.getContext(), request, response);
                 filterChain.doFilter(request, response);
             }
-        } catch (Throwable e) {
+        } catch (final Throwable e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
     }

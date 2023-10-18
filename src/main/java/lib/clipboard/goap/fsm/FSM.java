@@ -36,7 +36,7 @@ public final class FSM {
                     dispatchPlanFinishedEvent();
                 }
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             final FSMStateful state = states.pop();
             if (state instanceof PerformActionState) {
                 dispatchPlanFailedEvent(((PerformActionState) state).getCurrentActions());

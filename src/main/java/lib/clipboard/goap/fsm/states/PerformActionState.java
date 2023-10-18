@@ -68,9 +68,9 @@ public class PerformActionState implements FSMStateful {
 
                 workingOnQueue = true;
             }
-        } catch (UnperformableActionException e) {
+        } catch (final UnperformableActionException e) {
             System.out.println(e.getMessage());
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
 
             // throw new Exception();

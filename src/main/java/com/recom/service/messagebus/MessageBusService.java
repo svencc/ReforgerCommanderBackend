@@ -2,8 +2,8 @@ package com.recom.service.messagebus;
 
 import com.recom.dto.message.MessageBusResponseDto;
 import com.recom.dto.message.MessageDto;
-import com.recom.entity.Message;
-import com.recom.model.message.MessageType;
+import com.recom.mapper.MessageMapper;
+import com.recom.model.message.MessageContainer;
 import com.recom.observer.*;
 import com.recom.persistence.message.MessagePersistenceLayer;
 import lombok.Getter;
@@ -12,38 +12,34 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class MessageBusService implements HasSubject<MessageBusResponseDto> {
+public class MessageBusService implements HasSubject<MessageContainer> {
 
     @NonNull
     @Getter()
-    private final Subjective<MessageBusResponseDto> subject = new Subject<>();
-
+    private final Subjective<MessageContainer> subject = new Subject<>();
     @NonNull
     private final MessagePersistenceLayer messagePersistenceLayer;
 
-    public void sendMessage(
+    public <T> void sendMessage(
             @NonNull final String mapName,
-            @NonNull final String messageType,
-            @NonNull final String payload
+            @NonNull final MessageContainer messageContainer
     ) {
-        subject.notifyObserversWith(new Notification<>(MessageBusResponseDto.builder().messages(
-                List.of(
-                        MessageDto.builder()
-                                .uuid(UUID.randomUUID())
-                                .payload("test")
-                                .build()
-                )
-        ).build()));
+        subject.notifyObserversWith(new Notification<>(messageContainer));
+    }
 
-//        messagePersistenceLayer.saveAll(List.of(Message.builder()
-//                .mapName(mapName)
-//                .messageType(MessageType.valueOf(messageType))
-//                .payload(payload)
-//                .build()));
+    @NonNull
+    public MessageBusResponseDto listMessagesSince(
+            @NonNull final String mapName,
+            @NonNull final Long sinceTimestampEpochMilliseconds
+
+    ) {
+        return MessageBusResponseDto.builder()
+                .mapName(mapName)
+                .messages(messagePersistenceLayer.findAllMapSpecificMessagesSince(mapName, sinceTimestampEpochMilliseconds))
+                .build();
     }
 
 }

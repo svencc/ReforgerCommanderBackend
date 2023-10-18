@@ -43,7 +43,7 @@ public class DBCachedManager {
                 .map(cacheValue -> {
                     try {
                         return (V) cacheValue.get();
-                    } catch (ClassCastException e) {
+                    } catch (final ClassCastException e) {
                         return null;
                     }
                 })
@@ -68,7 +68,7 @@ public class DBCachedManager {
     ) {
         try {
             cacheManager.getCache(cacheName).put(cacheKey, valueToCache);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             log.debug("Put; cache {} not found", cacheName);
         }
         dbCachedPersistenceLayer.put(cacheName, cacheKey, valueToCache);
@@ -80,7 +80,7 @@ public class DBCachedManager {
     ) {
         try {
             cacheManager.getCache(cacheName).evict(cacheKey);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             log.debug("Delete; cache {} not found", cacheName);
         }
         dbCachedPersistenceLayer.delete(cacheName, cacheKey);

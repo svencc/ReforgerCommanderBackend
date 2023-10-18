@@ -26,7 +26,7 @@ public class DBCachedService {
     ) {
         try {
             return proxyToDBCacheUnsafe(cacheName, cacheKey, cacheLoader);
-        } catch (DBCachedDeserializationException e) {
+        } catch (final DBCachedDeserializationException e) {
             log.info("Executing cacheLoader (due to deserialization error) {} - {} ", cacheName, cacheKey);
             log.info("Delete {} - {} ", cacheName, cacheKey);
             dbCachedPersistenceLayer.delete(cacheName, cacheKey);

@@ -50,7 +50,7 @@ public class AsyncCacheableRequestProcessor {
                                 .cacheControl(CacheControl.noCache())
                                 .build()
                         );
-            } catch (DBCachedDeserializationException dbcde) {
+            } catch (final DBCachedDeserializationException dbcde) {
                 log.error("Unable to deserialize cached value; Generating new one");
                 dbCachedManager.delete(cacheName, cacheKey);
             }
@@ -69,7 +69,7 @@ public class AsyncCacheableRequestProcessor {
                 Optional<T> result = Optional.empty();
                 try {
                     result = Optional.ofNullable(cacheLoader.get());
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     log.error("Async-Exception", e);
                 } finally {
                     result.ifPresent(value -> dbCachedManager.put(cacheName, cacheKey, value));

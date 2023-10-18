@@ -2,7 +2,9 @@ package com.recom.api.messagebus;
 
 import com.recom.api.commons.HttpCommons;
 import com.recom.configuration.AsyncConfiguration;
-import com.recom.dto.message.MessageBusRequestDto;
+import com.recom.dto.message.MessageBusLongPollRequestDto;
+import com.recom.dto.message.MessageBusResponseDto;
+import com.recom.dto.message.MessageBusSinceRequestDto;
 import com.recom.persistence.message.MessagePersistenceLayer;
 import com.recom.service.AssertionService;
 import com.recom.service.ReforgerPayloadParserService;
@@ -17,7 +19,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.validation.annotation.Validated;
@@ -49,8 +50,8 @@ public class MessageBusController {
     private final AsyncConfiguration asyncConfiguration;
 
     @Operation(
-            summary = "Get a list of messages",
-            description = "Gets all map specific, latest message of a type.",
+            summary = "Long-poll latest messages",
+            description = "Polls for all map specific, latest message.",
             security = @SecurityRequirement(name = HttpCommons.BEARER_AUTHENTICATION_REQUIREMENT)
     )
     @ApiResponses(value = {
@@ -64,12 +65,12 @@ public class MessageBusController {
     ) {
         log.debug("Requested POST /api/v1/map/renderer/form (FORM)");
 
-        return getMessagesJSON(payloadParser.parseValidated(payload, MessageBusRequestDto.class));
+        return getMessagesJSON(payloadParser.parseValidated(payload, MessageBusLongPollRequestDto.class));
     }
 
     @Operation(
-            summary = "Get a list of messages",
-            description = "Gets all map specific, latest message of a type.",
+            summary = "Long-poll latest messages",
+            description = "Polls for all map specific, latest message.",
             security = @SecurityRequirement(name = HttpCommons.BEARER_AUTHENTICATION_REQUIREMENT)
     )
     @ApiResponses(value = {
@@ -79,10 +80,10 @@ public class MessageBusController {
     @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseBodyEmitter> getMessagesJSON(
             @RequestBody(required = true)
-            @NonNull @Valid final MessageBusRequestDto mapRendererRequestDto
+            @NonNull @Valid final MessageBusLongPollRequestDto messageBusLongPollRequestDto
     ) {
         log.debug("Requested POST /api/v1/map/message-bus (JSON)");
-        assertionService.assertMapExists(mapRendererRequestDto.getMapName());
+        assertionService.assertMapExists(messageBusLongPollRequestDto.getMapName());
 
         final MessageLongPollObserver messageLongPollObserver = MessageLongPollObserver.builder()
                 .timeout(RECOM_CURL_TIMEOUT.toMillis())
@@ -91,7 +92,7 @@ public class MessageBusController {
                 .build();
         messageLongPollObserver.observe(messageBusService.getSubject());
 
-        messageLongPollObserver.scheduleTestResponse(mapRendererRequestDto.getMapName(), Duration.ofSeconds(5), messageBusService.getSubject(), asyncConfiguration);
+        messageLongPollObserver.scheduleTestResponse(messageBusLongPollRequestDto.getMapName(), Duration.ofSeconds(5), messageBusService.getSubject(), asyncConfiguration);
 
         final HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
@@ -100,6 +101,28 @@ public class MessageBusController {
                 .headers(httpHeaders)
                 .cacheControl(CacheControl.noCache())
                 .body(messageLongPollObserver.provideResponseEmitter());
+    }
+
+    @Operation(
+            summary = "Get a list of messages since given timestamp",
+            description = "Gets all map specific message since provided epoch-millis.",
+            security = @SecurityRequirement(name = HttpCommons.BEARER_AUTHENTICATION_REQUIREMENT)
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK),
+            @ApiResponse(responseCode = HttpCommons.UNAUTHORIZED_CODE, description = HttpCommons.UNAUTHORIZED, content = @Content())
+    })
+    @PostMapping(path = "/after", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<MessageBusResponseDto> getMessagesSinceJSON(
+            @RequestBody(required = true)
+            @NonNull @Valid final MessageBusSinceRequestDto messageBusSinceRequestDto
+    ) {
+        log.debug("Requested POST /api/v1/map/message-bus/after (JSON)");
+        assertionService.assertMapExists(messageBusSinceRequestDto.getMapName());
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .cacheControl(CacheControl.noCache())
+                .body(messageBusService.listMessagesSince(messageBusSinceRequestDto.getMapName(), messageBusSinceRequestDto.getTimestampEpochMilliseconds()));
     }
 
 }

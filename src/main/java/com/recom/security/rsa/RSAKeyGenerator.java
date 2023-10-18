@@ -148,7 +148,7 @@ public class RSAKeyGenerator {
         try (final OutputStream fos = fileSystemResource.getOutputStream()) {
             log.info("| +- Save {} key: '{}'", keyType.name().toLowerCase(), filePath.toAbsolutePath());
             fos.write(keyBytes);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new IOException(e);
         }
     }
@@ -165,7 +165,7 @@ public class RSAKeyGenerator {
         try (final OutputStream fos = fileSystemResource.getOutputStream()) {
             log.info("| +- Save uuid: '{}'", filePath.toAbsolutePath());
             fos.write(uuid.getBytes());
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new IOException(e);
         }
     }
