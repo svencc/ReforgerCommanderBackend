@@ -124,7 +124,9 @@ public class MessageLongPollObserver extends ObserverTemplate<MessageContainer> 
                 .filter(Objects::nonNull)
                 .toList();
 
-        messagePersistenceLayer.saveAll(messagesToSave);
+        if (!messagesToSave.isEmpty()) {
+            messagePersistenceLayer.saveAll(messagesToSave);
+        }
     }
 
     @NonNull
