@@ -2,9 +2,13 @@ package com.recom.api.messagebus;
 
 import com.recom.api.commons.HttpCommons;
 import com.recom.configuration.AsyncConfiguration;
+import com.recom.dto.map.Point2DDto;
 import com.recom.dto.message.MessageBusLongPollRequestDto;
 import com.recom.dto.message.MessageBusResponseDto;
 import com.recom.dto.message.MessageBusSinceRequestDto;
+import com.recom.model.message.MessageContainer;
+import com.recom.model.message.MessageType;
+import com.recom.model.message.OneMessage;
 import com.recom.persistence.message.MessagePersistenceLayer;
 import com.recom.service.AssertionService;
 import com.recom.service.ReforgerPayloadParserService;
@@ -25,8 +29,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
 
+import java.math.BigDecimal;
 import java.time.Duration;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Validated
@@ -36,7 +43,7 @@ import java.util.Map;
 @RequestMapping("/api/v1/message-bus")
 public class MessageBusController {
 
-    private final static Duration RECOM_CURL_TIMEOUT = Duration.ofSeconds(5); // 12 seconds seems to be the maximum on REFORGER side!
+    private final static Duration RECOM_CURL_TIMEOUT = Duration.ofSeconds(12); // 12 seconds seems to be the maximum on REFORGER side!
 
     @NonNull
     private final AssertionService assertionService;
@@ -85,24 +92,53 @@ public class MessageBusController {
         log.debug("Requested POST /api/v1/map/message-bus (JSON)");
         assertionService.assertMapExists(messageBusLongPollRequestDto.getMapName());
 
-        try (final MessageLongPollObserver messageLongPollObserver = MessageLongPollObserver.builder()
+        final MessageLongPollObserver messageLongPollObserver = MessageLongPollObserver.builder()
                 .timeout(RECOM_CURL_TIMEOUT.toMillis())
-                .asyncTaskExecutor(asyncConfiguration.provideClusterGeneratorExecutor())
                 .messagePersistenceLayer(messagePersistenceLayer)
-                .build()
-        ) {
-            messageLongPollObserver.observe(messageBusService.getSubject());
+                .build();
 
-            messageLongPollObserver.scheduleTestResponse(messageBusLongPollRequestDto.getMapName(), Duration.ofSeconds(5), messageBusService.getSubject(), asyncConfiguration);
+        messageLongPollObserver.observe(messageBusService.getSubject());
 
-            final HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+        scheduleSendMessageForTest(messageBusLongPollRequestDto);
 
-            return ResponseEntity.status(HttpStatus.OK)
-                    .headers(httpHeaders)
-                    .cacheControl(CacheControl.noCache())
-                    .body(messageLongPollObserver.provideResponseEmitter());
-        }
+
+        final HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .headers(httpHeaders)
+                .cacheControl(CacheControl.noCache())
+                .body(messageLongPollObserver.provideResponseEmitter());
+    }
+
+    private void scheduleSendMessageForTest(@NonNull MessageBusLongPollRequestDto messageBusLongPollRequestDto) {
+        CompletableFuture.runAsync(() -> {
+            try {
+                Thread.sleep(Duration.ofSeconds(2).toMillis());
+                messageBusService.sendMessage(messageBusLongPollRequestDto.getMapName(), MessageContainer.builder()
+                        .mapName(messageBusLongPollRequestDto.getMapName())
+                        .messages(List.of(
+                                OneMessage.builder()
+                                        .messageType(MessageType.TEST)
+                                        .payload(Point2DDto.builder()
+                                                .x(BigDecimal.valueOf(1.0))
+                                                .y(BigDecimal.valueOf(2.0))
+                                                .build())
+                                        .build(),
+                                OneMessage.builder()
+                                        .messageType(MessageType.TEST)
+                                        .payload(Point2DDto.builder()
+                                                .x(BigDecimal.valueOf(1.0))
+                                                .y(BigDecimal.valueOf(2.0))
+                                                .build())
+                                        .build()
+                        ))
+                        .build()
+                );
+            } catch (final InterruptedException ignored) {
+                log.error("Interrupted Exception");
+            }
+        }, asyncConfiguration.provideVirtualThreadPerTaskExecutor());
     }
 
     @Operation(

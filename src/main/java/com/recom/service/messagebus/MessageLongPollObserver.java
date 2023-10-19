@@ -1,14 +1,10 @@
 package com.recom.service.messagebus;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.recom.configuration.AsyncConfiguration;
-import com.recom.dto.map.Point2DDto;
 import com.recom.dto.message.MessageBusResponseDto;
 import com.recom.dto.message.MessageDto;
 import com.recom.entity.Message;
 import com.recom.exception.HttpTimeoutException;
-import com.recom.model.message.MessageType;
-import com.recom.model.message.OneMessage;
 import com.recom.model.message.MessageContainer;
 import com.recom.observer.Notification;
 import com.recom.observer.ObserverTemplate;
@@ -19,19 +15,15 @@ import lombok.Builder;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.http.MediaType;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
 
-import java.math.BigDecimal;
-import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -40,8 +32,6 @@ public class MessageLongPollObserver extends ObserverTemplate<MessageContainer> 
     @NonNull
     private final Long timeout;
     @NonNull
-    private final AsyncTaskExecutor asyncTaskExecutor;
-    @NonNull
     private final MessagePersistenceLayer messagePersistenceLayer;
     @NonNull
     private final ResponseBodyEmitter responseBodyEmitter;
@@ -49,11 +39,9 @@ public class MessageLongPollObserver extends ObserverTemplate<MessageContainer> 
     @Builder()
     public MessageLongPollObserver(
             @NonNull final Long timeout,
-            @NonNull final AsyncTaskExecutor asyncTaskExecutor,
             @NonNull final MessagePersistenceLayer messagePersistenceLayer
     ) {
         this.timeout = timeout;
-        this.asyncTaskExecutor = asyncTaskExecutor;
         this.messagePersistenceLayer = messagePersistenceLayer;
 
         this.responseBodyEmitter = new ResponseBodyEmitter(timeout);
@@ -131,47 +119,6 @@ public class MessageLongPollObserver extends ObserverTemplate<MessageContainer> 
     @NonNull
     public ResponseBodyEmitter provideResponseEmitter() {
         return responseBodyEmitter;
-    }
-
-    public void scheduleTestResponse(
-            @NonNull final String mapName,
-            @NonNull final Duration duration,
-            @NonNull final Subjective<MessageContainer> onBehalfOf,
-            @NonNull final AsyncConfiguration asyncConfiguration
-    ) {
-        log.debug("MessageLongPollObserver.startObserving");
-        CompletableFuture.runAsync(() -> {
-            try {
-                Thread.sleep(duration.toMillis());
-            } catch (final InterruptedException ignored) {
-                log.error("Interrupted Exception");
-            }
-            takeNotice(
-                    onBehalfOf,
-                    new Notification<>(
-                            MessageContainer.builder()
-                                    .mapName(mapName)
-                                    .messages(List.of(
-                                                    OneMessage.builder()
-                                                            .messageType(MessageType.TEST)
-                                                            .payload(Point2DDto.builder()
-                                                                    .x(BigDecimal.valueOf(1.0))
-                                                                    .y(BigDecimal.valueOf(2.0))
-                                                                    .build())
-                                                            .build(),
-                                                    OneMessage.builder()
-                                                            .messageType(MessageType.TEST)
-                                                            .payload(Point2DDto.builder()
-                                                                    .x(BigDecimal.valueOf(1.0))
-                                                                    .y(BigDecimal.valueOf(2.0))
-                                                                    .build())
-                                                            .build()
-                                            )
-                                    )
-                                    .build()
-                    )
-            );
-        }, asyncConfiguration.provideVirtualThreadPerTaskExecutor());
     }
 
 }

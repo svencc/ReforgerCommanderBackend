@@ -22,20 +22,17 @@ import static org.mockito.Mockito.*;
 class MessageLongPollObserverTest {
 
     @Mock
-    private AsyncTaskExecutor asyncTaskExecutor;
-    @Mock
     private MessagePersistenceLayer messagePersistenceLayer;
     private MessageBusService messageBusService;
     private MessageLongPollObserver observerUnderTest;
 
+
     @BeforeEach
     public void setUp() {
         // Prepare MessageLongPollObserver (instance under test)
-        asyncTaskExecutor = mock(AsyncTaskExecutor.class);
         messagePersistenceLayer = mock(MessagePersistenceLayer.class);
         observerUnderTest = MessageLongPollObserver.builder()
                 .timeout(10000L) // Set a reasonable timeout value
-                .asyncTaskExecutor(asyncTaskExecutor)
                 .messagePersistenceLayer(messagePersistenceLayer)
                 .build();
 
