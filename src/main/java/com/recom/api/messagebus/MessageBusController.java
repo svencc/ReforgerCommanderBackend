@@ -85,22 +85,24 @@ public class MessageBusController {
         log.debug("Requested POST /api/v1/map/message-bus (JSON)");
         assertionService.assertMapExists(messageBusLongPollRequestDto.getMapName());
 
-        final MessageLongPollObserver messageLongPollObserver = MessageLongPollObserver.builder()
+        try (final MessageLongPollObserver messageLongPollObserver = MessageLongPollObserver.builder()
                 .timeout(RECOM_CURL_TIMEOUT.toMillis())
                 .asyncTaskExecutor(asyncConfiguration.provideClusterGeneratorExecutor())
                 .messagePersistenceLayer(messagePersistenceLayer)
-                .build();
-        messageLongPollObserver.observe(messageBusService.getSubject());
+                .build()
+        ) {
+            messageLongPollObserver.observe(messageBusService.getSubject());
 
-        messageLongPollObserver.scheduleTestResponse(messageBusLongPollRequestDto.getMapName(), Duration.ofSeconds(5), messageBusService.getSubject(), asyncConfiguration);
+            messageLongPollObserver.scheduleTestResponse(messageBusLongPollRequestDto.getMapName(), Duration.ofSeconds(5), messageBusService.getSubject(), asyncConfiguration);
 
-        final HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+            final HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .headers(httpHeaders)
-                .cacheControl(CacheControl.noCache())
-                .body(messageLongPollObserver.provideResponseEmitter());
+            return ResponseEntity.status(HttpStatus.OK)
+                    .headers(httpHeaders)
+                    .cacheControl(CacheControl.noCache())
+                    .body(messageLongPollObserver.provideResponseEmitter());
+        }
     }
 
     @Operation(

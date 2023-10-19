@@ -1,13 +1,11 @@
 package com.recom.service.messagebus;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.recom.configuration.AsyncConfiguration;
 import com.recom.model.message.MessageContainer;
 import com.recom.model.message.MessageType;
 import com.recom.model.message.OneMessage;
-import com.recom.observer.Subject;
+import com.recom.observer.Subjective;
 import com.recom.persistence.message.MessagePersistenceLayer;
-import com.recom.property.RECOMAsyncProperties;
 import com.recom.service.provider.StaticObjectMapperProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +14,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.task.AsyncTaskExecutor;
 
-import java.time.Duration;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -29,7 +26,6 @@ class MessageLongPollObserverTest {
     @Mock
     private MessagePersistenceLayer messagePersistenceLayer;
     private MessageBusService messageBusService;
-    private AsyncConfiguration asyncConfiguration;
     private MessageLongPollObserver observerUnderTest;
 
     @BeforeEach
@@ -49,20 +45,13 @@ class MessageLongPollObserverTest {
         final ObjectMapper objectMapper = new ObjectMapper();
         final StaticObjectMapperProvider staticObjectMapperProvider = new StaticObjectMapperProvider(objectMapper);
         staticObjectMapperProvider.postConstruct();
-
-        // Prepare AsyncConfiguration
-        final RECOMAsyncProperties properties = RECOMAsyncProperties.builder()
-                .corePoolSize(1)
-                .maxPoolSize(1)
-                .build();
-        asyncConfiguration = new AsyncConfiguration(properties);
     }
 
     @Test
-    public void test() throws InterruptedException {
+    public void sendMessage_withOneMessage_messageIsPersisted() throws InterruptedException {
         // Arrange
-        observerUnderTest.scheduleTestResponse("TestMap", Duration.ofMillis(5), new Subject<>(), asyncConfiguration);
-        observerUnderTest.observe(messageBusService.getSubject());
+        final Subjective<MessageContainer> messageBusSubjectSpy = spy(messageBusService.getSubject());
+        observerUnderTest.observe(messageBusSubjectSpy);
 
         final OneMessage testMessage = OneMessage.builder()
                 .messageType(MessageType.TEST)
@@ -78,10 +67,13 @@ class MessageLongPollObserverTest {
                         .build()
         );
 
+        // run autocloseable implementation;
+        observerUnderTest.close();
+
         // Assert
-        // Sleep for a duration longer than the scheduled task to complete
-        Thread.sleep(200);
         verify(messagePersistenceLayer, times(1)).saveAll(anyList());
+        verify(messageBusSubjectSpy, times(1)).beObservedBy(observerUnderTest);
+        verify(messageBusSubjectSpy, times(1)).observationStoppedThrough(any()); // executed by autocloseable implementation
     }
 
 }
