@@ -23,7 +23,9 @@ public class Subject<T> implements Subjective<T> {
 
     @Override
     public void notifyObserversWith(@NonNull final Notification<T> notification) {
-        observersWatchingMe.forEach(observer -> observer.takeNotice(this, notification));
+        // run through a copy of the list to avoid ConcurrentModificationException when removing observers!
+        final List<Observing<T>> copiedObserversWatchingMe = new ArrayList<>(observersWatchingMe);
+        copiedObserversWatchingMe.forEach(observer -> observer.takeNotice(this, notification));
     }
 
     @Override

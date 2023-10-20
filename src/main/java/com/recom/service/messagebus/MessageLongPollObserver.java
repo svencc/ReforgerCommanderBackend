@@ -67,6 +67,7 @@ public class MessageLongPollObserver extends ObserverTemplate<MessageContainer> 
             responseBodyEmitter.completeWithError(e);
         } finally {
             responseBodyEmitter.complete();
+            subject.observationStoppedThrough(this);
         }
     }
 
