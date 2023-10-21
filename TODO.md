@@ -1,7 +1,5 @@
 # TODO LIST
 
-* MessageBus
-* 
 * GOAP: MOVE ACTION
 * 
 * 
