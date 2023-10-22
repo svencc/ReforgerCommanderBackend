@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
 
+// Deprecated and probably will be removed in the future as it is not used and needed anymore
+// but maybe we need the actuator / ping endpoint in the future
+@Deprecated(forRemoval = true)
 @Slf4j
 @RestController
 @RequiredArgsConstructor

@@ -39,15 +39,11 @@ class MessageBusServiceTest {
         final StaticObjectMapperProvider staticObjectMapperProvider = new StaticObjectMapperProvider(objectMapper);
         staticObjectMapperProvider.postConstruct();
 
-        try (final MessageLongPollObserver observer = MessageLongPollObserver.builder()
-                .timeout(10000L)
-                .messagePersistenceLayer(messagePersistenceLayer)
-                .build()
-        ) {
+        try (final MessageLongPollObserver observer = new MessageLongPollObserver(10000L)) {
             observer.observe(serviceUnderTest.getSubject());
 
             // Act
-            serviceUnderTest.sendMessage("mapName", MessageContainer.builder()
+            serviceUnderTest.sendMessage(MessageContainer.builder()
                     .mapName("mapName")
                     .messages(List.of(OneMessage.builder()
                             .messageType(MessageType.TEST)
@@ -77,7 +73,7 @@ class MessageBusServiceTest {
     void getSubject() {
         // Arrange
         // Act
-        final Subjective<MessageContainer> resultToTest = serviceUnderTest.getSubject();
+        final Subjective<MessageBusResponseDto> resultToTest = serviceUnderTest.getSubject();
         // Assert
         assertNotNull(resultToTest);
     }

@@ -1,6 +1,7 @@
 package com.recom.service.messagebus;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.recom.dto.message.MessageBusResponseDto;
 import com.recom.model.message.MessageContainer;
 import com.recom.model.message.MessageType;
 import com.recom.model.message.OneMessage;
@@ -30,11 +31,7 @@ class MessageLongPollObserverTest {
     public void setUp() {
         // Prepare MessageLongPollObserver (instance under test)
         messagePersistenceLayer = mock(MessagePersistenceLayer.class);
-        observerUnderTest = MessageLongPollObserver.builder()
-                .timeout(10000L) // Set a reasonable timeout value
-                .messagePersistenceLayer(messagePersistenceLayer)
-                .build();
-
+        observerUnderTest = new MessageLongPollObserver(10000L);
         messageBusService = new MessageBusService(messagePersistenceLayer);
 
         // Prepare ObjectMapper / StaticObjectMapperProvider
@@ -44,9 +41,9 @@ class MessageLongPollObserverTest {
     }
 
     @Test
-    public void sendMessage_withOneMessage_messageIsPersisted() throws InterruptedException {
+    public void sendMessage_withOneMessage_messageIsPersisted() {
         // Arrange
-        final Subjective<MessageContainer> messageBusSubjectSpy = spy(messageBusService.getSubject());
+        final Subjective<MessageBusResponseDto> messageBusSubjectSpy = spy(messageBusService.getSubject());
         observerUnderTest.observe(messageBusSubjectSpy);
 
         final OneMessage testMessage = OneMessage.builder()
@@ -56,7 +53,6 @@ class MessageLongPollObserverTest {
 
         // Act
         messageBusService.sendMessage(
-                "TestMap",
                 MessageContainer.builder()
                         .mapName("test-map")
                         .messages(List.of(testMessage))

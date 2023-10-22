@@ -1,5 +1,13 @@
 # TODO LIST
 
+
+* map scanner: heigthmap, forest heatmap, military heatmap, industrial heatmap, civil heatmap
+* unit scanner: run regularly
+  * persist?
+
+* start game command Reforger -> RECOM (if its not running yet)
+* map renderer -> reduce point density on client side / depending of zoom factor
+
 * GOAP: MOVE ACTION
 * 
 * 

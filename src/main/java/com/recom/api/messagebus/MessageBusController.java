@@ -1,15 +1,8 @@
 package com.recom.api.messagebus;
 
 import com.recom.api.commons.HttpCommons;
-import com.recom.configuration.AsyncConfiguration;
-import com.recom.dto.map.Point2DDto;
 import com.recom.dto.message.MessageBusLongPollRequestDto;
 import com.recom.dto.message.MessageBusResponseDto;
-import com.recom.dto.message.MessageBusSinceRequestDto;
-import com.recom.model.message.MessageContainer;
-import com.recom.model.message.MessageType;
-import com.recom.model.message.OneMessage;
-import com.recom.persistence.message.MessagePersistenceLayer;
 import com.recom.service.AssertionService;
 import com.recom.service.ReforgerPayloadParserService;
 import com.recom.service.messagebus.MessageBusService;
@@ -24,16 +17,14 @@ import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.util.Lazy;
 import org.springframework.http.*;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
 
-import java.math.BigDecimal;
 import java.time.Duration;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Validated
@@ -50,11 +41,7 @@ public class MessageBusController {
     @NonNull
     private final ReforgerPayloadParserService payloadParser;
     @NonNull
-    private final MessagePersistenceLayer messagePersistenceLayer;
-    @NonNull
     private final MessageBusService messageBusService;
-    @NonNull
-    private final AsyncConfiguration asyncConfiguration;
 
     @Operation(
             summary = "Long-poll latest messages",
@@ -91,16 +78,22 @@ public class MessageBusController {
     ) {
         log.debug("Requested POST /api/v1/map/message-bus (JSON)");
         assertionService.assertMapExists(messageBusLongPollRequestDto.getMapName());
-
-        final MessageLongPollObserver messageLongPollObserver = MessageLongPollObserver.builder()
-                .timeout(RECOM_CURL_TIMEOUT.toMillis())
-                .messagePersistenceLayer(messagePersistenceLayer)
-                .build();
-
-        messageLongPollObserver.observe(messageBusService.getSubject());
-
-        scheduleSendMessageForTest(messageBusLongPollRequestDto);
-
+        ResponseBodyEmitter emitter;
+        final Lazy<MessageBusResponseDto> messagesSinceLazy = Lazy.of(() -> messageBusService.listMessagesSince(messageBusLongPollRequestDto.getMapName(), messageBusLongPollRequestDto.getTimestampEpochMilliseconds()));
+        if (messageBusLongPollRequestDto.getTimestampEpochMilliseconds() != null && !messagesSinceLazy.get().getMessages().isEmpty()) {
+            emitter = new ResponseBodyEmitter(RECOM_CURL_TIMEOUT.toMillis());
+            try {
+                emitter.send(messagesSinceLazy.get(), MediaType.APPLICATION_JSON);
+                emitter.complete();
+            } catch (final Exception e) {
+                log.error(e.getMessage(), e);
+                emitter.completeWithError(e);
+            }
+        } else {
+            final MessageLongPollObserver messageLongPollObserver = new MessageLongPollObserver(RECOM_CURL_TIMEOUT.toMillis());
+            messageLongPollObserver.observe(messageBusService.getSubject());
+            emitter = messageLongPollObserver.provideResponseEmitter();
+        }
 
         final HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
@@ -108,37 +101,7 @@ public class MessageBusController {
         return ResponseEntity.status(HttpStatus.OK)
                 .headers(httpHeaders)
                 .cacheControl(CacheControl.noCache())
-                .body(messageLongPollObserver.provideResponseEmitter());
-    }
-
-    private void scheduleSendMessageForTest(@NonNull MessageBusLongPollRequestDto messageBusLongPollRequestDto) {
-        CompletableFuture.runAsync(() -> {
-            try {
-                Thread.sleep(Duration.ofSeconds(2).toMillis());
-                messageBusService.sendMessage(messageBusLongPollRequestDto.getMapName(), MessageContainer.builder()
-                        .mapName(messageBusLongPollRequestDto.getMapName())
-                        .messages(List.of(
-                                OneMessage.builder()
-                                        .messageType(MessageType.TEST)
-                                        .payload(Point2DDto.builder()
-                                                .x(BigDecimal.valueOf(1.0))
-                                                .y(BigDecimal.valueOf(2.0))
-                                                .build())
-                                        .build(),
-                                OneMessage.builder()
-                                        .messageType(MessageType.TEST)
-                                        .payload(Point2DDto.builder()
-                                                .x(BigDecimal.valueOf(1.0))
-                                                .y(BigDecimal.valueOf(2.0))
-                                                .build())
-                                        .build()
-                        ))
-                        .build()
-                );
-            } catch (final InterruptedException ignored) {
-                log.error("Interrupted Exception");
-            }
-        }, asyncConfiguration.provideVirtualThreadPerTaskExecutor());
+                .body(emitter);
     }
 
     @Operation(
@@ -153,14 +116,14 @@ public class MessageBusController {
     @PostMapping(path = "/after", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MessageBusResponseDto> getMessagesSinceJSON(
             @RequestBody(required = true)
-            @NonNull @Valid final MessageBusSinceRequestDto messageBusSinceRequestDto
+            @NonNull @Valid final MessageBusLongPollRequestDto messageBusLongPollRequestDto
     ) {
         log.debug("Requested POST /api/v1/map/message-bus/after (JSON)");
-        assertionService.assertMapExists(messageBusSinceRequestDto.getMapName());
+        assertionService.assertMapExists(messageBusLongPollRequestDto.getMapName());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
-                .body(messageBusService.listMessagesSince(messageBusSinceRequestDto.getMapName(), messageBusSinceRequestDto.getTimestampEpochMilliseconds()));
+                .body(messageBusService.listMessagesSince(messageBusLongPollRequestDto.getMapName(), messageBusLongPollRequestDto.getTimestampEpochMilliseconds()));
     }
 
 }
