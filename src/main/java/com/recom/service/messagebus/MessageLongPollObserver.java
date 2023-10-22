@@ -36,7 +36,7 @@ public class MessageLongPollObserver extends ObserverTemplate<MessageBusResponse
         try {
             responseBodyEmitter.send(response, MediaType.APPLICATION_JSON);
         } catch (final Exception e) {
-            log.error(e.getMessage(), e);
+            log.error("MessageLongPollObserver.takeNotice", e);
             responseBodyEmitter.completeWithError(e);
         } finally {
             responseBodyEmitter.complete();

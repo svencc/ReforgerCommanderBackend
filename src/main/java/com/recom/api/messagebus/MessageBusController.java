@@ -78,6 +78,7 @@ public class MessageBusController {
     ) {
         log.debug("Requested POST /api/v1/map/message-bus (JSON)");
         assertionService.assertMapExists(messageBusLongPollRequestDto.getMapName());
+
         ResponseBodyEmitter emitter;
         final Lazy<MessageBusResponseDto> messagesSinceLazy = Lazy.of(() -> messageBusService.listMessagesSince(messageBusLongPollRequestDto.getMapName(), messageBusLongPollRequestDto.getTimestampEpochMilliseconds()));
         if (messageBusLongPollRequestDto.getTimestampEpochMilliseconds() != null && !messagesSinceLazy.get().getMessages().isEmpty()) {
@@ -86,7 +87,7 @@ public class MessageBusController {
                 emitter.send(messagesSinceLazy.get(), MediaType.APPLICATION_JSON);
                 emitter.complete();
             } catch (final Exception e) {
-                log.error(e.getMessage(), e);
+                log.error("MessageBusController.getMessagesJSON: ", e);
                 emitter.completeWithError(e);
             }
         } else {
@@ -97,7 +98,6 @@ public class MessageBusController {
 
         final HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
-
         return ResponseEntity.status(HttpStatus.OK)
                 .headers(httpHeaders)
                 .cacheControl(CacheControl.noCache())
