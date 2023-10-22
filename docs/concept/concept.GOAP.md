@@ -2,7 +2,7 @@ Concept of GOAP running AI Commander in RECOM
 ====================
 ***(Goal-Oriented Action Planning)***
 
-**Author:** *Me*
+**Author:** *Me & ChatGPT*
 
 # Introduction
 In the dynamic world of strategy games, artificial intelligence (AI) is a pivotal factor in crafting an immersive and challenging player experience. 

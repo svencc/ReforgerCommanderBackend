@@ -1,5 +1,8 @@
 # TODO LIST
 
+* implement message-bus reaction to map-renderer; implement message bus on client;
+  * kind of message obersver pattern; module subscribes to message bus and gets notified if new messages arrive
+  * modules can register to message bus and get notified if new messages arrive
 
 * map scanner: heigthmap, forest heatmap, military heatmap, industrial heatmap, civil heatmap
 * unit scanner: run regularly
