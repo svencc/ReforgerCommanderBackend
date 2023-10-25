@@ -68,6 +68,10 @@ public class EmitMessagesController {
                         OneMessage.builder()
                                 .messageType(MessageType.FETCH_MAP_RENDER_DATA)
                                 .payload(null)
+                                .build(),
+                        OneMessage.builder()
+                                .messageType(MessageType.FETCH_MAP_RENDER_DATA)
+                                .payload(null)
                                 .build()
                 ))
                 .build()
