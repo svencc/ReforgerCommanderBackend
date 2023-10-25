@@ -39,11 +39,19 @@ public class MessageBusService implements HasSubject<MessageBusResponseDto> {
 
     public <T> void sendMessage(@NonNull final MessageContainer messageContainer) {
         final MessageBusResponseDto response = prepareNotification(messageContainer);
-        persistNotification(response);
+        final List<Message> persistedMessages = persistNotification(response);
+        setLatestMessage(response, persistedMessages);
         subject.notifyObserversWith(new Notification<>(response));
     }
 
-    private void persistNotification(@NonNull final MessageBusResponseDto messageBusResponse) {
+    private void setLatestMessage(
+            @NonNull final MessageBusResponseDto response,
+            @NonNull final List<Message> persistedMessages
+    ) {
+        response.setEpochMillisecondsLastMessage(persistedMessages.stream().mapToLong(message -> message.getTimestamp().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()).max().orElse(0L));
+    }
+
+    private @NonNull List<Message> persistNotification(@NonNull final MessageBusResponseDto messageBusResponse) {
         final List<Message> messagesToSave = messageBusResponse.getMessages().stream()
                 .map(message -> {
                             try {
@@ -65,7 +73,9 @@ public class MessageBusService implements HasSubject<MessageBusResponseDto> {
                 .toList();
 
         if (!messagesToSave.isEmpty()) {
-            messagePersistenceLayer.saveAll(messagesToSave);
+            return messagePersistenceLayer.saveAll(messagesToSave);
+        } else {
+            return List.of();
         }
     }
 
@@ -73,19 +83,21 @@ public class MessageBusService implements HasSubject<MessageBusResponseDto> {
     private MessageBusResponseDto prepareNotification(@NonNull final MessageContainer container) {
         final Instant now = Instant.now();
         long epochMilli = now.toEpochMilli();
+        final List<MessageDto> messages = container.getMessages().stream()
+                .map(message -> {
+                    return MessageDto.builder()
+                            .uuid(UUID.randomUUID())
+                            .messageType(message.getMessageType())
+                            .payload(message.getPayload())
+                            .timestampEpochMilliseconds(epochMilli)
+                            .build();
+                })
+                .toList();
+
         return MessageBusResponseDto.builder()
                 .mapName(container.getMapName())
-                .messages(container.getMessages().stream()
-                        .map(message -> {
-                            return MessageDto.builder()
-                                    .uuid(UUID.randomUUID())
-                                    .messageType(message.getMessageType())
-                                    .payload(message.getPayload())
-                                    .timestampEpochMilliseconds(epochMilli)
-                                    .build();
-                        })
-                        .toList()
-                )
+                .epochMillisecondsLastMessage(messages.stream().mapToLong(MessageDto::getTimestampEpochMilliseconds).max().orElse(0L))
+                .messages(messages)
                 .build();
     }
 
@@ -95,9 +107,11 @@ public class MessageBusService implements HasSubject<MessageBusResponseDto> {
             @Nullable final Long sinceTimestampEpochMilliseconds
 
     ) {
+        final List<MessageDto> messages = messagePersistenceLayer.findAllMapSpecificMessagesSince(mapName, Optional.ofNullable(sinceTimestampEpochMilliseconds).orElse(0L));
         return MessageBusResponseDto.builder()
                 .mapName(mapName)
-                .messages(messagePersistenceLayer.findAllMapSpecificMessagesSince(mapName, Optional.ofNullable(sinceTimestampEpochMilliseconds).orElse(0L)))
+                .epochMillisecondsLastMessage(messages.stream().mapToLong(MessageDto::getTimestampEpochMilliseconds).max().orElse(0L))
+                .messages(messages)
                 .build();
     }
 
