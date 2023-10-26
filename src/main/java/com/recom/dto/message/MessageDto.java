@@ -1,5 +1,6 @@
 package com.recom.dto.message;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.recom.model.message.MessageType;
@@ -25,11 +26,12 @@ public class MessageDto {
 
     @Schema
     @JsonProperty()
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private MessageType messageType;
 
     @Schema(description = "Unix timestamp in milliseconds", example = "1691941419964")
     @JsonProperty()
-    private Long timestampEpochMilliseconds;
+    private String timestampEpochMilliseconds;
 
     @Schema
     @JsonProperty()

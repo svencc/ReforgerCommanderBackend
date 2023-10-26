@@ -2,6 +2,7 @@ package com.recom.api.test;
 
 import com.recom.api.commons.HttpCommons;
 import com.recom.configuration.AsyncConfiguration;
+import com.recom.dto.map.Point2DDto;
 import com.recom.dto.message.MessageBusLongPollRequestDto;
 import com.recom.model.message.MessageContainer;
 import com.recom.model.message.MessageType;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Slf4j
@@ -67,10 +69,19 @@ public class EmitMessagesController {
                 .messages(List.of(
                         OneMessage.builder()
                                 .messageType(MessageType.FETCH_MAP_RENDER_DATA)
-                                .payload(null)
+                                .payload(List.of(
+                                        Point2DDto.builder()
+                                                .x(BigDecimal.valueOf(5.0))
+                                                .y(BigDecimal.valueOf(7.8))
+                                                .build(),
+                                        Point2DDto.builder()
+                                                .x(BigDecimal.valueOf(5.0))
+                                                .y(BigDecimal.valueOf(7.8))
+                                                .build())
+                                )
                                 .build(),
                         OneMessage.builder()
-                                .messageType(MessageType.FETCH_MAP_RENDER_DATA)
+                                .messageType(MessageType.TEST)
                                 .payload(null)
                                 .build()
                 ))

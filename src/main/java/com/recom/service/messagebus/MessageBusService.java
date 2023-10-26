@@ -48,7 +48,13 @@ public class MessageBusService implements HasSubject<MessageBusResponseDto> {
             @NonNull final MessageBusResponseDto response,
             @NonNull final List<Message> persistedMessages
     ) {
-        response.setEpochMillisecondsLastMessage(persistedMessages.stream().mapToLong(message -> message.getTimestamp().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()).max().orElse(0L));
+        response.setEpochMillisecondsLastMessage(persistedMessages.stream()
+                .mapToLong(message -> message.getTimestamp().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
+                .boxed()
+                .max(Long::compareTo)
+                .map(String::valueOf)
+                .orElse(null)
+        );
     }
 
     private @NonNull List<Message> persistNotification(@NonNull final MessageBusResponseDto messageBusResponse) {
@@ -60,7 +66,7 @@ public class MessageBusService implements HasSubject<MessageBusResponseDto> {
                                         .mapName(messageBusResponse.getMapName())
                                         .messageType(message.getMessageType())
                                         .payload(StaticObjectMapperProvider.provide().writeValueAsString(message.getPayload()))
-                                        .timestamp(LocalDateTime.ofInstant(Instant.ofEpochMilli(message.getTimestampEpochMilliseconds()), ZoneId.systemDefault()))
+                                        .timestamp(LocalDateTime.ofInstant(Instant.ofEpochMilli(Long.parseLong(message.getTimestampEpochMilliseconds())), ZoneId.systemDefault()))
                                         .build();
                             } catch (final JsonProcessingException jpe) {
                                 log.error("JsonProcessingException: ", jpe);
@@ -82,21 +88,23 @@ public class MessageBusService implements HasSubject<MessageBusResponseDto> {
     @NonNull
     private MessageBusResponseDto prepareNotification(@NonNull final MessageContainer container) {
         final Instant now = Instant.now();
-        long epochMilli = now.toEpochMilli();
+        final long epochMilli = now.toEpochMilli();
         final List<MessageDto> messages = container.getMessages().stream()
-                .map(message -> {
-                    return MessageDto.builder()
-                            .uuid(UUID.randomUUID())
-                            .messageType(message.getMessageType())
-                            .payload(message.getPayload())
-                            .timestampEpochMilliseconds(epochMilli)
-                            .build();
-                })
+                .map(message -> MessageDto.builder()
+                        .uuid(UUID.randomUUID())
+                        .messageType(message.getMessageType())
+                        .payload(message.getPayload())
+                        .timestampEpochMilliseconds(String.valueOf(epochMilli))
+                        .build())
                 .toList();
 
         return MessageBusResponseDto.builder()
                 .mapName(container.getMapName())
-                .epochMillisecondsLastMessage(messages.stream().mapToLong(MessageDto::getTimestampEpochMilliseconds).max().orElse(0L))
+                .epochMillisecondsLastMessage(messages.stream()
+                        .map(MessageDto::getTimestampEpochMilliseconds)
+                        .max(String::compareTo)
+                        .orElse(null)
+                )
                 .messages(messages)
                 .build();
     }
@@ -110,7 +118,11 @@ public class MessageBusService implements HasSubject<MessageBusResponseDto> {
         final List<MessageDto> messages = messagePersistenceLayer.findAllMapSpecificMessagesSince(mapName, Optional.ofNullable(sinceTimestampEpochMilliseconds).orElse(0L));
         return MessageBusResponseDto.builder()
                 .mapName(mapName)
-                .epochMillisecondsLastMessage(messages.stream().mapToLong(MessageDto::getTimestampEpochMilliseconds).max().orElse(0L))
+                .epochMillisecondsLastMessage(messages.stream()
+                        .map(MessageDto::getTimestampEpochMilliseconds)
+                        .max(String::compareTo)
+                        .orElse(null)
+                )
                 .messages(messages)
                 .build();
     }

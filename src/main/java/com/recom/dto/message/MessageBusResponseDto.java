@@ -25,7 +25,7 @@ public class MessageBusResponseDto implements Serializable {
 
     @Schema
     @JsonProperty()
-    private Long epochMillisecondsLastMessage;
+    private String epochMillisecondsLastMessage;
 
     @Schema
     @JsonProperty()

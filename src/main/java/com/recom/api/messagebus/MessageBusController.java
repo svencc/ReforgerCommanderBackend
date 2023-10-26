@@ -58,7 +58,7 @@ public class MessageBusController {
             @RequestParam(required = true)
             @NonNull final Map<String, String> payload
     ) {
-        log.debug("Requested POST/api/v1/message-bus/form (FORM)");
+        log.debug("Requested POST /api/v1/message-bus/form (FORM)");
 
         return getMessagesJSON(payloadParser.parseValidated(payload, MessageBusLongPollRequestDto.class));
     }
@@ -77,16 +77,16 @@ public class MessageBusController {
             @RequestBody(required = true)
             @NonNull @Valid final MessageBusLongPollRequestDto messageBusLongPollRequestDto
     ) {
-        if (messageBusLongPollRequestDto.getTimestampEpochMilliseconds() != null && messageBusLongPollRequestDto.getTimestampEpochMilliseconds() != 0L) {
-            log.debug("Requested POST /api/v1/message-bus since {} (JSON)", messageBusLongPollRequestDto.getTimestampEpochMilliseconds());
+        if (isNumeric(messageBusLongPollRequestDto)) {
+            log.debug("Requested POST /api/v1/message-bus since {} (JSON)", messageBusLongPollRequestDto.getSinceEpochMilliseconds());
         } else {
             log.debug("Requested POST /api/v1/message-bus (JSON)");
         }
         assertionService.assertMapExists(messageBusLongPollRequestDto.getMapName());
 
         ResponseBodyEmitter emitter;
-        final Lazy<MessageBusResponseDto> messagesSinceLazy = Lazy.of(() -> messageBusService.listMessagesSince(messageBusLongPollRequestDto.getMapName(), messageBusLongPollRequestDto.getTimestampEpochMilliseconds()));
-        if (messageBusLongPollRequestDto.getTimestampEpochMilliseconds() != null && messageBusLongPollRequestDto.getTimestampEpochMilliseconds() != 0L && !messagesSinceLazy.get().getMessages().isEmpty()) {
+        final Lazy<MessageBusResponseDto> messagesSinceLazy = Lazy.of(() -> messageBusService.listMessagesSince(messageBusLongPollRequestDto.getMapName(), Long.valueOf(messageBusLongPollRequestDto.getSinceEpochMilliseconds())));
+        if (isNumeric(messageBusLongPollRequestDto) && !messagesSinceLazy.get().getMessages().isEmpty()) {
             emitter = new ResponseBodyEmitter(RECOM_CURL_TIMEOUT.toMillis());
             try {
                 emitter.send(messagesSinceLazy.get(), MediaType.APPLICATION_JSON);
@@ -107,6 +107,10 @@ public class MessageBusController {
                 .headers(httpHeaders)
                 .cacheControl(CacheControl.noCache())
                 .body(emitter);
+    }
+
+    private static boolean isNumeric(@NonNull final MessageBusLongPollRequestDto messageBusLongPollRequestDto) {
+        return messageBusLongPollRequestDto.getSinceEpochMilliseconds() != null && !messageBusLongPollRequestDto.getSinceEpochMilliseconds().isEmpty();
     }
 
 }
