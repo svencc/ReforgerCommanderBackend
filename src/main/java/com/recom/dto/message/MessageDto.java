@@ -35,6 +35,6 @@ public class MessageDto {
 
     @Schema
     @JsonProperty()
-    private Object payload;
+    private String payload;
 
 }

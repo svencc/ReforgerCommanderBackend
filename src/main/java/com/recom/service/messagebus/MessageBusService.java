@@ -22,7 +22,6 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -40,11 +39,11 @@ public class MessageBusService implements HasSubject<MessageBusResponseDto> {
     public <T> void sendMessage(@NonNull final MessageContainer messageContainer) {
         final MessageBusResponseDto response = prepareNotification(messageContainer);
         final List<Message> persistedMessages = persistNotification(response);
-        setLatestMessage(response, persistedMessages);
+        setLatestMessageTimestamp(response, persistedMessages);
         subject.notifyObserversWith(new Notification<>(response));
     }
 
-    private void setLatestMessage(
+    private void setLatestMessageTimestamp(
             @NonNull final MessageBusResponseDto response,
             @NonNull final List<Message> persistedMessages
     ) {
@@ -59,23 +58,14 @@ public class MessageBusService implements HasSubject<MessageBusResponseDto> {
 
     private @NonNull List<Message> persistNotification(@NonNull final MessageBusResponseDto messageBusResponse) {
         final List<Message> messagesToSave = messageBusResponse.getMessages().stream()
-                .map(message -> {
-                            try {
-                                return Message.builder()
-                                        .uuid(message.getUuid())
-                                        .mapName(messageBusResponse.getMapName())
-                                        .messageType(message.getMessageType())
-                                        .payload(StaticObjectMapperProvider.provide().writeValueAsString(message.getPayload()))
-                                        .timestamp(LocalDateTime.ofInstant(Instant.ofEpochMilli(Long.parseLong(message.getTimestampEpochMilliseconds())), ZoneId.systemDefault()))
-                                        .build();
-                            } catch (final JsonProcessingException jpe) {
-                                log.error("JsonProcessingException: ", jpe);
-                            }
-                            return null;
-                        }
-
+                .map(message -> Message.builder()
+                        .uuid(message.getUuid())
+                        .mapName(messageBusResponse.getMapName())
+                        .messageType(message.getMessageType())
+                        .payload(message.getPayload())
+                        .timestamp(LocalDateTime.ofInstant(Instant.ofEpochMilli(Long.parseLong(message.getTimestampEpochMilliseconds())), ZoneId.systemDefault()))
+                        .build()
                 )
-                .filter(Objects::nonNull)
                 .toList();
 
         if (!messagesToSave.isEmpty()) {
@@ -90,12 +80,20 @@ public class MessageBusService implements HasSubject<MessageBusResponseDto> {
         final Instant now = Instant.now();
         final long epochMilli = now.toEpochMilli();
         final List<MessageDto> messages = container.getMessages().stream()
-                .map(message -> MessageDto.builder()
-                        .uuid(UUID.randomUUID())
-                        .messageType(message.getMessageType())
-                        .payload(message.getPayload())
-                        .timestampEpochMilliseconds(String.valueOf(epochMilli))
-                        .build())
+                .map(message -> {
+                    MessageDto.MessageDtoBuilder messageBuilder = MessageDto.builder()
+                            .uuid(UUID.randomUUID())
+                            .messageType(message.getMessageType())
+                            .timestampEpochMilliseconds(String.valueOf(epochMilli));
+
+                    try {
+                        messageBuilder.payload(StaticObjectMapperProvider.provide().writeValueAsString(message.getPayload()));
+                    } catch (JsonProcessingException jpe) {
+                        log.error("JsonProcessingException: ", jpe);
+                    }
+
+                    return messageBuilder.build();
+                })
                 .toList();
 
         return MessageBusResponseDto.builder()
