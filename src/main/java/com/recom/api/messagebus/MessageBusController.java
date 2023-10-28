@@ -7,6 +7,7 @@ import com.recom.service.AssertionService;
 import com.recom.service.ReforgerPayloadParserService;
 import com.recom.service.messagebus.MessageBusService;
 import com.recom.service.messagebus.MessageLongPollObserver;
+import com.recom.util.StringUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -35,7 +36,7 @@ import java.util.Map;
 @RequestMapping("/api/v1/message-bus")
 public class MessageBusController {
 
-    private final static Duration RECOM_CURL_TIMEOUT = Duration.ofSeconds(15); // 12 seconds seems to be the maximum on REFORGER side!
+    private final static Duration RECOM_CURL_TIMEOUT = Duration.ofSeconds(13); // 12 seconds seems to be the maximum on REFORGER side!
 
     @NonNull
     private final AssertionService assertionService;
@@ -77,7 +78,7 @@ public class MessageBusController {
             @RequestBody(required = true)
             @NonNull @Valid final MessageBusLongPollRequestDto messageBusLongPollRequestDto
     ) {
-        if (isNumeric(messageBusLongPollRequestDto)) {
+        if (StringUtil.isNumeric(messageBusLongPollRequestDto.getSinceEpochMilliseconds())) {
             log.debug("Requested POST /api/v1/message-bus since {} (JSON)", messageBusLongPollRequestDto.getSinceEpochMilliseconds());
         } else {
             log.debug("Requested POST /api/v1/message-bus (JSON)");
@@ -86,7 +87,7 @@ public class MessageBusController {
 
         ResponseBodyEmitter emitter;
         final Lazy<MessageBusResponseDto> messagesSinceLazy = Lazy.of(() -> messageBusService.listMessagesSince(messageBusLongPollRequestDto.getMapName(), Long.valueOf(messageBusLongPollRequestDto.getSinceEpochMilliseconds())));
-        if (isNumeric(messageBusLongPollRequestDto) && !messagesSinceLazy.get().getMessages().isEmpty()) {
+        if (StringUtil.isNumeric(messageBusLongPollRequestDto.getSinceEpochMilliseconds()) && !messagesSinceLazy.get().getMessages().isEmpty()) {
             emitter = new ResponseBodyEmitter(RECOM_CURL_TIMEOUT.toMillis());
             try {
                 emitter.send(messagesSinceLazy.get(), MediaType.APPLICATION_JSON);
@@ -107,10 +108,6 @@ public class MessageBusController {
                 .headers(httpHeaders)
                 .cacheControl(CacheControl.noCache())
                 .body(emitter);
-    }
-
-    private static boolean isNumeric(@NonNull final MessageBusLongPollRequestDto messageBusLongPollRequestDto) {
-        return messageBusLongPollRequestDto.getSinceEpochMilliseconds() != null && !messageBusLongPollRequestDto.getSinceEpochMilliseconds().isEmpty();
     }
 
 }
