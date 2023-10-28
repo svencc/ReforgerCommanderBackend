@@ -68,8 +68,8 @@ class AsyncCacheableRequestProcessorTest {
 
         // Act
         final ResponseEntity<String> responseEntityToTest = serviceUnderTest.processRequest(cacheName, cacheKey, cacheLoader);
-
         // Assert
+        Thread.sleep(100); // Wait for the async task (CompletableFuture) to finish
         assertEquals(HttpStatus.ACCEPTED, responseEntityToTest.getStatusCode());
         assertNull(responseEntityToTest.getBody());
 
