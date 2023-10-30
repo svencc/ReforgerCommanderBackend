@@ -55,13 +55,13 @@ public class MessageBusController {
             @ApiResponse(responseCode = HttpCommons.UNAUTHORIZED_CODE, description = HttpCommons.UNAUTHORIZED, content = @Content())
     })
     @PostMapping(path = "/form", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity<ResponseBodyEmitter> getMessagesForm(
+    public ResponseEntity<ResponseBodyEmitter> messageBusFORM(
             @RequestParam(required = true)
             @NonNull final Map<String, String> payload
     ) {
         log.debug("Requested POST /api/v1/message-bus/form (FORM)");
 
-        return getMessagesJSON(payloadParser.parseValidated(payload, MessageBusLongPollRequestDto.class));
+        return messageBusJSON(payloadParser.parseValidated(payload, MessageBusLongPollRequestDto.class));
     }
 
     @Operation(
@@ -74,7 +74,7 @@ public class MessageBusController {
             @ApiResponse(responseCode = HttpCommons.UNAUTHORIZED_CODE, description = HttpCommons.UNAUTHORIZED, content = @Content())
     })
     @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseBodyEmitter> getMessagesJSON(
+    public ResponseEntity<ResponseBodyEmitter> messageBusJSON(
             @RequestBody(required = true)
             @NonNull @Valid final MessageBusLongPollRequestDto messageBusLongPollRequestDto
     ) {

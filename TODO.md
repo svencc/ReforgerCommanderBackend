@@ -1,5 +1,9 @@
 # TODO LIST
 
+
+* TODO/BUG MapMetaDataService.mapExists cache gets not deleted after map was imported!
+
+
 * map scanner: heigthmap, forest heatmap, military heatmap, industrial heatmap, civil heatmap
 * unit scanner: run regularly
   * persist?
