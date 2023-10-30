@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.4</version>
+        <version>3.1.5</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -27,8 +27,8 @@
         <snakeyaml.version>2.2</snakeyaml.version>
         <springdoc-openapi.version>2.2.0</springdoc-openapi.version>
         <commons-math3.version>3.6.1</commons-math3.version>
-        <nimbus-jose-jwt.version>9.35</nimbus-jose-jwt.version>
-        <spring-security-oauth2-jose.version>6.1.4</spring-security-oauth2-jose.version>
+        <nimbus-jose-jwt.version>9.37</nimbus-jose-jwt.version>
+        <spring-security-oauth2-jose.version>6.1.5</spring-security-oauth2-jose.version>
         <awaitility.version>4.2.0</awaitility.version>
 
         <!-- JIB from source -->
