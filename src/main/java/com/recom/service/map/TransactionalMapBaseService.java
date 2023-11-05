@@ -1,7 +1,7 @@
 package com.recom.service.map;
 
 import com.recom.dto.map.scanner.TransactionIdentifierDto;
-import com.recom.dto.map.scanner.TransactionalMapEntityPackage;
+import com.recom.event.listener.generic.TransactionalMapEntityPackable;
 import com.recom.event.event.async.map.commit.CommitMapTransactionAsyncEvent;
 import com.recom.event.event.async.map.open.OpenMapTransactionAsyncEvent;
 import com.recom.event.event.async.map.addmappackage.AddPackageAsyncEventBase;
@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 
 @RequiredArgsConstructor
-public abstract class TransactionalMapBaseService<T extends TransactionalMapEntityPackage> {
+public abstract class TransactionalMapBaseService<T extends TransactionalMapEntityPackable> {
 
     @NonNull
     protected final ApplicationEventPublisher applicationEventPublisher;

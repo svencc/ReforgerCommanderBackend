@@ -1,13 +1,9 @@
-package com.recom.event.listener;
+package com.recom.event.listener.generic;
 
 import com.recom.dto.map.scanner.TransactionIdentifierDto;
-import com.recom.dto.map.scanner.TransactionalMapEntityPackage;
-import com.recom.entity.MapEntity;
 import com.recom.event.BaseRecomEventListener;
 import com.recom.event.event.sync.cache.CacheResetSyncEvent;
-import com.recom.mapper.MapEntityMapper;
 import com.recom.model.map.MapTransaction;
-import com.recom.persistence.mapEntity.MapEntityPersistenceLayer;
 import com.recom.service.map.MapTransactionValidatorService;
 import lombok.Getter;
 import lombok.NonNull;
@@ -27,19 +23,25 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RequiredArgsConstructor
-abstract class TransactionalMapPackageBaseEventListener<PACKAGE_TYPE extends TransactionalMapEntityPackage> extends BaseRecomEventListener {
+public abstract class TransactionalMapPackageBaseEventListener<
+        PACKAGE_TYPE extends TransactionalMapEntityPackable<DTO_TYPE>,
+        ENTITY_TYPE extends MapLocatedEntity,
+        DTO_TYPE extends MapLocatedDto>
+        extends BaseRecomEventListener {
 
     @NonNull
     protected final TransactionTemplate transactionTemplate;
     @NonNull
     protected final ApplicationEventPublisher applicationEventPublisher;
     @NonNull
-    protected final MapEntityPersistenceLayer mapEntityPersistenceLayer;
+    protected final MapEntityPersistable<ENTITY_TYPE> entityPersistenceLayer;
     @NonNull
     protected final MapTransactionValidatorService mapTransactionValidator;
     @Getter
     @NonNull
-    protected final Map<String, MapTransaction<PACKAGE_TYPE>> transactions = new HashMap<>();
+    protected final Map<String, MapTransaction<DTO_TYPE, PACKAGE_TYPE>> transactions = new HashMap<>();
+    @NonNull
+    protected final TransactionalMapEntityMappable<ENTITY_TYPE, DTO_TYPE> entityMapper;
 
     protected void handleOpenTransaction(@NonNull final TransactionIdentifierDto transactionIdentifier) {
         final String sessionIdentifier = transactionIdentifier.getSessionIdentifier();
@@ -105,19 +107,19 @@ abstract class TransactionalMapPackageBaseEventListener<PACKAGE_TYPE extends Tra
 
     private boolean processTransaction(@NonNull final String sessionIdentifier) {
         if (transactions.containsKey(sessionIdentifier)) {
-            final MapTransaction<PACKAGE_TYPE> existingTransaction = transactions.get(sessionIdentifier);
+            final MapTransaction<DTO_TYPE, PACKAGE_TYPE> existingTransaction = transactions.get(sessionIdentifier);
             if (mapTransactionValidator.isValidTransaction(existingTransaction)) {
                 log.debug("Process transaction named {}!", sessionIdentifier);
-                final List<MapEntity> distinctEntities = existingTransaction.getPackages().stream()
+                final List<ENTITY_TYPE> distinctEntities = existingTransaction.getPackages().stream()
                         .flatMap(packageDto -> packageDto.getEntities().stream())
                         .distinct()
-                        .map(MapEntityMapper.INSTANCE::toEntity)
+                        .map(entityMapper::toEntity)
                         .peek(mapEntity -> mapEntity.setMapName(sessionIdentifier))
                         .collect(Collectors.toList());
 
                 final Boolean transactionExecuted = transactionTemplate.execute(status -> {
-                    mapEntityPersistenceLayer.deleteMapEntities(sessionIdentifier);
-                    mapEntityPersistenceLayer.saveAll(distinctEntities);
+                    entityPersistenceLayer.deleteMapEntities(sessionIdentifier);
+                    entityPersistenceLayer.saveAll(distinctEntities);
                     log.debug("Transaction named {} persisted!", sessionIdentifier);
 
                     return true;

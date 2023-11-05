@@ -1,5 +1,6 @@
 package com.recom.entity;
 
+import com.recom.event.listener.generic.MapLocatedEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Cache;
@@ -25,7 +26,7 @@ import java.io.Serializable;
 })
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class MapEntity implements Persistable<Long>, Serializable {
+public class MapEntity implements Persistable<Long>, Serializable, MapLocatedEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

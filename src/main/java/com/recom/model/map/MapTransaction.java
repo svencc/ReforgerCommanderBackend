@@ -1,7 +1,8 @@
 package com.recom.model.map;
 
 import com.recom.dto.map.scanner.TransactionIdentifierDto;
-import com.recom.dto.map.scanner.TransactionalMapEntityPackage;
+import com.recom.event.listener.generic.TransactionalMapEntityPackable;
+import com.recom.event.listener.generic.MapLocatedDto;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
@@ -11,7 +12,7 @@ import java.util.List;
 
 @Data
 @Builder
-public class MapTransaction<T extends TransactionalMapEntityPackage> {
+public class MapTransaction<DTO_TYPE extends MapLocatedDto, PACKAGE_TYPE extends TransactionalMapEntityPackable<DTO_TYPE>> {
 
     private TransactionIdentifierDto openTransactionIdentifier;
 
@@ -19,7 +20,7 @@ public class MapTransaction<T extends TransactionalMapEntityPackage> {
     
     @NonNull
     @Builder.Default
-    private List<T> packages = new ArrayList<>();
+    private List<PACKAGE_TYPE> packages = new ArrayList<>();
 
     public boolean isCommitted() {
         return commitTransactionIdentifier != null;

@@ -1,10 +1,14 @@
 package com.recom.event.listener;
 
+import com.recom.dto.map.scanner.topography.MapTopographyEntityDto;
 import com.recom.dto.map.scanner.topography.TransactionalMapTopographyEntityPackageDto;
+import com.recom.entity.MapTopographyEntity;
 import com.recom.event.event.async.map.addmappackage.AddMapTopographyPackageAsyncEvent;
 import com.recom.event.event.async.map.commit.CommitMapTopographyTransactionAsyncEvent;
 import com.recom.event.event.async.map.open.OpenMapTopographyTransactionAsyncEvent;
-import com.recom.persistence.mapEntity.MapEntityPersistenceLayer;
+import com.recom.event.listener.generic.TransactionalMapPackageBaseEventListener;
+import com.recom.mapper.MapTopographyEntityMapper;
+import com.recom.persistence.mapTopographyEntity.MapTopographyEntityPersistenceLayer;
 import com.recom.service.map.MapTransactionValidatorService;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -16,15 +20,15 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 @Slf4j
 @Component
-public class MapTopographyEntityScannerTransactionEventListener extends TransactionalMapPackageBaseEventListener<TransactionalMapTopographyEntityPackageDto> {
+public class MapTopographyEntityScannerTransactionEventListener extends TransactionalMapPackageBaseEventListener<TransactionalMapTopographyEntityPackageDto, MapTopographyEntity, MapTopographyEntityDto> {
 
     public MapTopographyEntityScannerTransactionEventListener(
             @NonNull final TransactionTemplate transactionTemplate,
             @NonNull final ApplicationEventPublisher applicationEventPublisher,
-            @NonNull final MapEntityPersistenceLayer mapEntityPersistenceLayer,
+            @NonNull final MapTopographyEntityPersistenceLayer entityPersistenceLayer,
             @NonNull final MapTransactionValidatorService mapTransactionValidator
     ) {
-        super(transactionTemplate, applicationEventPublisher, mapEntityPersistenceLayer, mapTransactionValidator);
+        super(transactionTemplate, applicationEventPublisher, entityPersistenceLayer, mapTransactionValidator, MapTopographyEntityMapper.INSTANCE);
     }
 
     @Async("AsyncMapTopographyTransactionExecutor")

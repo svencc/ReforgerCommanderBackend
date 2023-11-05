@@ -2,6 +2,7 @@ package com.recom.persistence.mapEntity;
 
 import com.recom.entity.MapEntity;
 import com.recom.model.map.EnumMapDescriptorType;
+import com.recom.event.listener.generic.MapEntityPersistable;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
@@ -12,7 +13,7 @@ import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
-public class MapEntityPersistenceLayer {
+public class MapEntityPersistenceLayer implements MapEntityPersistable<MapEntity> {
 
     @NonNull
     private final MapEntityRepository mapEntityRepository;

@@ -1,6 +1,7 @@
 package com.recom.persistence.mapTopographyEntity;
 
 import com.recom.entity.MapTopographyEntity;
+import com.recom.event.listener.generic.MapEntityPersistable;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class MapTopographyEntityPersistenceLayer {
+public class MapTopographyEntityPersistenceLayer implements MapEntityPersistable<MapTopographyEntity> {
 
     @NonNull
     private final MapTopographyEntityRepository mapTopographyEntityRepository;

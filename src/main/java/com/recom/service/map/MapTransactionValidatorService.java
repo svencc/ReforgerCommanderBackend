@@ -1,6 +1,7 @@
 package com.recom.service.map;
 
-import com.recom.dto.map.scanner.map.TransactionalMapEntityPackageDto;
+import com.recom.event.listener.generic.TransactionalMapEntityPackable;
+import com.recom.event.listener.generic.MapLocatedDto;
 import com.recom.model.map.MapTransaction;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -12,9 +13,9 @@ import java.util.stream.IntStream;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class MapTransactionValidatorService {
+public class MapTransactionValidatorService<DTO_TYPE extends MapLocatedDto, PACKAGE_TYPE extends TransactionalMapEntityPackable<DTO_TYPE>> {
 
-    public boolean isValidTransaction(@NonNull final MapTransaction transaction) {
+    public boolean isValidTransaction(@NonNull final MapTransaction<DTO_TYPE, PACKAGE_TYPE> transaction) {
         // Open Transaction Message has to be present!
         if (transaction.getOpenTransactionIdentifier() == null) {
             log.warn("Required open transaction messages not found!");
@@ -52,7 +53,7 @@ public class MapTransactionValidatorService {
 
         // Calculate actual package order checksum
         final Integer calculatedPackageOrderChecksum = transaction.getPackages().stream()
-                .map(TransactionalMapEntityPackageDto::getPackageOrder)
+                .map(TransactionalMapEntityPackable::getPackageOrder)
                 .distinct()
                 .sorted()
                 .mapToInt(packageOrder -> packageOrder)

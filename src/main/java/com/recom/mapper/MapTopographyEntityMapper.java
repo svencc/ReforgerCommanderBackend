@@ -3,6 +3,7 @@ package com.recom.mapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.recom.dto.map.scanner.topography.MapTopographyEntityDto;
 import com.recom.entity.MapTopographyEntity;
+import com.recom.event.listener.generic.TransactionalMapEntityMappable;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -14,7 +15,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Mapper
-public interface MapTopographyEntityMapper {
+public interface MapTopographyEntityMapper extends TransactionalMapEntityMappable<MapTopographyEntity, MapTopographyEntityDto> {
 
     MapTopographyEntityMapper INSTANCE = Mappers.getMapper(MapTopographyEntityMapper.class);
 

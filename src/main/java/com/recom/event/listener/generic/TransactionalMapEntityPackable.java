@@ -1,10 +1,10 @@
-package com.recom.dto.map.scanner;
+package com.recom.event.listener.generic;
 
 import lombok.NonNull;
 
 import java.util.List;
 
-public interface TransactionalMapEntityPackage<T> {
+public interface TransactionalMapEntityPackable<DTO_TYPE extends MapLocatedDto> {
 
     @NonNull
     String getSessionIdentifier();
@@ -13,6 +13,6 @@ public interface TransactionalMapEntityPackage<T> {
     Integer getPackageOrder();
 
     @NonNull
-    List<T> getEntities();
+    List<DTO_TYPE> getEntities();
 
 }
