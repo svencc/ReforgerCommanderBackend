@@ -1,10 +1,10 @@
 package com.recom.service.map.scanner;
 
 import com.recom.dto.map.scanner.TransactionIdentifierDto;
-import com.recom.dto.map.scanner.TransactionalEntityPackageDto;
-import com.recom.event.event.async.map.AddMapPackageAsyncEvent;
-import com.recom.event.event.async.map.CommitMapTransactionAsyncEvent;
-import com.recom.event.event.async.map.OpenMapTransactionAsyncEvent;
+import com.recom.dto.map.scanner.map.TransactionalMapEntityPackageDto;
+import com.recom.event.event.async.map.addmappackage.AddMapPackageAsyncEvent;
+import com.recom.event.event.async.map.commit.CommitMapTransactionAsyncEvent;
+import com.recom.event.event.async.map.open.OpenMapTransactionAsyncEvent;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -12,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationEventPublisher;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
@@ -40,7 +39,7 @@ class MapEntityTransactionServiceTest {
     @Test
     public void testAddMapEntitiesPackage() {
         // Arrange
-        final TransactionalEntityPackageDto entityPackageDto = TransactionalEntityPackageDto.builder().sessionIdentifier("transactionId").build();
+        final TransactionalMapEntityPackageDto entityPackageDto = TransactionalMapEntityPackageDto.builder().sessionIdentifier("transactionId").build();
 
         // Act
         serviceUnderTest.addMapEntitiesPackage(entityPackageDto);

@@ -1,7 +1,7 @@
 package com.recom.model.map;
 
 import com.recom.dto.map.scanner.TransactionIdentifierDto;
-import com.recom.dto.map.scanner.TransactionalEntityPackageDto;
+import com.recom.dto.map.scanner.map.TransactionalMapEntityPackageDto;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
@@ -19,7 +19,7 @@ public class MapTransaction {
     
     @NonNull
     @Builder.Default
-    private List<TransactionalEntityPackageDto> packages = new ArrayList<>();
+    private List<TransactionalMapEntityPackageDto> packages = new ArrayList<>();
 
     public boolean isCommitted() {
         return commitTransactionIdentifier != null;

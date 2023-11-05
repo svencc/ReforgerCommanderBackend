@@ -1,10 +1,11 @@
 package com.recom.event;
 
 import com.recom.dto.map.scanner.TransactionIdentifierDto;
-import com.recom.dto.map.scanner.TransactionalEntityPackageDto;
-import com.recom.event.event.async.map.AddMapPackageAsyncEvent;
-import com.recom.event.event.async.map.CommitMapTransactionAsyncEvent;
-import com.recom.event.event.async.map.OpenMapTransactionAsyncEvent;
+import com.recom.dto.map.scanner.map.TransactionalMapEntityPackageDto;
+import com.recom.event.event.async.map.addmappackage.AddMapPackageAsyncEvent;
+import com.recom.event.event.async.map.commit.CommitMapTransactionAsyncEvent;
+import com.recom.event.event.async.map.open.OpenMapTransactionAsyncEvent;
+import com.recom.event.listener.MapEntityScannerTransactionEventListener;
 import com.recom.event.event.sync.cache.CacheResetSyncEvent;
 import com.recom.model.map.MapTransaction;
 import com.recom.persistence.mapEntity.MapEntityPersistenceLayer;
@@ -65,7 +66,7 @@ public class MapEntityScannerTransactionEventListenerTest {
     @Test
     public void testHandleAddMapPackage_whenTransactionExists_shouldIgnoreEventAndDoNothing() {
         // Arrange
-        final TransactionalEntityPackageDto packageDto = new TransactionalEntityPackageDto();
+        final TransactionalMapEntityPackageDto packageDto = new TransactionalMapEntityPackageDto();
         final String session1 = "session1";
         packageDto.setSessionIdentifier(session1);
         final AddMapPackageAsyncEvent event = new AddMapPackageAsyncEvent(packageDto);
@@ -83,7 +84,7 @@ public class MapEntityScannerTransactionEventListenerTest {
     @Test
     public void testHandleAddMapPackage_whenTransactionIsOpenedJustBefore_shouldAddPackageAndDoNotPersist() {
         // Arrange
-        final TransactionalEntityPackageDto packageDto = new TransactionalEntityPackageDto();
+        final TransactionalMapEntityPackageDto packageDto = new TransactionalMapEntityPackageDto();
         final String session1 = "session1";
         packageDto.setSessionIdentifier(session1);
         final AddMapPackageAsyncEvent event = new AddMapPackageAsyncEvent(packageDto);
@@ -106,7 +107,7 @@ public class MapEntityScannerTransactionEventListenerTest {
     @Test
     public void testHandleCommitTransaction_whenTransactionIsValid_shouldProcessTransaction() {
         // Arrange
-        final TransactionalEntityPackageDto packageDto = new TransactionalEntityPackageDto();
+        final TransactionalMapEntityPackageDto packageDto = new TransactionalMapEntityPackageDto();
         final String session1 = "session1";
         packageDto.setSessionIdentifier(session1);
         final AddMapPackageAsyncEvent event = new AddMapPackageAsyncEvent(packageDto);
@@ -131,7 +132,7 @@ public class MapEntityScannerTransactionEventListenerTest {
     @Test
     public void testHandleCommitTransaction_whenTransactionIsInvalid_shouldNotProcessTransaction() {
         // Arrange
-        final TransactionalEntityPackageDto packageDto = new TransactionalEntityPackageDto();
+        final TransactionalMapEntityPackageDto packageDto = new TransactionalMapEntityPackageDto();
         final String session1 = "session1";
         packageDto.setSessionIdentifier(session1);
         final AddMapPackageAsyncEvent event = new AddMapPackageAsyncEvent(packageDto);

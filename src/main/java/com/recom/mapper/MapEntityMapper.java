@@ -1,10 +1,8 @@
 package com.recom.mapper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.recom.dto.map.scanner.MapEntityDto;
+import com.recom.dto.map.scanner.map.MapEntityDto;
 import com.recom.entity.MapEntity;
-import com.recom.service.provider.StaticObjectMapperProvider;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -23,36 +21,19 @@ public interface MapEntityMapper {
     @Nullable
     @Named("encodeVectorToJsonString")
     static String encodeVectorToJsonString(@Nullable final List<BigDecimal> vectorXYZ) throws JsonProcessingException {
-        if (vectorXYZ == null) {
-            return null;
-        } else {
-            return StaticObjectMapperProvider.provide().writeValueAsString(vectorXYZ);
-        }
+        return MapperUtil.encodeVectorToJsonString(vectorXYZ);
     }
 
     @Nullable
     @Named("decodeJsonStringToVector")
     static List<BigDecimal> decodeJsonStringToVector(@Nullable final String vectorXYZString) throws JsonProcessingException {
-        if (vectorXYZString == null) {
-            return null;
-        } else {
-            return StaticObjectMapperProvider.provide().readValue(vectorXYZString, new TypeReference<List<BigDecimal>>() {
-            });
-        }
+        return MapperUtil.decodeJsonStringToVector(vectorXYZString);
     }
 
     @Nullable
     @Named("blankStringToNull")
     static String blankStringToNull(@Nullable final String blankableString) throws JsonProcessingException {
-        if (blankableString == null) {
-            return null;
-        } else {
-            if (blankableString.isBlank()) {
-                return null;
-            } else {
-                return blankableString;
-            }
-        }
+        return MapperUtil.blankStringToNull(blankableString);
     }
 
     @BeanMapping(ignoreByDefault = true)

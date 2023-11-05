@@ -1,4 +1,4 @@
-package com.recom.dto.map.scanner;
+package com.recom.dto.map.scanner.topography;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,43 +17,19 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MapEntityDto {
+public class MapTopographyEntityDto {
 
     @Schema
     @JsonProperty()
-    private String entityId;
+    private Float surfaceHeight;
 
     @Schema
     @JsonProperty()
-    private String name;
+    private Float oceanHeight;
 
     @Schema
     @JsonProperty()
-    private String className;
-
-    @Schema
-    @JsonProperty()
-    private String prefabName;
-
-    @Schema
-    @JsonProperty()
-    private String resourceName;
-
-    @Schema
-    @JsonProperty()
-    private String mapDescriptorType;
-
-    @Schema
-    @JsonProperty()
-    private List<BigDecimal> rotationX;
-
-    @Schema
-    @JsonProperty()
-    private List<BigDecimal> rotationY;
-
-    @Schema
-    @JsonProperty()
-    private List<BigDecimal> rotationZ;
+    private Float oceanBaseHeight;
 
     @Schema
     @JsonProperty()

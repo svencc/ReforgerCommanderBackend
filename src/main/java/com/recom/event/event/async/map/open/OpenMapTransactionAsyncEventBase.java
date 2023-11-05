@@ -1,4 +1,4 @@
-package com.recom.event.event.async.map;
+package com.recom.event.event.async.map.open;
 
 import com.recom.dto.map.scanner.TransactionIdentifierDto;
 import com.recom.event.event.async.RecomAsyncEvent;
@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class CommitMapTransactionAsyncEvent extends RecomAsyncEvent {
+public abstract class OpenMapTransactionAsyncEventBase extends RecomAsyncEvent {
 
     @NonNull
     private final TransactionIdentifierDto transactionIdentifierDto;

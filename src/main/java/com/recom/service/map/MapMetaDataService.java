@@ -52,7 +52,7 @@ public class MapMetaDataService {
     @NonNull
     @Cacheable(cacheNames = PROVIDEMAPMETALIST_PROVIDEMAPMETA_CACHE)
     public MapMetaDto provideMapMeta(@NonNull final String mapName) {
-        log.info("provideMapMeta({})", mapName);
+        log.debug("provideMapMeta({})", mapName);
         return dbCachedService.proxyToDBCacheSafe(
                 PROVIDEMAPMETALIST_PROVIDEMAPMETA_CACHE,
                 mapName,

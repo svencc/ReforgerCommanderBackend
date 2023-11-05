@@ -1,28 +1,30 @@
-package com.recom.service.map.scanner;
+package com.recom.service.map;
 
-import com.recom.dto.map.scanner.map.TransactionalMapEntityPackageDto;
 import com.recom.dto.map.scanner.TransactionIdentifierDto;
-import com.recom.event.event.async.map.addmappackage.AddMapPackageAsyncEvent;
+import com.recom.dto.map.scanner.TransactionalEntityPackage;
 import com.recom.event.event.async.map.commit.CommitMapTransactionAsyncEvent;
 import com.recom.event.event.async.map.open.OpenMapTransactionAsyncEvent;
+import com.recom.event.event.async.map.addmappackage.AddPackageAsyncEventBase;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.stereotype.Service;
 
-@Service
 @RequiredArgsConstructor
-public class MapEntityTransactionService {
+public abstract class TransactionalMapBaseService<T extends TransactionalEntityPackage> {
 
     @NonNull
-    private final ApplicationEventPublisher applicationEventPublisher;
+    protected final ApplicationEventPublisher applicationEventPublisher;
 
     public void openTransaction(@NonNull final TransactionIdentifierDto transactionIdentifierDto) {
         applicationEventPublisher.publishEvent(new OpenMapTransactionAsyncEvent(transactionIdentifierDto));
     }
-    public void addMapEntitiesPackage(@NonNull final TransactionalMapEntityPackageDto transactionalMapEntityPackageDto) {
-        applicationEventPublisher.publishEvent(new AddMapPackageAsyncEvent(transactionalMapEntityPackageDto));
+
+    public void addMapEntitiesPackage(@NonNull final T transactionalEntityPackageDto) {
+        applicationEventPublisher.publishEvent(createMapPackageAsyncEvent(transactionalEntityPackageDto));
     }
+
+    public abstract AddPackageAsyncEventBase<T> createMapPackageAsyncEvent(@NonNull final T transactionalEntityPackageDto);
+
     public void commitTransaction(@NonNull final TransactionIdentifierDto transactionIdentifierDto) {
         applicationEventPublisher.publishEvent(new CommitMapTransactionAsyncEvent(transactionIdentifierDto));
     }

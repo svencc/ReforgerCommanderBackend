@@ -1,10 +1,10 @@
-package com.recom.api.map;
+package com.recom.api.map.scanner;
 
 import com.recom.api.commons.HttpCommons;
 import com.recom.dto.map.scanner.TransactionIdentifierDto;
-import com.recom.dto.map.scanner.TransactionalEntityPackageDto;
+import com.recom.dto.map.scanner.topography.TransactionalMapTopographyEntityPackageDto;
 import com.recom.service.ReforgerPayloadParserService;
-import com.recom.service.map.scanner.MapEntityTransactionService;
+import com.recom.service.map.maptopographyscanner.MapTopographyTransactionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -28,40 +28,40 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "MapScanner")
-@RequestMapping("/api/v1/map/scanner")
-public class MapScannerController {
+@Tag(name = "MapTopographyScanner")
+@RequestMapping("/api/v1/map/scanner/topography")
+public class MapTopographyScannerController {
 
     @NonNull
-    private final MapEntityTransactionService mapEntityTransactionService;
+    private final MapTopographyTransactionService mapTopographyTransactionService;
     @NonNull
     private final ReforgerPayloadParserService payloadParser;
 
 
     @Operation(
-            summary = "Starts a map-scanner transaction",
-            description = "Starts a map-scanner session.",
+            summary = "Starts a map-topography-scanner transaction",
+            description = "Starts a map-topography-scanner session.",
             security = @SecurityRequirement(name = HttpCommons.BEARER_AUTHENTICATION_REQUIREMENT)
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK)
     })
     @PostMapping(path = "/transaction/open", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity<Void> startTransaction(
+    public ResponseEntity<Void> startMapTopographyTransaction(
             @RequestParam(required = true)
             @NonNull final Map<String, String> payload
     ) {
-        log.info("Requested POST /api/v1/map/scanner/transaction/open");
+        log.debug("Requested POST /api/v1/map/scanner/topography/transaction/open");
 
-        mapEntityTransactionService.openTransaction(payloadParser.parseValidated(payload, TransactionIdentifierDto.class));
+        mapTopographyTransactionService.openTransaction(payloadParser.parseValidated(payload, TransactionIdentifierDto.class));
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
                 .build();
     }
 
     @Operation(
-            summary = "Ends a map-scanner transaction",
-            description = "Ends a map-scanner session.",
+            summary = "Ends a map-topography-scanner transaction",
+            description = "Ends a map-topography-scanner session.",
             security = @SecurityRequirement(name = HttpCommons.BEARER_AUTHENTICATION_REQUIREMENT)
     )
     @ApiResponses(value = {
@@ -69,21 +69,21 @@ public class MapScannerController {
             @ApiResponse(responseCode = HttpCommons.UNAUTHORIZED_CODE, description = HttpCommons.UNAUTHORIZED, content = @Content())
     })
     @PostMapping(path = "/transaction/commit", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity<Void> commitTransaction(
+    public ResponseEntity<Void> commitMapTopographyTransaction(
             @RequestParam(required = true)
             @NonNull final Map<String, String> payload
     ) {
-        log.info("Requested POST /api/v1/map/scanner/transaction/commit");
+        log.debug("Requested POST /api/v1/map/scanner/topography/transaction/commit");
 
-        mapEntityTransactionService.commitTransaction(payloadParser.parseValidated(payload, TransactionIdentifierDto.class));
+        mapTopographyTransactionService.commitTransaction(payloadParser.parseValidated(payload, TransactionIdentifierDto.class));
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
                 .build();
     }
 
     @Operation(
-            summary = "Transfer map-entities-package",
-            description = "Receives a scanned package of map-entities.",
+            summary = "Transfer map-topography-scanner-package",
+            description = "Receives a scanned package of map-topography-entities.",
             security = @SecurityRequirement(name = HttpCommons.BEARER_AUTHENTICATION_REQUIREMENT)
     )
     @ApiResponses(value = {
@@ -91,13 +91,13 @@ public class MapScannerController {
             @ApiResponse(responseCode = HttpCommons.UNAUTHORIZED_CODE, description = HttpCommons.UNAUTHORIZED, content = @Content())
     })
     @PostMapping(path = "/transaction/entities", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity<Void> transmitEntityPackage(
+    public ResponseEntity<Void> transmitMapTopographyPackage(
             @RequestParam(required = true)
             @NonNull final Map<String, String> payload
     ) {
-        log.info("Requested POST /api/v1/map/scanner/transaction/entities");
+        log.debug("Requested POST /api/v1/map/scanner/topography/transaction/entities");
 
-        mapEntityTransactionService.addMapEntitiesPackage(payloadParser.parseValidated(payload, TransactionalEntityPackageDto.class));
+        mapTopographyTransactionService.addMapEntitiesPackage(payloadParser.parseValidated(payload, TransactionalMapTopographyEntityPackageDto.class));
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
                 .build();

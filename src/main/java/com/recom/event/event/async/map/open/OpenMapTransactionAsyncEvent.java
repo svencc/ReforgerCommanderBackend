@@ -1,4 +1,4 @@
-package com.recom.event.event.async.map;
+package com.recom.event.event.async.map.open;
 
 import com.recom.dto.map.scanner.TransactionIdentifierDto;
 import com.recom.event.event.async.RecomAsyncEvent;

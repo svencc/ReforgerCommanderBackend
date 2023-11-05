@@ -16,10 +16,10 @@ public class AccountPersistenceLayer {
     @NonNull
     private final AccountRepository accountRepository;
 
+    @NonNull
     public Account save(@NonNull final Account account) {
         return accountRepository.save(account);
     }
-
 
     @NonNull
     @Cacheable(cacheNames = "UserPersistenceLayer.findByUUID")

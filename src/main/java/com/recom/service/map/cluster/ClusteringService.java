@@ -5,7 +5,7 @@ import com.recom.dto.map.cluster.ClusterDto;
 import com.recom.dto.map.cluster.ClusterResponseDto;
 import com.recom.dto.map.cluster.ConcaveHullDto;
 import com.recom.dto.map.cluster.ConvexHullDto;
-import com.recom.dto.map.scanner.MapEntityDto;
+import com.recom.dto.map.scanner.map.MapEntityDto;
 import com.recom.mapper.MapEntityMapper;
 import com.recom.model.map.ClusterConfiguration;
 import com.recom.persistence.mapEntity.MapEntityPersistenceLayer;

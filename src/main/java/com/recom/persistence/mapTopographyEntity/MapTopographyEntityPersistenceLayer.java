@@ -1,0 +1,32 @@
+package com.recom.persistence.mapTopographyEntity;
+
+import com.recom.entity.MapTopographyEntity;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class MapTopographyEntityPersistenceLayer {
+
+    @NonNull
+    private final MapTopographyEntityRepository mapTopographyEntityRepository;
+
+    @NonNull
+    public List<MapTopographyEntity> saveAll(@NonNull List<MapTopographyEntity> distinctEntities) {
+        return mapTopographyEntityRepository.saveAll(distinctEntities);
+    }
+
+    public Integer deleteMapEntities(@NonNull final String mapName) {
+        return mapTopographyEntityRepository.deleteByMapName(mapName);
+    }
+
+    @Cacheable(cacheNames = "MapTopographyEntityPersistenceLayer.countEntitiesByMapName")
+    public Integer countEntitiesByMapName(@NonNull final String mapName) {
+        return mapTopographyEntityRepository.countByMapName(mapName);
+    }
+
+}

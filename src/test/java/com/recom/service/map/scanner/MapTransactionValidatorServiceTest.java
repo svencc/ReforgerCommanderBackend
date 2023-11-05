@@ -1,7 +1,7 @@
 package com.recom.service.map.scanner;
 
 import com.recom.dto.map.scanner.TransactionIdentifierDto;
-import com.recom.dto.map.scanner.TransactionalEntityPackageDto;
+import com.recom.dto.map.scanner.map.TransactionalMapEntityPackageDto;
 import com.recom.model.map.MapTransaction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -57,7 +57,7 @@ class MapTransactionValidatorServiceTest {
                 .openTransactionIdentifier(TransactionIdentifierDto.builder().sessionIdentifier(sessionName).packageOrder(0).build())
                 .commitTransactionIdentifier(TransactionIdentifierDto.builder().sessionIdentifier(sessionName).packageOrder(3).build())
                 .packages(List.of(
-                        TransactionalEntityPackageDto.builder().packageOrder(1).build()
+                        TransactionalMapEntityPackageDto.builder().packageOrder(1).build()
                 ))
                 .build();
 
@@ -76,8 +76,8 @@ class MapTransactionValidatorServiceTest {
                 .openTransactionIdentifier(TransactionIdentifierDto.builder().sessionIdentifier(sessionName).packageOrder(0).build())
                 .commitTransactionIdentifier(TransactionIdentifierDto.builder().sessionIdentifier(sessionName).packageOrder(3).build())
                 .packages(List.of(
-                        TransactionalEntityPackageDto.builder().packageOrder(1).build(),
-                        TransactionalEntityPackageDto.builder().packageOrder(2).build()
+                        TransactionalMapEntityPackageDto.builder().packageOrder(1).build(),
+                        TransactionalMapEntityPackageDto.builder().packageOrder(2).build()
                 ))
                 .build();
 

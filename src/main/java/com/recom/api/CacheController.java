@@ -42,7 +42,7 @@ public class CacheController {
     })
     @DeleteMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> deleteCache() {
-        log.info("Requested DELETE /api/v1/cache");
+        log.debug("Requested DELETE /api/v1/cache");
 
         applicationEventPublisher.publishEvent(new CacheResetSyncEvent());
 

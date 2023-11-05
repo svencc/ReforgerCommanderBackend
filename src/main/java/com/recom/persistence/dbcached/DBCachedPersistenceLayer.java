@@ -102,8 +102,8 @@ public class DBCachedPersistenceLayer {
         final Optional<DBCachedItem> maybeCachedItem = databasePersistentCacheRepository.findByCacheNameAndCacheKey(cacheName, cacheKey);
 
         maybeCachedItem.ifPresentOrElse(
-                (__) -> log.info("Cache hit {} - {}", cacheName, cacheKey),
-                () -> log.info("Cache miss {} - {}", cacheName, cacheKey)
+                (__) -> log.debug("Cache hit {} - {}", cacheName, cacheKey),
+                () -> log.debug("Cache miss {} - {}", cacheName, cacheKey)
         );
 
         return maybeCachedItem.flatMap(cacheItem -> deserializeCacheValue(cacheKey, cacheItem.getCachedValue()));

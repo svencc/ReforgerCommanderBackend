@@ -1,6 +1,6 @@
 package com.recom.service.map.scanner;
 
-import com.recom.dto.map.scanner.TransactionalEntityPackageDto;
+import com.recom.dto.map.scanner.map.TransactionalMapEntityPackageDto;
 import com.recom.model.map.MapTransaction;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +52,7 @@ public class MapTransactionValidatorService {
 
         // Calculate actual package order checksum
         final Integer calculatedPackageOrderChecksum = transaction.getPackages().stream()
-                .map(TransactionalEntityPackageDto::getPackageOrder)
+                .map(TransactionalMapEntityPackageDto::getPackageOrder)
                 .distinct()
                 .sorted()
                 .mapToInt(packageOrder -> packageOrder)
@@ -61,7 +61,7 @@ public class MapTransactionValidatorService {
         boolean isChecksumValid = expectedPackageOrderChecksum.equals(calculatedPackageOrderChecksum);
 
         if (isChecksumValid) {
-            log.info(
+            log.debug(
                     "Expected checksum {} vs. actual sum {} => valid",
                     expectedPackageOrderChecksum,
                     calculatedPackageOrderChecksum

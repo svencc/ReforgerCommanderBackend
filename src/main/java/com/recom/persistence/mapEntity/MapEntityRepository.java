@@ -12,14 +12,10 @@ import java.util.List;
 interface MapEntityRepository extends JpaRepository<MapEntity, Long> {
 
     @NonNull
-    Integer countByMapName(
-            @NonNull final String mapName
-    );
+    Integer countByMapName(@NonNull final String mapName);
 
     @NonNull
-    Integer deleteByMapName(
-            @NonNull final String mapName
-    );
+    Integer deleteByMapName(@NonNull final String mapName);
 
     @NonNull
     @Query(value = "SELECT DISTINCT me.mapName" +
@@ -32,45 +28,35 @@ interface MapEntityRepository extends JpaRepository<MapEntity, Long> {
             "         FROM MapEntity me" +
             "        WHERE me.className IS NOT NULL" +
             "     ORDER BY me.className ASC")
-    List<String> projectUtilizedClassNamesByMapName(
-            @NonNull final String mapName
-    );
+    List<String> projectUtilizedClassNamesByMapName(@NonNull final String mapName);
 
     @NonNull
     @Query(value = "SELECT DISTINCT me.resourceName" +
             "        FROM MapEntity me" +
             "       WHERE me.resourceName IS NOT NULL" +
             "    ORDER BY me.resourceName ASC")
-    List<String> projectUtilizedResourceNamesByMapName(
-            @NonNull final String mapName
-    );
+    List<String> projectUtilizedResourceNamesByMapName(@NonNull final String mapName);
 
     @NonNull
     @Query(value = "SELECT DISTINCT me.prefabName" +
             "        FROM MapEntity me" +
             "       WHERE me.prefabName IS NOT NULL" +
             "    ORDER BY me.prefabName ASC")
-    List<String> projectUtilizedPrefabNameByMapName(
-            @NonNull final String mapName
-    );
+    List<String> projectUtilizedPrefabNameByMapName(@NonNull final String mapName);
 
     @NonNull
     @Query(value = "SELECT DISTINCT me.name" +
             "         FROM MapEntity me" +
             "        WHERE me.name IS NOT NULL" +
             "     ORDER BY me.name ASC")
-    List<String> projectNamedEntitiesByMapName(
-            @NonNull final String mapName
-    );
+    List<String> projectNamedEntitiesByMapName(@NonNull final String mapName);
 
     @NonNull
     @Query(value = "SELECT DISTINCT me.mapDescriptorType" +
             "         FROM MapEntity me" +
             "        WHERE me.mapDescriptorType IS NOT NULL" +
             "     ORDER BY me.mapDescriptorType ASC")
-    List<String> projectMapMetaTypesByMapName(
-            @NonNull final String mapName
-    );
+    List<String> projectMapMetaTypesByMapName(@NonNull final String mapName);
 
     @NonNull
     List<MapEntity> findAllByMapNameAndMapDescriptorTypeIn(
@@ -93,7 +79,7 @@ interface MapEntityRepository extends JpaRepository<MapEntity, Long> {
     @NonNull
     List<MapEntity> findAllByMapNameAndClassNameIn(
             @NonNull final String mapName,
-            @NonNull final List<String>  classNames
+            @NonNull final List<String> classNames
     );
 
 }

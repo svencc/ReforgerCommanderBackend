@@ -1,9 +1,10 @@
-package com.recom.event;
+package com.recom.event.listener;
 
 import com.recom.entity.MapEntity;
-import com.recom.event.event.async.map.AddMapPackageAsyncEvent;
-import com.recom.event.event.async.map.CommitMapTransactionAsyncEvent;
-import com.recom.event.event.async.map.OpenMapTransactionAsyncEvent;
+import com.recom.event.BaseRecomEventListener;
+import com.recom.event.event.async.map.addmappackage.AddMapPackageAsyncEvent;
+import com.recom.event.event.async.map.commit.CommitMapTransactionAsyncEvent;
+import com.recom.event.event.async.map.open.OpenMapTransactionAsyncEvent;
 import com.recom.event.event.sync.cache.CacheResetSyncEvent;
 import com.recom.mapper.MapEntityMapper;
 import com.recom.model.map.MapTransaction;
@@ -54,13 +55,13 @@ public class MapEntityScannerTransactionEventListener extends BaseRecomEventList
             final MapTransaction existingTransaction = transactions.get(sessionIdentifier);
             resetSession(existingTransaction);
             existingTransaction.setOpenTransactionIdentifier(event.getTransactionIdentifierDto());
-            log.info("Re-Open / clear transaction named {}!", event.getTransactionIdentifierDto().getSessionIdentifier());
+            log.debug("Re-Open / clear transaction named {}!", event.getTransactionIdentifierDto().getSessionIdentifier());
         } else {
             final MapTransaction newTransaction = MapTransaction.builder()
                     .openTransactionIdentifier(event.getTransactionIdentifierDto())
                     .build();
             transactions.put(sessionIdentifier, newTransaction);
-            log.info("Open new transaction named {}!", event.getTransactionIdentifierDto().getSessionIdentifier());
+            log.debug("Open new transaction named {}!", event.getTransactionIdentifierDto().getSessionIdentifier());
         }
     }
 
@@ -74,10 +75,10 @@ public class MapEntityScannerTransactionEventListener extends BaseRecomEventList
     @EventListener(classes = AddMapPackageAsyncEvent.class)
     public void handleAddMapPackage(@NonNull final AddMapPackageAsyncEvent event) {
         logEvent(event);
-        final String sessionIdentifier = event.getTransactionalEntityPackageDto().getSessionIdentifier();
+        final String sessionIdentifier = event.getTransactionalMapEntityPackageDto().getSessionIdentifier();
         if (transactions.containsKey(sessionIdentifier)) {
             final MapTransaction existingTransaction = transactions.get(sessionIdentifier);
-            existingTransaction.getPackages().add(event.getTransactionalEntityPackageDto());
+            existingTransaction.getPackages().add(event.getTransactionalMapEntityPackageDto());
             log.debug("Added map entity package to transaction named {}!", sessionIdentifier);
 
             // EDGE CASE: If transaction is already committed, process it immediately
@@ -87,7 +88,7 @@ public class MapEntityScannerTransactionEventListener extends BaseRecomEventList
                 boolean isProcessed = processTransaction(sessionIdentifier);
                 if (isProcessed) {
                     transactions.remove(sessionIdentifier);
-                    log.info("Transaction named {} committed and removed from stack!", sessionIdentifier);
+                    log.debug("Transaction named {} committed and removed from stack!", sessionIdentifier);
                     applicationEventPublisher.publishEvent(new CacheResetSyncEvent());
                 }
             }
@@ -100,7 +101,7 @@ public class MapEntityScannerTransactionEventListener extends BaseRecomEventList
         if (transactions.containsKey(sessionIdentifier)) {
             final MapTransaction existingTransaction = transactions.get(sessionIdentifier);
             if (mapTransactionValidator.isValidTransaction(existingTransaction)) {
-                log.info("Process transaction named {}!", sessionIdentifier);
+                log.debug("Process transaction named {}!", sessionIdentifier);
                 final List<MapEntity> distinctEntities = existingTransaction.getPackages().stream()
                         .flatMap(packageDto -> packageDto.getEntities().stream())
                         .distinct()
@@ -111,7 +112,7 @@ public class MapEntityScannerTransactionEventListener extends BaseRecomEventList
                 final Boolean transactionExecuted = transactionTemplate.execute(status -> {
                     mapEntityPersistenceLayer.deleteMapEntities(sessionIdentifier);
                     mapEntityPersistenceLayer.saveAll(distinctEntities);
-                    log.info("Transaction named {} persisted!", sessionIdentifier);
+                    log.debug("Transaction named {} persisted!", sessionIdentifier);
 
                     return true;
                 });
@@ -131,7 +132,7 @@ public class MapEntityScannerTransactionEventListener extends BaseRecomEventList
         if (transactions.containsKey(sessionIdentifier)) {
             final MapTransaction existingTransaction = transactions.get(sessionIdentifier);
             if (existingTransaction.getCommitTransactionIdentifier() == null) {
-                log.info("Commit transaction named {}!", event.getTransactionIdentifierDto().getSessionIdentifier());
+                log.debug("Commit transaction named {}!", event.getTransactionIdentifierDto().getSessionIdentifier());
                 existingTransaction.setCommitTransactionIdentifier(event.getTransactionIdentifierDto());
                 processTransaction(sessionIdentifier);
             } else {

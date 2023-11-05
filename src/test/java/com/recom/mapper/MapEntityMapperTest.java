@@ -2,9 +2,10 @@ package com.recom.mapper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.recom.dto.map.scanner.MapEntityDto;
+import com.recom.dto.map.scanner.map.MapEntityDto;
 import com.recom.entity.MapEntity;
 import com.recom.service.provider.StaticObjectMapperProvider;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -14,14 +15,18 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MapEntityMapperTest {
 
+    ObjectMapper objectMapper;
+
+    @BeforeEach
+    public void beforeEach() {
+        objectMapper = new ObjectMapper();
+        final StaticObjectMapperProvider staticObjectMapperProvider = new StaticObjectMapperProvider(objectMapper);
+        staticObjectMapperProvider.postConstruct();
+    }
 
     @Test
     public void testToEntity() throws JsonProcessingException {
         // Arrange
-        final ObjectMapper objectMapper = new ObjectMapper();
-        final StaticObjectMapperProvider staticObjectMapperProvider = new StaticObjectMapperProvider(objectMapper);
-        staticObjectMapperProvider.postConstruct();
-
         final String entityId = "0x60000000000019A9 {}";
         final String className = "GenericEntity";
         final String prefabName = "Prefabs/Editor/EditorServer.et";
@@ -63,11 +68,6 @@ class MapEntityMapperTest {
 
     @Test
     public void testToDto() throws JsonProcessingException {
-        // Arrange
-        final ObjectMapper objectMapper = new ObjectMapper();
-        final StaticObjectMapperProvider staticObjectMapperProvider = new StaticObjectMapperProvider(objectMapper);
-        staticObjectMapperProvider.postConstruct();
-
         final String entityId = "0x60000000000019A9 {}";
         final String className = "GenericEntity";
         final String prefabName = "Prefabs/Editor/EditorServer.et";
