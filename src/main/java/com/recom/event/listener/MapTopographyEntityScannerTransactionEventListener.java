@@ -1,13 +1,11 @@
 package com.recom.event.listener;
 
+import com.recom.dto.map.scanner.topography.TransactionalMapTopographyEntityPackageDto;
 import com.recom.event.event.async.map.addmappackage.AddMapTopographyPackageAsyncEvent;
 import com.recom.event.event.async.map.commit.CommitMapTopographyTransactionAsyncEvent;
-import com.recom.event.event.async.map.commit.CommitMapTransactionAsyncEvent;
 import com.recom.event.event.async.map.open.OpenMapTopographyTransactionAsyncEvent;
-import com.recom.event.event.async.map.open.OpenMapTransactionAsyncEvent;
-import com.recom.event.event.async.map.addmappackage.AddMapPackageAsyncEvent;
 import com.recom.persistence.mapEntity.MapEntityPersistenceLayer;
-import com.recom.service.map.scanner.MapTransactionValidatorService;
+import com.recom.service.map.MapTransactionValidatorService;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -18,7 +16,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 @Slf4j
 @Component
-public class MapTopographyEntityScannerTransactionEventListener extends TransactionalMapPackageBaseEventListener {
+public class MapTopographyEntityScannerTransactionEventListener extends TransactionalMapPackageBaseEventListener<TransactionalMapTopographyEntityPackageDto> {
 
     public MapTopographyEntityScannerTransactionEventListener(
             @NonNull final TransactionTemplate transactionTemplate,
@@ -33,21 +31,21 @@ public class MapTopographyEntityScannerTransactionEventListener extends Transact
     @EventListener(classes = OpenMapTopographyTransactionAsyncEvent.class)
     public void handleOpenTransactionEvent(@NonNull final OpenMapTopographyTransactionAsyncEvent event) {
         logEvent(event);
-//        handleOpenTransaction(event.getTransactionIdentifierDto());
+        handleOpenTransaction(event.getTransactionIdentifierDto());
     }
 
     @Async("AsyncMapTopographyTransactionExecutor")
     @EventListener(classes = AddMapTopographyPackageAsyncEvent.class)
     public void handleAddMapPackageEvent(@NonNull final AddMapTopographyPackageAsyncEvent event) {
         logEvent(event);
-//        handleAddMapPackage(event.getTransactionalMapEntityPackageDto());
+        handleAddMapPackage(event.getTransactionalMapEntityPackage());
     }
 
     @Async("AsyncMapTopographyTransactionExecutor")
     @EventListener(classes = CommitMapTopographyTransactionAsyncEvent.class)
     public void handleCommitTransactionEvent(@NonNull final CommitMapTopographyTransactionAsyncEvent event) {
         logEvent(event);
-//        handleCommitTransaction(event.getTransactionIdentifierDto());
+        handleCommitTransaction(event.getTransactionIdentifierDto());
     }
 
 }

@@ -9,7 +9,7 @@ import com.recom.event.listener.MapEntityScannerTransactionEventListener;
 import com.recom.event.event.sync.cache.CacheResetSyncEvent;
 import com.recom.model.map.MapTransaction;
 import com.recom.persistence.mapEntity.MapEntityPersistenceLayer;
-import com.recom.service.map.scanner.MapTransactionValidatorService;
+import com.recom.service.map.MapTransactionValidatorService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;

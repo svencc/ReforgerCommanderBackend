@@ -4,7 +4,7 @@ import lombok.NonNull;
 
 import java.util.List;
 
-public interface TransactionalEntityPackage<T> {
+public interface TransactionalMapEntityPackage<T> {
 
     @NonNull
     String getSessionIdentifier();

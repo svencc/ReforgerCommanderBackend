@@ -2,8 +2,7 @@ package com.recom.dto.map.scanner.map;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.recom.dto.map.scanner.TransactionalEntityPackage;
-import com.recom.dto.map.scanner.topography.MapTopographyEntityDto;
+import com.recom.dto.map.scanner.TransactionalMapEntityPackage;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -21,7 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class TransactionalMapEntityPackageDto implements TransactionalEntityPackage<MapEntityDto> {
+public class TransactionalMapEntityPackageDto implements TransactionalMapEntityPackage<MapEntityDto> {
 
     @NotEmpty
     @Schema

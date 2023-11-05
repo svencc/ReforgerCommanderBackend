@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NonNull;
 
 @Getter
-//@RequiredArgsConstructor
 public class AddMapTopographyPackageAsyncEvent extends AddPackageAsyncEventBase<TransactionalMapTopographyEntityPackageDto> {
 
     public AddMapTopographyPackageAsyncEvent(final @NonNull TransactionalMapTopographyEntityPackageDto transactionalMapEntityPackage) {

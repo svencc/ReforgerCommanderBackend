@@ -4,7 +4,7 @@ import com.recom.api.commons.HttpCommons;
 import com.recom.dto.map.scanner.TransactionIdentifierDto;
 import com.recom.dto.map.scanner.topography.TransactionalMapTopographyEntityPackageDto;
 import com.recom.service.ReforgerPayloadParserService;
-import com.recom.service.map.maptopographyscanner.MapTopographyTransactionService;
+import com.recom.service.map.scanner.MapTopographyTransactionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

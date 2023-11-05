@@ -3,6 +3,7 @@ package com.recom.service.map.scanner;
 import com.recom.dto.map.scanner.TransactionIdentifierDto;
 import com.recom.dto.map.scanner.map.TransactionalMapEntityPackageDto;
 import com.recom.model.map.MapTransaction;
+import com.recom.service.map.MapTransactionValidatorService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

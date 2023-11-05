@@ -1,4 +1,4 @@
-package com.recom.service.map.scanner;
+package com.recom.service.map;
 
 import com.recom.dto.map.scanner.map.TransactionalMapEntityPackageDto;
 import com.recom.model.map.MapTransaction;

@@ -9,7 +9,7 @@ import com.recom.event.event.sync.cache.CacheResetSyncEvent;
 import com.recom.mapper.MapEntityMapper;
 import com.recom.model.map.MapTransaction;
 import com.recom.persistence.mapEntity.MapEntityPersistenceLayer;
-import com.recom.service.map.scanner.MapTransactionValidatorService;
+import com.recom.service.map.MapTransactionValidatorService;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
