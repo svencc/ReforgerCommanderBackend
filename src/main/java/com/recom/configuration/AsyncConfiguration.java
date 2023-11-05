@@ -57,6 +57,17 @@ public class AsyncConfiguration implements AsyncConfigurer {
 
         return executor;
     }
+    @Bean("AsyncMapTopographyTransactionExecutor")
+    @Qualifier(value = "AsyncMapTopographyTransactionExecutor")
+    public ThreadPoolTaskExecutor getAsyncMapTopographyTransactionExecutor() {
+        final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(1);
+        executor.setMaxPoolSize(1);
+        executor.setThreadNamePrefix("MpTpEvnt-Xc");
+        executor.initialize();
+
+        return executor;
+    }
 
     @Bean("ConfigurationSystemExecutor")
     @Qualifier(value = "ConfigurationSystemExecutor")

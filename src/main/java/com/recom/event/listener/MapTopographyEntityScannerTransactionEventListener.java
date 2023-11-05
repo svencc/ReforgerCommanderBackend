@@ -29,21 +29,21 @@ public class MapTopographyEntityScannerTransactionEventListener extends Transact
         super(transactionTemplate, applicationEventPublisher, mapEntityPersistenceLayer, mapTransactionValidator);
     }
 
-    @Async("AsyncMapTransactionExecutor")
+    @Async("AsyncMapTopographyTransactionExecutor")
     @EventListener(classes = OpenMapTopographyTransactionAsyncEvent.class)
     public void handleOpenTransactionEvent(@NonNull final OpenMapTopographyTransactionAsyncEvent event) {
         logEvent(event);
 //        handleOpenTransaction(event.getTransactionIdentifierDto());
     }
 
-    @Async("AsyncMapTransactionExecutor")
+    @Async("AsyncMapTopographyTransactionExecutor")
     @EventListener(classes = AddMapTopographyPackageAsyncEvent.class)
     public void handleAddMapPackageEvent(@NonNull final AddMapTopographyPackageAsyncEvent event) {
         logEvent(event);
 //        handleAddMapPackage(event.getTransactionalMapEntityPackageDto());
     }
 
-    @Async("AsyncMapTransactionExecutor")
+    @Async("AsyncMapTopographyTransactionExecutor")
     @EventListener(classes = CommitMapTopographyTransactionAsyncEvent.class)
     public void handleCommitTransactionEvent(@NonNull final CommitMapTopographyTransactionAsyncEvent event) {
         logEvent(event);
