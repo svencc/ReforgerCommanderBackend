@@ -1,7 +1,8 @@
-package com.recom.event;
+package com.recom.event.listener;
 
 import com.recom.event.event.async.cache.CacheResetAsyncEvent;
 import com.recom.event.event.sync.cache.CacheResetSyncEvent;
+import com.recom.event.listener.CacheResetEventListener;
 import com.recom.service.dbcached.DBCachedManager;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

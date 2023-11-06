@@ -1,5 +1,6 @@
-package com.recom.event;
+package com.recom.event.listener;
 
+import com.recom.event.BaseRecomEventListener;
 import com.recom.event.event.async.cache.CacheResetAsyncEvent;
 import com.recom.event.event.sync.cache.CacheResetSyncEvent;
 import com.recom.service.dbcached.DBCachedManager;

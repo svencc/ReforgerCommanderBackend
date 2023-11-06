@@ -1,4 +1,4 @@
-package com.recom.event;
+package com.recom.event.listener;
 
 import com.recom.dto.map.scanner.TransactionIdentifierDto;
 import com.recom.dto.map.scanner.map.MapEntityDto;
@@ -39,7 +39,7 @@ public class MapEntityScannerTransactionEventListenerTest {
     @Mock
     private MapEntityPersistenceLayer mapEntityPersistenceLayer;
     @Mock
-    private MapTransactionValidatorService mapTransactionValidator;
+    private MapTransactionValidatorService<MapEntityDto, TransactionalMapEntityPackageDto> mapTransactionValidator;
     @InjectMocks
     private MapEntityScannerTransactionEventListener eventListener;
 
@@ -61,7 +61,7 @@ public class MapEntityScannerTransactionEventListenerTest {
 
         // Assert
         assert transactions.containsKey("session1");
-        final MapTransaction transaction = transactions.get("session1");
+        final MapTransaction<MapEntityDto, TransactionalMapEntityPackageDto> transaction = transactions.get("session1");
         assert transaction.getOpenTransactionIdentifier().equals(transactionIdentifierDto);
     }
 
