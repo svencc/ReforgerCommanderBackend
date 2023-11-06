@@ -26,7 +26,7 @@ public class MapTopographyEntityScannerTransactionEventListener extends Transact
             @NonNull final TransactionTemplate transactionTemplate,
             @NonNull final ApplicationEventPublisher applicationEventPublisher,
             @NonNull final MapTopographyEntityPersistenceLayer entityPersistenceLayer,
-            @NonNull final MapTransactionValidatorService mapTransactionValidator
+            @NonNull final MapTransactionValidatorService<MapTopographyEntityDto, TransactionalMapTopographyEntityPackageDto> mapTransactionValidator
     ) {
         super(transactionTemplate, applicationEventPublisher, entityPersistenceLayer, mapTransactionValidator, MapTopographyEntityMapper.INSTANCE);
     }
