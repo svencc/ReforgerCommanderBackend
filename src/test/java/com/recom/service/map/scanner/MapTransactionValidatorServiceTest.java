@@ -1,6 +1,7 @@
 package com.recom.service.map.scanner;
 
 import com.recom.dto.map.scanner.TransactionIdentifierDto;
+import com.recom.dto.map.scanner.map.MapEntityDto;
 import com.recom.dto.map.scanner.map.TransactionalMapEntityPackageDto;
 import com.recom.model.map.MapTransaction;
 import com.recom.service.map.MapTransactionValidatorService;
@@ -14,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MapTransactionValidatorServiceTest {
 
-    private MapTransactionValidatorService serviceUnderTest;
+    private MapTransactionValidatorService<MapEntityDto, TransactionalMapEntityPackageDto> serviceUnderTest;
 
     @BeforeEach
     public void beforeEach() {
@@ -54,7 +55,7 @@ class MapTransactionValidatorServiceTest {
     void testIsValidTransaction_whenTransactionHasMissingPackage_shouldFail() {
         // Arrange
         final String sessionName = "session1";
-        final MapTransaction testTransaction = MapTransaction.builder()
+        final MapTransaction<MapEntityDto, TransactionalMapEntityPackageDto> testTransaction = MapTransaction.<MapEntityDto, TransactionalMapEntityPackageDto>builder()
                 .openTransactionIdentifier(TransactionIdentifierDto.builder().sessionIdentifier(sessionName).packageOrder(0).build())
                 .commitTransactionIdentifier(TransactionIdentifierDto.builder().sessionIdentifier(sessionName).packageOrder(3).build())
                 .packages(List.of(
@@ -73,7 +74,7 @@ class MapTransactionValidatorServiceTest {
     void testIsValidTransaction_whenTransactionIsValid_shouldPass() {
         // Arrange
         final String sessionName = "session1";
-        final MapTransaction testTransaction = MapTransaction.builder()
+        final MapTransaction<MapEntityDto, TransactionalMapEntityPackageDto> testTransaction = MapTransaction.<MapEntityDto, TransactionalMapEntityPackageDto>builder()
                 .openTransactionIdentifier(TransactionIdentifierDto.builder().sessionIdentifier(sessionName).packageOrder(0).build())
                 .commitTransactionIdentifier(TransactionIdentifierDto.builder().sessionIdentifier(sessionName).packageOrder(3).build())
                 .packages(List.of(

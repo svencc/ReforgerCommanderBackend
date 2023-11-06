@@ -36,7 +36,7 @@ public abstract class TransactionalMapPackageBaseEventListener<
     @NonNull
     protected final MapEntityPersistable<ENTITY_TYPE> entityPersistenceLayer;
     @NonNull
-    protected final MapTransactionValidatorService mapTransactionValidator;
+    protected final MapTransactionValidatorService<DTO_TYPE, PACKAGE_TYPE> mapTransactionValidator;
     @Getter
     @NonNull
     protected final Map<String, MapTransaction<DTO_TYPE, PACKAGE_TYPE>> transactions = new HashMap<>();
@@ -46,12 +46,12 @@ public abstract class TransactionalMapPackageBaseEventListener<
     protected void handleOpenTransaction(@NonNull final TransactionIdentifierDto transactionIdentifier) {
         final String sessionIdentifier = transactionIdentifier.getSessionIdentifier();
         if (transactions.containsKey(sessionIdentifier)) {
-            final MapTransaction existingTransaction = transactions.get(sessionIdentifier);
+            final MapTransaction<DTO_TYPE, PACKAGE_TYPE> existingTransaction = transactions.get(sessionIdentifier);
             resetSession(existingTransaction);
             existingTransaction.setOpenTransactionIdentifier(transactionIdentifier);
             log.debug("Re-Open / clear transaction named {}!", transactionIdentifier.getSessionIdentifier());
         } else {
-            final MapTransaction newTransaction = MapTransaction.builder()
+            final MapTransaction<DTO_TYPE, PACKAGE_TYPE> newTransaction = MapTransaction.<DTO_TYPE, PACKAGE_TYPE>builder()
                     .openTransactionIdentifier(transactionIdentifier)
                     .build();
             transactions.put(sessionIdentifier, newTransaction);
@@ -59,18 +59,17 @@ public abstract class TransactionalMapPackageBaseEventListener<
         }
     }
 
-    private static void resetSession(@NonNull final MapTransaction transaction) {
+    private void resetSession(@NonNull final MapTransaction<DTO_TYPE, PACKAGE_TYPE> transaction) {
         transaction.setOpenTransactionIdentifier(null);
         transaction.setCommitTransactionIdentifier(null);
         transaction.getPackages().clear();
     }
 
     protected void handleAddMapPackage(@NonNull final PACKAGE_TYPE transactionalMapEntityPackage) {
-
         final String sessionIdentifier = transactionalMapEntityPackage.getSessionIdentifier();
         if (transactions.containsKey(sessionIdentifier)) {
-            final MapTransaction existingTransaction = transactions.get(sessionIdentifier);
-            existingTransaction.getPackages().add(transactionalMapEntityPackage.getEntities());
+            final MapTransaction<DTO_TYPE, PACKAGE_TYPE> existingTransaction = transactions.get(sessionIdentifier);
+            existingTransaction.getPackages().add(transactionalMapEntityPackage);
             log.debug("Added map entity package to transaction named {}!", sessionIdentifier);
 
             // EDGE CASE: If transaction is already committed, process it immediately
@@ -92,7 +91,7 @@ public abstract class TransactionalMapPackageBaseEventListener<
     protected void handleCommitTransaction(@NonNull final TransactionIdentifierDto transactionIdentifier) {
         final String sessionIdentifier = transactionIdentifier.getSessionIdentifier();
         if (transactions.containsKey(sessionIdentifier)) {
-            final MapTransaction existingTransaction = transactions.get(sessionIdentifier);
+            final MapTransaction<DTO_TYPE, PACKAGE_TYPE> existingTransaction = transactions.get(sessionIdentifier);
             if (existingTransaction.getCommitTransactionIdentifier() == null) {
                 log.debug("Commit transaction named {}!", transactionIdentifier.getSessionIdentifier());
                 existingTransaction.setCommitTransactionIdentifier(transactionIdentifier);
@@ -131,6 +130,5 @@ public abstract class TransactionalMapPackageBaseEventListener<
 
         return false;
     }
-
 
 }
