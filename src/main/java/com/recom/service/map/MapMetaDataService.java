@@ -75,7 +75,7 @@ public class MapMetaDataService {
         return mapEntityPersistenceLayer.findAllMapNames();
     }
 
-    @Cacheable(cacheNames = "MapMetaDataService.mapExists")
+//    @Cacheable(cacheNames = "MapMetaDataService.mapExists") // @TODO does not reset when data are added!
     public boolean mapExists(@NonNull final String mapName) {
         return mapEntityPersistenceLayer.findAllMapNames().contains(mapName);
     }
