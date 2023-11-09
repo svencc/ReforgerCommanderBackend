@@ -3,11 +3,7 @@
 * map scanner: heigthmap
 * tidy up unfinished MapTransactions @Scheduled
 
-
-
-
-
-
+* ParallelTaskExecutor
 
 * TODO/BUG MapMetaDataService.mapExists cache gets not deleted after map was imported!
 
