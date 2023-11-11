@@ -1,6 +1,6 @@
 # TODO LIST
 
-* map scanner: heigthmap
+* Refactor Coordinates (in client necessary? probably not)
 * tidy up unfinished MapTransactions @Scheduled
 
 * ParallelTaskExecutor
