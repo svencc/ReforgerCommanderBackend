@@ -29,7 +29,7 @@ public class CacheResetEventListener extends BaseRecomEventListener {
     @EventListener(classes = CacheResetAsyncEvent.class)
     public void handleCacheResetAsyncEvent(@NonNull final CacheResetAsyncEvent event) {
         clearAllCaches();
-        logEvent(event);
+        debugEvent(event);
     }
 
     private void clearAllCaches() {
@@ -40,7 +40,7 @@ public class CacheResetEventListener extends BaseRecomEventListener {
     @EventListener(classes = CacheResetSyncEvent.class)
     public void handleCacheResetSyncEvent(@NonNull final CacheResetSyncEvent event) {
         clearAllCaches();
-        logEvent(event);
+        debugEvent(event);
     }
 
 }

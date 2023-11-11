@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RequiredArgsConstructor
-public abstract class TransactionalMapPackageBaseEventListener<
+public abstract class TransactionalMapPackageBaseEventListenerBase<
         PACKAGE_TYPE extends TransactionalMapEntityPackable<DTO_TYPE>,
         ENTITY_TYPE extends MapLocatedEntity,
         DTO_TYPE extends MapLocatedDto>
@@ -49,13 +49,13 @@ public abstract class TransactionalMapPackageBaseEventListener<
             final MapTransaction<DTO_TYPE, PACKAGE_TYPE> existingTransaction = transactions.get(sessionIdentifier);
             resetSession(existingTransaction);
             existingTransaction.setOpenTransactionIdentifier(transactionIdentifier);
-            log.debug("Re-Open / clear transaction named {}!", transactionIdentifier.getSessionIdentifier());
+            log.info("Re-Open / clear transaction named {}!", transactionIdentifier.getSessionIdentifier());
         } else {
             final MapTransaction<DTO_TYPE, PACKAGE_TYPE> newTransaction = MapTransaction.<DTO_TYPE, PACKAGE_TYPE>builder()
                     .openTransactionIdentifier(transactionIdentifier)
                     .build();
             transactions.put(sessionIdentifier, newTransaction);
-            log.debug("Open new transaction named {}!", transactionIdentifier.getSessionIdentifier());
+            log.info("Open new transaction named {}!", transactionIdentifier.getSessionIdentifier());
         }
     }
 
@@ -70,7 +70,7 @@ public abstract class TransactionalMapPackageBaseEventListener<
         if (transactions.containsKey(sessionIdentifier)) {
             final MapTransaction<DTO_TYPE, PACKAGE_TYPE> existingTransaction = transactions.get(sessionIdentifier);
             existingTransaction.getPackages().add(transactionalMapEntityPackage);
-            log.debug("Added map entity package to transaction named {}!", sessionIdentifier);
+            log.trace("Added map entity package to transaction named {}!", sessionIdentifier);
 
             // EDGE CASE: If transaction is already committed, process it immediately
             // Try to process already committed transaction, in case that transaction-commit-message took over a data package!
@@ -93,7 +93,7 @@ public abstract class TransactionalMapPackageBaseEventListener<
         if (transactions.containsKey(sessionIdentifier)) {
             final MapTransaction<DTO_TYPE, PACKAGE_TYPE> existingTransaction = transactions.get(sessionIdentifier);
             if (existingTransaction.getCommitTransactionIdentifier() == null) {
-                log.debug("Commit transaction named {}!", transactionIdentifier.getSessionIdentifier());
+                log.info("Commit transaction named {}!", transactionIdentifier.getSessionIdentifier());
                 existingTransaction.setCommitTransactionIdentifier(transactionIdentifier);
                 processTransaction(sessionIdentifier);
             } else {
@@ -108,7 +108,7 @@ public abstract class TransactionalMapPackageBaseEventListener<
         if (transactions.containsKey(sessionIdentifier)) {
             final MapTransaction<DTO_TYPE, PACKAGE_TYPE> existingTransaction = transactions.get(sessionIdentifier);
             if (mapTransactionValidator.isValidTransaction(existingTransaction)) {
-                log.debug("Process transaction named {}!", sessionIdentifier);
+                log.info("Process transaction named {}!", sessionIdentifier);
                 final List<ENTITY_TYPE> distinctEntities = existingTransaction.getPackages().stream()
                         .flatMap(packageDto -> packageDto.getEntities().stream())
                         .distinct()
@@ -116,10 +116,12 @@ public abstract class TransactionalMapPackageBaseEventListener<
                         .peek(mapEntity -> mapEntity.setMapName(sessionIdentifier))
                         .collect(Collectors.toList());
 
+                log.info("... persist {} entities.", distinctEntities.size());
+
                 final Boolean transactionExecuted = transactionTemplate.execute(status -> {
                     entityPersistenceLayer.deleteMapEntities(sessionIdentifier);
                     entityPersistenceLayer.saveAll(distinctEntities);
-                    log.debug("Transaction named {} persisted!", sessionIdentifier);
+                    log.info("Transaction named {} persisted!", sessionIdentifier);
 
                     return true;
                 });

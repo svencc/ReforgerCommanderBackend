@@ -47,7 +47,7 @@ public class MapEntityPersistenceLayer implements MapEntityPersistable<MapEntity
                 .toList());
     }
 
-    @Cacheable(cacheNames = "MapEntityPersistenceLayer.findAllMapNames")
+//    @Cacheable(cacheNames = "MapEntityPersistenceLayer.findAllMapNames")
     public List<String> findAllMapNames() {
         return mapEntityRepository.projectMapNames();
     }

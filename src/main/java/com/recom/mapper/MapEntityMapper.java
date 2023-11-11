@@ -37,6 +37,24 @@ public interface MapEntityMapper extends TransactionalMapEntityMappable<MapEntit
         return MapperUtil.blankStringToNull(blankableString);
     }
 
+    @Nullable
+    @Named("extractCoordinateX")
+    static BigDecimal extractCoordinateX(@Nullable final List<BigDecimal> coordinates) {
+        return MapperUtil.extractCoordinateX(coordinates);
+    }
+
+    @Nullable
+    @Named("extractCoordinateY")
+    static BigDecimal extractCoordinateY(@Nullable final List<BigDecimal> coordinates) {
+        return MapperUtil.extractCoordinateY(coordinates);
+    }
+
+    @Nullable
+    @Named("extractCoordinateZ")
+    static BigDecimal extractCoordinateZ(@Nullable final List<BigDecimal> coordinates) {
+        return MapperUtil.extractCoordinateZ(coordinates);
+    }
+
     @BeanMapping(ignoreByDefault = true)
     @Mapping(source = "entityId", target = "entityId")
     @Mapping(source = "name", target = "name", qualifiedByName = "blankStringToNull")
@@ -48,6 +66,9 @@ public interface MapEntityMapper extends TransactionalMapEntityMappable<MapEntit
     @Mapping(source = "rotationY", target = "rotationY", qualifiedByName = "encodeVectorToJsonString")
     @Mapping(source = "rotationZ", target = "rotationZ", qualifiedByName = "encodeVectorToJsonString")
     @Mapping(source = "coordinates", target = "coordinates", qualifiedByName = "encodeVectorToJsonString")
+    @Mapping(source = "coordinates", target = "coordinateX", qualifiedByName = "extractCoordinateX")
+    @Mapping(source = "coordinates", target = "coordinateY", qualifiedByName = "extractCoordinateY")
+    @Mapping(source = "coordinates", target = "coordinateZ", qualifiedByName = "extractCoordinateZ")
     MapEntity toEntity(final MapEntityDto mapEntityDto);
 
     @BeanMapping(ignoreByDefault = true)

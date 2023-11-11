@@ -1,14 +1,14 @@
 # TODO LIST
 
-* Refactor Coordinates (in client necessary? probably not)
-* tidy up unfinished MapTransactions @Scheduled
-
-* ParallelTaskExecutor
-
+* Cache Reset Map Exists!
 * TODO/BUG MapMetaDataService.mapExists cache gets not deleted after map was imported!
 
+* tidy up unfinished MapTransactions @Scheduled
 
-* map scanner, forest heatmap, military heatmap, industrial heatmap, civil heatmap
+
+
+
+* x heatmaps generator
 * unit scanner: run regularly
   * persist?
 

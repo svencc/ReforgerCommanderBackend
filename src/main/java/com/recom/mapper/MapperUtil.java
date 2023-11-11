@@ -44,4 +44,31 @@ public class MapperUtil {
         }
     }
 
+    @Nullable
+    static BigDecimal extractCoordinateX(@Nullable final List<BigDecimal> coordinates) {
+        if (coordinates == null) {
+            return null;
+        } else {
+            return coordinates.get(0);
+        }
+    }
+
+    @Nullable
+    static BigDecimal extractCoordinateY(@Nullable final List<BigDecimal> coordinates) {
+        if (coordinates == null) {
+            return null;
+        } else {
+            return coordinates.get(1);
+        }
+    }
+
+    @Nullable
+    static BigDecimal extractCoordinateZ(@Nullable final List<BigDecimal> coordinates) {
+        if (coordinates == null) {
+            return null;
+        } else {
+            return coordinates.get(2);
+        }
+    }
+
 }

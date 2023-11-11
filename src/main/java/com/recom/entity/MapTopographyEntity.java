@@ -9,6 +9,7 @@ import org.hibernate.annotations.Nationalized;
 import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -18,7 +19,11 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Table(indexes = {
         @Index(name = "IDX_mapName", columnList = "mapName", unique = false),
-        @Index(name = "IDX_mapName_coordinates", columnList = "mapName, coordinates", unique = true)
+        @Index(name = "IDX_mapName_coordinates", columnList = "mapName, coordinateX, coordinateY, coordinateZ", unique = true),
+        @Index(name = "IDX_mapName_coordinateX", columnList = "mapName, coordinateX", unique = false),
+        @Index(name = "IDX_mapName_coordinateY", columnList = "mapName, coordinateY", unique = false),
+        @Index(name = "IDX_mapName_coordinateZ", columnList = "mapName, coordinateZ", unique = false),
+        @Index(name = "IDX_mapName_coordinate_map", columnList = "mapName, coordinateX, coordinateZ,", unique = false)
 })
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -45,6 +50,16 @@ public class MapTopographyEntity implements Persistable<Long>, Serializable, Map
     @Lob
     @Column(insertable = true, updatable = false, nullable = true)
     private String coordinates;
+
+    @Column(insertable = true, updatable = false, nullable = true)
+    private BigDecimal coordinateX;
+
+    @Column(insertable = true, updatable = false, nullable = true)
+    private BigDecimal coordinateY;
+
+    @Column(insertable = true, updatable = false, nullable = true)
+    private BigDecimal coordinateZ;
+
 
     @Override
     public int hashCode() {

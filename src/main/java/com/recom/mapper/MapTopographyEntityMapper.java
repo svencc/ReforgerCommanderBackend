@@ -31,11 +31,32 @@ public interface MapTopographyEntityMapper extends TransactionalMapEntityMappabl
         return MapperUtil.decodeJsonStringToVector(vectorXYZString);
     }
 
+    @Nullable
+    @Named("extractCoordinateX")
+    static BigDecimal extractCoordinateX(@Nullable final List<BigDecimal> coordinates) {
+        return MapperUtil.extractCoordinateX(coordinates);
+    }
+
+    @Nullable
+    @Named("extractCoordinateY")
+    static BigDecimal extractCoordinateY(@Nullable final List<BigDecimal> coordinates) {
+        return MapperUtil.extractCoordinateY(coordinates);
+    }
+
+    @Nullable
+    @Named("extractCoordinateZ")
+    static BigDecimal extractCoordinateZ(@Nullable final List<BigDecimal> coordinates) {
+        return MapperUtil.extractCoordinateZ(coordinates);
+    }
+
     @BeanMapping(ignoreByDefault = true)
     @Mapping(source = "surfaceHeight", target = "surfaceHeight")
     @Mapping(source = "oceanHeight", target = "oceanHeight")
     @Mapping(source = "oceanBaseHeight", target = "oceanBaseHeight")
     @Mapping(source = "coordinates", target = "coordinates", qualifiedByName = "encodeVectorToJsonString")
+    @Mapping(source = "coordinates", target = "coordinateX", qualifiedByName = "extractCoordinateX")
+    @Mapping(source = "coordinates", target = "coordinateY", qualifiedByName = "extractCoordinateY")
+    @Mapping(source = "coordinates", target = "coordinateZ", qualifiedByName = "extractCoordinateZ")
     MapTopographyEntity toEntity(final MapTopographyEntityDto mapTopographyEntityDto);
 
     @BeanMapping(ignoreByDefault = true)
