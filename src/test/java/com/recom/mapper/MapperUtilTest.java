@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.recom.service.provider.StaticObjectMapperProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.lang.Nullable;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -69,6 +70,27 @@ class MapperUtilTest {
         assertNull(MapperUtil.blankStringToNull("  "));
         assertEquals("Hello", MapperUtil.blankStringToNull("Hello"));
         assertNull(MapperUtil.blankStringToNull(null));
+    }
+
+    @Test
+    public void testExtractCoordinateX() {
+        // Arrange & Act & Assert
+        assertNull(MapperUtil.extractCoordinateX(null));
+        assertEquals(BigDecimal.ONE, MapperUtil.extractCoordinateX(List.of(BigDecimal.ONE, BigDecimal.TWO, BigDecimal.TEN)));
+    }
+
+    @Test
+    public void testExtractCoordinateY() {
+        // Arrange & Act & Assert
+        assertNull(MapperUtil.extractCoordinateY(null));
+        assertEquals(BigDecimal.TWO, MapperUtil.extractCoordinateY(List.of(BigDecimal.ONE, BigDecimal.TWO, BigDecimal.TEN)));
+    }
+
+    @Test
+    public void testExtractCoordinateZ() {
+        // Arrange & Act & Assert
+        assertNull(MapperUtil.extractCoordinateZ(null));
+        assertEquals(BigDecimal.TEN, MapperUtil.extractCoordinateZ(List.of(BigDecimal.ONE, BigDecimal.TWO, BigDecimal.TEN)));
     }
 
 }

@@ -48,6 +48,9 @@ class MapTopographyEntityMapperTest {
         assertEquals(oceanHeight, entityToTest.getOceanHeight());
         assertEquals(oceanBaseHeight, entityToTest.getOceanBaseHeight());
         assertEquals(objectMapper.writeValueAsString(coordinates), entityToTest.getCoordinates());
+        assertEquals(BigDecimal.valueOf(1.0), entityToTest.getCoordinateX());
+        assertEquals(BigDecimal.valueOf(2.0), entityToTest.getCoordinateY());
+        assertEquals(BigDecimal.valueOf(3.0), entityToTest.getCoordinateZ());
     }
 
     @Test
