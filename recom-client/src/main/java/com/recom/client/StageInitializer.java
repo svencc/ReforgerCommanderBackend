@@ -35,10 +35,4 @@ public class StageInitializer implements ApplicationListener<StageReadyEvent> {
         }
     }
 
-//    @Override
-//    public boolean supportsAsyncExecution() {
-//        return ApplicationListener.super.supportsAsyncExecution();
-//    }
-
-
 }
