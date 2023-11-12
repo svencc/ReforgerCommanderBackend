@@ -1,6 +1,8 @@
 # TODO LIST
 
+* scanner -> qubus
 * Cache Reset Map Exists!
+* Account Settings are also cached ....
 * TODO/BUG MapMetaDataService.mapExists cache gets not deleted after map was imported!
 
 * tidy up unfinished MapTransactions @Scheduled
