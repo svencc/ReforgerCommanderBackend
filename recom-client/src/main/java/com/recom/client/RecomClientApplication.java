@@ -9,10 +9,6 @@ public class RecomClientApplication {
 
 	public static void main(@NonNull final String[] args) {
 		Application.launch(RecomClientFxApplication.class, args);
-
-
-
-//		SpringApplication.run(RecomClientApplication.class, args);
 	}
 
 }
