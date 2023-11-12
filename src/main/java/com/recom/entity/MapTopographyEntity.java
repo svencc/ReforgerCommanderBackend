@@ -39,25 +39,18 @@ public class MapTopographyEntity implements Persistable<Long>, Serializable, Map
     private String mapName;
 
     @Column(insertable = true, updatable = false, nullable = false)
-    private Float surfaceHeight;
-
-    @Column(insertable = true, updatable = false, nullable = false)
     private Float oceanHeight;
 
     @Column(insertable = true, updatable = false, nullable = false)
     private Float oceanBaseHeight;
 
-    @Lob
-    @Column(insertable = true, updatable = false, nullable = true)
-    private String coordinates;
-
-    @Column(insertable = true, updatable = false, nullable = true)
+    @Column(columnDefinition = "Decimal(15,10)", insertable = true, updatable = false, nullable = true)
     private BigDecimal coordinateX;
 
-    @Column(insertable = true, updatable = false, nullable = true)
+    @Column(columnDefinition = "Decimal(15,10)", insertable = true, updatable = false, nullable = true)
     private BigDecimal coordinateY;
 
-    @Column(insertable = true, updatable = false, nullable = true)
+    @Column(columnDefinition = "Decimal(15,10)", insertable = true, updatable = false, nullable = true)
     private BigDecimal coordinateZ;
 
 

@@ -11,10 +11,6 @@ public interface MapLocatedEntity {
 
     String getMapName();
 
-    String getCoordinates();
-
-    void setCoordinates(@NonNull final String coordinates);
-
     BigDecimal getCoordinateX();
 
     void setCoordinateX(@NonNull final BigDecimal coordinateX);

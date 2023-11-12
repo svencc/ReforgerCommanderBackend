@@ -1,16 +1,15 @@
-package com.recom.dto.map.scanner.topography;
+package com.recom.dto.map.topography;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.recom.event.listener.generic.MapLocatedDto;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-import java.util.List;
+import java.io.Serializable;
 
 @Data
 @Schema
@@ -18,18 +17,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MapTopographyEntityDto implements MapLocatedDto {
+public class MapTopographyRequestDto implements Serializable {
 
+    @NotBlank
     @Schema
     @JsonProperty()
-    private Float oceanHeight;
-
-    @Schema
-    @JsonProperty()
-    private Float oceanBaseHeight;
-
-    @Schema
-    @JsonProperty()
-    private List<BigDecimal> coordinates;
+    private String mapName;
 
 }

@@ -2,7 +2,9 @@ package com.recom.mapper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.recom.dto.map.scanner.topography.MapTopographyEntityDto;
+import com.recom.entity.MapEntity;
 import com.recom.entity.MapTopographyEntity;
+import com.recom.event.listener.generic.MapLocatedEntity;
 import com.recom.event.listener.generic.TransactionalMapEntityMappable;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
@@ -49,21 +51,24 @@ public interface MapTopographyEntityMapper extends TransactionalMapEntityMappabl
         return MapperUtil.extractCoordinateZ(coordinates);
     }
 
+    @Nullable
+    @Named("joinEntityCoordinatesToDtoCoordinates")
+    static List<BigDecimal> joinEntityCoordinatesToDtoCoordinates(@Nullable final MapLocatedEntity entity) {
+        return MapperUtil.joinEntityCoordinatesToDtoCoordinates(entity);
+    }
+
     @BeanMapping(ignoreByDefault = true)
-    @Mapping(source = "surfaceHeight", target = "surfaceHeight")
     @Mapping(source = "oceanHeight", target = "oceanHeight")
     @Mapping(source = "oceanBaseHeight", target = "oceanBaseHeight")
-    @Mapping(source = "coordinates", target = "coordinates", qualifiedByName = "encodeVectorToJsonString")
     @Mapping(source = "coordinates", target = "coordinateX", qualifiedByName = "extractCoordinateX")
     @Mapping(source = "coordinates", target = "coordinateY", qualifiedByName = "extractCoordinateY")
     @Mapping(source = "coordinates", target = "coordinateZ", qualifiedByName = "extractCoordinateZ")
     MapTopographyEntity toEntity(final MapTopographyEntityDto mapTopographyEntityDto);
 
     @BeanMapping(ignoreByDefault = true)
-    @Mapping(source = "surfaceHeight", target = "surfaceHeight")
     @Mapping(source = "oceanHeight", target = "oceanHeight")
     @Mapping(source = "oceanBaseHeight", target = "oceanBaseHeight")
-    @Mapping(source = "coordinates", target = "coordinates", qualifiedByName = "decodeJsonStringToVector")
+    @Mapping(source = "entity", target = "coordinates", qualifiedByName = "joinEntityCoordinatesToDtoCoordinates")
     MapTopographyEntityDto toDto(final MapTopographyEntity entity);
 
 }

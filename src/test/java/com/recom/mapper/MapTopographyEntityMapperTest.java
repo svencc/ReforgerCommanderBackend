@@ -2,7 +2,6 @@ package com.recom.mapper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.recom.dto.map.scanner.map.MapEntityDto;
 import com.recom.dto.map.scanner.topography.MapTopographyEntityDto;
 import com.recom.entity.MapTopographyEntity;
 import com.recom.service.provider.StaticObjectMapperProvider;
@@ -12,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class MapTopographyEntityMapperTest {
 
@@ -28,13 +27,11 @@ class MapTopographyEntityMapperTest {
     @Test
     public void testToEntity() throws JsonProcessingException {
         // Arrange
-        final Float surfaceHeight = 98.5F;
         final Float oceanHeight = 0F;
         final Float oceanBaseHeight = 5F;
         final List<BigDecimal> coordinates = List.of(BigDecimal.valueOf(1.0), BigDecimal.valueOf(2.0), BigDecimal.valueOf(3.0));
 
         final MapTopographyEntityDto dto = MapTopographyEntityDto.builder()
-                .surfaceHeight(surfaceHeight)
                 .oceanHeight(oceanHeight)
                 .oceanBaseHeight(oceanBaseHeight)
                 .coordinates(coordinates)
@@ -44,10 +41,8 @@ class MapTopographyEntityMapperTest {
         final MapTopographyEntity entityToTest = MapTopographyEntityMapper.INSTANCE.toEntity(dto);
 
         // Assert
-        assertEquals(surfaceHeight, entityToTest.getSurfaceHeight());
         assertEquals(oceanHeight, entityToTest.getOceanHeight());
         assertEquals(oceanBaseHeight, entityToTest.getOceanBaseHeight());
-        assertEquals(objectMapper.writeValueAsString(coordinates), entityToTest.getCoordinates());
         assertEquals(BigDecimal.valueOf(1.0), entityToTest.getCoordinateX());
         assertEquals(BigDecimal.valueOf(2.0), entityToTest.getCoordinateY());
         assertEquals(BigDecimal.valueOf(3.0), entityToTest.getCoordinateZ());
@@ -56,26 +51,26 @@ class MapTopographyEntityMapperTest {
     @Test
     public void testToDto() throws JsonProcessingException {
         // Arrange
-        final Float surfaceHeight = 98.5F;
         final Float oceanHeight = 0F;
         final Float oceanBaseHeight = 5F;
-        final List<BigDecimal> coordinates = List.of(BigDecimal.valueOf(1.0), BigDecimal.valueOf(2.0), BigDecimal.valueOf(3.0));
 
         final MapTopographyEntity entity = MapTopographyEntity.builder()
-                .surfaceHeight(surfaceHeight)
                 .oceanHeight(oceanHeight)
                 .oceanBaseHeight(oceanBaseHeight)
-                .coordinates(objectMapper.writeValueAsString(coordinates))
+                .coordinateX(BigDecimal.valueOf(1.0))
+                .coordinateY(BigDecimal.valueOf(2.0))
+                .coordinateZ(BigDecimal.valueOf(3.0))
                 .build();
 
         // Act
         final MapTopographyEntityDto dtoToTest = MapTopographyEntityMapper.INSTANCE.toDto(entity);
 
         // Assert
-        assertEquals(surfaceHeight, dtoToTest.getSurfaceHeight());
         assertEquals(oceanHeight, dtoToTest.getOceanHeight());
         assertEquals(oceanBaseHeight, dtoToTest.getOceanBaseHeight());
-        assertTrue(coordinates.containsAll(dtoToTest.getCoordinates()));
+        assertEquals(BigDecimal.valueOf(1.0), dtoToTest.getCoordinates().get(0));
+        assertEquals(BigDecimal.valueOf(2.0), dtoToTest.getCoordinates().get(1));
+        assertEquals(BigDecimal.valueOf(3.0), dtoToTest.getCoordinates().get(2));
     }
 
 }

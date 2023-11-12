@@ -79,17 +79,13 @@ public class MapEntity implements Persistable<Long>, Serializable, MapLocatedEnt
     @Column(insertable = true, updatable = false, nullable = true)
     private String rotationZ;
 
-    @Lob
-    @Column(insertable = true, updatable = false, nullable = true)
-    private String coordinates;
-
-    @Column(insertable = true, updatable = false, nullable = true)
+    @Column(columnDefinition="Decimal(15,10)",insertable = true, updatable = false, nullable = true)
     private BigDecimal coordinateX;
 
-    @Column(insertable = true, updatable = false, nullable = true)
+    @Column(columnDefinition="Decimal(15,10)",insertable = true, updatable = false, nullable = true)
     private BigDecimal coordinateY;
 
-    @Column(insertable = true, updatable = false, nullable = true)
+    @Column(columnDefinition="Decimal(15,10)",insertable = true, updatable = false, nullable = true)
     private BigDecimal coordinateZ;
 
     @Override

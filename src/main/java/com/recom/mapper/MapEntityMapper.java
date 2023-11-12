@@ -3,6 +3,8 @@ package com.recom.mapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.recom.dto.map.scanner.map.MapEntityDto;
 import com.recom.entity.MapEntity;
+import com.recom.entity.MapTopographyEntity;
+import com.recom.event.listener.generic.MapLocatedEntity;
 import com.recom.event.listener.generic.TransactionalMapEntityMappable;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
@@ -55,6 +57,12 @@ public interface MapEntityMapper extends TransactionalMapEntityMappable<MapEntit
         return MapperUtil.extractCoordinateZ(coordinates);
     }
 
+    @Nullable
+    @Named("joinEntityCoordinatesToDtoCoordinates")
+    static List<BigDecimal> joinEntityCoordinatesToDtoCoordinates(@Nullable final MapLocatedEntity entity) {
+        return MapperUtil.joinEntityCoordinatesToDtoCoordinates(entity);
+    }
+
     @BeanMapping(ignoreByDefault = true)
     @Mapping(source = "entityId", target = "entityId")
     @Mapping(source = "name", target = "name", qualifiedByName = "blankStringToNull")
@@ -65,7 +73,6 @@ public interface MapEntityMapper extends TransactionalMapEntityMappable<MapEntit
     @Mapping(source = "rotationX", target = "rotationX", qualifiedByName = "encodeVectorToJsonString")
     @Mapping(source = "rotationY", target = "rotationY", qualifiedByName = "encodeVectorToJsonString")
     @Mapping(source = "rotationZ", target = "rotationZ", qualifiedByName = "encodeVectorToJsonString")
-    @Mapping(source = "coordinates", target = "coordinates", qualifiedByName = "encodeVectorToJsonString")
     @Mapping(source = "coordinates", target = "coordinateX", qualifiedByName = "extractCoordinateX")
     @Mapping(source = "coordinates", target = "coordinateY", qualifiedByName = "extractCoordinateY")
     @Mapping(source = "coordinates", target = "coordinateZ", qualifiedByName = "extractCoordinateZ")
@@ -81,7 +88,7 @@ public interface MapEntityMapper extends TransactionalMapEntityMappable<MapEntit
     @Mapping(source = "rotationX", target = "rotationX", qualifiedByName = "decodeJsonStringToVector")
     @Mapping(source = "rotationY", target = "rotationY", qualifiedByName = "decodeJsonStringToVector")
     @Mapping(source = "rotationZ", target = "rotationZ", qualifiedByName = "decodeJsonStringToVector")
-    @Mapping(source = "coordinates", target = "coordinates", qualifiedByName = "decodeJsonStringToVector")
+    @Mapping(source = "entity", target = "coordinates", qualifiedByName = "joinEntityCoordinatesToDtoCoordinates")
     MapEntityDto toDto(final MapEntity entity);
 
 }

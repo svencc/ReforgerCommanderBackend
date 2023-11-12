@@ -7,6 +7,8 @@
 
 * tidy up unfinished MapTransactions @Scheduled
 
+* normalize map entities
+  * map name
 
 
 

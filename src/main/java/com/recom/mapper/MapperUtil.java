@@ -2,6 +2,9 @@ package com.recom.mapper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.recom.entity.MapEntity;
+import com.recom.entity.MapTopographyEntity;
+import com.recom.event.listener.generic.MapLocatedEntity;
 import com.recom.service.provider.StaticObjectMapperProvider;
 import lombok.experimental.UtilityClass;
 import org.springframework.lang.Nullable;
@@ -69,6 +72,10 @@ public class MapperUtil {
         } else {
             return coordinates.get(2);
         }
+    }
+
+    static List<BigDecimal> joinEntityCoordinatesToDtoCoordinates(@Nullable final MapLocatedEntity entity) {
+        return List.of(entity.getCoordinateX(), entity.getCoordinateY(), entity.getCoordinateZ());
     }
 
 }

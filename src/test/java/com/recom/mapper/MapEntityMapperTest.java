@@ -63,7 +63,6 @@ class MapEntityMapperTest {
         assertEquals(objectMapper.writeValueAsString(rotationX), entityToTest.getRotationX());
         assertEquals(objectMapper.writeValueAsString(rotationY), entityToTest.getRotationY());
         assertEquals(objectMapper.writeValueAsString(rotationZ), entityToTest.getRotationZ());
-        assertEquals(objectMapper.writeValueAsString(coordinates), entityToTest.getCoordinates());
         assertEquals(BigDecimal.valueOf(1.0), entityToTest.getCoordinateX());
         assertEquals(BigDecimal.valueOf(2.0), entityToTest.getCoordinateY());
         assertEquals(BigDecimal.valueOf(3.0), entityToTest.getCoordinateZ());
@@ -91,7 +90,9 @@ class MapEntityMapperTest {
                 .rotationX(objectMapper.writeValueAsString(rotationX))
                 .rotationY(objectMapper.writeValueAsString(rotationY))
                 .rotationZ(objectMapper.writeValueAsString(rotationZ))
-                .coordinates(objectMapper.writeValueAsString(coordinates))
+                .coordinateX(BigDecimal.valueOf(1.0))
+                .coordinateY(BigDecimal.valueOf(2.0))
+                .coordinateZ(BigDecimal.valueOf(3.0))
                 .build();
 
         // Act
