@@ -29,12 +29,12 @@ public class TopographyMapDataService {
     public byte[] provideTopographyMap(@NonNull final String mapName) throws IOException {
         final List<MapTopographyEntity> mapTopographyEntities = mapTopographyEntityPersistenceLayer.findAllByMapNameOrdered(mapName);
 
-        log.error("Found {} topography entities for map {}", mapTopographyEntities.size(), mapName);
+        log.info("Found {} topography entities for map {}", mapTopographyEntities.size(), mapName);
 
         final ByteArrayOutputStream outputStream = heightmapGeneratorService.generateHeightmap(mapTopographyEntities);
         final byte[] byteArray = outputStream.toByteArray();
 
-        try (FileOutputStream fileOutputStream = new FileOutputStream(Path.of("topographic-scanner-example.png").toFile())) {
+        try (FileOutputStream fileOutputStream = new FileOutputStream(Path.of("heightmap.png").toFile())) {
             fileOutputStream.write(byteArray);
         } catch (IOException e) {
             e.printStackTrace();
