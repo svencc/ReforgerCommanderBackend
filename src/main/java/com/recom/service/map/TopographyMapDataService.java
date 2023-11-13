@@ -34,7 +34,7 @@ public class TopographyMapDataService {
         final ByteArrayOutputStream outputStream = heightmapGeneratorService.generateHeightmap(mapTopographyEntities);
         final byte[] byteArray = outputStream.toByteArray();
 
-        try (FileOutputStream fileOutputStream = new FileOutputStream(Path.of("heightmap.png").toFile())) {
+        try (FileOutputStream fileOutputStream = new FileOutputStream(Path.of("topographic-scanner-example.png").toFile())) {
             fileOutputStream.write(byteArray);
         } catch (IOException e) {
             e.printStackTrace();

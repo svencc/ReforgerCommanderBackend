@@ -24,6 +24,7 @@ What works and what you can see in the example images:
 To create more intelligence from map data the following features are planned:
 * Forest detection / forest heatmap
 * Terrain heightmap
+  * ![topographic-scanner-example.png](md-media%2Ftopographic-scanner-example.png)
 * Mil detection
 * Industrial detection
 * Qualification and prioritization of clusters / targets
