@@ -1,7 +1,6 @@
 package com.recom.service.map;
 
 import com.recom.entity.MapTopographyEntity;
-import com.recom.mapper.MapperUtil;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,9 +9,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -50,7 +47,7 @@ public class HeightmapGeneratorService {
                     final float dynamicDepthValue = (heightValue - seaLevel) / depthRange;
                     int blueValue = (int) (255 * (dynamicDepthValue)); //  // normalize to 0..255
                     blueValue = Math.min(Math.max(blueValue, 0), 255);
-                    color = new Color(0, 0, blueValue);
+                    color = new Color((int) (blueValue * 0.77), (int) (192 * 0.94), blueValue);
                 }
 
                 image.setRGB(x, z, color.getRGB());
@@ -65,19 +62,21 @@ public class HeightmapGeneratorService {
 
     @NonNull
     public ByteArrayOutputStream generateHeightmap(@NonNull final List<MapTopographyEntity> mapTopographyEntities) throws IOException {
-        int resolution = 1444;
-        int x = 0;
+        final int resolution = 1444; // select count(distinct(coordinate x+z)) from map_topography_entity;
+//        int x = 0;
+//        int z = 0;
+        int x = resolution - 1;
         int z = 0;
-        float[][] heightMap = new float[resolution][resolution];
+
+
+        final float[][] heightMap = new float[resolution][resolution];
         float maxHeight = 0;
         float maxWaterDepth = 0;
         float seaLevel = 0.0f;
 
         for (final MapTopographyEntity entity : mapTopographyEntities) {
-            final List<BigDecimal> coordinates = MapperUtil.joinEntityCoordinatesToDtoCoordinates(entity);
-            float height = coordinates.get(1).floatValue();
+            final float height = entity.getCoordinateY().floatValue(); // coordinateY = height
             heightMap[x][z] = height;
-
             if (height > maxHeight) {
                 maxHeight = height;
             }
@@ -85,11 +84,22 @@ public class HeightmapGeneratorService {
                 maxWaterDepth = height;
             }
 
+            z--;
+            if (z < 0) {
+                z = resolution - 1;
+                if (x == 0) {
+                    break; // we are done; we have all the data we need
+                } else {
+                    x--;
+                }
+            }
+            /*
             z++;
             if (z == resolution) {
                 z = 0;
                 x++;
             }
+             */
         }
 
         return createHeightMap(seaLevel, maxHeight, maxWaterDepth, heightMap);

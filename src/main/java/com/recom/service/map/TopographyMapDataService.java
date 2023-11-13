@@ -4,6 +4,7 @@ import com.recom.entity.MapTopographyEntity;
 import com.recom.persistence.mapTopography.MapTopographyEntityPersistenceLayer;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TopographyMapDataService {
@@ -26,6 +28,8 @@ public class TopographyMapDataService {
     @Transactional(readOnly = true)
     public byte[] provideTopographyMap(@NonNull final String mapName) throws IOException {
         final List<MapTopographyEntity> mapTopographyEntities = mapTopographyEntityPersistenceLayer.findAllByMapName(mapName);
+
+        log.error("Found {} topography entities for map {}", mapTopographyEntities.size(), mapName);
 
         final ByteArrayOutputStream outputStream = heightmapGeneratorService.generateHeightmap(mapTopographyEntities);
         final byte[] byteArray = outputStream.toByteArray();
