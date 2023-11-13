@@ -63,10 +63,8 @@ public class HeightmapGeneratorService {
     @NonNull
     public ByteArrayOutputStream generateHeightmap(@NonNull final List<MapTopographyEntity> mapTopographyEntities) throws IOException {
         final int resolution = 1444; // select count(distinct(coordinate x+z)) from map_topography_entity;
-//        int x = 0;
-//        int z = 0;
-        int x = resolution - 1;
-        int z = 0;
+        int x = 0;
+        int z = resolution - 1;
 
 
         final float[][] heightMap = new float[resolution][resolution];
@@ -87,19 +85,12 @@ public class HeightmapGeneratorService {
             z--;
             if (z < 0) {
                 z = resolution - 1;
-                if (x == 0) {
+                if (x == resolution - 1) {
                     break; // we are done; we have all the data we need
                 } else {
-                    x--;
+                    x++;
                 }
             }
-            /*
-            z++;
-            if (z == resolution) {
-                z = 0;
-                x++;
-            }
-             */
         }
 
         return createHeightMap(seaLevel, maxHeight, maxWaterDepth, heightMap);

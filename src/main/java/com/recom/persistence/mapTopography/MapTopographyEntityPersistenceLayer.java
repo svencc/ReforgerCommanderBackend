@@ -31,7 +31,7 @@ public class MapTopographyEntityPersistenceLayer implements MapEntityPersistable
     }
 
     @NonNull
-    public List<MapTopographyEntity> findAllByMapName(@NonNull final String mapName) {
+    public List<MapTopographyEntity> findAllByMapNameOrdered(@NonNull final String mapName) {
         return mapTopographyEntityRepository.findAllByMapNameOrderByCoordinateXAscCoordinateZAsc(mapName);
     }
 

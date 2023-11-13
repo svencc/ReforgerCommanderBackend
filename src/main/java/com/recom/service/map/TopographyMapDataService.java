@@ -27,7 +27,7 @@ public class TopographyMapDataService {
 
     @Transactional(readOnly = true)
     public byte[] provideTopographyMap(@NonNull final String mapName) throws IOException {
-        final List<MapTopographyEntity> mapTopographyEntities = mapTopographyEntityPersistenceLayer.findAllByMapName(mapName);
+        final List<MapTopographyEntity> mapTopographyEntities = mapTopographyEntityPersistenceLayer.findAllByMapNameOrdered(mapName);
 
         log.error("Found {} topography entities for map {}", mapTopographyEntities.size(), mapName);
 
