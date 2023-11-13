@@ -1,4 +1,4 @@
-package com.recom.persistence.mapTopographyEntity;
+package com.recom.persistence.mapTopography;
 
 import com.recom.entity.MapTopographyEntity;
 import com.recom.event.listener.generic.MapEntityPersistable;
@@ -28,6 +28,11 @@ public class MapTopographyEntityPersistenceLayer implements MapEntityPersistable
     @Cacheable(cacheNames = "MapTopographyEntityPersistenceLayer.countEntitiesByMapName")
     public Integer countEntitiesByMapName(@NonNull final String mapName) {
         return mapTopographyEntityRepository.countByMapName(mapName);
+    }
+
+    @NonNull
+    public List<MapTopographyEntity> findAllByMapNameOrdered(@NonNull final String mapName) {
+        return mapTopographyEntityRepository.findAllByMapNameOrderByCoordinateXAscCoordinateZAsc(mapName);
     }
 
 }

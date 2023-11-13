@@ -20,7 +20,7 @@ import java.util.TimeZone;
         RECOMSecurityProperties.class,
         RECOMAsyncProperties.class
 })
-public class Application {
+public class RecomBackendApplication {
 
     public static void main(String[] args) {
         // Set default locale to US
@@ -29,7 +29,7 @@ public class Application {
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
 
         // Start Spring Boot Application
-        final ConfigurableApplicationContext context = SpringApplication.run(Application.class, args);
+        final ConfigurableApplicationContext context = SpringApplication.run(RecomBackendApplication.class, args);
 
         // Start Spring Context
         context.start();

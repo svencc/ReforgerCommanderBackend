@@ -48,7 +48,7 @@ public class MapperUtil {
     }
 
     @Nullable
-    static BigDecimal extractCoordinateX(@Nullable final List<BigDecimal> coordinates) {
+    public BigDecimal extractCoordinateX(@Nullable final List<BigDecimal> coordinates) {
         if (coordinates == null) {
             return null;
         } else {
@@ -57,7 +57,7 @@ public class MapperUtil {
     }
 
     @Nullable
-    static BigDecimal extractCoordinateY(@Nullable final List<BigDecimal> coordinates) {
+    public BigDecimal extractCoordinateY(@Nullable final List<BigDecimal> coordinates) {
         if (coordinates == null) {
             return null;
         } else {
@@ -66,7 +66,7 @@ public class MapperUtil {
     }
 
     @Nullable
-    static BigDecimal extractCoordinateZ(@Nullable final List<BigDecimal> coordinates) {
+    public BigDecimal extractCoordinateZ(@Nullable final List<BigDecimal> coordinates) {
         if (coordinates == null) {
             return null;
         } else {
@@ -74,7 +74,7 @@ public class MapperUtil {
         }
     }
 
-    static List<BigDecimal> joinEntityCoordinatesToDtoCoordinates(@Nullable final MapLocatedEntity entity) {
+    public List<BigDecimal> joinEntityCoordinatesToDtoCoordinates(@Nullable final MapLocatedEntity entity) {
         return List.of(entity.getCoordinateX(), entity.getCoordinateY(), entity.getCoordinateZ());
     }
 

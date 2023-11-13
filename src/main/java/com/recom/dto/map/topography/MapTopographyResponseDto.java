@@ -32,6 +32,6 @@ public class MapTopographyResponseDto implements Serializable {
 
     @Schema
     @JsonProperty()
-    private List<MapTopographyDataPointDto> coordinates;
+    private List<List<BigDecimal>> coordinates;
 
 }
