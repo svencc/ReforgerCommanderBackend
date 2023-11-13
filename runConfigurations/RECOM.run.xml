@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="RECOM" type="Application" factoryName="Application">
     <option name="ALTERNATIVE_JRE_PATH" value="$USER_HOME$/.sdkman/candidates/java/17.0.5-tem" />
-    <option name="MAIN_CLASS_NAME" value="com.recom.Application" />
+    <option name="MAIN_CLASS_NAME" value="com.recom.RecomBackendApplication" />
     <module name="recom-backend" />
     <option name="VM_PARAMETERS" value="-XX:+UseShenandoahGC -Xms256m -Xmx16384m -Dspring.profiles.active=local" />
     <extension name="coverage">

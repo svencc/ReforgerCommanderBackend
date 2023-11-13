@@ -8,7 +8,7 @@ import com.recom.event.event.async.map.commit.CommitMapTopographyTransactionAsyn
 import com.recom.event.event.async.map.open.OpenMapTopographyTransactionAsyncEvent;
 import com.recom.event.event.sync.cache.CacheResetSyncEvent;
 import com.recom.model.map.MapTransaction;
-import com.recom.persistence.mapTopographyEntity.MapTopographyEntityPersistenceLayer;
+import com.recom.persistence.mapTopography.MapTopographyEntityPersistenceLayer;
 import com.recom.service.map.MapTransactionValidatorService;
 import lombok.NonNull;
 import org.junit.jupiter.api.Test;

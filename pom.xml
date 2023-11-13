@@ -29,7 +29,6 @@
         <commons-math3.version>3.6.1</commons-math3.version>
         <nimbus-jose-jwt.version>9.37</nimbus-jose-jwt.version>
         <spring-security-oauth2-jose.version>6.1.5</spring-security-oauth2-jose.version>
-        <awaitility.version>4.2.0</awaitility.version>
 
         <!-- JIB from source -->
         <docker.source.base-image.registry>svencc</docker.source.base-image.registry>
@@ -169,12 +168,6 @@
             <artifactId>reactor-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>org.awaitility</groupId>-->
-        <!--            <artifactId>awaitility</artifactId>-->
-        <!--            <version>${awaitility.version}</version>-->
-        <!--            <scope>test</scope>-->
-        <!--        </dependency>-->
         <!-- TESTING -->
 
     </dependencies>

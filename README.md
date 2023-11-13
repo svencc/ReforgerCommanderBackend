@@ -38,7 +38,7 @@ Database is ready configured for application-server connection.
 
 ## Run application server
 
-Run com.recom.Application with "local" profile.
+Run com.recom.RecomBackendApplication with "local" profile.
 application-local.properties is preconfigured to work with the provided docker-mariaDb instance.
 
 ## Project Pages:

@@ -2,13 +2,16 @@
 
 * scanner -> qubus
 * Cache Reset Map Exists!
-* Account Settings are also cached ....
+* Account Settings are also cached -> reset when creating new account!....
 * TODO/BUG MapMetaDataService.mapExists cache gets not deleted after map was imported!
 
 * tidy up unfinished MapTransactions @Scheduled
 
 * normalize map entities
-  * map name
+  * map-meta-entity
+    * ID 
+    * name
+    * ocean_base_height
 
 
 
@@ -111,3 +114,6 @@ separate libs / dependencies / common shared code
 * observables
 * hint: https://stackoverflow.com/questions/2585220/how-to-configure-a-subproject-dependency-in-maven-without-deploying-jars
 * eventually create java modules?
+* multi-pom-project?
+  * backend
+  * client
