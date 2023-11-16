@@ -8,6 +8,7 @@ import com.recom.event.event.async.map.commit.CommitMapTransactionAsyncEvent;
 import com.recom.event.event.async.map.open.OpenMapTransactionAsyncEvent;
 import com.recom.event.event.sync.cache.CacheResetSyncEvent;
 import com.recom.model.map.MapTransaction;
+import com.recom.persistence.map.GameMapPersistenceLayer;
 import com.recom.persistence.map.structure.MapStructurePersistenceLayer;
 import com.recom.service.map.MapTransactionValidatorService;
 import lombok.NonNull;
@@ -39,6 +40,8 @@ public class MapStructureEntityScannerTransactionEventListenerTest {
     private MapStructurePersistenceLayer mapStructurePersistenceLayer;
     @Mock
     private MapTransactionValidatorService<MapStructureEntityDto, TransactionalMapStructureEntityPackageDto> mapTransactionValidator;
+    @Mock
+    private GameMapPersistenceLayer gameMapPersistenceLayer;
     @InjectMocks
     private MapStructureEntityScannerTransactionEventListener eventListener;
 
