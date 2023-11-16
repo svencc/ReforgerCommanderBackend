@@ -77,7 +77,7 @@ public class MapTopographyScannerTransactionEventListenerTest {
 
         // Assert
         assertFalse(eventListener.getTransactions().containsKey(session1));
-        verify(mapEntityPersistenceLayer, never()).deleteMapEntities(anyString());
+        verify(mapEntityPersistenceLayer, never()).deleteMapEntities(any());
         verify(mapEntityPersistenceLayer, never()).saveAll(anyList());
         verify(applicationEventPublisher, never()).publishEvent(any(CacheResetSyncEvent.class));
     }
@@ -100,7 +100,7 @@ public class MapTopographyScannerTransactionEventListenerTest {
         assertTrue(eventListener.getTransactions().containsKey(session1));
         assertEquals(1, eventListener.getTransactions().get(session1).getPackages().size());
         assertTrue(eventListener.getTransactions().get(session1).getPackages().contains(packageDto));
-        verify(mapEntityPersistenceLayer, never()).deleteMapEntities(anyString());
+        verify(mapEntityPersistenceLayer, never()).deleteMapEntities(any());
         verify(mapEntityPersistenceLayer, never()).saveAll(anyList());
         verify(applicationEventPublisher, never()).publishEvent(any(CacheResetSyncEvent.class));
     }

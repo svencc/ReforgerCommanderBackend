@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.recom.dto.configuration.OverridableConfigurationDto;
 import com.recom.entity.Configuration;
+import com.recom.entity.GameMap;
 import com.recom.model.configuration.ConfigurationType;
 import com.recom.service.provider.StaticObjectMapperProvider;
 import org.junit.jupiter.api.Test;
@@ -17,8 +18,9 @@ class ConfigurationMapperTest {
     @Test
     public void testToDto() {
         // Arrange
+        final GameMap gameMap = GameMap.builder().name("mapName").build();
         final Configuration configuration = Configuration.builder()
-                .mapName("mapName")
+                .gameMap(gameMap)
                 .namespace("namespace")
                 .name("name")
                 .value("value")
@@ -42,8 +44,9 @@ class ConfigurationMapperTest {
         StaticObjectMapperProvider staticObjectMapperProvider = new StaticObjectMapperProvider(objectMapper);
         staticObjectMapperProvider.postConstruct();
 
+        final GameMap gameMap = GameMap.builder().name("mapName").build();
         final Configuration configuration = Configuration.builder()
-                .mapName("mapName")
+                .gameMap(gameMap)
                 .namespace("namespace")
                 .name("name")
                 .value(objectMapper.writeValueAsString(List.of("asd", "fgh")))

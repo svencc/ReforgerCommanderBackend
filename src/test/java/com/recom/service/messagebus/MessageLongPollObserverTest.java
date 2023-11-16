@@ -2,6 +2,7 @@ package com.recom.service.messagebus;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.recom.dto.message.MessageBusResponseDto;
+import com.recom.entity.GameMap;
 import com.recom.model.message.MessageContainer;
 import com.recom.model.message.MessageType;
 import com.recom.model.message.OneMessage;
@@ -43,6 +44,7 @@ class MessageLongPollObserverTest {
     @Test
     public void sendMessage_withOneMessage_messageIsPersisted() {
         // Arrange
+        final GameMap gameMap = GameMap.builder().name("test-map").build();
         final Subjective<MessageBusResponseDto> messageBusSubjectSpy = spy(messageBusService.getSubject());
         observerUnderTest.observe(messageBusSubjectSpy);
 
@@ -54,7 +56,7 @@ class MessageLongPollObserverTest {
         // Act
         messageBusService.sendMessage(
                 MessageContainer.builder()
-                        .gameMap("test-map")
+                        .gameMap(gameMap)
                         .messages(List.of(testMessage))
                         .build()
         );

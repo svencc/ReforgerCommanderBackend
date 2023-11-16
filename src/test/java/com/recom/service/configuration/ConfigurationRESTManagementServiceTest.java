@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.recom.dto.configuration.OverridableConfigurationDto;
 import com.recom.dto.configuration.OverrideConfigurationDto;
 import com.recom.entity.Configuration;
+import com.recom.entity.GameMap;
 import com.recom.model.configuration.ConfigurationType;
 import com.recom.persistence.configuration.ConfigurationPersistenceLayer;
 import com.recom.service.provider.StaticObjectMapperProvider;
@@ -45,17 +46,18 @@ class ConfigurationRESTManagementServiceTest {
     @Test
     void testProvideAllExistingConfigurationValues() {
         // Arrange
+        final GameMap gameMap = GameMap.builder().name("mapName").build();
         when(configurationValueProvider.provideAllExistingDefaultValues())
                 .thenReturn(List.of(
                         Configuration.builder()
-                                .mapName(null)
+                                .gameMap(gameMap)
                                 .namespace("namespace")
                                 .name("value")
                                 .type(ConfigurationType.INTEGER)
                                 .value("1")
                                 .build(),
                         Configuration.builder()
-                                .mapName(null)
+                                .gameMap(gameMap)
                                 .namespace("namespace")
                                 .name("list")
                                 .type(ConfigurationType.LIST)
@@ -85,19 +87,20 @@ class ConfigurationRESTManagementServiceTest {
     void testProvideAllExistingConfigurationValues_whenMapNameGive_shouldMergeWithOverriddenMapConfigurationData() {
         // Arrange
         final String mapName = "mapName";
+        final GameMap gameMap = GameMap.builder().name(mapName).build();
 
         // Map specific configuration values
-        when(configurationPersistenceLayer.findAllMapSpecificValueEntities(eq(mapName)))
+        when(configurationPersistenceLayer.findAllMapSpecificValueEntities(eq(gameMap)))
                 .thenReturn(List.of(
                         Configuration.builder()
-                                .mapName(mapName)
+                                .gameMap(gameMap)
                                 .namespace("namespace")
                                 .name("value")
                                 .type(ConfigurationType.INTEGER)
                                 .value("2")
                                 .build(),
                         Configuration.builder()
-                                .mapName(mapName)
+                                .gameMap(gameMap)
                                 .namespace("namespace")
                                 .name("list")
                                 .type(ConfigurationType.LIST)
@@ -109,14 +112,14 @@ class ConfigurationRESTManagementServiceTest {
         when(configurationValueProvider.provideAllExistingDefaultValues())
                 .thenReturn(List.of(
                         Configuration.builder()
-                                .mapName(null)
+                                .gameMap(null)
                                 .namespace("namespace")
                                 .name("value")
                                 .type(ConfigurationType.INTEGER)
                                 .value("1")
                                 .build(),
                         Configuration.builder()
-                                .mapName(null)
+                                .gameMap(null)
                                 .namespace("namespace")
                                 .name("list")
                                 .type(ConfigurationType.LIST)
@@ -125,7 +128,7 @@ class ConfigurationRESTManagementServiceTest {
                 ));
 
         // Act
-        final List<OverridableConfigurationDto> listToTest = serviceUnderTest.provideAllExistingConfigurationValues(mapName);
+        final List<OverridableConfigurationDto> listToTest = serviceUnderTest.provideAllExistingConfigurationValues(gameMap);
 
         // Assert
         assertNotNull(listToTest);
@@ -148,6 +151,7 @@ class ConfigurationRESTManagementServiceTest {
     void testUpdateOverrides_whenMapNameGive_shouldMergeWithOverriddenMapConfigurationData() {
         // Arrange
         final String mapName = "mapName";
+        final GameMap gameMap = GameMap.builder().name(mapName).build();
         final String namespace = "namespace";
         final List<OverrideConfigurationDto> overrideList = List.of(
                 OverrideConfigurationDto.builder()
@@ -166,14 +170,14 @@ class ConfigurationRESTManagementServiceTest {
 
         when(configurationValueProvider.provideAllExistingDefaultValues()).thenReturn(List.of(
                 Configuration.builder()
-                        .mapName(null)
+                        .gameMap(null)
                         .namespace(namespace)
                         .name("value")
                         .type(ConfigurationType.INTEGER)
                         .value("1")
                         .build(),
                 Configuration.builder()
-                        .mapName(null)
+                        .gameMap(null)
                         .namespace(namespace)
                         .name("list")
                         .type(ConfigurationType.LIST)
@@ -182,7 +186,7 @@ class ConfigurationRESTManagementServiceTest {
         ));
 
         // Act
-        serviceUnderTest.updateOverrides(mapName, overrideList);
+        serviceUnderTest.updateOverrides(gameMap, overrideList);
 
         // Assert
         // test that new and updated entities are saved ...

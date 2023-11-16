@@ -37,8 +37,6 @@ public class MessageBusService implements HasSubject<MessageBusResponseDto> {
     private final Subjective<MessageBusResponseDto> subject = new Subject<>();
     @NonNull
     private final MessagePersistenceLayer messagePersistenceLayer;
-    @NonNull
-    private final GameMapService gameMapService;
 
     public <T> void sendMessage(@NonNull final MessageContainer messageContainer) {
         final MessageBusResponseDto response = prepareNotification(messageContainer);

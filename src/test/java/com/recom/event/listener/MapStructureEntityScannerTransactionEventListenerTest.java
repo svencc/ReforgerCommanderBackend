@@ -77,7 +77,7 @@ public class MapStructureEntityScannerTransactionEventListenerTest {
 
         // Assert
         assertFalse(eventListener.getTransactions().containsKey(session1));
-        verify(mapStructurePersistenceLayer, never()).deleteMapEntities(anyString());
+        verify(mapStructurePersistenceLayer, never()).deleteMapEntities(any());
         verify(mapStructurePersistenceLayer, never()).saveAll(anyList());
         verify(applicationEventPublisher, never()).publishEvent(any(CacheResetSyncEvent.class));
     }
@@ -100,7 +100,7 @@ public class MapStructureEntityScannerTransactionEventListenerTest {
         assertTrue(eventListener.getTransactions().containsKey(session1));
         assertEquals(1, eventListener.getTransactions().get(session1).getPackages().size());
         assertTrue(eventListener.getTransactions().get(session1).getPackages().contains(packageDto));
-        verify(mapStructurePersistenceLayer, never()).deleteMapEntities(anyString());
+        verify(mapStructurePersistenceLayer, never()).deleteMapEntities(any());
         verify(mapStructurePersistenceLayer, never()).saveAll(anyList());
         verify(applicationEventPublisher, never()).publishEvent(any(CacheResetSyncEvent.class));
     }
