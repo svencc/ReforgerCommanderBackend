@@ -8,7 +8,7 @@ import lombok.SneakyThrows;
 
 import java.util.List;
 
-public class RegisteredListConfigurationValueDescriptor<TYPE> extends BaseRegisteredConfigurationValueDescribable {
+public class RegisteredListConfigurationValueDescriptor<TYPE> extends RegisteredConfigurationValueDescribtable {
 
     public RegisteredListConfigurationValueDescriptor(
             @NonNull final String namespace,

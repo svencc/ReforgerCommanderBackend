@@ -21,7 +21,7 @@ What works and what you can see in the example images:
 ![cluster-example-2.png](md-media%2Fcluster-example-2.png)
 ![cluster-example-3.png](md-media%2Fcluster-example-3.png)
 
-To create more intelligence from map data the following features are planned:
+To create more intelligence from gameMap data the following features are planned:
 * Forest detection / forest heatmap
 * Terrain heightmap
   * ![topographic-scanner-example.png](md-media%2Ftopographic-scanner-example.png)
@@ -29,7 +29,7 @@ To create more intelligence from map data the following features are planned:
 * Industrial detection
 * Qualification and prioritization of clusters / targets
 
-After having more intelligence from the map data, the work on the AI Commander will start.
+After having more intelligence from the gameMap data, the work on the AI Commander will start.
 Planned is to harness the power of OpenAI to create a commander that make decisions and gives orders to his units.
 
 ## Setup or run mariaDb docker container

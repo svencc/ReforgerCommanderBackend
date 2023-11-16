@@ -2,7 +2,8 @@ package com.recom.dto.map.scanner.topography;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.recom.event.listener.generic.TransactionalMapEntityPackable;
+import com.recom.event.listener.generic.generic.TransactionalMapEntityPackable;
+import com.recom.event.listener.generic.maprelated.TransactionalMapRelatedEntityPackable;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

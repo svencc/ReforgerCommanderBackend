@@ -77,7 +77,7 @@ public class MapExistsController {
         log.debug("Requested GET /api/v1/map/exists (JSON)");
 
         try {
-            assertionService.assertMapExists(mapExistsRequestDto.getMapName());
+            assertionService.provideMap(mapExistsRequestDto.getMapName());
             return ResponseEntity.status(HttpStatus.OK)
                     .cacheControl(CacheControl.noCache())
                     .body(MapExistsResponseDto.builder()

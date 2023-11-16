@@ -3,6 +3,7 @@ package com.recom.api.map;
 import com.recom.api.commons.HttpCommons;
 import com.recom.dto.map.renderer.MapRenderResponseDto;
 import com.recom.dto.map.renderer.MapRendererRequestDto;
+import com.recom.entity.GameMap;
 import com.recom.service.AssertionService;
 import com.recom.service.ReforgerPayloadParserService;
 import com.recom.service.dbcached.AsyncCacheableRequestProcessor;
@@ -78,12 +79,12 @@ public class MapRendererController {
     ) {
         log.debug("Requested POST /api/v1/map/renderer (JSON)");
 
-        assertionService.assertMapExists(mapRendererRequestDto.getMapName());
+        final GameMap gameMap = assertionService.provideMap(mapRendererRequestDto.getMapName());
 
         return asyncCacheableRequestProcessor.processRequest(
                 MapRendererService.MAP_RENDERER_CACHE_NAME,
                 mapRendererRequestDto.getMapName(),
-                () -> mapRendererService.renderMap(mapRendererRequestDto.getMapName())
+                () -> mapRendererService.renderMap(gameMap)
         );
     }
 

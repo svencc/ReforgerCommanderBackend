@@ -3,6 +3,7 @@ package com.recom.api.messagebus;
 import com.recom.api.commons.HttpCommons;
 import com.recom.dto.message.MessageBusLongPollRequestDto;
 import com.recom.dto.message.MessageBusResponseDto;
+import com.recom.entity.GameMap;
 import com.recom.service.AssertionService;
 import com.recom.service.ReforgerPayloadParserService;
 import com.recom.service.messagebus.MessageBusService;
@@ -83,10 +84,10 @@ public class MessageBusController {
         } else {
             log.debug("Requested POST /api/v1/message-bus (JSON)");
         }
-        assertionService.assertMapExists(messageBusLongPollRequestDto.getMapName());
+        final GameMap gameMap = assertionService.provideMap(messageBusLongPollRequestDto.getMapName());
 
         ResponseBodyEmitter emitter;
-        final Lazy<MessageBusResponseDto> messagesSinceLazy = Lazy.of(() -> messageBusService.listMessagesSince(messageBusLongPollRequestDto.getMapName(), Long.valueOf(messageBusLongPollRequestDto.getSinceEpochMilliseconds())));
+        final Lazy<MessageBusResponseDto> messagesSinceLazy = Lazy.of(() -> messageBusService.listMessagesSince(gameMap, Long.valueOf(messageBusLongPollRequestDto.getSinceEpochMilliseconds())));
         if (StringUtil.isNumeric(messageBusLongPollRequestDto.getSinceEpochMilliseconds()) && !messagesSinceLazy.get().getMessages().isEmpty()) {
             emitter = new ResponseBodyEmitter(RECOM_CURL_TIMEOUT.toMillis());
             try {

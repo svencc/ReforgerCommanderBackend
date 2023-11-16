@@ -1,12 +1,13 @@
 package com.recom.service.configuration;
 
 import com.recom.entity.Configuration;
-import com.recom.entity.MapEntity;
+import com.recom.entity.GameMap;
+import com.recom.entity.MapStructureEntity;
 import com.recom.event.event.async.cache.CacheResetAsyncEvent;
 import com.recom.model.configuration.descriptor.RegisteredListConfigurationValueDescriptor;
 import com.recom.persistence.configuration.ConfigurationPersistenceLayer;
-import com.recom.persistence.mapEntity.MapEntityPersistenceLayer;
-import com.recom.service.map.MapMetaDataService;
+import com.recom.persistence.map.structure.MapStructurePersistenceLayer;
+import com.recom.service.map.GameMapService;
 import com.recom.service.provider.StaticObjectMapperProvider;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class ConfigurationMapToolsService {
 
     final Predicate<Optional<Configuration>> isDefaultListValue = (confOpt) -> confOpt.isPresent() && confOpt.get().getMapName() != null;
     @NonNull
-    private final MapMetaDataService mapMetaDataService;
+    private final GameMapService gameMapService;
     @NonNull
     private final ConfigurationValueProvider configurationValueProvider;
     @NonNull
@@ -35,17 +36,17 @@ public class ConfigurationMapToolsService {
     @NonNull
     private final ConfigurationPersistenceLayer configurationPersistenceLayer;
     @NonNull
-    private final MapEntityPersistenceLayer mapEntityPersistenceLayer;
+    private final MapStructurePersistenceLayer mapStructurePersistenceLayer;
 
     @NonNull
     @Transactional(readOnly = false)
     public List<String> addResources(
-            @NonNull final String mapName,
+            @NonNull final GameMap gameMap,
             @NonNull final List<String> addResourcesMatcherList,
             @NonNull final RegisteredListConfigurationValueDescriptor<String> listConfigurationValueDescriptor
     ) {
-        final AddResourcesTuple resultTuple = mergeWithExistingConfigurationList(mapName, addResourcesMatcherList, listConfigurationValueDescriptor);
-        overrideListValue(mapName, listConfigurationValueDescriptor, resultTuple.mergedListToPersist());
+        final AddResourcesTuple resultTuple = mergeWithExistingConfigurationList(gameMap, addResourcesMatcherList, listConfigurationValueDescriptor);
+        overrideListValue(gameMap, listConfigurationValueDescriptor, resultTuple.mergedListToPersist());
         applicationEventPublisher.publishEvent(new CacheResetAsyncEvent());
 
         return resultTuple.resourcesToAdd().stream()
@@ -55,7 +56,7 @@ public class ConfigurationMapToolsService {
 
     @NonNull
     private ConfigurationMapToolsService.AddResourcesTuple mergeWithExistingConfigurationList(
-            @NonNull final String mapName,
+            @NonNull final GameMap gameMap,
             @NonNull final List<String> addResourcesMatcherList,
             @NonNull final RegisteredListConfigurationValueDescriptor<String> configurationValueDescriptor
     ) {
@@ -64,37 +65,37 @@ public class ConfigurationMapToolsService {
         addResourcesMatcherList.stream()
                 .distinct()
                 .forEach(entityMatcher -> {
-                    final List<String> matchedResources = mapMetaDataService.provideMapMeta(mapName).getUtilizedResources().stream()
+                    final List<String> matchedResources = gameMapService.provideGameMapMetaData(gameMap).getUtilizedResources().stream()
                             .filter(utilizedResource -> utilizedResource.toLowerCase().matches(entityMatcher.toLowerCase()))
                             .toList();
                     resourcesToAdd.addAll(matchedResources);
 
-                    final List<String> matchedPrefabs = mapMetaDataService.provideMapMeta(mapName).getUtilizedPrefabs().stream()
+                    final List<String> matchedPrefabs = gameMapService.provideGameMapMetaData(gameMap).getUtilizedPrefabs().stream()
                             .filter(utilizedPrefab -> utilizedPrefab.toLowerCase().matches(entityMatcher.toLowerCase()))
                             .toList();
-                    final List<String> matchedResourcesByPrefabs = mapEntityPersistenceLayer.findAllByPrefabIn(mapName, matchedPrefabs).stream()
-                            .map(MapEntity::getResourceName)
+                    final List<String> matchedResourcesByPrefabs = mapStructurePersistenceLayer.findAllByPrefabIn(gameMap, matchedPrefabs).stream()
+                            .map(MapStructureEntity::getResourceName)
                             .toList();
                     resourcesToAdd.addAll(matchedResourcesByPrefabs);
 
-                    final List<String> matchedClasses = mapMetaDataService.provideMapMeta(mapName).getUtilizedClasses().stream()
+                    final List<String> matchedClasses = gameMapService.provideGameMapMetaData(gameMap).getUtilizedClasses().stream()
                             .filter(utilizedPrefab -> utilizedPrefab.toLowerCase().matches(entityMatcher.toLowerCase()))
                             .toList();
-                    final List<String> matchedResourcesByClasses = mapEntityPersistenceLayer.findAllByClassIn(mapName, matchedClasses).stream()
-                            .map(MapEntity::getResourceName)
+                    final List<String> matchedResourcesByClasses = mapStructurePersistenceLayer.findAllByClassIn(gameMap, matchedClasses).stream()
+                            .map(MapStructureEntity::getResourceName)
                             .toList();
                     resourcesToAdd.addAll(matchedResourcesByClasses);
 
-                    final List<String> matchedMapDescriptorTypes = mapMetaDataService.provideMapMeta(mapName).getUtilizedClasses().stream()
+                    final List<String> matchedMapDescriptorTypes = gameMapService.provideGameMapMetaData(gameMap).getUtilizedClasses().stream()
                             .filter(utilizedPrefab -> utilizedPrefab.toLowerCase().matches(entityMatcher.toLowerCase()))
                             .toList();
-                    final List<String> matchedResourcesByMapDescriptorTypes = mapEntityPersistenceLayer.findAllByMapDescriptorTypeIn(mapName, matchedMapDescriptorTypes).stream()
-                            .map(MapEntity::getResourceName)
+                    final List<String> matchedResourcesByMapDescriptorTypes = mapStructurePersistenceLayer.findAllByMapDescriptorTypeIn(gameMap, matchedMapDescriptorTypes).stream()
+                            .map(MapStructureEntity::getResourceName)
                             .toList();
                     resourcesToAdd.addAll(matchedResourcesByMapDescriptorTypes);
                 });
 
-        final List<String> existingClusterResources = configurationValueProvider.queryValue(mapName, configurationValueDescriptor);
+        final List<String> existingClusterResources = configurationValueProvider.queryValue(gameMap, configurationValueDescriptor);
 
         List<String> mergedResourceList = new ArrayList<>(existingClusterResources);
         mergedResourceList.addAll(resourcesToAdd.stream().filter(Objects::nonNull).toList());
@@ -109,11 +110,11 @@ public class ConfigurationMapToolsService {
 
     @SneakyThrows
     public <T> void overrideListValue(
-            @NonNull final String mapName,
+            @NonNull final GameMap gameMap,
             @NonNull final RegisteredListConfigurationValueDescriptor<T> configurationValueDescribable,
             @NonNull final List<T> mergedList
     ) {
-        final Optional<Configuration> maybeConfiguration = configurationValueProvider.queryMostConcreteConfiguration(mapName, configurationValueDescribable);
+        final Optional<Configuration> maybeConfiguration = configurationValueProvider.queryMostConcreteConfiguration(gameMap, configurationValueDescribable);
 
         if (isDefaultListValue.test(maybeConfiguration)) {
             maybeConfiguration.get().setValue(StaticObjectMapperProvider.provide().writeValueAsString(mergedList));
@@ -122,7 +123,7 @@ public class ConfigurationMapToolsService {
         } else {
             // @TODO this is a candidate for a service ... this code is already duplicated multiple times.
             final Configuration.ConfigurationBuilder configurationBuilder = Configuration.builder()
-                    .mapName(mapName)
+                    .gameMap(gameMap)
                     .namespace(configurationValueDescribable.getNamespace())
                     .name(configurationValueDescribable.getName())
                     .type(configurationValueDescribable.getType())
@@ -135,12 +136,12 @@ public class ConfigurationMapToolsService {
     @NonNull
     @Transactional(readOnly = false)
     public List<String> removeResources(
-            @NonNull final String mapName,
+            @NonNull final GameMap gameMap,
             @NonNull final List<String> removeResourcesMatcherList,
             @NonNull final RegisteredListConfigurationValueDescriptor<String> listConfigurationValueDescriptor
     ) {
-        final RemoveResourcesTuple resultTuple = removeFromExistingConfigurationList(mapName, removeResourcesMatcherList, listConfigurationValueDescriptor);
-        overrideListValue(mapName, listConfigurationValueDescriptor, resultTuple.mergedListToPersist());
+        final RemoveResourcesTuple resultTuple = removeFromExistingConfigurationList(gameMap, removeResourcesMatcherList, listConfigurationValueDescriptor);
+        overrideListValue(gameMap, listConfigurationValueDescriptor, resultTuple.mergedListToPersist());
         applicationEventPublisher.publishEvent(new CacheResetAsyncEvent());
 
         return resultTuple.resourcesToRemove().stream()
@@ -150,12 +151,12 @@ public class ConfigurationMapToolsService {
 
     @NonNull
     private ConfigurationMapToolsService.RemoveResourcesTuple removeFromExistingConfigurationList(
-            @NonNull final String mapName,
+            @NonNull final GameMap gameMap,
             @NonNull final List<String> removeResourcesMatcherList,
             @NonNull final RegisteredListConfigurationValueDescriptor<String> configurationValueDescriptor
     ) {
         final Set<String> resourcesToRemove = new HashSet<>();
-        final List<String> existingClusterResources = configurationValueProvider.queryValue(mapName, configurationValueDescriptor);
+        final List<String> existingClusterResources = configurationValueProvider.queryValue(gameMap, configurationValueDescriptor);
         removeResourcesMatcherList.stream()
                 .distinct()
                 .forEach(entityMatcher -> {

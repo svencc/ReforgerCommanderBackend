@@ -1,17 +1,25 @@
 # TODO LIST
 
+* optimize gameMap topography data persistence and model
+  * only save 1 entity with model
+  * replace existing MapTopographyEntityScannerTransactionEventListener
+
+* normalize gameMap entities
+  * gameMap-meta-entity
+    * ID
+    * name
+    * size
+    * ocean_base_height
+  * relations to map_structure_entity + map_topography_entity
+
+
 * scanner -> qubus
 * Cache Reset Map Exists!
 * Account Settings are also cached -> reset when creating new account!....
-* TODO/BUG MapMetaDataService.mapExists cache gets not deleted after map was imported!
+* TODO/BUG MapMetaDataService.mapExists cache gets not deleted after gameMap was imported!
 
 * tidy up unfinished MapTransactions @Scheduled
 
-* normalize map entities
-  * map-meta-entity
-    * ID 
-    * name
-    * ocean_base_height
 
 
 
@@ -20,20 +28,20 @@
   * persist?
 
 * start game command Reforger -> RECOM (if its not running yet)
-* map renderer -> reduce point density on client side / depending of zoom factor
+* gameMap renderer -> reduce point density on client side / depending of zoom factor
 
 * GOAP: MOVE ACTION
 * 
 * 
 * Transactions have to time out via scheduler after one hour
 *
-* normalize db/map entities table
+* normalize db/gameMap entities table
 * use @Embeddable types for coordinates ...
-* map data immutable (do not offer setters); use @Access(AccessType.FIELD) for all unmodifiable entities!
+* gameMap data immutable (do not offer setters); use @Access(AccessType.FIELD) for all unmodifiable entities!
 *
 *
 * db migration scripts
-    * add map default account to db in init (same as used in postman collection)
+    * add gameMap default account to db in init (same as used in postman collection)
 *
 * DB-based Configuration System
     * new db config values for type-colors, z-indexes, etc.
@@ -44,10 +52,10 @@
 *
 * replace POST clustering call with GET call (affects client)
 *
-* map size is not necessarily square! -> fix scanner!
-* save map size to map data and add output to map meta data
+* gameMap size is not necessarily square! -> fix scanner!
+* save gameMap size to gameMap data and add output to gameMap meta data
 * rework scanner; now works with sphere -> we need to implement a cube scanner!
-    * get map height for setting the cube height 
+    * get gameMap height for setting the cube height 
 *
 * woods detection
 * military detection
@@ -62,7 +70,7 @@
     * add column for key->keyHash:indexed, cacheName->hash:indexed, dataType
     * move to separate project / dependency
 *
-* add communication loop between client and server to check if the current map is actually indexed or not; only execute map-scan-process if map is not indexed!
+* add communication loop between client and server to check if the current gameMap is actually indexed or not; only execute gameMap-scan-process if gameMap is not indexed!
     * first time: only once at startup time
     * advanced: reindex also if index is suddenly deleted from server (work with http codes if you query for clusters)
 * move from POST-get http methods to real GET Methods. we only need to pass MapName (and eventual token name) so we can
@@ -86,7 +94,7 @@
     * Should error responses give more information? also important for the error logging in db....
     * ServerErrorDto & BadRequestDto are equal in structure ...
 *
-* delete map via POST
+* delete gameMap via POST
     * -> remove corresponding configs
     * -> cache reset
 *
@@ -97,14 +105,14 @@
 * add dependency license generator
 * Add Docker Compose
 * Transactional Controller Template?
-* map entity query/filter controller
+* gameMap entity query/filter controller
 * documentation / wiki
 * project page
 * build pipeline / cd
 
 ------
 
-* ConcaveHull.java implements Point on its own; change to Point2D Implementation so we dont need to map this data
+* ConcaveHull.java implements Point on its own; change to Point2D Implementation so we dont need to gameMap this data
     * but first we have to test if we want to keep the ConcaveHull implementation~~
 
 

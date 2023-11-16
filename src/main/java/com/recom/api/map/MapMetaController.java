@@ -2,8 +2,9 @@ package com.recom.api.map;
 
 import com.recom.api.commons.HttpCommons;
 import com.recom.dto.map.meta.MapMetaDto;
+import com.recom.entity.GameMap;
 import com.recom.service.AssertionService;
-import com.recom.service.map.MapMetaDataService;
+import com.recom.service.map.GameMapService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -35,7 +36,7 @@ public class MapMetaController {
     @NonNull
     private final AssertionService assertionService;
     @NonNull
-    private final MapMetaDataService mapMetaDataService;
+    private final GameMapService gameMapService;
 
 
     @Operation(
@@ -54,17 +55,17 @@ public class MapMetaController {
     ) {
         if (maybeMapName.isPresent()) {
             log.debug("Requested GET /api/v1/map/meta?mapName={}", maybeMapName.get());
-            assertionService.assertMapExists(maybeMapName.get());
+            final GameMap gameMap = assertionService.provideMap(maybeMapName.get());
 
             return ResponseEntity.status(HttpStatus.OK)
                     .cacheControl(CacheControl.noCache())
-                    .body(List.of(mapMetaDataService.provideMapMeta(maybeMapName.get())));
+                    .body(List.of(gameMapService.provideGameMapMetaData(gameMap)));
         } else {
             log.debug("Requested GET /api/v1/map/meta");
 
             return ResponseEntity.status(HttpStatus.OK)
                     .cacheControl(CacheControl.noCache())
-                    .body(mapMetaDataService.provideMapMetaList());
+                    .body(gameMapService.provideGameMapMetaList());
         }
     }
 

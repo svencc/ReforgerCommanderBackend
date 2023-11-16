@@ -3,7 +3,7 @@ package com.recom.api.map;
 import com.recom.api.commons.HttpCommons;
 import com.recom.security.account.RECOMAccount;
 import com.recom.security.account.RECOMAuthorities;
-import com.recom.service.map.MapMetaDataService;
+import com.recom.service.map.GameMapService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -33,7 +33,7 @@ import java.util.List;
 public class MapsController {
 
     @NonNull
-    private final MapMetaDataService mapMetaDataService;
+    private final GameMapService gameMapService;
 
 
     @Operation(
@@ -54,7 +54,7 @@ public class MapsController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
-                .body(mapMetaDataService.provideAllMapNames());
+                .body(gameMapService.provideAllGameMapNames());
     }
 
 }

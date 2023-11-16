@@ -5,8 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Nationalized;
 import org.springframework.data.domain.Persistable;
+import org.springframework.lang.Nullable;
 
 import java.io.Serializable;
 
@@ -18,7 +18,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Table(indexes = {
         @Index(name = "IDX_namespace_name", columnList = "namespace, name", unique = false),
-        @Index(name = "IDX_mapName_namespace_name", columnList = "mapName, namespace, name", unique = false),
+//        @Index(name = "IDX_gameMap_namespace_name", columnList = "gameMap, namespace, name", unique = false),
 })
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -29,9 +29,9 @@ public class Configuration implements Persistable<Long>, Serializable {
     @Column(insertable = true, updatable = false, nullable = false)
     private Long id;
 
-    @Nationalized
-    @Column(insertable = true, updatable = true, nullable = true, length = 255)
-    private String mapName;
+    @Nullable
+    @OneToOne(mappedBy = "configuration", fetch = FetchType.EAGER, optional = true)
+    private GameMap gameMap;
 
     @Column(insertable = true, updatable = true, nullable = false, length = 255)
     private String namespace;
@@ -46,6 +46,11 @@ public class Configuration implements Persistable<Long>, Serializable {
     @Lob
     @Column(insertable = true, updatable = true, nullable = false, columnDefinition = "LONGTEXT")
     private String value;
+
+    @Nullable
+    public String getMapName() {
+        return gameMap.getName();
+    }
 
     @Override
     public int hashCode() {

@@ -2,9 +2,7 @@ package com.recom.mapper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.recom.entity.MapEntity;
-import com.recom.entity.MapTopographyEntity;
-import com.recom.event.listener.generic.MapLocatedEntity;
+import com.recom.event.listener.generic.maplocated.MapLocatedEntity;
 import com.recom.service.provider.StaticObjectMapperProvider;
 import lombok.experimental.UtilityClass;
 import org.springframework.lang.Nullable;

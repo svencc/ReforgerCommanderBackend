@@ -1,7 +1,7 @@
 package com.recom.service.configuration;
 
 import com.recom.entity.Configuration;
-import com.recom.model.configuration.descriptor.BaseRegisteredConfigurationValueDescribable;
+import com.recom.model.configuration.descriptor.RegisteredConfigurationValueDescribtable;
 import com.recom.persistence.configuration.ConfigurationPersistenceLayer;
 import com.recom.runner.PostStartupExecutor;
 import com.recom.service.PostStartExecutable;
@@ -52,7 +52,7 @@ public class DefaultConfigurationDatabaseInitializer implements PostStartExecuta
     }
 
     private void applyRegisteredDefaultSettingsToDatabase() {
-        final List<BaseRegisteredConfigurationValueDescribable> allRegisteredDefaultValues = defaultConfigurationProviderRegister.stream()
+        final List<RegisteredConfigurationValueDescribtable> allRegisteredDefaultValues = defaultConfigurationProviderRegister.stream()
                 .flatMap((provider) -> provider.provideDefaultConfigurationValues().stream())
                 .toList();
 
@@ -63,7 +63,7 @@ public class DefaultConfigurationDatabaseInitializer implements PostStartExecuta
         final List<Configuration> configurationsToUpdate = new ArrayList<>();
         final List<Configuration> configurationsToDelete = new ArrayList<>();
 
-        allRegisteredDefaultValues.forEach((final BaseRegisteredConfigurationValueDescribable registeredDefaultValue) -> {
+        allRegisteredDefaultValues.forEach((final RegisteredConfigurationValueDescribtable registeredDefaultValue) -> {
             final String namespace = registeredDefaultValue.getNamespace();
             final String name = registeredDefaultValue.getName();
 

@@ -4,6 +4,7 @@ import com.recom.api.commons.HttpCommons;
 import com.recom.configuration.AsyncConfiguration;
 import com.recom.dto.map.Point2DDto;
 import com.recom.dto.message.MessageBusLongPollRequestDto;
+import com.recom.entity.GameMap;
 import com.recom.model.message.MessageContainer;
 import com.recom.model.message.MessageType;
 import com.recom.model.message.OneMessage;
@@ -62,10 +63,10 @@ public class EmitMessagesController {
             @NonNull @Valid final MessageBusLongPollRequestDto messageBusLongPollRequestDto
     ) {
         log.debug("Requested POST /api/v1/test/emit-messages (JSON)");
-        assertionService.assertMapExists(messageBusLongPollRequestDto.getMapName());
+        final GameMap gameMap = assertionService.provideMap(messageBusLongPollRequestDto.getMapName());
 
         messageBusService.sendMessage(MessageContainer.builder()
-                .mapName(messageBusLongPollRequestDto.getMapName())
+                .gameMap(gameMap)
                 .messages(List.of(
                         OneMessage.builder()
                                 .messageType(MessageType.FETCH_MAP_RENDER_DATA)

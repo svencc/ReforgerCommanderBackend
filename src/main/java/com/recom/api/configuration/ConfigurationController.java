@@ -3,6 +3,7 @@ package com.recom.api.configuration;
 import com.recom.api.commons.HttpCommons;
 import com.recom.dto.configuration.OverridableConfigurationDto;
 import com.recom.dto.configuration.OverrideConfigurationDto;
+import com.recom.entity.GameMap;
 import com.recom.event.event.async.cache.CacheResetAsyncEvent;
 import com.recom.service.AssertionService;
 import com.recom.service.configuration.ConfigurationRESTManagementService;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
 @Validated
@@ -59,11 +61,12 @@ public class ConfigurationController {
     ) {
         log.debug("Requested GET /api/v1/map/configuration");
 
-        maybeMapName.ifPresent(assertionService::assertMapExists);
+        final AtomicReference<GameMap> mapMeta = new AtomicReference<>();
+        maybeMapName.ifPresent((mapName) -> mapMeta.set(assertionService.provideMap(mapName)));
 
         return maybeMapName.map((final String mapName) -> ResponseEntity.status(HttpStatus.OK)
                         .cacheControl(CacheControl.noCache())
-                        .body(configurationRESTManagementService.provideAllExistingConfigurationValues(mapName)))
+                        .body(configurationRESTManagementService.provideAllExistingConfigurationValues(mapMeta.get())))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.OK)
                         .cacheControl(CacheControl.noCache())
                         .body(configurationRESTManagementService.provideAllExistingConfigurationValues())
@@ -89,13 +92,13 @@ public class ConfigurationController {
     ) {
         log.debug("Requested POST /api/v1/map/configuration");
 
-        assertionService.assertMapExists(mapName);
-        configurationRESTManagementService.updateOverrides(mapName, overrideList);
+        final GameMap gameMap = assertionService.provideMap(mapName);
+        configurationRESTManagementService.updateOverrides(gameMap, overrideList);
         applicationEventPublisher.publishEvent(new CacheResetAsyncEvent());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
-                .body(configurationRESTManagementService.provideAllExistingConfigurationValues(mapName));
+                .body(configurationRESTManagementService.provideAllExistingConfigurationValues(gameMap));
     }
 
 }

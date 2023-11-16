@@ -1,6 +1,7 @@
 package com.recom.api.configuration;
 
 import com.recom.api.commons.HttpCommons;
+import com.recom.entity.GameMap;
 import com.recom.service.AssertionService;
 import com.recom.service.configuration.ConfigurationDescriptorProvider;
 import com.recom.service.configuration.ConfigurationMapToolsService;
@@ -54,11 +55,11 @@ public class MapToolsForestController {
             @NonNull final List<String> entityMatcherList
     ) {
         log.debug("Requested POST /api/v1/configuration/map-tools/resources/forest");
-        assertionService.assertMapExists(mapName);
+        final GameMap gameMap = assertionService.provideMap(mapName);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
-                .body(configurationMapToolsService.addResources(mapName, entityMatcherList, ConfigurationDescriptorProvider.CLUSTERING_FOREST_RESOURCES_LIST));
+                .body(configurationMapToolsService.addResources(gameMap, entityMatcherList, ConfigurationDescriptorProvider.CLUSTERING_FOREST_RESOURCES_LIST));
     }
 
     @Operation(
@@ -79,11 +80,11 @@ public class MapToolsForestController {
             @NonNull final List<String> entityMatcherList
     ) {
         log.debug("Requested DELETE /api/v1/configuration/map-tools/resources/forest");
-        assertionService.assertMapExists(mapName);
+        final GameMap gameMap = assertionService.provideMap(mapName);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
-                .body(configurationMapToolsService.removeResources(mapName, entityMatcherList, ConfigurationDescriptorProvider.CLUSTERING_FOREST_RESOURCES_LIST));
+                .body(configurationMapToolsService.removeResources(gameMap, entityMatcherList, ConfigurationDescriptorProvider.CLUSTERING_FOREST_RESOURCES_LIST));
     }
 
 }

@@ -3,6 +3,7 @@ package com.recom.service.map;
 import com.recom.dto.map.renderer.MapRenderCommandDto;
 import com.recom.dto.map.renderer.MapRenderCommandType;
 import com.recom.dto.map.renderer.MapRenderResponseDto;
+import com.recom.entity.GameMap;
 import com.recom.service.map.cluster.ClusteringService;
 import com.recom.util.ColorUtil;
 import lombok.NonNull;
@@ -29,8 +30,8 @@ public class MapRendererService {
 
     @NonNull
     @Cacheable(value = MAP_RENDERER_CACHE_NAME)
-    public MapRenderResponseDto renderMap(@NonNull final String mapName) {
-        final List<MapRenderCommandDto> renderCommands = clusteringService.generateClusters(mapName).getClusterList().stream()
+    public MapRenderResponseDto renderMap(@NonNull final GameMap gameMap) {
+        final List<MapRenderCommandDto> renderCommands = clusteringService.generateClusters(gameMap).getClusterList().stream()
                 .map(cluster -> MapRenderCommandDto.builder()
                         .id(UUID.randomUUID())
                         .mapRenderCommandType(MapRenderCommandType.POLYGON)

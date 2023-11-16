@@ -1,7 +1,7 @@
 package com.recom.service.configuration;
 
 import com.recom.model.configuration.ConfigurationType;
-import com.recom.model.configuration.descriptor.BaseRegisteredConfigurationValueDescribable;
+import com.recom.model.configuration.descriptor.RegisteredConfigurationValueDescribtable;
 import com.recom.model.configuration.descriptor.RegisteredDoubleConfigurationValueDescriptor;
 import com.recom.model.configuration.descriptor.RegisteredIntegerConfigurationValueDescriptor;
 import com.recom.model.configuration.descriptor.RegisteredListConfigurationValueDescriptor;
@@ -1491,7 +1491,7 @@ public class ConfigurationDescriptorProvider implements DefaultConfigurationProv
     }
 
     @Override
-    public @NonNull List<BaseRegisteredConfigurationValueDescribable> provideDefaultConfigurationValues() {
+    public @NonNull List<RegisteredConfigurationValueDescribtable> provideDefaultConfigurationValues() {
         return List.of(
                 ConfigurationDescriptorProvider.CLUSTERING_VILLAGE_EPSILON_MAXIMUM_RADIUS_OF_THE_NEIGHBORHOOD,
                 ConfigurationDescriptorProvider.CLUSTERING_VILLAGE_MINIMUM_POINTS,

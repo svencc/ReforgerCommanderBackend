@@ -1,6 +1,7 @@
 package com.recom.persistence.configuration;
 
 import com.recom.entity.Configuration;
+import com.recom.entity.GameMap;
 import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,19 +15,19 @@ interface ConfigurationRepository extends JpaRepository<Configuration, Long> {
     @NonNull
     @Query("SELECT c " +
             " FROM Configuration c " +
-            "WHERE (c.mapName = :mapName OR c.mapName IS NULL) " +
+            "WHERE (c.gameMap = :gameMap OR c.gameMap IS NULL) " +
             "  AND c.namespace = :namespace AND c.name = :name"
     )
-    List<Configuration> findAllByMapNameAndNamespaceAndName(
-            @NonNull final String mapName,
+    List<Configuration> findAllByGameMapAndNamespaceAndName(
+            @NonNull final GameMap gameMap,
             @NonNull final String namespace,
             @NonNull final String name
     );
 
     @NonNull
-    List<Configuration> findAllByMapNameIsNull();
+    List<Configuration> findAllByGameMapIsNull();
 
     @NonNull
-    List<Configuration> findAllByMapName(@NonNull final String mapName);
+    List<Configuration> findAllByGameMap(@NonNull final GameMap gameMap);
 
 }

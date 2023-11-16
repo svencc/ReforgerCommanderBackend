@@ -5,10 +5,12 @@ import com.recom.dto.map.cluster.ClusterDto;
 import com.recom.dto.map.cluster.ClusterResponseDto;
 import com.recom.dto.map.cluster.ConcaveHullDto;
 import com.recom.dto.map.cluster.ConvexHullDto;
-import com.recom.dto.map.scanner.map.MapEntityDto;
-import com.recom.mapper.MapEntityMapper;
+import com.recom.dto.map.scanner.structure.MapStructureEntityDto;
+import com.recom.entity.GameMap;
+import com.recom.mapper.MapStructureEntityMapper;
 import com.recom.model.map.ClusterConfiguration;
-import com.recom.persistence.mapEntity.MapEntityPersistenceLayer;
+import com.recom.persistence.map.GameMapPersistenceLayer;
+import com.recom.persistence.map.structure.MapStructurePersistenceLayer;
 import com.recom.service.configuration.ConfigurationDescriptorProvider;
 import com.recom.service.configuration.ConfigurationValueProvider;
 import com.recom.service.dbcached.DBCachedService;
@@ -46,9 +48,12 @@ public class ClusteringService {
     @NonNull
     private final ConfigurationValueProvider configurationValueProvider;
     @NonNull
-    private final MapEntityPersistenceLayer mapEntityPersistenceLayer;
+    private final MapStructurePersistenceLayer mapStructurePersistenceLayer;
+    @NonNull
+    private final GameMapPersistenceLayer gameMapPersistenceLayer;
     @NonNull
     private final DBCachedService dbCachedService;
+
     private MonotoneChain convexHullGenerator;
     private ConcaveHull concaveHullGenerator;
 
@@ -70,9 +75,7 @@ public class ClusteringService {
     }
 
     @Cacheable(cacheNames = MAPENTITYPERSISTENCELAYER_GENERATECLUSTERS_CACHE)
-    public ClusterResponseDto generateClusters(
-            @NonNull final String mapName
-    ) {
+    public ClusterResponseDto generateClusters(@NonNull final GameMap gameMap) {
         final List<ClusterConfiguration> clusterConfigurations = List.of(
                 ClusterConfiguration.builder()
                         .clusteringResourcesListDescriptor(ConfigurationDescriptorProvider.CLUSTERING_VILLAGE_RESOURCES_LIST)
@@ -92,22 +95,22 @@ public class ClusteringService {
         );
         return dbCachedService.proxyToDBCacheSafe(
                 MAPENTITYPERSISTENCELAYER_GENERATECLUSTERS_CACHE,
-                mapName,
+                gameMap.getName(),
                 () -> {
                     ArrayList<ClusterDto> clusterList = clusterConfigurations.stream()
                             .flatMap((final ClusterConfiguration configuration) -> {
-                                final List<String> clusterResources = configurationValueProvider.queryValue(mapName, configuration.getClusteringResourcesListDescriptor());
-                                final List<DoublePoint> resources = mapEntityPersistenceLayer.findAllByMapNameAndResourceNameIn(mapName, clusterResources).stream()
-                                        .map(MapEntityMapper.INSTANCE::toDto)
-                                        .map(MapEntityDto::getCoordinates)
+                                final List<String> clusterResources = configurationValueProvider.queryValue(gameMap, configuration.getClusteringResourcesListDescriptor());
+                                final List<DoublePoint> resources = mapStructurePersistenceLayer.findAllByMapNameAndResourceNameIn(gameMap, clusterResources).stream()
+                                        .map(MapStructureEntityMapper.INSTANCE::toDto)
+                                        .map(MapStructureEntityDto::getCoordinates)
                                         .filter(Objects::nonNull)
                                         .filter(vector -> vector.size() == 3)
                                         .map(this::vectorToPoint)
                                         .toList();
 
                                 final DBSCANClusterer<DoublePoint> dbscanClusterer = new DBSCANClusterer<>(
-                                        configurationValueProvider.queryValue(mapName, configuration.getDbscanClusteringEpsilonMaximumRadiusOfTheNeighborhoodDescriptor()),
-                                        configurationValueProvider.queryValue(mapName, configuration.getDbscanClusteringVillageMinimumPointsDescriptor())
+                                        configurationValueProvider.queryValue(gameMap, configuration.getDbscanClusteringEpsilonMaximumRadiusOfTheNeighborhoodDescriptor()),
+                                        configurationValueProvider.queryValue(gameMap, configuration.getDbscanClusteringVillageMinimumPointsDescriptor())
                                 );
 
                                 return dbscanClusterer.cluster(resources).stream()

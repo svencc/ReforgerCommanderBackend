@@ -1,7 +1,8 @@
 package com.recom.service.map;
 
-import com.recom.entity.MapTopographyEntity;
-import com.recom.persistence.mapTopography.MapTopographyEntityPersistenceLayer;
+import com.recom.entity.GameMap;
+import com.recom.entity.MapTopography;
+import com.recom.persistence.map.topography.MapTopographyPersistenceLayer;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,16 +21,17 @@ import java.util.List;
 public class TopographyMapDataService {
 
     @NonNull
-    private final MapTopographyEntityPersistenceLayer mapTopographyEntityPersistenceLayer;
+    private final MapTopographyPersistenceLayer mapTopographyPersistenceLayer;
     @NonNull
     private final HeightmapGeneratorService heightmapGeneratorService;
 
 
     @Transactional(readOnly = true)
-    public byte[] provideTopographyMap(@NonNull final String mapName) throws IOException {
-        final List<MapTopographyEntity> mapTopographyEntities = mapTopographyEntityPersistenceLayer.findAllByMapNameOrdered(mapName);
+    public byte[] provideTopographyMap(@NonNull final GameMap gameMap) throws IOException {
+//        final List<MapTopography> mapTopographyEntities = mapTopographyPersistenceLayer.findAllByMapNameOrdered(gameMap);
+        final List<MapTopography> mapTopographyEntities = List.of();
 
-        log.info("Found {} topography entities for map {}", mapTopographyEntities.size(), mapName);
+        log.info("Found {} topography entities for map {}", mapTopographyEntities.size(), gameMap);
 
         final ByteArrayOutputStream outputStream = heightmapGeneratorService.generateHeightmap(mapTopographyEntities);
         final byte[] byteArray = outputStream.toByteArray();

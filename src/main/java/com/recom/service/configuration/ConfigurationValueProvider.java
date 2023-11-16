@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.recom.entity.Configuration;
+import com.recom.entity.GameMap;
 import com.recom.exception.ConfigurationNotReadableException;
 import com.recom.model.configuration.ConfigurationType;
 import com.recom.model.configuration.descriptor.*;
@@ -31,10 +32,10 @@ public class ConfigurationValueProvider {
 
     @NonNull
     public Boolean queryValue(
-            @NonNull final String mapName,
+            @NonNull final GameMap gameMap,
             @NonNull final RegisteredBooleanConfigurationValueDescriptor descriptor
     ) {
-        final Optional<Configuration> maybeMostConcrete = queryMostConcreteConfiguration(mapName, descriptor);
+        final Optional<Configuration> maybeMostConcrete = queryMostConcreteConfiguration(gameMap, descriptor);
 
         if (maybeMostConcrete.isPresent() && maybeMostConcrete.get().getType().equals(ConfigurationType.BOOLEAN)) {
             return Boolean.valueOf(maybeMostConcrete.get().getValue());
@@ -45,10 +46,10 @@ public class ConfigurationValueProvider {
 
     @NonNull
     public Optional<Configuration> queryMostConcreteConfiguration(
-            @NonNull final String mapName,
-            @NonNull final BaseRegisteredConfigurationValueDescribable descriptor
+            @NonNull final GameMap gameMap,
+            @NonNull final RegisteredConfigurationValueDescribtable descriptor
     ) {
-        return queryValue(mapName, descriptor.getNamespace(), descriptor.getName()).stream()
+        return queryValue(gameMap, descriptor.getNamespace(), descriptor.getName()).stream()
                 .min(Comparator.nullsLast(
                         Comparator.comparing(Configuration::getMapName, Comparator.nullsLast(String::compareTo))
                 ));
@@ -56,11 +57,11 @@ public class ConfigurationValueProvider {
 
     @NonNull
     private List<Configuration> queryValue(
-            @NonNull final String mapName,
+            @NonNull final GameMap gameMap,
             @NonNull final String namespace,
             @NonNull final String name
     ) {
-        return configurationPersistenceLayer.findValues(mapName, namespace, name);
+        return configurationPersistenceLayer.findValues(gameMap, namespace, name);
     }
 
 //    @NonNull
@@ -73,10 +74,10 @@ public class ConfigurationValueProvider {
 
     @NonNull
     public String queryValue(
-            @NonNull final String mapName,
+            @NonNull final GameMap gameMap,
             @NonNull final RegisteredStringConfigurationValueDescriptor descriptor
     ) {
-        final Optional<Configuration> maybeMostConcrete = queryMostConcreteConfiguration(mapName, descriptor);
+        final Optional<Configuration> maybeMostConcrete = queryMostConcreteConfiguration(gameMap, descriptor);
 
         if (maybeMostConcrete.isPresent() && maybeMostConcrete.get().getType().equals(ConfigurationType.STRING)) {
             return maybeMostConcrete.get().getValue();
@@ -87,7 +88,7 @@ public class ConfigurationValueProvider {
 
     @NonNull
     private ConfigurationNotReadableException generateConfigurationNotReadableException(
-            @NonNull final BaseRegisteredConfigurationValueDescribable descriptor,
+            @NonNull final RegisteredConfigurationValueDescribtable descriptor,
             @NonNull final Optional<Configuration> maybeMostConcrete
     ) {
         return maybeMostConcrete.map(configuration -> new ConfigurationNotReadableException(
@@ -109,10 +110,10 @@ public class ConfigurationValueProvider {
     @NonNull
     @SneakyThrows(JsonProcessingException.class)
     public <TYPE> List<TYPE> queryValue(
-            @NonNull final String mapName,
+            @NonNull final GameMap gameMap,
             @NonNull final RegisteredListConfigurationValueDescriptor<TYPE> descriptor
     ) {
-        final Optional<Configuration> maybeMostConcrete = queryMostConcreteConfiguration(mapName, descriptor);
+        final Optional<Configuration> maybeMostConcrete = queryMostConcreteConfiguration(gameMap, descriptor);
 
         if (maybeMostConcrete.isPresent() && maybeMostConcrete.get().getType().equals(ConfigurationType.LIST)) {
             return objectMapper.readValue(maybeMostConcrete.get().getValue(), new TypeReference<List<TYPE>>() {
@@ -124,10 +125,10 @@ public class ConfigurationValueProvider {
 
     @NonNull
     public Integer queryValue(
-            @NonNull final String mapName,
+            @NonNull final GameMap gameMap,
             @NonNull final RegisteredIntegerConfigurationValueDescriptor descriptor
     ) {
-        final Optional<Configuration> maybeMostConcrete = queryMostConcreteConfiguration(mapName, descriptor);
+        final Optional<Configuration> maybeMostConcrete = queryMostConcreteConfiguration(gameMap, descriptor);
 
         if (maybeMostConcrete.isPresent() && maybeMostConcrete.get().getType().equals(ConfigurationType.INTEGER)) {
             try {
@@ -142,10 +143,10 @@ public class ConfigurationValueProvider {
 
     @NonNull
     public Double queryValue(
-            @NonNull final String mapName,
+            @NonNull final GameMap gameMap,
             @NonNull final RegisteredDoubleConfigurationValueDescriptor descriptor
     ) {
-        final Optional<Configuration> maybeMostConcrete = queryMostConcreteConfiguration(mapName, descriptor);
+        final Optional<Configuration> maybeMostConcrete = queryMostConcreteConfiguration(gameMap, descriptor);
 
         if (maybeMostConcrete.isPresent() && maybeMostConcrete.get().getType().equals(ConfigurationType.DOUBLE)) {
             try {

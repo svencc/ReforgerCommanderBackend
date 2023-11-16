@@ -15,9 +15,7 @@ class ExecutorProvider {
     private final ThreadPoolTaskExecutor clusterGeneratorExecutor;
 
     @NonNull
-    public ExecutorProvider(
-            @Qualifier(AsyncConfiguration.ASYNC_REQUEST_PROCESSOR_EXECUTOR_BEAN) @NonNull final ThreadPoolTaskExecutor executor
-    ) {
+    public ExecutorProvider(@Qualifier(AsyncConfiguration.ASYNC_REQUEST_PROCESSOR_EXECUTOR_BEAN) @NonNull final ThreadPoolTaskExecutor executor) {
         this.clusterGeneratorExecutor = executor;
     }
 

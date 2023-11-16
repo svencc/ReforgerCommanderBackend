@@ -19,9 +19,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(indexes = {
-        @Index(name = "IDX_mapName", columnList = "mapName", unique = false),
-        @Index(name = "IDX_mapName_messageType_timestamp", columnList = "mapName, messageType, timestamp", unique = false),
-        @Index(name = "IDX_mapName_timestamp", columnList = "mapName, timestamp", unique = false),
+        @Index(name = "IDX_gameMap", columnList = "gameMap", unique = false),
+        @Index(name = "IDX_gameMap_messageType_timestamp", columnList = "gameMap, messageType, timestamp", unique = false),
+        @Index(name = "IDX_gameMap_timestamp", columnList = "gameMap, timestamp", unique = false),
 })
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -32,9 +32,9 @@ public class Message implements Persistable<UUID>, Serializable {
     @Column(insertable = true, updatable = false, nullable = false)
     private UUID uuid;
 
-    @Nationalized
-    @Column(insertable = true, updatable = false, nullable = false, length = 255)
-    private String mapName;
+    @ManyToOne
+    @JoinColumn(name = "gameMap", referencedColumnName = "id", nullable = false, updatable = false)
+    private GameMap gameMap;
 
     @Enumerated(EnumType.STRING)
     @Column(insertable = true, updatable = false, nullable = false, length = 255)

@@ -13,7 +13,7 @@ GOAP is based on three core components: **goals**, **actions** and **world state
 Let's delve into these elements in detail.
 
 ## Goals
-**Goals** represent the specific intentions or states that an AI agent seeks to achieve. In a strategy game, the goals could be diverse, ranging from gathering certain resources to conquering strategic points on the map. 
+**Goals** represent the specific intentions or states that an AI agent seeks to achieve. In a strategy game, the goals could be diverse, ranging from gathering certain resources to conquering strategic points on the gameMap. 
 
 Defining clear and reachable goals is the first step in developing an effective GOAP system, as they dictate the direction and focus of the AI agents.
 
@@ -95,7 +95,7 @@ Here are some common goals utilized in GOAP systems:
 - **Maximize Resources**: A goal could be to collect a certain amount of resources.
 - **Base Expansion**: A goal could be to expand the base by constructing new buildings and structures.
 - **Eliminate enemy units**: One goal could be to eliminate all enemy units.
-- **Area Securing**: A goal could be to secure or control a specific area on the map.
+- **Area Securing**: A goal could be to secure or control a specific area on the gameMap.
 - **Technological Superiority**: A goal could be to research a specific technology to gain an advantage over the opponent.
 - **Survival**: A basic goal could simply be to survive and protect your base from enemy attacks.
 
@@ -108,7 +108,7 @@ Below, we outline a range of actions commonly integrated into GOAP systems:
 - **Collect/Mine Resources**: Units could have actions to collect resources such as wood, stone or food.
 - **Build**: Units could construct buildings or structures.
 - **Attack/Defend**: Units could have actions to attack enemy units or defend themselves or a base.
-- **Explore**: Units could explore new areas of the map or research technologies to improve their abilities.
+- **Explore**: Units could explore new areas of the gameMap or research technologies to improve their abilities.
 - **Heal/Repair**: Units could heal other units or repair damaged structures.
 - **Trade**: In some games, units may perform trade actions to exchange or sell resources.
 

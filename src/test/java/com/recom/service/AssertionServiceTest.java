@@ -1,7 +1,7 @@
 package com.recom.service;
 
 import com.recom.exception.HttpNotFoundException;
-import com.recom.service.map.MapMetaDataService;
+import com.recom.service.map.GameMapService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,7 +15,7 @@ import static org.mockito.Mockito.when;
 class AssertionServiceTest {
 
     @Mock
-    private MapMetaDataService mapMetaDataService;
+    private GameMapService gameMapService;
     @InjectMocks
     private AssertionService serviceUnderTest;
 
@@ -23,21 +23,21 @@ class AssertionServiceTest {
     public void testAssertMapExists_whenMapExists_shouldNotThrowException() {
         // Arrange
         String mapName = "existingMap";
-        when(mapMetaDataService.mapExists(mapName)).thenReturn(true);
+        when(gameMapService.provideGameMap(mapName)).thenReturn(true);
 
         // Act and Assert
-        assertDoesNotThrow(() -> serviceUnderTest.assertMapExists(mapName));
+        assertDoesNotThrow(() -> serviceUnderTest.provideMap(mapName));
     }
 
     @Test
     public void testAssertMapExists_whenMapDoesNotExist_shouldThrowHttpNotFoundException() {
         // Arrange
         String mapName = "nonExistingMap";
-        when(mapMetaDataService.mapExists(mapName)).thenReturn(false);
+        when(gameMapService.provideGameMap(mapName)).thenReturn(false);
 
         // Act and Assert
         HttpNotFoundException exception = assertThrows(HttpNotFoundException.class,
-                () -> serviceUnderTest.assertMapExists(mapName));
+                () -> serviceUnderTest.provideMap(mapName));
 
         assertEquals("Map nonExistingMap does not exist", exception.getMessage());
     }

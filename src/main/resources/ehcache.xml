@@ -11,8 +11,8 @@
         </expiry>
         <resources>
             <heap unit="entries">2000</heap>
-            <!--            <disk persistent="false"></disk>-->
-            <!--<offheap unit="MB">100</offheap>-->
+            <!-- <disk persistent="false"></disk> -->
+            <!-- <offheap unit="MB">100</offheap> -->
         </resources>
     </cache-template>
 
@@ -43,31 +43,31 @@
     </cache>
 
 
-    <cache alias="MapEntityPersistenceLayer.findAllByMapNameAndResourceNameIn" uses-template="recomDefaultCache">
+    <cache alias="MapStructurePersistenceLayer.findAllByMapNameAndResourceNameIn" uses-template="recomDefaultCache">
     </cache>
-    <cache alias="MapEntityPersistenceLayer.findAllTownEntities" uses-template="recomDefaultCache">
+    <cache alias="MapStructurePersistenceLayer.findAllTownEntities" uses-template="recomDefaultCache">
     </cache>
-    <cache alias="MapEntityPersistenceLayer.generateClusters" uses-template="recomDefaultCache">
+    <cache alias="MapStructurePersistenceLayer.generateClusters" uses-template="recomDefaultCache">
     </cache>
-    <cache alias="MapEntityPersistenceLayer.findAllMapNames" uses-template="recomDefaultCache">
+    <cache alias="MapStructurePersistenceLayer.findAllMapNames" uses-template="recomDefaultCache">
     </cache>
-    <cache alias="MapEntityPersistenceLayer.countEntitiesByMapName" uses-template="recomDefaultCache">
+    <cache alias="MapStructurePersistenceLayer.countEntitiesByMapName" uses-template="recomDefaultCache">
     </cache>
-    <cache alias="MapEntityPersistenceLayer.utilizedClassesByMapName" uses-template="recomDefaultCache">
+    <cache alias="MapStructurePersistenceLayer.utilizedClassesByMapName" uses-template="recomDefaultCache">
     </cache>
-    <cache alias="MapEntityPersistenceLayer.utilizedResourcesByMapName" uses-template="recomDefaultCache">
+    <cache alias="MapStructurePersistenceLayer.utilizedResourcesByMapName" uses-template="recomDefaultCache">
     </cache>
-    <cache alias="MapEntityPersistenceLayer.utilizedPrefabsByMapName" uses-template="recomDefaultCache">
+    <cache alias="MapStructurePersistenceLayer.utilizedPrefabsByMapName" uses-template="recomDefaultCache">
     </cache>
-    <cache alias="MapEntityPersistenceLayer.utilizedNamedEntitiesByMapName" uses-template="recomDefaultCache">
+    <cache alias="MapStructurePersistenceLayer.utilizedNamedEntitiesByMapName" uses-template="recomDefaultCache">
     </cache>
-    <cache alias="MapEntityPersistenceLayer.utilizedMapMetaTypeByMapName" uses-template="recomDefaultCache">
+    <cache alias="MapStructurePersistenceLayer.utilizedMapMetaTypeByMapName" uses-template="recomDefaultCache">
     </cache>
-    <cache alias="MapEntityPersistenceLayer.findAllByMapNameAndPrefabNameIn" uses-template="recomDefaultCache">
+    <cache alias="MapStructurePersistenceLayer.findAllByMapNameAndPrefabNameIn" uses-template="recomDefaultCache">
     </cache>
-    <cache alias="MapEntityPersistenceLayer.findAllByClassIn" uses-template="recomDefaultCache">
+    <cache alias="MapStructurePersistenceLayer.findAllByClassIn" uses-template="recomDefaultCache">
     </cache>
-    <cache alias="MapEntityPersistenceLayer.findAllByMapDescriptorTypeIn" uses-template="recomDefaultCache">
+    <cache alias="MapStructurePersistenceLayer.findAllByMapDescriptorTypeIn" uses-template="recomDefaultCache">
     </cache>
 
 

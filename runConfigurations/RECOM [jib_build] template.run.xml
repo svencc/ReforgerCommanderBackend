@@ -6,14 +6,14 @@
         <MavenRunnerSettings>
           <option name="delegateBuildToMaven" value="false" />
           <option name="environmentProperties">
-            <map>
+            <gameMap>
               <entry key="env.REGISTRY_PASSWORD" value="to-be-set" />
               <entry key="env.REGISTRY_USER" value="to-be-set" />
-            </map>
+            </gameMap>
           </option>
           <option name="jreName" value="#USE_PROJECT_JDK" />
           <option name="mavenProperties">
-            <map />
+            <gameMap />
           </option>
           <option name="passParentEnv" value="true" />
           <option name="runMavenInBackground" value="true" />
@@ -33,7 +33,7 @@
           </option>
           <option name="pomFileName" value="pom.xml" />
           <option name="profilesMap">
-            <map />
+            <gameMap />
           </option>
           <option name="resolveToWorkspace" value="false" />
           <option name="workingDirPath" value="$PROJECT_DIR$" />

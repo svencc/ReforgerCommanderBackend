@@ -1,7 +1,7 @@
 package com.recom.service.map;
 
-import com.recom.event.listener.generic.TransactionalMapEntityPackable;
-import com.recom.event.listener.generic.MapLocatedDto;
+import com.recom.event.listener.generic.generic.MapDto;
+import com.recom.event.listener.generic.generic.TransactionalMapEntityPackable;
 import com.recom.model.map.MapTransaction;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,7 @@ import java.util.stream.IntStream;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class MapTransactionValidatorService<DTO_TYPE extends MapLocatedDto, PACKAGE_TYPE extends TransactionalMapEntityPackable<DTO_TYPE>> {
+public class MapTransactionValidatorService<DTO_TYPE extends MapDto, PACKAGE_TYPE extends TransactionalMapEntityPackable<DTO_TYPE>> {
 
     public boolean isValidTransaction(@NonNull final MapTransaction<DTO_TYPE, PACKAGE_TYPE> transaction) {
         // Open Transaction Message has to be present!

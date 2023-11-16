@@ -3,6 +3,7 @@ package com.recom.api.map;
 import com.recom.api.commons.HttpCommons;
 import com.recom.dto.map.cluster.ClusterResponseDto;
 import com.recom.dto.map.cluster.MapClusterRequestDto;
+import com.recom.entity.GameMap;
 import com.recom.service.AssertionService;
 import com.recom.service.ReforgerPayloadParserService;
 import com.recom.service.dbcached.AsyncCacheableRequestProcessor;
@@ -76,12 +77,12 @@ public class MapClustersController {
     ) {
         log.debug("Requested POST /api/v1/clusters (JSON)");
 
-        assertionService.assertMapExists(clusterRequestDto.getMapName());
+        final GameMap gameMap = assertionService.provideMap(clusterRequestDto.getMapName());
 
         return asyncCacheableRequestProcessor.processRequest(
                 ClusteringService.MAPENTITYPERSISTENCELAYER_GENERATECLUSTERS_CACHE,
                 clusterRequestDto.getMapName(),
-                () -> clusteringService.generateClusters(clusterRequestDto.getMapName())
+                () -> clusteringService.generateClusters(gameMap)
         );
     }
 

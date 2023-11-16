@@ -2,6 +2,7 @@ package com.recom.service.messagebus;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.recom.dto.message.MessageBusResponseDto;
+import com.recom.entity.GameMap;
 import com.recom.model.message.MessageContainer;
 import com.recom.model.message.MessageType;
 import com.recom.model.message.OneMessage;
@@ -33,6 +34,7 @@ class MessageBusServiceTest {
     @Test
     void sendMessage() {
         // Arrange
+        final GameMap gameMap = GameMap.builder().name("mapName").build();
 
         // Prepare ObjectMapper / StaticObjectMapperProvider
         final ObjectMapper objectMapper = new ObjectMapper();
@@ -44,7 +46,7 @@ class MessageBusServiceTest {
 
             // Act
             serviceUnderTest.sendMessage(MessageContainer.builder()
-                    .mapName("mapName")
+                    .gameMap(gameMap)
                     .messages(List.of(OneMessage.builder()
                             .messageType(MessageType.TEST)
                             .payload("test-payload")
@@ -60,8 +62,11 @@ class MessageBusServiceTest {
     @Test
     void listMessagesSince() {
         // Arrange
+        final GameMap gameMap = GameMap.builder().name("mapName").build();
+
         // Act
-        final MessageBusResponseDto responseToTest = serviceUnderTest.listMessagesSince("mapName", 0L);
+        final MessageBusResponseDto responseToTest = serviceUnderTest.listMessagesSince(gameMap, 0L);
+
         // Assert
         assertNotNull(responseToTest);
         assertEquals("mapName", responseToTest.getMapName());

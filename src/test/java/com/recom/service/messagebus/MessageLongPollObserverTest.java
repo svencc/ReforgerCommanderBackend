@@ -54,7 +54,7 @@ class MessageLongPollObserverTest {
         // Act
         messageBusService.sendMessage(
                 MessageContainer.builder()
-                        .mapName("test-map")
+                        .gameMap("test-map")
                         .messages(List.of(testMessage))
                         .build()
         );

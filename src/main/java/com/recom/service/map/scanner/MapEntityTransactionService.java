@@ -1,7 +1,7 @@
 package com.recom.service.map.scanner;
 
 import com.recom.dto.map.scanner.TransactionIdentifierDto;
-import com.recom.dto.map.scanner.map.TransactionalMapEntityPackageDto;
+import com.recom.dto.map.scanner.structure.TransactionalMapStructureEntityPackageDto;
 import com.recom.event.event.async.map.addmappackage.AddMapPackageAsyncEvent;
 import com.recom.event.event.async.map.commit.CommitMapTransactionAsyncEvent;
 import com.recom.event.event.async.map.open.OpenMapTransactionAsyncEvent;
@@ -21,7 +21,7 @@ public class MapEntityTransactionService {
         applicationEventPublisher.publishEvent(new OpenMapTransactionAsyncEvent(transactionIdentifierDto));
     }
 
-    public void addMapEntitiesPackage(@NonNull final TransactionalMapEntityPackageDto transactionalMapEntityPackageDto) {
+    public void addMapEntitiesPackage(@NonNull final TransactionalMapStructureEntityPackageDto transactionalMapEntityPackageDto) {
         applicationEventPublisher.publishEvent(new AddMapPackageAsyncEvent(transactionalMapEntityPackageDto));
     }
 

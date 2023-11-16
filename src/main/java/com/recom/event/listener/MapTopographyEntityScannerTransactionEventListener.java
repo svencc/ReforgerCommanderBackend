@@ -2,13 +2,13 @@ package com.recom.event.listener;
 
 import com.recom.dto.map.scanner.topography.MapTopographyEntityDto;
 import com.recom.dto.map.scanner.topography.TransactionalMapTopographyEntityPackageDto;
-import com.recom.entity.MapTopographyEntity;
+import com.recom.entity.MapTopography;
 import com.recom.event.event.async.map.addmappackage.AddMapTopographyPackageAsyncEvent;
 import com.recom.event.event.async.map.commit.CommitMapTopographyTransactionAsyncEvent;
 import com.recom.event.event.async.map.open.OpenMapTopographyTransactionAsyncEvent;
-import com.recom.event.listener.generic.TransactionalMapPackageBaseEventListenerBase;
-import com.recom.mapper.MapTopographyEntityMapper;
-import com.recom.persistence.mapTopography.MapTopographyEntityPersistenceLayer;
+import com.recom.event.listener.generic.maprelated.TransactionalMapRelatedPackageEventListenerTemplate;
+import com.recom.persistence.map.GameMapPersistenceLayer;
+import com.recom.persistence.map.topography.MapTopographyPersistenceLayer;
 import com.recom.service.map.MapTransactionValidatorService;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -20,15 +20,16 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 @Slf4j
 @Component
-public class MapTopographyEntityScannerTransactionEventListener extends TransactionalMapPackageBaseEventListenerBase<TransactionalMapTopographyEntityPackageDto, MapTopographyEntity, MapTopographyEntityDto> {
+public class MapTopographyEntityScannerTransactionEventListener extends TransactionalMapRelatedPackageEventListenerTemplate<TransactionalMapTopographyEntityPackageDto, MapTopography, MapTopographyEntityDto> {
 
     public MapTopographyEntityScannerTransactionEventListener(
             @NonNull final TransactionTemplate transactionTemplate,
             @NonNull final ApplicationEventPublisher applicationEventPublisher,
-            @NonNull final MapTopographyEntityPersistenceLayer entityPersistenceLayer,
-            @NonNull final MapTransactionValidatorService<MapTopographyEntityDto, TransactionalMapTopographyEntityPackageDto> mapTransactionValidator
+            @NonNull final MapTopographyPersistenceLayer entityPersistenceLayer,
+            @NonNull final MapTransactionValidatorService<MapTopographyEntityDto, TransactionalMapTopographyEntityPackageDto> mapTransactionValidator,
+            @NonNull final GameMapPersistenceLayer gameMapPersistenceLayer
     ) {
-        super(transactionTemplate, applicationEventPublisher, entityPersistenceLayer, mapTransactionValidator, MapTopographyEntityMapper.INSTANCE);
+        super(transactionTemplate, applicationEventPublisher, entityPersistenceLayer, mapTransactionValidator, gameMapPersistenceLayer);
     }
 
     @Async("AsyncMapTopographyTransactionExecutor")

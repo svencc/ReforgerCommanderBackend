@@ -1,5 +1,6 @@
 package com.recom.persistence.message;
 
+import com.recom.entity.GameMap;
 import com.recom.entity.Message;
 import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,8 +13,8 @@ import java.util.List;
 interface MessageRepository extends JpaRepository<Message, Long> {
 
     @NonNull
-    List<Message> findAllByMapNameAndTimestampAfter(
-            @NonNull final String mapName,
+    List<Message> findAllByGameMapAndTimestampAfter(
+            @NonNull final GameMap gameMap,
             @NonNull final LocalDateTime timestamp
     );
 

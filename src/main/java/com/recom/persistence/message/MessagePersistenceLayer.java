@@ -1,6 +1,7 @@
 package com.recom.persistence.message;
 
 import com.recom.dto.message.MessageDto;
+import com.recom.entity.GameMap;
 import com.recom.entity.Message;
 import com.recom.mapper.MessageMapper;
 import lombok.NonNull;
@@ -25,11 +26,11 @@ public class MessagePersistenceLayer {
 
     @NonNull
     public List<MessageDto> findAllMapSpecificMessagesSince(
-            @NonNull final String mapName,
+            @NonNull final GameMap gameMap,
             @NonNull final Long sinceTimestampEpochMilliseconds
     ) {
         final LocalDateTime since = LocalDateTime.ofInstant(Instant.ofEpochMilli(sinceTimestampEpochMilliseconds), ZoneId.systemDefault());
-        return messageRepository.findAllByMapNameAndTimestampAfter(mapName, since).stream()
+        return messageRepository.findAllByGameMapAndTimestampAfter(gameMap, since).stream()
                 .map(MessageMapper.INSTANCE::toDto)
                 .sorted(Comparator.comparing(MessageDto::getTimestampEpochMilliseconds))
                 .toList();

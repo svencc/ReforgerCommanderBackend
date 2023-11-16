@@ -1,5 +1,6 @@
 package com.recom.model.message;
 
+import com.recom.entity.GameMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class MessageContainer {
 
-    private String mapName;
+    private GameMap gameMap;
     private List<OneMessage> messages;
 
 }

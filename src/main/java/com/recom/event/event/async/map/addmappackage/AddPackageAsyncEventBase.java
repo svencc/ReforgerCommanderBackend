@@ -1,6 +1,6 @@
 package com.recom.event.event.async.map.addmappackage;
 
-import com.recom.event.listener.generic.TransactionalMapEntityPackable;
+import com.recom.event.listener.generic.generic.TransactionalMapEntityPackable;
 import com.recom.event.event.async.RecomAsyncEvent;
 import lombok.Getter;
 import lombok.NonNull;

@@ -2,6 +2,7 @@ package com.recom.api.map;
 
 import com.recom.api.commons.HttpCommons;
 import com.recom.dto.map.topography.MapTopographyRequestDto;
+import com.recom.entity.GameMap;
 import com.recom.exception.HttpNotFoundException;
 import com.recom.security.account.RECOMAccount;
 import com.recom.security.account.RECOMAuthorities;
@@ -60,10 +61,10 @@ public class MapTopographyController {
         log.debug("Requested GET /api/v1/map/topography");
 
         try {
-            assertionService.assertMapExists(mapTopographyRequestDto.getMapName());
+            final GameMap gameMap = assertionService.provideMap(mapTopographyRequestDto.getMapName());
             return ResponseEntity.status(HttpStatus.OK)
                     .cacheControl(CacheControl.noCache())
-                    .body(topographyMapDataService.provideTopographyMap(mapTopographyRequestDto.getMapName()));
+                    .body(topographyMapDataService.provideTopographyMap(gameMap));
         } catch (final HttpNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .cacheControl(CacheControl.noCache())

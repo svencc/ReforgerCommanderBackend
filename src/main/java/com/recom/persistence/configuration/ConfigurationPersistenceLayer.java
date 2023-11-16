@@ -1,6 +1,7 @@
 package com.recom.persistence.configuration;
 
 import com.recom.entity.Configuration;
+import com.recom.entity.GameMap;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
@@ -18,23 +19,23 @@ public class ConfigurationPersistenceLayer {
     @NonNull
     @Cacheable(cacheNames = "ConfigurationPersistenceLayer.findValues")
     public List<Configuration> findValues(
-            @NonNull final String mapName,
+            @NonNull final GameMap gameMap,
             @NonNull final String namespace,
             @NonNull final String name
     ) {
-        return configurationRepository.findAllByMapNameAndNamespaceAndName(mapName, namespace, name);
+        return configurationRepository.findAllByGameMapAndNamespaceAndName(gameMap, namespace, name);
     }
 
     @NonNull
     @Cacheable(cacheNames = "ConfigurationPersistenceLayer.findAllDefaultValueEntities")
     public List<Configuration> findAllDefaultValueEntities() {
-        return configurationRepository.findAllByMapNameIsNull();
+        return configurationRepository.findAllByGameMapIsNull();
     }
 
     @NonNull
     @Cacheable(cacheNames = "ConfigurationPersistenceLayer.findAllMapSpecificValueEntities")
-    public List<Configuration> findAllMapSpecificValueEntities(@NonNull final String mapName) {
-        return configurationRepository.findAllByMapName(mapName);
+    public List<Configuration> findAllMapSpecificValueEntities(@NonNull final GameMap gameMap) {
+        return configurationRepository.findAllByGameMap(gameMap);
     }
 
     @NonNull

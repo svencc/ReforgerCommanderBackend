@@ -25,18 +25,14 @@ public class AsyncCacheableRequestProcessor {
     private final MutexService mutexService;
     @NonNull
     private final DBCachedManager dbCachedManager;
-    //    @NonNull
-//    private final CacheManager cacheManager; // <<<<<<<<<<<<<< dann wäre hier der cache manager zu injecten, dann pushen wir die werte automatisch in den applikationscache, und können die werte dann auch über den cache manager abfragen!
     @NonNull
     private final ExecutorProvider executorProvider;
-
-// @TODO: sollen die Methoden überhaupt noch mit @Cacheable versehen werden?
 
     @NonNull
     public <T extends Serializable> ResponseEntity<T> processRequest(
             @NonNull final String cacheName,
-            @NonNull final String cacheKey, // @TODO CacheKey Object
-            @NonNull final Supplier<T> cacheLoader // @TODO CacheKey is Passed to CacheLoader (no supplier, another signature: CacheLoader -> Optional : cacheLoader(CacheKey))
+            @NonNull final String cacheKey,
+            @NonNull final Supplier<T> cacheLoader
     ) {
         if (dbCachedManager.isCached(cacheName, cacheKey)) {
             try {

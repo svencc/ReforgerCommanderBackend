@@ -1,6 +1,6 @@
 package com.recom.service.map;
 
-import com.recom.entity.MapTopographyEntity;
+import com.recom.entity.MapTopography;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -61,7 +61,7 @@ public class HeightmapGeneratorService {
     }
 
     @NonNull
-    public ByteArrayOutputStream generateHeightmap(@NonNull final List<MapTopographyEntity> mapTopographyEntities) throws IOException {
+    public ByteArrayOutputStream generateHeightmap(@NonNull final List<MapTopography> mapTopographyEntities) throws IOException {
         final int resolution = 1444; // select count(distinct(coordinate x+z)) from map_topography_entity;
         int x = 0;
         int z = resolution - 1;
@@ -72,8 +72,9 @@ public class HeightmapGeneratorService {
         float maxWaterDepth = 0;
         float seaLevel = 0.0f;
 
-        for (final MapTopographyEntity entity : mapTopographyEntities) {
-            final float height = entity.getCoordinateY().floatValue(); // coordinateY = height
+        for (final MapTopography entity : mapTopographyEntities) {
+//            final float height = entity.getCoordinateY().floatValue(); // coordinateY = height
+            final float height = 1f;
             heightMap[x][z] = height;
             if (height > maxHeight) {
                 maxHeight = height;
