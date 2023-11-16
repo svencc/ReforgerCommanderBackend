@@ -39,7 +39,6 @@ public class MapStructureEntity implements Persistable<Long>, Serializable, MapL
     @Column(insertable = true, updatable = false, nullable = false)
     private Long id;
 
-    @NonNull
     @OneToOne(mappedBy = "mapStructure", fetch = FetchType.EAGER, optional = false)
     private GameMap gameMap;
 
