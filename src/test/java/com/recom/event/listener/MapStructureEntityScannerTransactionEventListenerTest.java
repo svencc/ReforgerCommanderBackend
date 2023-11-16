@@ -3,6 +3,7 @@ package com.recom.event.listener;
 import com.recom.dto.map.scanner.TransactionIdentifierDto;
 import com.recom.dto.map.scanner.structure.MapStructureEntityDto;
 import com.recom.dto.map.scanner.structure.TransactionalMapStructureEntityPackageDto;
+import com.recom.entity.GameMap;
 import com.recom.event.event.async.map.addmappackage.AddMapPackageAsyncEvent;
 import com.recom.event.event.async.map.commit.CommitMapTransactionAsyncEvent;
 import com.recom.event.event.async.map.open.OpenMapTransactionAsyncEvent;
@@ -23,6 +24,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.Map;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -116,6 +118,7 @@ public class MapStructureEntityScannerTransactionEventListenerTest {
         packageDto.setSessionIdentifier(session1);
         final AddMapPackageAsyncEvent event = new AddMapPackageAsyncEvent(packageDto);
         when(mapTransactionValidator.isValidTransaction(any(MapTransaction.class))).thenReturn(true);
+        when(gameMapPersistenceLayer.findByName(eq(session1))).thenReturn(Optional.of(GameMap.builder().name(session1).build()));
 
         // Act
         // open transaction and send event/package

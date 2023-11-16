@@ -115,21 +115,21 @@ public abstract class TransactionalMapLocatedPackageEventListenerTemplate<
             final MapTransaction<DTO_TYPE, PACKAGE_TYPE> existingTransaction = transactions.get(sessionIdentifier);
             if (mapTransactionValidator.isValidTransaction(existingTransaction)) {
                 log.info("Process transaction named {}!", sessionIdentifier);
-                final Optional<GameMap> mapMeta = gameMapPersistenceLayer.findByName(sessionIdentifier);
+                final Optional<GameMap> maybeGameMap = gameMapPersistenceLayer.findByName(sessionIdentifier);
 
-                if (mapMeta.isPresent()) {
+                if (maybeGameMap.isPresent()) {
                     final List<ENTITY_TYPE> distinctEntities = existingTransaction.getPackages().stream()
                             .flatMap(packageDto -> packageDto.getEntities().stream())
                             .distinct()
                             .map(entityMapper::toEntity)
-                            .peek(mapEntity -> mapEntity.setGameMap(mapMeta.get()))
+                            .peek(mapEntity -> mapEntity.setGameMap(maybeGameMap.get()))
                             .collect(Collectors.toList());
 
                     log.info("... persist {} entities.", distinctEntities.size());
 
                     final Boolean transactionExecuted = transactionTemplate.execute(status -> {
 
-                        entityPersistenceLayer.deleteMapEntities(mapMeta.get());
+                        entityPersistenceLayer.deleteMapEntities(maybeGameMap.get());
                         entityPersistenceLayer.saveAll(distinctEntities);
                         log.info("Transaction named {} persisted!", sessionIdentifier);
 
