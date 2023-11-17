@@ -10,9 +10,8 @@ import com.recom.event.event.async.map.open.OpenMapTransactionAsyncEvent;
 import com.recom.event.event.sync.cache.CacheResetSyncEvent;
 import com.recom.model.map.MapTransaction;
 import com.recom.persistence.map.GameMapPersistenceLayer;
-import com.recom.persistence.map.structure.MapStructurePersistenceLayer;
+import com.recom.persistence.map.structure.MapLocatedStructurePersistenceLayer;
 import com.recom.service.map.MapTransactionValidatorService;
-import lombok.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -39,13 +38,13 @@ public class MapStructureEntityScannerTransactionEventListenerTest {
     @Mock
     private ApplicationEventPublisher applicationEventPublisher;
     @Mock
-    private MapStructurePersistenceLayer mapStructurePersistenceLayer;
+    private MapLocatedStructurePersistenceLayer mapStructurePersistenceLayer;
     @Mock
     private MapTransactionValidatorService<MapStructureEntityDto, TransactionalMapStructureEntityPackageDto> mapTransactionValidator;
     @Mock
     private GameMapPersistenceLayer gameMapPersistenceLayer;
     @InjectMocks
-    private MapStructureEntityScannerTransactionEventListener eventListener;
+    private MapStructureEntityScannerTransactionEventListener eventListenerUnderTest;
 
     @Captor
     private ArgumentCaptor<CacheResetSyncEvent> cacheResetEventCaptor;
@@ -58,15 +57,15 @@ public class MapStructureEntityScannerTransactionEventListenerTest {
         transactionIdentifierDto.setSessionIdentifier("session1");
         final OpenMapTransactionAsyncEvent event = new OpenMapTransactionAsyncEvent(transactionIdentifierDto);
 
-        final @NonNull Map<String, MapTransaction<MapStructureEntityDto, TransactionalMapStructureEntityPackageDto>> transactions = eventListener.getTransactions();
+        final Map<String, MapTransaction<MapStructureEntityDto, TransactionalMapStructureEntityPackageDto>> transactions = eventListenerUnderTest.getTransactions();
 
         // Act
-        eventListener.handleOpenTransactionEvent(event);
+        eventListenerUnderTest.handleOpenTransactionEvent(event);
 
         // Assert
-        assert transactions.containsKey("session1");
+        assertTrue(transactions.containsKey("session1"));
         final MapTransaction<MapStructureEntityDto, TransactionalMapStructureEntityPackageDto> transaction = transactions.get("session1");
-        assert transaction.getOpenTransactionIdentifier().equals(transactionIdentifierDto);
+        assertEquals(transactionIdentifierDto, transaction.getOpenTransactionIdentifier());
     }
 
     @Test
@@ -78,10 +77,10 @@ public class MapStructureEntityScannerTransactionEventListenerTest {
         final AddMapPackageAsyncEvent event = new AddMapPackageAsyncEvent(packageDto);
 
         // Act
-        eventListener.handleAddMapPackageEvent(event);
+        eventListenerUnderTest.handleAddMapPackageEvent(event);
 
         // Assert
-        assertFalse(eventListener.getTransactions().containsKey(session1));
+        assertFalse(eventListenerUnderTest.getTransactions().containsKey(session1));
         verify(mapStructurePersistenceLayer, never()).deleteMapEntities(any());
         verify(mapStructurePersistenceLayer, never()).saveAll(anyList());
         verify(applicationEventPublisher, never()).publishEvent(any(CacheResetSyncEvent.class));
@@ -98,13 +97,13 @@ public class MapStructureEntityScannerTransactionEventListenerTest {
         // Act
         // open transaction and send event/package
         final OpenMapTransactionAsyncEvent openSessionEvent = new OpenMapTransactionAsyncEvent(TransactionIdentifierDto.builder().sessionIdentifier(session1).build());
-        eventListener.handleOpenTransactionEvent(openSessionEvent);
-        eventListener.handleAddMapPackageEvent(event);
+        eventListenerUnderTest.handleOpenTransactionEvent(openSessionEvent);
+        eventListenerUnderTest.handleAddMapPackageEvent(event);
 
         // Assert
-        assertTrue(eventListener.getTransactions().containsKey(session1));
-        assertEquals(1, eventListener.getTransactions().get(session1).getPackages().size());
-        assertTrue(eventListener.getTransactions().get(session1).getPackages().contains(packageDto));
+        assertTrue(eventListenerUnderTest.getTransactions().containsKey(session1));
+        assertEquals(1, eventListenerUnderTest.getTransactions().get(session1).getPackages().size());
+        assertTrue(eventListenerUnderTest.getTransactions().get(session1).getPackages().contains(packageDto));
         verify(mapStructurePersistenceLayer, never()).deleteMapEntities(any());
         verify(mapStructurePersistenceLayer, never()).saveAll(anyList());
         verify(applicationEventPublisher, never()).publishEvent(any(CacheResetSyncEvent.class));
@@ -123,15 +122,15 @@ public class MapStructureEntityScannerTransactionEventListenerTest {
         // Act
         // open transaction and send event/package
         final OpenMapTransactionAsyncEvent openTransactionEvent = new OpenMapTransactionAsyncEvent(TransactionIdentifierDto.builder().sessionIdentifier(session1).build());
-        eventListener.handleOpenTransactionEvent(openTransactionEvent);
+        eventListenerUnderTest.handleOpenTransactionEvent(openTransactionEvent);
 
-        eventListener.handleAddMapPackageEvent(event);
+        eventListenerUnderTest.handleAddMapPackageEvent(event);
 
         final CommitMapTransactionAsyncEvent commitEvent = new CommitMapTransactionAsyncEvent(TransactionIdentifierDto.builder().sessionIdentifier(session1).build());
-        eventListener.handleCommitTransactionEvent(commitEvent);
+        eventListenerUnderTest.handleCommitTransactionEvent(commitEvent);
 
         // Assert
-        verify(mapTransactionValidator, times(1)).isValidTransaction(eq(eventListener.getTransactions().get(session1)));
+        verify(mapTransactionValidator, times(1)).isValidTransaction(eq(eventListenerUnderTest.getTransactions().get(session1)));
         verify(transactionTemplate, times(1)).execute(any());
     }
 
@@ -148,15 +147,15 @@ public class MapStructureEntityScannerTransactionEventListenerTest {
         // Act
         // open transaction and send event/package
         final OpenMapTransactionAsyncEvent openTransactionEvent = new OpenMapTransactionAsyncEvent(TransactionIdentifierDto.builder().sessionIdentifier(session1).build());
-        eventListener.handleOpenTransactionEvent(openTransactionEvent);
+        eventListenerUnderTest.handleOpenTransactionEvent(openTransactionEvent);
 
-        eventListener.handleAddMapPackageEvent(event);
+        eventListenerUnderTest.handleAddMapPackageEvent(event);
 
         final CommitMapTransactionAsyncEvent commitEvent = new CommitMapTransactionAsyncEvent(TransactionIdentifierDto.builder().sessionIdentifier(session1).build());
-        eventListener.handleCommitTransactionEvent(commitEvent);
+        eventListenerUnderTest.handleCommitTransactionEvent(commitEvent);
 
         // Assert
-        verify(mapTransactionValidator, times(1)).isValidTransaction(eq(eventListener.getTransactions().get(session1)));
+        verify(mapTransactionValidator, times(1)).isValidTransaction(eq(eventListenerUnderTest.getTransactions().get(session1)));
         verify(transactionTemplate, never()).execute(any());
     }
 

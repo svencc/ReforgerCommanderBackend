@@ -2,7 +2,7 @@ package com.recom.service.map;
 
 import com.recom.entity.GameMap;
 import com.recom.entity.MapTopography;
-import com.recom.persistence.map.topography.MapTopographyPersistenceLayer;
+import com.recom.persistence.map.topography.MapLocatedTopographyPersistenceLayer;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ import java.util.List;
 public class TopographyMapDataService {
 
     @NonNull
-    private final MapTopographyPersistenceLayer mapTopographyPersistenceLayer;
+    private final MapLocatedTopographyPersistenceLayer mapTopographyPersistenceLayer;
     @NonNull
     private final HeightmapGeneratorService heightmapGeneratorService;
 

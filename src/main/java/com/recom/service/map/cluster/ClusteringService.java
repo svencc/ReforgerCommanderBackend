@@ -10,7 +10,7 @@ import com.recom.entity.GameMap;
 import com.recom.mapper.MapStructureEntityMapper;
 import com.recom.model.map.ClusterConfiguration;
 import com.recom.persistence.map.GameMapPersistenceLayer;
-import com.recom.persistence.map.structure.MapStructurePersistenceLayer;
+import com.recom.persistence.map.structure.MapLocatedStructurePersistenceLayer;
 import com.recom.service.configuration.ConfigurationDescriptorProvider;
 import com.recom.service.configuration.ConfigurationValueProvider;
 import com.recom.service.dbcached.DBCachedService;
@@ -48,7 +48,7 @@ public class ClusteringService {
     @NonNull
     private final ConfigurationValueProvider configurationValueProvider;
     @NonNull
-    private final MapStructurePersistenceLayer mapStructurePersistenceLayer;
+    private final MapLocatedStructurePersistenceLayer mapStructurePersistenceLayer;
     @NonNull
     private final GameMapPersistenceLayer gameMapPersistenceLayer;
     @NonNull

@@ -2,7 +2,7 @@ package com.recom.persistence.map.structure;
 
 import com.recom.entity.GameMap;
 import com.recom.entity.MapStructureEntity;
-import com.recom.event.listener.generic.generic.MapEntityPersistable;
+import com.recom.event.listener.generic.generic.MapLocatedEntityPersistable;
 import com.recom.model.map.EnumMapDescriptorType;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
-public class MapStructurePersistenceLayer implements MapEntityPersistable<MapStructureEntity> {
+public class MapLocatedStructurePersistenceLayer implements MapLocatedEntityPersistable<MapStructureEntity> {
 
     @NonNull
     private final MapStructureRepository mapStructureRepository;
