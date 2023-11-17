@@ -4,6 +4,7 @@
   * only save 1 entity with model
   * replace existing MapTopographyEntityScannerTransactionEventListener
 
+
 * normalize gameMap entities
   * gameMap-meta-entity
     * ID
@@ -11,6 +12,13 @@
     * size
     * ocean_base_height
   * relations to map_structure_entity + map_topography_entity
+
+
+* add gameMap meta data to gameMap
+  * new api endpoint for creating gameMap if not existing
+  * then add gameMap data
+    * entities
+    * topography
 
 
 * scanner -> qubus
