@@ -85,4 +85,11 @@ public class GameMapService {
         return gameMapPersistenceLayer.findByName(mapName);
     }
 
+    public void create(@NonNull final String mapName) {
+        gameMapPersistenceLayer.save(
+                GameMap.builder()
+                        .name(mapName)
+                        .build()
+        );
+    }
 }

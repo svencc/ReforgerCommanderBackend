@@ -21,6 +21,11 @@ public class GameMapPersistenceLayer {
     }
 
     @NonNull
+    public GameMap save(@NonNull GameMap gameMap) {
+        return gameMapRepository.save(gameMap);
+    }
+
+    @NonNull
     public Optional<GameMap> findByName(@NonNull final String mapName) {
         return gameMapRepository.findByName(mapName);
     }
