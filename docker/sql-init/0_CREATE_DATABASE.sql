@@ -1,6 +1,6 @@
 CREATE DATABASE recom_db;
 
-USE DATABASE recom_db;
+USE recom_db;
 
 CREATE TABLE account
 (

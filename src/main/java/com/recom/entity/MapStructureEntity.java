@@ -23,11 +23,11 @@ import java.math.BigDecimal;
         @Index(name = "IDX_gameMap_resourceName", columnList = "game_map_id, resourceName", unique = false),
         @Index(name = "IDX_gameMap_mapDescriptorType", columnList = "game_map_id, mapDescriptorType", unique = false),
         @Index(name = "IDX_gameMap_name", columnList = "game_map_id, name", unique = false),
-        @Index(name = "IDX_gameMap_coordinates", columnList = "game_map_id, coordinateX, coordinateY, coordinateZ", unique = false),
-        @Index(name = "IDX_gameMap_coordinateX", columnList = "game_map_id, coordinateX", unique = false),
-        @Index(name = "IDX_gameMap_coordinateY", columnList = "game_map_id, coordinateY", unique = false),
-        @Index(name = "IDX_gameMap_coordinateZ", columnList = "game_map_id, coordinateZ", unique = false),
-        @Index(name = "IDX_gameMap_coordinate_xz", columnList = "game_map_id, coordinateX, coordinateZ,", unique = false)
+//        @Index(name = "IDX_gameMap_coordinates", columnList = "game_map_id, coordinateX, coordinateY, coordinateZ", unique = false),
+//        @Index(name = "IDX_gameMap_coordinateX", columnList = "game_map_id, coordinateX", unique = false),
+//        @Index(name = "IDX_gameMap_coordinateY", columnList = "game_map_id, coordinateY", unique = false),
+//        @Index(name = "IDX_gameMap_coordinateZ", columnList = "game_map_id, coordinateZ", unique = false),
+//        @Index(name = "IDX_gameMap_coordinate_xz", columnList = "game_map_id, coordinateX, coordinateZ,", unique = false)
 })
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
