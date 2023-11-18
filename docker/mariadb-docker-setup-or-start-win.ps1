@@ -18,7 +18,7 @@ $MARIADB_ROOT_PASSWORD = "recomRootPwd"
 $PROJECT_FOLDER = $PSScriptRoot
 $PROJECT_DB_NAME = "recom_db"
 
-docker pull mariadb
+docker pull mariadb:10.11.6
 
 # Look if the docker db container already exists
 $DOCKER_DBCONTAINER_FILTER_STRING = (docker container ls --all)

@@ -30,7 +30,7 @@ public class Configuration implements Persistable<Long>, Serializable {
     private Long id;
 
     @Nullable
-    @OneToOne(mappedBy = "configuration", fetch = FetchType.EAGER, optional = true)
+    @ManyToOne(optional = true)
     private GameMap gameMap;
 
     @Column(insertable = true, updatable = true, nullable = false, length = 255)

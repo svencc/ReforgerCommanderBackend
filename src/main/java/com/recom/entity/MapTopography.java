@@ -26,7 +26,7 @@ public class MapTopography implements Persistable<Long>, Serializable, MapRelate
     private Long id;
 
     @NonNull
-    @OneToOne(mappedBy = "mapTopography", fetch = FetchType.EAGER, optional = false)
+    @OneToOne(fetch = FetchType.EAGER, optional = false)
     private GameMap gameMap;
 
     @Lob
