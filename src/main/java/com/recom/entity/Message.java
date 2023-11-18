@@ -19,9 +19,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(indexes = {
-//        @Index(name = "IDX_gameMap", columnList = "gameMap", unique = false),
-        @Index(name = "IDX_messageType_timestamp", columnList = "messageType, timestamp", unique = false),
-        @Index(name = "IDX_timestamp", columnList = "timestamp", unique = false),
+        @Index(name = "IDX_gameMap_messageType_timestamp", columnList = "game_map_id, messageType, timestamp", unique = false),
+        @Index(name = "IDX_gameMap_timestamp", columnList = "game_map_id, timestamp", unique = false),
 })
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)

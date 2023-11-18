@@ -18,17 +18,16 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(indexes = {
-//        @Index(name = "IDX_map", columnList = "mapMeta", unique = false),
-//        @Index(name = "IDX_map_className", columnList = "mapMeta, className", unique = false),
-//        @Index(name = "IDX_map_prefabName", columnList = "mapMeta, prefabName", unique = false),
-//        @Index(name = "IDX_map_resourceName", columnList = "mapMeta, resourceName", unique = false),
-//        @Index(name = "IDX_map_mapDescriptorType", columnList = "mapMeta, mapDescriptorType", unique = false),
-//        @Index(name = "IDX_map_name", columnList = "mapMeta, name", unique = false),
-//        @Index(name = "IDX_map_coordinates", columnList = "mapMeta, coordinateX, coordinateY, coordinateZ", unique = false),
-//        @Index(name = "IDX_map_coordinateX", columnList = "mapMeta, coordinateX", unique = false),
-//        @Index(name = "IDX_map_coordinateY", columnList = "mapMeta, coordinateY", unique = false),
-//        @Index(name = "IDX_map_coordinateZ", columnList = "mapMeta, coordinateZ", unique = false),
-//        @Index(name = "IDX_map_coordinate_map", columnList = "mapMeta, coordinateX, coordinateZ,", unique = false)
+        @Index(name = "IDX_gameMap_className", columnList = "game_map_id, className", unique = false),
+        @Index(name = "IDX_gameMap_prefabName", columnList = "game_map_id, prefabName", unique = false),
+        @Index(name = "IDX_gameMap_resourceName", columnList = "game_map_id, resourceName", unique = false),
+        @Index(name = "IDX_gameMap_mapDescriptorType", columnList = "game_map_id, mapDescriptorType", unique = false),
+        @Index(name = "IDX_gameMap_name", columnList = "game_map_id, name", unique = false),
+        @Index(name = "IDX_gameMap_coordinates", columnList = "game_map_id, coordinateX, coordinateY, coordinateZ", unique = false),
+        @Index(name = "IDX_gameMap_coordinateX", columnList = "game_map_id, coordinateX", unique = false),
+        @Index(name = "IDX_gameMap_coordinateY", columnList = "game_map_id, coordinateY", unique = false),
+        @Index(name = "IDX_gameMap_coordinateZ", columnList = "game_map_id, coordinateZ", unique = false),
+        @Index(name = "IDX_gameMap_coordinate_xz", columnList = "game_map_id, coordinateX, coordinateZ,", unique = false)
 })
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
