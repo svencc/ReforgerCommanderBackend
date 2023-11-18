@@ -1,4 +1,4 @@
-package com.recom.dto.map;
+package com.recom.dto.map.create;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,12 +17,17 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MapCreateRequestDto implements Serializable {
+public class MapCreateResponseDto implements Serializable {
 
     @NotBlank
     @Schema
     @JsonProperty()
     private String mapName;
+
+    @NotBlank
+    @Schema
+    @JsonProperty()
+    private boolean mapExists;
 
 }
 

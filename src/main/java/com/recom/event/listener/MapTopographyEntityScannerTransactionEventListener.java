@@ -92,10 +92,14 @@ public class MapTopographyEntityScannerTransactionEventListener extends Transact
                 .build();
 
         try {
-            return MapTopography.builder()
+            final MapTopography mapTopography = MapTopography.builder()
                     .gameMap(gameMap)
                     .data(serializeObject(topograpyModel).toByteArray())
                     .build();
+
+            gameMap.setMapTopography(mapTopography);
+
+            return mapTopography;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -74,6 +74,7 @@ public abstract class TransactionalMapLocatedPackageEventListenerTemplate<
                     final Boolean transactionExecuted = transactionTemplate.execute(status -> {
 
                         entityPersistenceLayer.deleteMapEntities(maybeGameMap.get());
+                        distinctEntities.forEach(entity -> entity.setGameMap(maybeGameMap.get()));
                         entityPersistenceLayer.saveAll(distinctEntities);
                         log.info("Transaction named {} persisted!", sessionIdentifier);
 

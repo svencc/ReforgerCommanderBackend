@@ -1,8 +1,8 @@
 package com.recom.api.map;
 
 import com.recom.api.commons.HttpCommons;
-import com.recom.dto.map.MapCreateRequestDto;
-import com.recom.exception.HttpNotFoundException;
+import com.recom.dto.map.create.MapCreateRequestDto;
+import com.recom.dto.map.create.MapCreateResponseDto;
 import com.recom.security.account.RECOMAccount;
 import com.recom.security.account.RECOMAuthorities;
 import com.recom.service.AssertionService;
@@ -51,7 +51,7 @@ public class MapCreateController {
             @ApiResponse(responseCode = HttpCommons.UNAUTHORIZED_CODE, description = HttpCommons.UNAUTHORIZED, content = @Content())
     })
     @PostMapping(path = "/form", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity<Void> mapExistsForm(
+    public ResponseEntity<MapCreateResponseDto> mapExistsForm(
             @AuthenticationPrincipal final RECOMAccount account,
             @RequestParam(required = true)
             @NonNull final Map<String, String> payload
@@ -72,22 +72,23 @@ public class MapCreateController {
     })
     @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
     @Secured({RECOMAuthorities.EVERYBODY})
-    public ResponseEntity<Void> mapExists(
+    public ResponseEntity<MapCreateResponseDto> mapExists(
             @AuthenticationPrincipal final RECOMAccount account,
             @RequestBody final MapCreateRequestDto mapExistsRequestDto
     ) {
         log.debug("Requested GET /api/v1/map/create (JSON)");
 
-        try {
-            assertionService.provideMap(mapExistsRequestDto.getMapName());
+        if (assertionService.provideMaybeMap(mapExistsRequestDto.getMapName()).isEmpty()) {
             gameMapService.create(mapExistsRequestDto.getMapName());
-        } catch (final HttpNotFoundException e) {
-            // do nothing; map already exists
         }
 
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
-                .build();
+                .body(MapCreateResponseDto.builder()
+                        .mapName(mapExistsRequestDto.getMapName())
+                        .mapExists(true)
+                        .build()
+                );
     }
 
 }

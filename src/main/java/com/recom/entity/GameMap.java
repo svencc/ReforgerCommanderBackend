@@ -33,8 +33,9 @@ public class GameMap implements Persistable<Long>, Serializable {
     @Column(insertable = true, updatable = false, nullable = false, length = 255)
     private String name;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = true, orphanRemoval = true)
-    private MapStructureEntity mapStructure;
+    @Builder.Default
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MapStructureEntity> mapStructures = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = true, orphanRemoval = true)
     private MapTopography mapTopography;
