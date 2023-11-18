@@ -2,6 +2,7 @@ package com.recom.service.map;
 
 import com.recom.entity.GameMap;
 import com.recom.entity.MapTopography;
+import com.recom.exception.HttpNotFoundException;
 import com.recom.persistence.map.topography.MapLocatedTopographyPersistenceLayer;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -28,12 +29,13 @@ public class TopographyMapDataService {
 
     @Transactional(readOnly = true)
     public byte[] provideTopographyMap(@NonNull final GameMap gameMap) throws IOException {
-//        final List<MapTopography> mapTopographyEntities = mapTopographyPersistenceLayer.findAllByMapNameOrdered(gameMap);
-        final List<MapTopography> mapTopographyEntities = List.of();
+        final Optional<MapTopography> maybeMapTopography = mapTopographyPersistenceLayer.findByGameMap(gameMap);
 
-        log.info("Found {} topography entities for map {}", mapTopographyEntities.size(), gameMap);
+        if (maybeMapTopography.isEmpty()) {
+            throw new HttpNotFoundException("No topography map found for map with id " + gameMap.getId() + "!");
+        }
 
-        final ByteArrayOutputStream outputStream = heightmapGeneratorService.generateHeightmap(mapTopographyEntities);
+        final ByteArrayOutputStream outputStream = heightmapGeneratorService.generateHeightmap(maybeMapTopography.get());
         final byte[] byteArray = outputStream.toByteArray();
 
         try (FileOutputStream fileOutputStream = new FileOutputStream(Path.of("heightmap.png").toFile())) {

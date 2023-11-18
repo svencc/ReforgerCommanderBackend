@@ -7,6 +7,8 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class MapLocatedTopographyPersistenceLayer implements MapRelatedEntityPersistable<MapTopography> {
@@ -21,6 +23,11 @@ public class MapLocatedTopographyPersistenceLayer implements MapRelatedEntityPer
 
     public Integer deleteMapEntities(@NonNull final GameMap gameMap) {
         return mapTopographyRepository.deleteByGameMap(gameMap);
+    }
+
+    @NonNull
+    public Optional<MapTopography> findByGameMap(@NonNull final GameMap gameMap) {
+        return mapTopographyRepository.findByGameMap(gameMap);
     }
 
 }

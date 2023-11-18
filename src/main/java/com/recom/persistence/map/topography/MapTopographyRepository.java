@@ -6,7 +6,7 @@ import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Optional;
 
 @Repository
 interface MapTopographyRepository extends JpaRepository<MapTopography, Long> {
@@ -16,5 +16,8 @@ interface MapTopographyRepository extends JpaRepository<MapTopography, Long> {
 
     @NonNull
     Integer deleteByGameMap(@NonNull final GameMap gameMap);
+
+    @NonNull
+    Optional<MapTopography> findByGameMap(@NonNull final GameMap gameMap);
 
 }

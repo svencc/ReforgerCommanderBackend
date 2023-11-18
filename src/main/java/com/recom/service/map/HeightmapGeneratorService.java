@@ -1,17 +1,20 @@
 package com.recom.service.map;
 
 import com.recom.entity.MapTopography;
+import com.recom.exception.DBCachedDeserializationException;
+import com.recom.model.map.TopographyData;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.List;
+import java.io.*;
+import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class HeightmapGeneratorService {
@@ -61,8 +64,11 @@ public class HeightmapGeneratorService {
     }
 
     @NonNull
-    public ByteArrayOutputStream generateHeightmap(@NonNull final List<MapTopography> mapTopographyEntities) throws IOException {
-        final int resolution = 1444; // select count(distinct(coordinate x+z)) from map_topography_entity;
+    public ByteArrayOutputStream generateHeightmap(@NonNull final MapTopography mapTopography) throws IOException {
+        byte[] data = mapTopography.getData();
+        final Optional<TopographyData> topograpyModel = deserializeCacheValue(data);
+
+        final int resolution = topograpyModel.get().getScanIterationsZ();
         int x = 0;
         int z = resolution - 1;
 
@@ -72,29 +78,41 @@ public class HeightmapGeneratorService {
         float maxWaterDepth = 0;
         float seaLevel = 0.0f;
 
-        for (final MapTopography entity : mapTopographyEntities) {
-//            final float height = entity.getCoordinateY().floatValue(); // coordinateY = height
-            final float height = 1f;
-            heightMap[x][z] = height;
-            if (height > maxHeight) {
-                maxHeight = height;
-            }
-            if (height < maxWaterDepth) {
-                maxWaterDepth = height;
-            }
+        for (final float[] xHeight : topograpyModel.get().getSurfaceData()) {
+            for (final float height : xHeight) {
+                heightMap[x][z] = height;
+                if (height > maxHeight) {
+                    maxHeight = height;
+                }
+                if (height < maxWaterDepth) {
+                    maxWaterDepth = height;
+                }
 
-            z--;
-            if (z < 0) {
-                z = resolution - 1;
-                if (x == resolution - 1) {
-                    break; // we are done; we have all the data we need
-                } else {
-                    x++;
+                z--;
+                if (z < 0) {
+                    z = resolution - 1;
+                    if (x == resolution - 1) {
+                        break; // we are done; we have all the data we need
+                    } else {
+                        x++;
+                    }
                 }
             }
         }
 
         return createHeightMap(seaLevel, maxHeight, maxWaterDepth, heightMap);
+    }
+
+    //    @TODO: SERIALIZE + DESERIALIZE in extra Service
+    @NonNull
+    private <V extends Serializable> Optional<V> deserializeCacheValue(
+            final byte[] serializedValue
+    ) throws DBCachedDeserializationException {
+        try (ObjectInputStream inputStream = new ObjectInputStream(new ByteArrayInputStream(serializedValue))) {
+            return Optional.ofNullable((V) inputStream.readObject());
+        } catch (final IOException | ClassNotFoundException e) {
+            throw new DBCachedDeserializationException("Unable to deserialize", e);
+        }
     }
 
 }
