@@ -9,6 +9,7 @@ import com.recom.event.event.async.map.commit.CommitMapTopographyTransactionAsyn
 import com.recom.event.event.async.map.open.OpenMapTopographyTransactionAsyncEvent;
 import com.recom.event.listener.generic.maprelated.TransactionalMapRelatedPackageEventListenerTemplate;
 import com.recom.model.map.MapTransaction;
+import com.recom.model.map.TopographyData;
 import com.recom.persistence.map.GameMapPersistenceLayer;
 import com.recom.persistence.map.topography.MapLocatedTopographyPersistenceLayer;
 import com.recom.service.map.MapTransactionValidatorService;
@@ -20,6 +21,10 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -62,9 +67,47 @@ public class MapTopographyEntityScannerTransactionEventListener extends Transact
     @NonNull
     @Override
     protected MapTopography mapTransactionToEntity(
-            @NonNull final GameMap mapMeta,
+            @NonNull final GameMap gameMap,
             @NonNull final List<TransactionalMapTopographyEntityPackageDto> packages
     ) {
-        return null;
+        final Float stepSize = packages.get(0).getEntities().get(0).getStepSize();
+        final Integer scanIterationsX = packages.get(0).getEntities().get(0).getScanIterationsX();
+        final Integer scanIterationsZ = packages.get(0).getEntities().get(0).getScanIterationsZ();
+        final Float oceanBaseHeight = packages.get(0).getEntities().get(0).getOceanBaseHeight();
+
+        final float[][] surfaceData = new float[scanIterationsX][scanIterationsZ];
+
+        packages.stream()
+                .flatMap((entityPackage) -> entityPackage.getEntities().stream())
+                .forEach((final MapTopographyEntityDto packageDto) -> {
+                    surfaceData[packageDto.getIterationX()][packageDto.getIterationZ()] = packageDto.getCoordinates().get(1).floatValue();
+                });
+
+        final TopographyData topograpyModel = TopographyData.builder()
+                .stepSize(stepSize)
+                .scanIterationsX(scanIterationsX)
+                .scanIterationsZ(scanIterationsZ)
+                .oceanBaseHeight(oceanBaseHeight)
+                .surfaceData(surfaceData)
+                .build();
+
+        try {
+            return MapTopography.builder()
+                    .gameMap(gameMap)
+                    .data(serializeObject(topograpyModel).toByteArray())
+                    .build();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @NonNull
+    private ByteArrayOutputStream serializeObject(@NonNull final Serializable object) throws IOException {
+        final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream)) {
+            objectOutputStream.writeObject(object);
+        }
+
+        return byteArrayOutputStream;
     }
 }
