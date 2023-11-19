@@ -13,6 +13,7 @@ import com.recom.model.map.TopographyData;
 import com.recom.persistence.map.GameMapPersistenceLayer;
 import com.recom.persistence.map.topography.MapLocatedTopographyPersistenceLayer;
 import com.recom.service.map.MapTransactionValidatorService;
+import com.recom.service.map.TopographyMapDataService;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -32,14 +33,21 @@ import java.util.Map;
 @Component
 public class MapTopographyEntityScannerTransactionEventListener extends TransactionalMapRelatedPackageEventListenerTemplate<TransactionalMapTopographyEntityPackageDto, MapTopography, MapTopographyEntityDto> {
 
+    @NonNull
+    private final TopographyMapDataService topographyMapDataService;
+
     public MapTopographyEntityScannerTransactionEventListener(
             @NonNull final TransactionTemplate transactionTemplate,
             @NonNull final MapLocatedTopographyPersistenceLayer entityPersistenceLayer,
             @NonNull final MapTransactionValidatorService<MapTopographyEntityDto, TransactionalMapTopographyEntityPackageDto> mapTransactionValidator,
             @NonNull final GameMapPersistenceLayer gameMapPersistenceLayer,
             @NonNull final ApplicationEventPublisher applicationEventPublisher
+
+            ,@NonNull final TopographyMapDataService topographyMapDataService
     ) {
         super(transactionTemplate, entityPersistenceLayer, mapTransactionValidator, gameMapPersistenceLayer, applicationEventPublisher);
+
+        this.topographyMapDataService = topographyMapDataService;
     }
 
     @Async("AsyncMapTopographyTransactionExecutor")
@@ -96,6 +104,8 @@ public class MapTopographyEntityScannerTransactionEventListener extends Transact
                     .gameMap(gameMap)
                     .data(serializeObject(topograpyModel).toByteArray())
                     .build();
+
+            topographyMapDataService.provideTopographyMap(mapTopography);
 
             gameMap.setMapTopography(mapTopography);
 

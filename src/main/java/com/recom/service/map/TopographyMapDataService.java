@@ -33,12 +33,18 @@ public class TopographyMapDataService {
 
         if (maybeMapTopography.isEmpty()) {
             throw new HttpNotFoundException("No topography map found for map with id " + gameMap.getId() + "!");
+        } else {
+            return provideTopographyMap(maybeMapTopography.get());
         }
+    }
 
-        final ByteArrayOutputStream outputStream = heightmapGeneratorService.generateHeightmap(maybeMapTopography.get());
+
+    @Transactional(readOnly = true)
+    public byte[] provideTopographyMap(@NonNull final MapTopography mapTopography) throws IOException {
+        final ByteArrayOutputStream outputStream = heightmapGeneratorService.generateHeightmap(mapTopography);
         final byte[] byteArray = outputStream.toByteArray();
 
-        try (FileOutputStream fileOutputStream = new FileOutputStream(Path.of("heightmap.png").toFile())) {
+        try (FileOutputStream fileOutputStream = new FileOutputStream(Path.of("cached-heightmap.png").toFile())) {
             fileOutputStream.write(byteArray);
         } catch (IOException e) {
             e.printStackTrace();
