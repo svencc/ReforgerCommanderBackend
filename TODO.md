@@ -1,10 +1,5 @@
 # TODO LIST
 
-* optimize gameMap topography data persistence and model
-  * only save 1 entity with model
-  * replace existing MapTopographyEntityScannerTransactionEventListener
-
-
 * normalize gameMap entities
   * gameMap-meta-entity
     * ID
