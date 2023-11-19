@@ -1,6 +1,5 @@
 # TODO LIST
 
-* de-serializer -> to service
 * topographic-map-generator -> to service
 
 * normalize gameMap entities

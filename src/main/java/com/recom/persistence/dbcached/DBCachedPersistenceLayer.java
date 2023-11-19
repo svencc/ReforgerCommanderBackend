@@ -2,13 +2,15 @@ package com.recom.persistence.dbcached;
 
 import com.recom.entity.DBCachedItem;
 import com.recom.exception.DBCachedDeserializationException;
+import com.recom.service.SerializationService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.Serializable;
 import java.util.Optional;
 
 @Slf4j
@@ -18,6 +20,8 @@ public class DBCachedPersistenceLayer {
 
     @NonNull
     private final DatabasePersistentCacheRepository databasePersistentCacheRepository;
+    @NonNull
+    private final SerializationService serializationService;
 
 
     public boolean isInDBCache(
@@ -57,7 +61,7 @@ public class DBCachedPersistenceLayer {
             @NonNull final V value
     ) {
         log.debug("Updating existing cache item {} - {}", existingCacheItem.getCacheName(), existingCacheItem.getCacheKey());
-        try (ByteArrayOutputStream byteArrayOutputStream = serializeObject(value)) {
+        try (ByteArrayOutputStream byteArrayOutputStream = serializationService.serializeObject(value)) {
             existingCacheItem.setCachedValue(byteArrayOutputStream.toByteArray());
             return existingCacheItem;
         } catch (final Exception e) {
@@ -73,7 +77,7 @@ public class DBCachedPersistenceLayer {
             @NonNull final V valueToCache
     ) {
         log.debug("Creating new cache item {} - {}.", cacheName, cacheKey);
-        try (ByteArrayOutputStream byteArrayOutputStream = serializeObject(valueToCache)) {
+        try (ByteArrayOutputStream byteArrayOutputStream = serializationService.serializeObject(valueToCache)) {
             return DBCachedItem.builder()
                     .cacheName(cacheName)
                     .cacheKey(cacheKey)
@@ -83,15 +87,6 @@ public class DBCachedPersistenceLayer {
             log.error("Error serializing cache value with key {}!", cacheKey, e);
             return null;
         }
-    }
-
-    @NonNull
-    private ByteArrayOutputStream serializeObject(@NonNull final Serializable object) throws IOException {
-        final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream)) {
-            objectOutputStream.writeObject(object);
-        }
-        return byteArrayOutputStream;
     }
 
     @NonNull
@@ -106,20 +101,7 @@ public class DBCachedPersistenceLayer {
                 () -> log.debug("Cache miss {} - {}", cacheName, cacheKey)
         );
 
-        return maybeCachedItem.flatMap(cacheItem -> deserializeCacheValue(cacheKey, cacheItem.getCachedValue()));
-    }
-
-    @NonNull
-    private <V extends Serializable> Optional<V> deserializeCacheValue(
-            @NonNull final String cacheKey,
-            final byte[] serializedValue
-    ) throws DBCachedDeserializationException {
-        try (ObjectInputStream inputStream = new ObjectInputStream(new ByteArrayInputStream(serializedValue))) {
-            return Optional.ofNullable((V) inputStream.readObject());
-        } catch (final IOException | ClassNotFoundException e) {
-            log.error("Error deserializing cache value with key {}", cacheKey);
-            throw new DBCachedDeserializationException(String.format("Unable to deserialize cacheKey %s", cacheKey), e);
-        }
+        return maybeCachedItem.flatMap(cacheItem -> serializationService.deserializeObject(cacheKey, cacheItem.getCachedValue()));
     }
 
     public void clearAll() {

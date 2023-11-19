@@ -12,6 +12,7 @@ import com.recom.model.map.MapTransaction;
 import com.recom.model.map.TopographyData;
 import com.recom.persistence.map.GameMapPersistenceLayer;
 import com.recom.persistence.map.topography.MapLocatedTopographyPersistenceLayer;
+import com.recom.service.SerializationService;
 import com.recom.service.map.MapTransactionValidatorService;
 import com.recom.service.map.TopographyMapDataService;
 import lombok.NonNull;
@@ -22,10 +23,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -35,19 +33,22 @@ public class MapTopographyEntityScannerTransactionEventListener extends Transact
 
     @NonNull
     private final TopographyMapDataService topographyMapDataService;
+    @NonNull
+    private final SerializationService serializationService;
 
     public MapTopographyEntityScannerTransactionEventListener(
             @NonNull final TransactionTemplate transactionTemplate,
             @NonNull final MapLocatedTopographyPersistenceLayer entityPersistenceLayer,
             @NonNull final MapTransactionValidatorService<MapTopographyEntityDto, TransactionalMapTopographyEntityPackageDto> mapTransactionValidator,
             @NonNull final GameMapPersistenceLayer gameMapPersistenceLayer,
-            @NonNull final ApplicationEventPublisher applicationEventPublisher
-
-            ,@NonNull final TopographyMapDataService topographyMapDataService
+            @NonNull final ApplicationEventPublisher applicationEventPublisher,
+            @NonNull final TopographyMapDataService topographyMapDataService,
+            @NonNull final SerializationService serializationService
     ) {
         super(transactionTemplate, entityPersistenceLayer, mapTransactionValidator, gameMapPersistenceLayer, applicationEventPublisher);
 
         this.topographyMapDataService = topographyMapDataService;
+        this.serializationService = serializationService;
     }
 
     @Async("AsyncMapTopographyTransactionExecutor")
@@ -102,7 +103,7 @@ public class MapTopographyEntityScannerTransactionEventListener extends Transact
         try {
             final MapTopography mapTopography = MapTopography.builder()
                     .gameMap(gameMap)
-                    .data(serializeObject(topograpyModel).toByteArray())
+                    .data(serializationService.serializeObject(topograpyModel).toByteArray())
                     .build();
 
             topographyMapDataService.provideTopographyMap(mapTopography);
@@ -115,13 +116,4 @@ public class MapTopographyEntityScannerTransactionEventListener extends Transact
         }
     }
 
-    @NonNull
-    private ByteArrayOutputStream serializeObject(@NonNull final Serializable object) throws IOException {
-        final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream)) {
-            objectOutputStream.writeObject(object);
-        }
-
-        return byteArrayOutputStream;
-    }
 }
