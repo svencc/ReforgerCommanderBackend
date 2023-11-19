@@ -1,20 +1,12 @@
 # TODO LIST
 
+* de-serializer -> to service
+* topographic-map-generator -> to service
+
 * normalize gameMap entities
   * gameMap-meta-entity
-    * ID
-    * name
     * size
     * ocean_base_height
-  * relations to map_structure_entity + map_topography_entity
-
-
-* add gameMap meta data to gameMap
-  * new api endpoint for creating gameMap if not existing
-  * then add gameMap data
-    * entities
-    * topography
-
 
 * scanner -> qubus
 * Cache Reset Map Exists!
