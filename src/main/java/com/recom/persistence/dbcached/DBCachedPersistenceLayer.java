@@ -101,7 +101,12 @@ public class DBCachedPersistenceLayer {
                 () -> log.debug("Cache miss {} - {}", cacheName, cacheKey)
         );
 
-        return maybeCachedItem.flatMap(cacheItem -> serializationService.deserializeObject(cacheKey, cacheItem.getCachedValue()));
+        final Optional<V> maybeDeserializedObject = maybeCachedItem.flatMap(cacheItem -> serializationService.deserializeObject(cacheItem.getCachedValue()));
+        if (maybeDeserializedObject.isEmpty()) {
+            log.error("Error deserializing cache value with key {}", cacheKey);
+        }
+
+        return maybeDeserializedObject;
     }
 
     public void clearAll() {

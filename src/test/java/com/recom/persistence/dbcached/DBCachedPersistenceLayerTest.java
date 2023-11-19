@@ -1,8 +1,8 @@
 package com.recom.persistence.dbcached;
 
 import com.recom.entity.DBCachedItem;
-import lombok.NonNull;
-import lombok.SneakyThrows;
+import com.recom.service.SerializationService;
+import com.recom.testhelper.SerializeObjectHelper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -12,8 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -25,6 +24,8 @@ class DBCachedPersistenceLayerTest {
 
     @Mock
     private DatabasePersistentCacheRepository repository;
+    @Mock
+    private SerializationService serializationService;
     @InjectMocks
     private DBCachedPersistenceLayer serviceUnderTest;
 
@@ -32,14 +33,16 @@ class DBCachedPersistenceLayerTest {
     private ArgumentCaptor<DBCachedItem> cacheItemCaptor;
 
     @Test
-    public void testPut_withNonExistingCacheItem_thenItemIsStored() {
+    public void testPut_withNonExistingCacheItem_thenItemIsStored() throws IOException {
         // Arrange
         final String cacheName = "testCacheName";
         final String key = "testKey";
         final String value = "testValue";
-        final byte[] serializedValue = serializeObjectHelper(value).toByteArray();
+        final ByteArrayOutputStream outputStream = SerializeObjectHelper.serializeObjectHelper(value);
+        final byte[] serializedValue = outputStream.toByteArray();
 
         when(repository.findByCacheNameAndCacheKey(eq(cacheName), eq(key))).thenReturn(Optional.empty());
+        when(serializationService.serializeObject(eq(value))).thenReturn(outputStream);
 
         final ArgumentCaptor<DBCachedItem> captor = ArgumentCaptor.forClass(DBCachedItem.class);
 
@@ -55,16 +58,6 @@ class DBCachedPersistenceLayerTest {
         assertTrue(Arrays.equals(serializedValue, capturedCacheItem.getCachedValue()));
     }
 
-    @NonNull
-    @SneakyThrows
-    private ByteArrayOutputStream serializeObjectHelper(@NonNull final Serializable object) {
-        final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream)) {
-            objectOutputStream.writeObject(object);
-        }
-        return byteArrayOutputStream;
-    }
-
     @Test
     public void testGet_withValidCacheData_thenReturnValue() {
         // Arrange
@@ -75,10 +68,11 @@ class DBCachedPersistenceLayerTest {
         final DBCachedItem cacheItem = DBCachedItem.builder()
                 .cacheName(cacheName)
                 .cacheKey(key)
-                .cachedValue(serializeObjectHelper(value).toByteArray())
+                .cachedValue(SerializeObjectHelper.serializeObjectHelper(value).toByteArray())
                 .build();
 
         when(repository.findByCacheNameAndCacheKey(eq(cacheName), eq(key))).thenReturn(Optional.of(cacheItem));
+        when(serializationService.deserializeObject(eq(cacheItem.getCachedValue()))).thenReturn(Optional.of(value));
 
         // Act
         Optional<String> result = serviceUnderTest.get(cacheName, key);

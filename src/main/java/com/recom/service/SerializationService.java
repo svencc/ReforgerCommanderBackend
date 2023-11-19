@@ -23,15 +23,11 @@ public class SerializationService {
     }
 
     @NonNull
-    public <V extends Serializable> Optional<V> deserializeObject(
-            @NonNull final String cacheKey,
-            final byte[] serializedValue
-    ) throws DBCachedDeserializationException {
+    public <V extends Serializable> Optional<V> deserializeObject(final byte[] serializedValue) throws DBCachedDeserializationException {
         try (ObjectInputStream inputStream = new ObjectInputStream(new ByteArrayInputStream(serializedValue))) {
             return Optional.ofNullable((V) inputStream.readObject());
         } catch (final IOException | ClassNotFoundException e) {
-            log.error("Error deserializing cache value with key {}", cacheKey);
-            throw new DBCachedDeserializationException(String.format("Unable to deserialize cacheKey %s", cacheKey), e);
+            return Optional.empty();
         }
     }
 

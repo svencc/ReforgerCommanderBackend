@@ -9,10 +9,13 @@ import com.recom.event.event.async.map.commit.CommitMapTopographyTransactionAsyn
 import com.recom.event.event.async.map.open.OpenMapTopographyTransactionAsyncEvent;
 import com.recom.event.event.sync.cache.CacheResetSyncEvent;
 import com.recom.model.map.MapTransaction;
+import com.recom.model.map.TopographyData;
 import com.recom.persistence.map.GameMapPersistenceLayer;
 import com.recom.persistence.map.topography.MapLocatedTopographyPersistenceLayer;
+import com.recom.service.SerializationService;
 import com.recom.service.map.MapTransactionValidatorService;
-import lombok.NonNull;
+import com.recom.service.map.TopographyMapDataService;
+import com.recom.testhelper.SerializeObjectHelper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -23,6 +26,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -43,6 +49,10 @@ public class MapTopographyScannerTransactionEventListenerTest {
     private MapTransactionValidatorService<MapTopographyEntityDto, TransactionalMapTopographyEntityPackageDto> mapTransactionValidator;
     @Mock
     private GameMapPersistenceLayer gameMapPersistenceLayer;
+    @Mock
+    private TopographyMapDataService topographyMapDataService;
+    @Mock
+    private SerializationService serializationService;
     @InjectMocks
     private MapTopographyEntityScannerTransactionEventListener eventListenerUnderTest;
 
@@ -110,15 +120,36 @@ public class MapTopographyScannerTransactionEventListenerTest {
     }
 
     @Test
-    public void testHandleCommitTransaction_whenTransactionIsValid_shouldProcessTransaction() {
+    public void testHandleCommitTransaction_whenTransactionIsValid_shouldProcessTransaction() throws IOException {
 
         // Arrange
-        final TransactionalMapTopographyEntityPackageDto packageDto = new TransactionalMapTopographyEntityPackageDto();
+        final List<MapTopographyEntityDto> entities = List.of(MapTopographyEntityDto.builder()
+                .iterationX(0)
+                .iterationZ(0)
+                .coordinates(List.of(BigDecimal.valueOf(1.0), BigDecimal.valueOf(2.0), BigDecimal.valueOf(3.0)))
+                .scanIterationsX(1)
+                .scanIterationsZ(1)
+                .stepSize(1.0f)
+                .oceanBaseHeight(0.0f)
+                .build());
+        final TransactionalMapTopographyEntityPackageDto packageDto = TransactionalMapTopographyEntityPackageDto.builder()
+                .entities(entities)
+                .build();
+
         final String session1 = "session1";
         packageDto.setSessionIdentifier(session1);
         final AddMapTopographyPackageAsyncEvent event = new AddMapTopographyPackageAsyncEvent(packageDto);
         when(mapTransactionValidator.isValidTransaction(any(MapTransaction.class))).thenReturn(true);
         when(gameMapPersistenceLayer.findByName(eq(session1))).thenReturn(Optional.of(GameMap.builder().name(session1).build()));
+
+        final TopographyData topographyData = TopographyData.builder()
+                .stepSize(1.0f)
+                .scanIterationsX(0)
+                .scanIterationsZ(0)
+                .oceanBaseHeight(0.0f)
+                .surfaceData(new float[][]{{1.0f}})
+                .build();
+        when(serializationService.serializeObject(any())).thenReturn(SerializeObjectHelper.serializeObjectHelper(topographyData));
 
 
         // Act
