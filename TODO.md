@@ -1,5 +1,8 @@
 # TODO LIST
 
+* add API to retrieve raw topo map values
+
+
 * normalize gameMap entities
   * gameMap-meta-entity
     * size
@@ -12,7 +15,7 @@
 
 * tidy up unfinished MapTransactions @Scheduled
 
-
+* Adjust colors of map; orientate on reforger map colors
 
 
 * x heatmaps generator
