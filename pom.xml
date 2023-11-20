@@ -27,8 +27,8 @@
         <snakeyaml.version>2.2</snakeyaml.version>
         <springdoc-openapi.version>2.2.0</springdoc-openapi.version>
         <commons-math3.version>3.6.1</commons-math3.version>
-        <nimbus-jose-jwt.version>9.37</nimbus-jose-jwt.version>
-        <spring-security-oauth2-jose.version>6.1.5</spring-security-oauth2-jose.version>
+        <nimbus-jose-jwt.version>9.37.1</nimbus-jose-jwt.version>
+        <spring-security-oauth2-jose.version>6.2.0</spring-security-oauth2-jose.version>
 
         <!-- JIB from source -->
         <docker.source.base-image.registry>svencc</docker.source.base-image.registry>
