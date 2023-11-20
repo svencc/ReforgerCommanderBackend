@@ -7,7 +7,7 @@ import com.recom.exception.HttpNotFoundException;
 import com.recom.security.account.RECOMAccount;
 import com.recom.security.account.RECOMAuthorities;
 import com.recom.service.AssertionService;
-import com.recom.service.map.TopographyMapDataService;
+import com.recom.service.map.topography.TopographyMapDataService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

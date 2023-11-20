@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.nio.file.Path;
 import java.util.Optional;
 
 @Slf4j
@@ -28,6 +29,29 @@ public class SerializationService {
             return Optional.ofNullable((V) inputStream.readObject());
         } catch (final IOException | ClassNotFoundException e) {
             return Optional.empty();
+        }
+    }
+
+    @NonNull
+    public void writeBytesToFile(
+            @NonNull final Path path,
+            final byte[] byteArray
+    ) throws IOException {
+        try (FileOutputStream fileOutputStream = new FileOutputStream(path.toFile())) {
+            fileOutputStream.write(byteArray);
+        } catch (IOException e) {
+            log.error("Could not write bytes to file ({})!", path.toAbsolutePath());
+            throw e;
+        }
+    }
+
+    @NonNull
+    public byte[] readBytesFromFile(@NonNull final Path path) throws IOException {
+        try (FileInputStream fileInputStream = new FileInputStream(path.toFile())) {
+            return fileInputStream.readAllBytes();
+        } catch (IOException e) {
+            log.error("Could not read bytes from file ({})!", path.toAbsolutePath());
+            throw e;
         }
     }
 

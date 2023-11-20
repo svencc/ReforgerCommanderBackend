@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.Path;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -62,6 +63,22 @@ class SerializationServiceTest {
         assertEquals(serializableObject.getName(), valueToTest.get().getName());
         assertEquals(serializableObject.getAge(), valueToTest.get().getAge());
         assertEquals(serializableObject.getAddress(), valueToTest.get().getAddress());
+    }
+
+    @Test
+    void readAndWriteBytesToAndFromFile() throws IOException {
+        // Arrange
+        final String testContent = "test";
+        final byte[] byteArray = testContent.getBytes();
+        final Path testFilePath = Path.of("src/test/resources/test");
+
+        // Act
+        serviceUnderTest.writeBytesToFile(testFilePath, byteArray);
+
+        // Assert
+        final byte[] bytesToTest = serviceUnderTest.readBytesFromFile(testFilePath);
+        assertEquals(testContent, new String(bytesToTest));
+
     }
 
     @Data

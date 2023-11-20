@@ -14,7 +14,7 @@ import com.recom.persistence.map.GameMapPersistenceLayer;
 import com.recom.persistence.map.topography.MapLocatedTopographyPersistenceLayer;
 import com.recom.service.SerializationService;
 import com.recom.service.map.MapTransactionValidatorService;
-import com.recom.service.map.TopographyMapDataService;
+import com.recom.service.map.topography.TopographyMapDataService;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -80,8 +80,8 @@ public class MapTopographyEntityScannerTransactionEventListener extends Transact
             @NonNull final List<TransactionalMapTopographyEntityPackageDto> packages
     ) {
         final Float stepSize = packages.get(0).getEntities().get(0).getStepSize();
-        final Integer scanIterationsX = packages.get(0).getEntities().get(0).getScanIterationsX();
-        final Integer scanIterationsZ = packages.get(0).getEntities().get(0).getScanIterationsZ();
+        final Integer scanIterationsX = packages.get(0).getEntities().get(0).getScanIterationsX(); // @TODO: This metadata could be moved to the open-transaction
+        final Integer scanIterationsZ = packages.get(0).getEntities().get(0).getScanIterationsZ(); // @TODO: This metadata could be moved to the open-transaction
         final Float oceanBaseHeight = packages.get(0).getEntities().get(0).getOceanBaseHeight();
 
         final float[][] surfaceData = new float[scanIterationsX][scanIterationsZ];
@@ -107,7 +107,6 @@ public class MapTopographyEntityScannerTransactionEventListener extends Transact
                     .build();
 
             topographyMapDataService.provideTopographyMap(mapTopography);
-
             gameMap.setMapTopography(mapTopography);
 
             return mapTopography;
