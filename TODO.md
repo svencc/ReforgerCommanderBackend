@@ -1,18 +1,5 @@
 # TODO LIST
 
-* topographic-map-generator -> to service
-  * MapTopographyController -> TopographyMapDataService -> MapLocatedTopographyPersistenceLayer (/)
-  * MapTopographyController -> TopographyMapDataService -> HeightmapGeneratorService (/)
-  * MapTopographyEntityScannerTransactionEventListener -> TopographyMapDataService -> HeightmapGeneratorService
-
-  * TopographyMapDataService (/) (/)
-  * MapLocatedTopographyPersistenceLayer (/) (/)
-  * HeightmapGeneratorService (/) (x)
-
-* write Tests!
-
-
-
 * normalize gameMap entities
   * gameMap-meta-entity
     * size

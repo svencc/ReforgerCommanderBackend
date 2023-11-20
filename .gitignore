@@ -4,3 +4,4 @@
 /docker/base-image/id_rsa.pub
 /docs/.obsidian/
 /src/test/resources/test
+/cached-heightmap.png

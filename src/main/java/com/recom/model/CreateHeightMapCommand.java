@@ -11,11 +11,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CreateHeightMapCommand {
 
-    private float seaLevel;
+    private Float seaLevel;
 
-    private float maxWaterDepth;
+    private Float maxWaterDepth;
 
-    private float maxHeight;
+    private Float maxHeight;
 
     private float[][] heightMap;
 

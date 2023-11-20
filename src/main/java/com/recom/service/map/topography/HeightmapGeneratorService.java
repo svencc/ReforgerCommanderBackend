@@ -72,6 +72,7 @@ public class HeightmapGeneratorService {
                 .heightMap(heightMap)
                 .seaLevel(topograpyModel.getOceanBaseHeight())
                 .maxHeight(maxHeight)
+                .maxWaterDepth(maxWaterDepth)
                 .build();
     }
 
