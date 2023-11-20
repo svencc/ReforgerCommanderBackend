@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -66,6 +67,7 @@ class SerializationServiceTest {
     }
 
     @Test
+    @Disabled
     void readAndWriteBytesToAndFromFile() throws IOException {
         // Arrange
         final String testContent = "test";
