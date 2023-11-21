@@ -4,6 +4,7 @@ import com.recom.entity.GameMap;
 import com.recom.entity.MapTopography;
 import com.recom.exception.HttpNotFoundException;
 import com.recom.exception.HttpUnprocessableEntityException;
+import com.recom.model.CreateHeightMapCommand;
 import com.recom.persistence.map.topography.MapLocatedTopographyPersistenceLayer;
 import com.recom.service.SerializationService;
 import lombok.NonNull;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -50,4 +52,16 @@ public class TopographyMapDataService {
         }
     }
 
+
+    @NonNull
+    public Optional<CreateHeightMapCommand> provideTopographyData(@NonNull final GameMap gameMap) {
+        return mapTopographyPersistenceLayer.findByGameMap(gameMap)
+                .map(mapTopography -> {
+                    try {
+                        return heightmapGeneratorService.provideHeightmapData(mapTopography);
+                    } catch (IOException e) {
+                        throw new HttpUnprocessableEntityException();
+                    }
+                });
+    }
 }

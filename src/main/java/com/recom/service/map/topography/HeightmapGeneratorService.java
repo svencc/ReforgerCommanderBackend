@@ -26,16 +26,20 @@ public class HeightmapGeneratorService {
 
     @NonNull
     public ByteArrayOutputStream generateHeightmap(@NonNull final MapTopography mapTopography) throws IOException {
-        final TopographyData topographyModel = serializationService.<TopographyData>deserializeObject(mapTopography.getData())
-                .orElseThrow(() -> new IOException("Unable to deserialize topography data!"));
-
-        final CreateHeightMapCommand command = invertHeightmapData(topographyModel);
-
-        return createHeightMap(command);
+        return createHeightMap(provideHeightmapData(mapTopography));
     }
 
     @NonNull
-    private CreateHeightMapCommand invertHeightmapData(@NonNull final TopographyData topograpyModel) {
+    public CreateHeightMapCommand provideHeightmapData(@NonNull final MapTopography mapTopography) throws IOException {
+        final TopographyData topographyModel = serializationService.<TopographyData>deserializeObject(mapTopography.getData())
+                .orElseThrow(() -> new IOException("Unable to deserialize topography data!"));
+
+        return invertHeightmapData(topographyModel);
+    }
+
+
+    @NonNull
+    public CreateHeightMapCommand invertHeightmapData(@NonNull final TopographyData topograpyModel) {
         final float[][] heightMap = new float[topograpyModel.getScanIterationsX()][topograpyModel.getScanIterationsZ()];
         float maxHeight = 0;
         float maxWaterDepth = 0;
@@ -69,6 +73,9 @@ public class HeightmapGeneratorService {
         }
 
         return CreateHeightMapCommand.builder()
+                .stepSize(topograpyModel.getStepSize())
+                .scanIterationsX(topograpyModel.getScanIterationsX())
+                .scanIterationsZ(topograpyModel.getScanIterationsZ())
                 .heightMap(heightMap)
                 .seaLevel(topograpyModel.getOceanBaseHeight())
                 .maxHeight(maxHeight)
