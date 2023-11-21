@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateHeightMapCommand {
+public class HeightMapDescriptor {
 
     // meta data
     private Float stepSize;

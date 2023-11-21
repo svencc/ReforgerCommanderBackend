@@ -1,8 +1,7 @@
 package com.recom.mapper;
 
 import com.recom.dto.map.topography.MapTopographyDataResponseDto;
-import com.recom.model.CreateHeightMapCommand;
-import lombok.NonNull;
+import com.recom.model.HeightMapDescriptor;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -11,10 +10,9 @@ public interface HeightMapDescriptorMapper {
 
     HeightMapDescriptorMapper INSTANCE = Mappers.getMapper(HeightMapDescriptorMapper.class);
 
-    //    @Mapping(source = "timestamp", target = "timestampEpochMilliseconds", qualifiedByName = "timestampToTimestampEpochMilliseconds")
     MapTopographyDataResponseDto toDto(
-            @NonNull final CreateHeightMapCommand command,
-            @NonNull final String mapName
+            final HeightMapDescriptor command,
+            final String mapName
     );
 
 }

@@ -1,7 +1,7 @@
 package com.recom.service.map.topography;
 
 import com.recom.entity.MapTopography;
-import com.recom.model.CreateHeightMapCommand;
+import com.recom.model.HeightMapDescriptor;
 import com.recom.model.map.TopographyData;
 import com.recom.service.SerializationService;
 import lombok.NonNull;
@@ -30,7 +30,7 @@ public class HeightmapGeneratorService {
     }
 
     @NonNull
-    public CreateHeightMapCommand provideHeightmapData(@NonNull final MapTopography mapTopography) throws IOException {
+    public HeightMapDescriptor provideHeightmapData(@NonNull final MapTopography mapTopography) throws IOException {
         final TopographyData topographyModel = serializationService.<TopographyData>deserializeObject(mapTopography.getData())
                 .orElseThrow(() -> new IOException("Unable to deserialize topography data!"));
 
@@ -39,7 +39,7 @@ public class HeightmapGeneratorService {
 
 
     @NonNull
-    public CreateHeightMapCommand invertHeightmapData(@NonNull final TopographyData topograpyModel) {
+    public HeightMapDescriptor invertHeightmapData(@NonNull final TopographyData topograpyModel) {
         final float[][] heightMap = new float[topograpyModel.getScanIterationsX()][topograpyModel.getScanIterationsZ()];
         float maxHeight = 0;
         float maxWaterDepth = 0;
@@ -72,7 +72,7 @@ public class HeightmapGeneratorService {
             }
         }
 
-        return CreateHeightMapCommand.builder()
+        return HeightMapDescriptor.builder()
                 .stepSize(topograpyModel.getStepSize())
                 .scanIterationsX(topograpyModel.getScanIterationsX())
                 .scanIterationsZ(topograpyModel.getScanIterationsZ())
@@ -84,7 +84,7 @@ public class HeightmapGeneratorService {
     }
 
     @NonNull
-    private ByteArrayOutputStream createHeightMap(@NonNull final CreateHeightMapCommand command) throws IOException {
+    private ByteArrayOutputStream createHeightMap(@NonNull final HeightMapDescriptor command) throws IOException {
         final int width = command.getHeightMap().length;
         final int height = command.getHeightMap()[0].length;
         final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);

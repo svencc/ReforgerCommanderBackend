@@ -6,7 +6,7 @@ import com.recom.dto.map.topography.MapTopographyRequestDto;
 import com.recom.entity.GameMap;
 import com.recom.exception.HttpNotFoundException;
 import com.recom.mapper.HeightMapDescriptorMapper;
-import com.recom.model.CreateHeightMapCommand;
+import com.recom.model.HeightMapDescriptor;
 import com.recom.security.account.RECOMAccount;
 import com.recom.security.account.RECOMAuthorities;
 import com.recom.service.AssertionService;
@@ -90,7 +90,7 @@ public class MapTopographyController {
         log.debug("Requested GET /api/v1/map/topography/data");
 
         final GameMap gameMap = assertionService.provideMap(mapTopographyRequestDto.getMapName());
-        final CreateHeightMapCommand command = topographyMapDataService.provideTopographyData(gameMap)
+        final HeightMapDescriptor command = topographyMapDataService.provideTopographyData(gameMap)
                 .orElseThrow(()-> new HttpNotFoundException("No topography map found for map with id " + gameMap.getId() + "!"));
 
         return ResponseEntity.status(HttpStatus.OK)

@@ -4,7 +4,7 @@ import com.recom.entity.GameMap;
 import com.recom.entity.MapTopography;
 import com.recom.exception.HttpNotFoundException;
 import com.recom.exception.HttpUnprocessableEntityException;
-import com.recom.model.CreateHeightMapCommand;
+import com.recom.model.HeightMapDescriptor;
 import com.recom.persistence.map.topography.MapLocatedTopographyPersistenceLayer;
 import com.recom.service.SerializationService;
 import lombok.NonNull;
@@ -54,7 +54,7 @@ public class TopographyMapDataService {
 
 
     @NonNull
-    public Optional<CreateHeightMapCommand> provideTopographyData(@NonNull final GameMap gameMap) {
+    public Optional<HeightMapDescriptor> provideTopographyData(@NonNull final GameMap gameMap) {
         return mapTopographyPersistenceLayer.findByGameMap(gameMap)
                 .map(mapTopography -> {
                     try {
