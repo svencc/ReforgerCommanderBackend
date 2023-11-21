@@ -1,7 +1,7 @@
 package com.recom.api.map;
 
 import com.recom.api.commons.HttpCommons;
-import com.recom.dto.map.topography.MapTopographyDataResponseDto;
+import com.recom.dto.map.topography.HeightMapDescriptorDto;
 import com.recom.dto.map.topography.MapTopographyRequestDto;
 import com.recom.entity.GameMap;
 import com.recom.exception.HttpNotFoundException;
@@ -83,7 +83,7 @@ public class MapTopographyController {
     })
     @PostMapping(path = "/data", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Secured({RECOMAuthorities.EVERYBODY})
-    public ResponseEntity<MapTopographyDataResponseDto> getTopographyMapData(
+    public ResponseEntity<HeightMapDescriptorDto> getTopographyMapData(
             @AuthenticationPrincipal RECOMAccount recomAccount,
             @RequestBody final MapTopographyRequestDto mapTopographyRequestDto
     ) {

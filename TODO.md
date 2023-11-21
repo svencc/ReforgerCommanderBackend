@@ -1,10 +1,5 @@
 # TODO LIST
 
-* add API to retrieve raw topo map values (/)
-* (add first implementation of topo map data endpoint missing tests; missing map meta data (size)) (/)
-* add topo map data to gameMap data -> open transaction ? calculation?
-*    ==> calculate on demand!
-
 * normalize gameMap entities
   * gameMap-meta-entity
     * size
