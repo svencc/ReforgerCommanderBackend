@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.ehcache.org/v3"
+        xsi:schemaLocation="http://www.ehcache.org/v3 http://www.ehcache.org/schema/ehcache-core-3.0.xsd">
+
+    <!--<persistence directory="${java.io.tmpdir}" />-->
+
+    <cache-template name="recomDefaultCache">
+        <expiry>
+            <ttl unit="hours">24</ttl>
+        </expiry>
+        <resources>
+            <heap unit="entries">2000</heap>
+            <!-- <disk persistent="false"></disk> -->
+            <!-- <offheap unit="MB">100</offheap> -->
+        </resources>
+    </cache-template>
+
+
+    <cache alias="UserPersistenceLayer.findByUUID" uses-template="recomDefaultCache">
+    </cache>
+
+
+    <cache alias="MapMetaDataService.provideMapMeta" uses-template="recomDefaultCache">
+    </cache>
+    <cache alias="MapMetaDataService.provideMapMetaList" uses-template="recomDefaultCache">
+    </cache>
+    <cache alias="MapMetaDataService.provideAllMapNames" uses-template="recomDefaultCache">
+    </cache>
+    <cache alias="MapMetaDataService.mapExists" uses-template="recomDefaultCache">
+    </cache>
+
+
+    <cache alias="MapRendererService.mapRenderCommands" uses-template="recomDefaultCache">
+    </cache>
+
+
+    <cache alias="ConfigurationPersistenceLayer.findValues" uses-template="recomDefaultCache">
+    </cache>
+    <cache alias="ConfigurationPersistenceLayer.findAllMapSpecificValueEntities" uses-template="recomDefaultCache">
+    </cache>
+    <cache alias="ConfigurationPersistenceLayer.findAllDefaultValueEntities" uses-template="recomDefaultCache">
+    </cache>
+
+
+    <cache alias="MapStructurePersistenceLayer.findAllByMapNameAndResourceNameIn" uses-template="recomDefaultCache">
+    </cache>
+    <cache alias="MapStructurePersistenceLayer.findAllTownEntities" uses-template="recomDefaultCache">
+    </cache>
+    <cache alias="MapStructurePersistenceLayer.generateClusters" uses-template="recomDefaultCache">
+    </cache>
+    <cache alias="MapStructurePersistenceLayer.findAllMapNames" uses-template="recomDefaultCache">
+    </cache>
+    <cache alias="MapStructurePersistenceLayer.countEntitiesByMapName" uses-template="recomDefaultCache">
+    </cache>
+    <cache alias="MapStructurePersistenceLayer.utilizedClassesByMapName" uses-template="recomDefaultCache">
+    </cache>
+    <cache alias="MapStructurePersistenceLayer.utilizedResourcesByMapName" uses-template="recomDefaultCache">
+    </cache>
+    <cache alias="MapStructurePersistenceLayer.utilizedPrefabsByMapName" uses-template="recomDefaultCache">
+    </cache>
+    <cache alias="MapStructurePersistenceLayer.utilizedNamedEntitiesByMapName" uses-template="recomDefaultCache">
+    </cache>
+    <cache alias="MapStructurePersistenceLayer.utilizedMapMetaTypeByMapName" uses-template="recomDefaultCache">
+    </cache>
+    <cache alias="MapStructurePersistenceLayer.findAllByMapNameAndPrefabNameIn" uses-template="recomDefaultCache">
+    </cache>
+    <cache alias="MapStructurePersistenceLayer.findAllByClassIn" uses-template="recomDefaultCache">
+    </cache>
+    <cache alias="MapStructurePersistenceLayer.findAllByMapDescriptorTypeIn" uses-template="recomDefaultCache">
+    </cache>
+
+
+</config>

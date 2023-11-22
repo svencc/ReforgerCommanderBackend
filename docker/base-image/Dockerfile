@@ -7,7 +7,7 @@ COPY bootstrap bootstrap
 # make bootstrap script executable
 RUN chmod +x bootstrap
 
-# copy ssh-daemon configuration
+# copy ssh-daemon com.recom.configuration
 COPY sshd_config /etc/ssh/sshd_config
 
 #RUN apt update \

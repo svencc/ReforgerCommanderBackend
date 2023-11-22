@@ -1,5 +1,11 @@
 # TODO LIST
 
+* migrate to Monorepo
+  * backend
+  * frontend
+  * dtos
+  * shared ...
+
 * normalize gameMap entities
   * gameMap-meta-entity
     * size
@@ -12,7 +18,7 @@
 
 * tidy up unfinished MapTransactions @Scheduled
 
-* Adjust colors of map; orientate on reforger map colors
+* Adjust colors of com.recom.dto.map; orientate on reforger com.recom.dto.map colors
 
 
 * x heatmaps generator
@@ -71,7 +77,7 @@
 *
 * Use spring health actuator instead health controller ...
 *
-* jwt authentication implemented; add roles and permissions (also to db); after login account-token should make claims, from the database persisted roles/claims
+* jwt com.recom.authentication implemented; add roles and permissions (also to db); after login account-token should make claims, from the database persisted roles/claims
     * add tests for RSAKeyGenerator.java
 * 
 * Create INITIAL ADMIN-USER on FIRST STARTUP if not exists (random password)

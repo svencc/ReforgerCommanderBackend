@@ -1,0 +1,5 @@
+com\recom\client\StageInitializer.class
+com\recom\client\RecomClientApplication.class
+com\recom\client\controller\HelloController.class
+com\recom\client\event\StageReadyEvent.class
+com\recom\client\RecomClientFxApplication.class

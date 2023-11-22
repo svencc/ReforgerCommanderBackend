@@ -17,14 +17,14 @@ What works and what you can see in the example images:
 * Configuration System (DB based) 
     * Cluster Entity-Type Configuration
 
-![cluster-example-1.png](md-media%2Fcluster-example-1.png)
-![cluster-example-2.png](md-media%2Fcluster-example-2.png)
-![cluster-example-3.png](md-media%2Fcluster-example-3.png)
+![cluster-example-1.png](docs%2Fmd-media%2Fcluster-example-1.png)
+![cluster-example-2.png](docs%2Fmd-media%2Fcluster-example-2.png)
+![cluster-example-3.png](docs%2Fmd-media%2Fcluster-example-3.png)
 
 To create more intelligence from gameMap data the following features are planned:
 * Forest detection / forest heatmap
 * Terrain heightmap
-  * ![topographic-scanner-example.png](md-media%2Ftopographic-scanner-example.png)
+  * ![topographic-scanner-example.png](docs%2Fmd-media%2Ftopographic-scanner-example.png)
 * Mil detection
 * Industrial detection
 * Qualification and prioritization of clusters / targets

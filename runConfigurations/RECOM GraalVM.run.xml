@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="RECOM GraalVM" type="Application" factoryName="Application">
+  <com.recom.configuration default="false" name="RECOM GraalVM" type="Application" factoryName="Application">
     <option name="ALTERNATIVE_JRE_PATH" value="graalvm-jdk-21" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <option name="MAIN_CLASS_NAME" value="com.recom.RecomBackendApplication" />
@@ -14,5 +14,5 @@
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
-  </configuration>
+  </com.recom.configuration>
 </component>

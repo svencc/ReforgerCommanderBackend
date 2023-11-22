@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="RECOM" type="Application" factoryName="Application">
+  <com.recom.configuration default="false" name="RECOM" type="Application" factoryName="Application">
     <option name="ALTERNATIVE_JRE_PATH" value="$USER_HOME$/.sdkman/candidates/java/17.0.5-tem" />
     <option name="MAIN_CLASS_NAME" value="com.recom.RecomBackendApplication" />
     <module name="recom-backend" />
@@ -13,5 +13,5 @@
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
-  </configuration>
+  </com.recom.configuration>
 </component>

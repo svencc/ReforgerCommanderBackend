@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="RECOM Client" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+  <com.recom.configuration default="false" name="RECOM Client" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <option name="ACTIVE_PROFILES" value="local" />
     <option name="ALTERNATIVE_JRE_PATH" value="azul-21" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -8,5 +8,5 @@
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
-  </configuration>
+  </com.recom.configuration>
 </component>
