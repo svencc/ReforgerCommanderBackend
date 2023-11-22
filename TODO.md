@@ -1,10 +1,8 @@
 # TODO LIST
 
 * migrate to Monorepo
-  * backend
-  * frontend
-  * dtos
-  * shared ...
+  * extract other libs
+
 
 * normalize gameMap entities
   * gameMap-meta-entity
