@@ -2,6 +2,7 @@ package com.recom.service.messagebus;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.recom.dto.message.MessageBusResponseDto;
+import com.recom.dto.message.MessageType;
 import com.recom.entity.GameMap;
 import com.recom.model.message.MessageContainer;
 import com.recom.model.message.SingleMessage;
