@@ -3,7 +3,7 @@
 ## ARMA Reforger+ AI Commander Backend Project
 
 <p align="center">
-  <img width="396" height="241" src="https://github.com/svencc/ReforgerCommanderBackend/raw/develop/md-media%2FRECOM.png">
+  <img width="396" height="241" src="https://github.com/svencc/ReforgerCommanderBackend/raw/develop/docs%2Fmd-media%2FRECOM.png">
 </p>
 
 
