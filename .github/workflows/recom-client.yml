@@ -1,0 +1,16 @@
+name: recom-client
+
+on:
+  push:
+    branches: [ develop ]
+    paths:
+      - services/recom-client/**
+      - libs/metrics/**
+      - libs/security/**
+      - .github/workflows/recom-client.yml
+
+jobs:
+  run:
+    uses: ./.github/workflows/service-workflow.yml
+    with:
+      service: recom-client
