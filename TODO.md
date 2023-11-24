@@ -28,6 +28,10 @@
 * start game command Reforger -> RECOM (if its not running yet)
 * gameMap renderer -> reduce point density on client side / depending of zoom factor
 
+
+
+
+
 * GOAP: MOVE ACTION
 * 
 * 
