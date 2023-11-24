@@ -1,10 +1,6 @@
 # TODO LIST
 
-* migrate to Monorepo
-  * github workflows?
-    * build
-    * code scanning
-  * extract other libs
+* migrate to Monorepo -> extract other libs
 
 * normalize gameMap entities
   * gameMap-meta-entity
