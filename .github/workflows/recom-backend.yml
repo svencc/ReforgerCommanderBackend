@@ -7,7 +7,7 @@ on:
       - services/recom-backend/**
       - libs/metrics/**
       - libs/security/**
-      - .github/workflows/backend.yml
+      - .github/workflows/recom-backend.yml
 
 jobs:
   run:
