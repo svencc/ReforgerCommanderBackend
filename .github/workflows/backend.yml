@@ -1,0 +1,16 @@
+name: recom-backend
+
+on:
+  push:
+    branches: [ develop ]
+    paths:
+      - services/recom-backend/**
+      - libs/metrics/**
+      - libs/security/**
+      - .github/workflows/backend.yml
+
+jobs:
+  run:
+    uses: ./.github/workflows/service-workflow.yml
+    with:
+      service: recom-backend
