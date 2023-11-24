@@ -14,15 +14,9 @@
 
 * tidy up unfinished MapTransactions @Scheduled
 
-* Adjust colors of com.recom.dto.map; orientate on reforger com.recom.dto.map colors
-
 
 * x heatmaps generator
 * unit scanner: run regularly
-  * persist?
-
-* start game command Reforger -> RECOM (if its not running yet)
-* gameMap renderer -> reduce point density on client side / depending of zoom factor
 
 
 
