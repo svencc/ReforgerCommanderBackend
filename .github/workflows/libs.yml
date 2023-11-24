@@ -11,6 +11,6 @@ on:
 
 jobs:
   run:
-    uses: ./.github/workflows/libs.yml
+    uses: ./.github/workflows/service-workflow.yml
     with:
       service: libs
