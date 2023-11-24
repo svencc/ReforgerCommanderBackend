@@ -1,9 +1,0 @@
-#!/bin/sh
-
-# variables
-APPLICATION="com.rcb.Application"
-HEAP="16G"
-
-# start service
-java -XX:+UseShenandoahGC -Xmx$HEAP -Xms32m -XX:+UnlockExperimentalVMOptions -XX:ShenandoahUncommitDelay=1000 -XX:ShenandoahGuaranteedGCInterval=10000 -Djava.awt.headless=true -Dfile.encoding=UTF-8 -cp @/app/jib-classpath-file $APPLICATION
-
