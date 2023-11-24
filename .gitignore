@@ -5,3 +5,6 @@
 /docs/.obsidian/
 /services/recom-backend/src/test/resources/test
 /cached-heightmap.png
+/libs/sharemodels/target/
+/services/recom-backend/target/
+/services/recom-client/target/
