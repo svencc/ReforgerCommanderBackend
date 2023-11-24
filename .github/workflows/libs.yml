@@ -1,0 +1,16 @@
+name: libs
+
+on:
+  push:
+    branches: [ develop ]
+    paths:
+      - libs/**
+      - libs/metrics/**
+      - libs/security/**
+      - .github/workflows/libs.yml
+
+jobs:
+  run:
+    uses: ./.github/workflows/libs.yml
+    with:
+      service: libs
