@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class RecomClientApplication {
 
 	public static void main(@NonNull final String[] args) {
-		Application.launch(RecomClientFxApplication.class, args);
+		Application.launch(JavaFxApplication.class, args);
 	}
 
 }

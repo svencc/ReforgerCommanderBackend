@@ -12,24 +12,24 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Component
-public class StageInitializer implements ApplicationListener<StageReadyEvent> {
+public class MainStageInitializer implements ApplicationListener<StageReadyEvent> {
 
     @Override
-    public void onApplicationEvent(@NonNull final StageReadyEvent event) {
-        final Stage stage = event.getStage();
-        populateStage(stage);
+    public void onApplicationEvent(@NonNull final StageReadyEvent mainStage) {
+        final Stage stage = mainStage.getStage();
+        populateMainStage(stage);
         stage.show();
     }
 
     @NonNull
-    private void populateStage(@NonNull final Stage stage) {
+    private void populateMainStage(@NonNull final Stage mainStage) {
         try {
             final BorderPane root = new BorderPane();
-            final FXMLLoader fxmlLoader = new FXMLLoader(StageInitializer.class.getResource("/view/hello-view.fxml"));
+            final FXMLLoader fxmlLoader = new FXMLLoader(MainStageInitializer.class.getResource("/view/hello-view.fxml"));
             final Scene scene = new Scene(fxmlLoader.load(), 320, 240);
 
-            stage.setTitle("Hello!");
-            stage.setScene(scene);
+            mainStage.setTitle("Hello!");
+            mainStage.setScene(scene);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -5,11 +5,13 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.lang.Nullable;
 
-public class RecomClientFxApplication extends Application {
+@Slf4j
+public class JavaFxApplication extends Application {
 
     @Nullable
     private ConfigurableApplicationContext applicationContext;
@@ -26,6 +28,7 @@ public class RecomClientFxApplication extends Application {
 
     @Override
     public void stop() {
+        log.warn("Closing application context...");
         applicationContext.close();
         Platform.exit();
     }
