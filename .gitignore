@@ -8,6 +8,7 @@
 /libs/sharedmodels/target/
 /libs/goapcom/target/
 /libs/observer/target/
+/libs/maze/target/
 
 /services/recom-backend/target/
 /services/recom-backend/src/test/resources/test
