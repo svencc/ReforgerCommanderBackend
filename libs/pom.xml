@@ -14,7 +14,27 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>sharemodels</module>
+        <module>sharedmodels</module>
+        <module>goapcom</module>
+        <module>observer</module>
     </modules>
+
+    <dependencies>
+        <!-- COMPILER UTILS  -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!-- COMPILER UTILS  -->
+
+        <!-- TEST -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- TEST -->
+    </dependencies>
 
 </project>

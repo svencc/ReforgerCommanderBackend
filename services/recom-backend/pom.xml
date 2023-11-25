@@ -16,19 +16,6 @@
     <description>RECOM Application Server</description>
 
     <properties>
-        <java.version>21</java.version>
-        <lombok.version>1.18.30</lombok.version>
-        <mapstruct.version>1.5.5.Final</mapstruct.version>
-        <hibernate-jcache.version>6.4.0.Final</hibernate-jcache.version>
-        <ehcache.version>3.10.8</ehcache.version>
-        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
-        <jib-maven-plugin.version>3.4.0</jib-maven-plugin.version>
-        <snakeyaml.version>2.2</snakeyaml.version>
-        <springdoc-openapi.version>2.2.0</springdoc-openapi.version>
-        <commons-math3.version>3.6.1</commons-math3.version>
-        <nimbus-jose-jwt.version>9.37.1</nimbus-jose-jwt.version>
-        <spring-security-oauth2-jose.version>6.2.0</spring-security-oauth2-jose.version>
-
         <!-- JIB from source -->
         <docker.source.base-image.registry>svencc</docker.source.base-image.registry>
         <docker.source.base-image.name>recom-base</docker.source.base-image.name>
@@ -47,6 +34,13 @@
             <groupId>com.recom</groupId>
             <artifactId>recom-sharedmodels</artifactId>
             <version>1.0.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.recom</groupId>
+            <artifactId>recom-observer</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
         <!-- RECOM SHARED LIBRARY  -->
 
@@ -134,7 +128,6 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -240,7 +233,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
-                <version>2.16.2</version>
             </plugin>
 
         </plugins>

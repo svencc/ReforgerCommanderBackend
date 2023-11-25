@@ -11,17 +11,8 @@
 
     <artifactId>recom-sharedmodels</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>RECOM SHARED MODELS</name>
+    <name>RECOM shared Models</name>
     <description>RECOM Shared DTOs</description>
-
-    <properties>
-        <java.version>21</java.version>
-        <lombok.version>1.18.30</lombok.version>
-        <mapstruct.version>1.5.5.Final</mapstruct.version>
-        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
-        <jib-maven-plugin.version>3.4.0</jib-maven-plugin.version>
-        <springdoc-openapi.version>2.2.0</springdoc-openapi.version>
-    </properties>
 
     <dependencies>
 
@@ -37,12 +28,10 @@
         <!-- VALIDATION  -->
 
         <!-- COMPILER UTILS  -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
-            <optional>true</optional>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.projectlombok</groupId>-->
+<!--            <artifactId>lombok</artifactId>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>

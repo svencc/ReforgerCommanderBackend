@@ -4,9 +4,8 @@ on:
   push:
     branches: [ develop ]
     paths:
+      - libs/**
       - services/recom-client/**
-      - libs/metrics/**
-      - libs/security/**
       - .github/workflows/recom-client.yml
 
 jobs:
