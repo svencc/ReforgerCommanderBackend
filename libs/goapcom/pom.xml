@@ -37,24 +37,6 @@
         </dependency>
         <!-- SIMPLE LOGGING FACADE  -->
 
-<!--        &lt;!&ndash; COMPILER UTILS  &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.projectlombok</groupId>-->
-<!--            <artifactId>lombok</artifactId>-->
-<!--            <version>${lombok.version}</version>-->
-<!--            <optional>true</optional>-->
-<!--        </dependency>-->
-<!--        &lt;!&ndash; COMPILER UTILS  &ndash;&gt;-->
-
-
-<!--        &lt;!&ndash; TEST &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.junit.jupiter</groupId>-->
-<!--            <artifactId>junit-jupiter</artifactId>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
-<!--        &lt;!&ndash; TEST &ndash;&gt;-->
-
     </dependencies>
 
     <build>
