@@ -35,7 +35,6 @@
         <commons-math3.version>3.6.1</commons-math3.version>
 
         <!-- CACHE -->
-        <hibernate-jcache.version>6.4.0.Final</hibernate-jcache.version>
         <ehcache.version>3.10.8</ehcache.version>
 
         <!-- JIB CONTAINER BUILDER -->
@@ -43,7 +42,6 @@
 
         <!-- JWT -->
         <nimbus-jose-jwt.version>9.37.1</nimbus-jose-jwt.version>
-        <spring-security-oauth2-jose.version>6.2.0</spring-security-oauth2-jose.version>
     </properties>
 
 </project>

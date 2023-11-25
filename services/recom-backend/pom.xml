@@ -69,7 +69,6 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-oauth2-jose</artifactId>
-            <version>${spring-security-oauth2-jose.version}</version>
         </dependency>
         <!-- JWT -->
 
@@ -112,7 +111,6 @@
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-jcache</artifactId>
-            <version>${hibernate-jcache.version}</version>
         </dependency>
         <dependency>
             <groupId>org.ehcache</groupId>
