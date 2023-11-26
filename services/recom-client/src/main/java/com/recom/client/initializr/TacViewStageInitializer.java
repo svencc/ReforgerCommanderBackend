@@ -1,7 +1,8 @@
 package com.recom.client.initializr;
 
 import com.recom.client.event.StageReadyEvent;
-import com.recom.rendertools.util.ColorUtil;
+import com.recom.client.property.SpringApplicationProperties;
+import com.recom.rendertools.util.ColorCalculator;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -16,6 +17,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
@@ -24,14 +26,18 @@ import java.util.Random;
 
 
 @Component
-public class ImageBufferedCanvasStageInitializer implements ApplicationListener<StageReadyEvent> {
+@RequiredArgsConstructor
+public class TacViewStageInitializer implements ApplicationListener<StageReadyEvent> {
+
+    @NonNull
+    private final SpringApplicationProperties springApplicationProperties;
 
     private long currentTime = 0;
     private long lastTime = 0;
     private int fpsCounter = 0;
     private double delta = 0;
     private double fpsAverageLastSecond = 0;
-    private AnimationTimer bufferToCanvasUILoop = null;
+    private AnimationTimer bufferToCanvasUpdaterLoop = null;
 
 
     final int width = 1024;
@@ -52,11 +58,11 @@ public class ImageBufferedCanvasStageInitializer implements ApplicationListener<
 
 
     @Override
-    public void onApplicationEvent(@NonNull final StageReadyEvent __) {
-        final Stage canvasStage = new Stage();
-        canvasStage.show();
-        populateImageBufferedCanvasStage(canvasStage);
-        bufferToCanvasUILoop = new AnimationTimer() {
+    public void onApplicationEvent(@NonNull final StageReadyEvent event) {
+        final Stage tacViewStage = event.getStage();
+        populateTacViewStage(tacViewStage);
+
+        bufferToCanvasUpdaterLoop = new AnimationTimer() {
             @Override
             public void handle(final long now) {
                 copyBufferToCanvas();
@@ -71,7 +77,8 @@ public class ImageBufferedCanvasStageInitializer implements ApplicationListener<
         });
 
 //        renderToBufferThread.start();
-        bufferToCanvasUILoop.start();
+        bufferToCanvasUpdaterLoop.start();
+        tacViewStage.show();
     }
 
     private void copyBufferToCanvas() {
@@ -96,7 +103,7 @@ public class ImageBufferedCanvasStageInitializer implements ApplicationListener<
         for (int x = 0; x < height; x++) {
             for (int y = 0; y < width; y++) {
                 final int index = (x * width) + y;
-                final int value = ColorUtil.ARGB(255, backGroundColor, backGroundColor, backGroundColor).intValue();
+                final int value = ColorCalculator.ARGB(255, backGroundColor, backGroundColor, backGroundColor).intValue();
                 intBuffer.put(index, value);
             }
         }
@@ -117,7 +124,7 @@ public class ImageBufferedCanvasStageInitializer implements ApplicationListener<
 
     }
 
-    private void populateImageBufferedCanvasStage(@NonNull final Stage canvasStage) {
+    private void populateTacViewStage(@NonNull final Stage canvasStage) {
         final BorderPane root = new BorderPane();
         root.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
 
@@ -132,7 +139,7 @@ public class ImageBufferedCanvasStageInitializer implements ApplicationListener<
 
         root.setCenter(canvas);
         final Scene scene = new Scene(root, width, height);
-        canvasStage.setTitle("BufferedCanvas Stage");
+        canvasStage.setTitle(springApplicationProperties.getName());
         canvasStage.setResizable(false);
         canvasStage.setScene(scene);
     }

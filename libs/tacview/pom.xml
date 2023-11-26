@@ -16,19 +16,23 @@
 
     <dependencies>
 
-        <!-- NEEDED FOR: import org.springframework.lang.Nullable -->
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
+            <groupId>com.recom</groupId>
+            <artifactId>recom-rendertools</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
-        <!-- NEEDED FOR: import org.springframework.lang.Nullable -->
+        <dependency>
+            <groupId>com.recom</groupId>
+            <artifactId>recom-observer</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
 
-        <!-- SIMPLE LOGGING FACADE  -->
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
         </dependency>
-        <!-- SIMPLE LOGGING FACADE  -->
 
     </dependencies>
 
