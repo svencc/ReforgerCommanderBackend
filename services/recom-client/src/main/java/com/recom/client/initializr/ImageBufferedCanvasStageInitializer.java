@@ -51,6 +51,9 @@ public class ImageBufferedCanvasStageInitializer implements ApplicationListener<
             }
         }
 
+//        https://www.youtube.com/watch?v=UDNrJAvKc0k
+//      fetch data with new REST Client
+
 
         final PixelFormat<IntBuffer> pixelFormat = PixelFormat.getIntArgbPreInstance();
         final PixelBuffer<IntBuffer> pixelBuffer = new PixelBuffer<>(width, height, intBuffer, pixelFormat);

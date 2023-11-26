@@ -53,5 +53,4 @@ public class CanvasStageInitializer implements ApplicationListener<StageReadyEve
         gc.fillRect(85, 125, 130, 130);
     }
 
-
 }
