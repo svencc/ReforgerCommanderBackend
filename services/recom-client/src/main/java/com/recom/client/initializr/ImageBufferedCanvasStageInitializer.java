@@ -1,6 +1,7 @@
 package com.recom.client.initializr;
 
 import com.recom.client.event.StageReadyEvent;
+import com.recom.util.ColorUtil;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;

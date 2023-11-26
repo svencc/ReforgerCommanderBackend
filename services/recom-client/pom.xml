@@ -15,11 +15,19 @@
     <description>RECOM Client</description>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.recom</groupId>
+            <artifactId>recom-rendertools</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>

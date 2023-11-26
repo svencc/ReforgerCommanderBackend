@@ -10,7 +10,7 @@
 
     <artifactId>recom-maze</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>RECOM maze</name>
+    <name>RECOM Maze</name>
     <description>RECOM Maze</description>
 
     <dependencies>
