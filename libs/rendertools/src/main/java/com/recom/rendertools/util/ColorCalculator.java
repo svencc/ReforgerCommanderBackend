@@ -4,7 +4,7 @@ import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public class ColorUtil {
+public class ColorCalculator {
 
     @NonNull
     public Long RGB(
