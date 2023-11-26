@@ -10,6 +10,7 @@
 /libs/observer/target/
 /libs/rendertools/target/
 /libs/maze/target/
+/libs/tacview/target/
 
 /services/recom-backend/target/
 /services/recom-backend/src/test/resources/test
