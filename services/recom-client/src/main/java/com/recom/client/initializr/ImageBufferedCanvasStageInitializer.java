@@ -1,7 +1,7 @@
 package com.recom.client.initializr;
 
 import com.recom.client.event.StageReadyEvent;
-import com.recom.util.ColorUtil;
+import com.recom.rendertools.util.ColorUtil;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -31,7 +31,7 @@ public class ImageBufferedCanvasStageInitializer implements ApplicationListener<
     private int fpsCounter = 0;
     private double delta = 0;
     private double fpsAverageLastSecond = 0;
-    private AnimationTimer mainLoop = null;
+    private AnimationTimer bufferToCanvasUILoop = null;
 
 
     final int width = 1024;
@@ -46,33 +46,36 @@ public class ImageBufferedCanvasStageInitializer implements ApplicationListener<
 
     private final Random random = new Random();
 
+    private Thread renderToBufferThread = null;
+    private int backGroundColor = 0;
+    private boolean fadeUp = true;
+
 
     @Override
     public void onApplicationEvent(@NonNull final StageReadyEvent __) {
         final Stage canvasStage = new Stage();
         canvasStage.show();
         populateImageBufferedCanvasStage(canvasStage);
-        mainLoop = new AnimationTimer() {
+        bufferToCanvasUILoop = new AnimationTimer() {
             @Override
-            public void handle(long now) {
-                renderStuff();
+            public void handle(final long now) {
+                copyBufferToCanvas();
             }
         };
 
-        mainLoop.start();
+        renderToBufferThread = Thread.ofPlatform().start(() -> {
+//        renderToBufferThread = new Thread(() -> {
+            while (true) {
+                renderToBuffer();
+            }
+        });
+
+//        renderToBufferThread.start();
+        bufferToCanvasUILoop.start();
     }
 
-    private void renderStuff() {
+    private void copyBufferToCanvas() {
         currentTime = System.currentTimeMillis();
-        /*
-        for (int x = 0; x < height; x++) {
-            for (int y = 0; y < width; y++) {
-                final int index = (x * width) + y;
-                final int value = ColorUtil.ARGB(255, 255, 255, 255).intValue();
-                intBuffer.put(index, value);
-            }
-        }
-         */
 
         pixelBuffer.updateBuffer(__ -> null);
         gc.drawImage(img, 0, 0);
@@ -89,6 +92,31 @@ public class ImageBufferedCanvasStageInitializer implements ApplicationListener<
         gc.fillText("FPS: " + fpsAverageLastSecond + " Delta: " + delta, 10, 10);
     }
 
+    private void renderToBuffer() {
+        for (int x = 0; x < height; x++) {
+            for (int y = 0; y < width; y++) {
+                final int index = (x * width) + y;
+                final int value = ColorUtil.ARGB(255, backGroundColor, backGroundColor, backGroundColor).intValue();
+                intBuffer.put(index, value);
+            }
+        }
+
+        if (fadeUp) {
+            backGroundColor++;
+            if (backGroundColor > 255) {
+                fadeUp = false;
+                backGroundColor--;
+            }
+        } else {
+            backGroundColor--;
+            if (backGroundColor < 0) {
+                fadeUp = true;
+                backGroundColor++;
+            }
+        }
+
+    }
+
     private void populateImageBufferedCanvasStage(@NonNull final Stage canvasStage) {
         final BorderPane root = new BorderPane();
         root.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
@@ -100,14 +128,7 @@ public class ImageBufferedCanvasStageInitializer implements ApplicationListener<
         canvas = new Canvas(width, height);
         gc = canvas.getGraphicsContext2D();
 
-        for (int x = 0; x < height; x++) {
-            for (int y = 0; y < width; y++) {
-                final int index = (x * width) + y;
-//                final int value = ColorUtil.ARGB(random.nextInt(256), random.nextInt(256), random.nextInt(256), random.nextInt(256)).intValue();
-                final int value = ColorUtil.ARGB(255, 255, 255, 255).intValue();
-                intBuffer.put(index, value);
-            }
-        }
+        renderToBuffer();
 
         root.setCenter(canvas);
         final Scene scene = new Scene(root, width, height);
