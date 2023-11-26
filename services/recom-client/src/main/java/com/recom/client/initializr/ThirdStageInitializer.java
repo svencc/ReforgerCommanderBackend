@@ -1,4 +1,4 @@
-package com.recom.client;
+package com.recom.client.initializr;
 
 import com.recom.client.event.StageReadyEvent;
 import javafx.event.EventHandler;
@@ -23,7 +23,7 @@ public class ThirdStageInitializer implements ApplicationListener<StageReadyEven
     public void onApplicationEvent(@NonNull final StageReadyEvent __) {
         final Stage thirdStage = new Stage();
         populateThirdStage(thirdStage);
-        thirdStage.show();
+//        thirdStage.show();
     }
 
     @NonNull

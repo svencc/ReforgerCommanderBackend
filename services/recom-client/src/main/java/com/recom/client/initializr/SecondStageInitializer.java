@@ -1,4 +1,4 @@
-package com.recom.client;
+package com.recom.client.initializr;
 
 import com.recom.client.event.StageReadyEvent;
 import javafx.scene.Scene;
@@ -21,7 +21,7 @@ public class SecondStageInitializer implements ApplicationListener<StageReadyEve
     public void onApplicationEvent(@NonNull final StageReadyEvent __) {
         final Stage secondStage = new Stage();
         populateSecondStage(secondStage);
-        secondStage.show();
+//        secondStage.show();
     }
 
     @NonNull

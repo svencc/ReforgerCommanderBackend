@@ -1,4 +1,4 @@
-package com.recom.client;
+package com.recom.client.initializr;
 
 import com.recom.client.event.StageReadyEvent;
 import javafx.fxml.FXMLLoader;
@@ -18,7 +18,7 @@ public class MainStageInitializer implements ApplicationListener<StageReadyEvent
     public void onApplicationEvent(@NonNull final StageReadyEvent mainStage) {
         final Stage stage = mainStage.getStage();
         populateMainStage(stage);
-        stage.show();
+//        stage.show();
     }
 
     @NonNull
