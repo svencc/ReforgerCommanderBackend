@@ -1,6 +1,7 @@
 # TODO LIST
 
-* migrate to Monorepo -> extract other libs
+* better integrate tacview
+  * use virtual thread pool for TacView renderer
 
 * normalize gameMap entities
   * gameMap-meta-entity
