@@ -23,7 +23,7 @@ public class FPSCounter {
     public boolean oneSecondPassed() {
         final boolean isOneSecondPassed = System.currentTimeMillis() - passedSecondsTrackerMillis > TimeUnits.SECOND_IN_MILLIS;
         if (isOneSecondPassed) {
-            passedSecondsTrackerMillis += TimeUnits.SECOND_IN_MILLIS;
+            passedSecondsTrackerMillis += (long) TimeUnits.SECOND_IN_MILLIS;
         }
 
         return isOneSecondPassed;
