@@ -42,6 +42,12 @@
             <version>1.0.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.recom</groupId>
+            <artifactId>recom-rendertools</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
         <!-- RECOM SHARED LIBRARY  -->
 
         <!-- SPRING BOOT WEB  -->

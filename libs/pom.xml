@@ -17,7 +17,9 @@
         <module>sharedmodels</module>
         <module>goapcom</module>
         <module>observer</module>
+        <module>rendertools</module>
         <module>maze</module>
+        <module>tacview</module>
     </modules>
 
     <dependencies>

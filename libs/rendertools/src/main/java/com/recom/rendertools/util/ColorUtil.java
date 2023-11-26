@@ -1,4 +1,4 @@
-package com.recom.client.initializr;
+package com.recom.rendertools.util;
 
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;

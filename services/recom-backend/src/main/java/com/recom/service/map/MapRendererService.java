@@ -5,7 +5,7 @@ import com.recom.dto.map.renderer.MapRenderCommandType;
 import com.recom.dto.map.renderer.MapRenderResponseDto;
 import com.recom.entity.GameMap;
 import com.recom.service.map.cluster.ClusteringService;
-import com.recom.util.ColorUtil;
+import com.recom.rendertools.util.ColorUtil;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
