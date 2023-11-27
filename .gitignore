@@ -6,6 +6,7 @@
 /cached-heightmap.png
 
 /libs/sharedmodels/target/
+/libs/javafxdependencies/target/
 /libs/goapcom/target/
 /libs/observer/target/
 /libs/rendertools/target/
