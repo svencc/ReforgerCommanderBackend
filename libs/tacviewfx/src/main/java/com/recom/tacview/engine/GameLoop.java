@@ -28,8 +28,7 @@
 //
 //@Component
 //@RequiredArgsConstructor
-////public class GameLoop extends Canvas implements Runnable {
-//public class TacViewer implements Runnable {
+//public class GameLoop extends Canvas implements Runnable {
 //
 //    // CONSTANTS
 //    @NonNull

@@ -19,7 +19,7 @@
         <module>observer</module>
         <module>rendertools</module>
         <module>maze</module>
-        <module>tacview</module>
+        <module>tacviewfx</module>
         <module>javafxdependencies</module>
     </modules>
 

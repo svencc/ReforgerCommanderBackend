@@ -3,7 +3,9 @@ package com.recom.tacview.service.profiler;
 import com.recom.tacview.engine.units.TimeUnits;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class Profiler {
 
     private final String profilerName;
@@ -14,9 +16,6 @@ public class Profiler {
     @Getter
     private double profiledMilliseconds;
 
-    Profiler(@NonNull final String profilerName) {
-        this.profilerName = profilerName;
-    }
 
     public void startNextMeasurement() {
         nanotimeStart = System.nanoTime();

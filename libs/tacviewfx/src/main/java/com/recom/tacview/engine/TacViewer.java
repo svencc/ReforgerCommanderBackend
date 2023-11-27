@@ -5,7 +5,6 @@ import com.recom.tacview.engine.input.KeyboardInput;
 import com.recom.tacview.engine.input.MouseInput;
 import com.recom.tacview.property.MetaProperties;
 import com.recom.tacview.property.RendererProperties;
-import com.recom.tacview.service.InputChannelService;
 import com.recom.tacview.service.profiler.FPSCounter;
 import com.recom.tacview.service.profiler.Profiler;
 import com.recom.tacview.service.profiler.ProfilerProvider;
@@ -14,25 +13,26 @@ import com.recom.tacview.service.tick.TickThresholdCalculator;
 import com.recom.tacview.service.tick.TickerService;
 import com.recom.tacview.strategy.SetFPSStrategy;
 import jakarta.annotation.PostConstruct;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.image.PixelBuffer;
+import javafx.scene.image.PixelFormat;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
-import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferInt;
+import java.nio.IntBuffer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Component
 @RequiredArgsConstructor
-public class GameLoop extends Canvas implements Runnable {
+public class TacViewer extends Canvas implements Runnable {
 
     // CONSTANTS
     @NonNull
-    public static String GAMELOOP_THREAD_NAME = "GLoop";
+    public static String THREAD_NAME = "TacViewer";
 
 
     // DEPENDENCIES
@@ -50,21 +50,21 @@ public class GameLoop extends Canvas implements Runnable {
     private final ScreenComposer screenComposer;
     @NonNull
     private final GameTemplate game;
-    @NonNull
-    private final InputChannelService inputChannelService;
+//    @NonNull
+//    private final InputChannelService inputChannelService;
 
 
-    // IMAGE RENDERING
-    @Nullable
-    private BufferedImage bufferedImage;
-    private int[] bufferedImagePixelRaster;
+    // IMAGE RENDERING BUFFER
+    private IntBuffer intBuffer = null;
+    private PixelFormat<IntBuffer> pixelFormat = null;
+    private PixelBuffer<IntBuffer> pixelBuffer = null;
 
 
     // EXECUTION THREADS
     @Nullable
-    private Thread gameLoopThread;
+    private Thread renderLoopThread;
     @Nullable
-    private ExecutorService backBufferExecuter;
+    private ExecutorService backBufferExecutor;
     private boolean running = false;
 
 
@@ -81,52 +81,39 @@ public class GameLoop extends Canvas implements Runnable {
 
     @PostConstruct
     public void postConstruct() {
-
         // CANVAS SIZE
-        final Dimension canvasSize = new Dimension(rendererProperties.getScaledWidth(), rendererProperties.getScaledHeight());
-        setSize(canvasSize);
-        setPreferredSize(canvasSize);
-        setMinimumSize(canvasSize);
-        setMaximumSize(canvasSize);
-        setIgnoreRepaint(true);
+        final Dimension canvasSize = new Dimension(rendererProperties.getWidth(), rendererProperties.getHeight());
+//        setSize(canvasSize);
+//        setPreferredSize(canvasSize);
+//        setMinimumSize(canvasSize);
+//        setMaximumSize(canvasSize);
+//        setIgnoreRepaint(true);
 
         // RENDER BACKBUFFERHANDLER
         if (rendererProperties.getComposer().isParallelizedBackBufferHandler()) {
-            backBufferExecuter = Executors.newFixedThreadPool(1);
+            backBufferExecutor = Executors.newFixedThreadPool(1);
         }
-
-        // INPUT
-//        inputChannelService.getSubject() // @TODO die beiden Inputs werden direkt verdrahtet mit dem service!
-
-        // @TODO AUSLAGERN IN INPUT PROVIDER
-        // -> handler statt mit new erzeuge als component; über provider?
-        keyboardInput = new KeyboardInput(inputChannelService);
-        mouseInput = new MouseInput(inputChannelService);
-        addKeyListener(keyboardInput);
-        addMouseListener(mouseInput);
-        addMouseMotionListener(mouseInput);
-
-        // DISABLE MOUSE CURSOR BY DEFAULT
-//        this.setCursor(this.getToolkit().createCustomCursor(
-//                new BufferedImage(3, 3, BufferedImage.TYPE_INT_ARGB), new Point(0, 0),
-//                "null"));
     }
+
 
     // GAMELOOP RUNNABLE METHODS
     public synchronized void start() {
-        bufferedImage = new BufferedImage(rendererProperties.getWidth(), rendererProperties.getHeight(), BufferedImage.TYPE_INT_RGB); // @TODO Initialisieren
-        bufferedImagePixelRaster = ((DataBufferInt) bufferedImage.getRaster().getDataBuffer()).getData();
+        // Create IMAGE BUFFER
+        intBuffer = IntBuffer.allocate(rendererProperties.getWidth() * rendererProperties.getHeight());
+        pixelFormat = PixelFormat.getIntArgbPreInstance();
+        pixelBuffer = new PixelBuffer<>(rendererProperties.getWidth(), rendererProperties.getHeight(), intBuffer, pixelFormat);
 
+        // Start Loop
         running = true;
-        gameLoopThread = new Thread(this, GAMELOOP_THREAD_NAME);
+        renderLoopThread = new Thread(this, THREAD_NAME);
         game.run();
-        gameLoopThread.start();
+        renderLoopThread.start();
     }
 
     public synchronized void stop() {
         running = false;
         try {
-            gameLoopThread.join();
+            renderLoopThread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
             System.exit(1);
@@ -137,7 +124,7 @@ public class GameLoop extends Canvas implements Runnable {
     @Override
     public void run() {
         requestFocus();
-        final Profiler loopProfiler = profilerProvider.provide("Loop");
+        final Profiler loopProfiler = profilerProvider.provide("TacViewerLoop");
         final FPSCounter fpsCounter = profilerProvider.provideFPSCounter();
         final TPSCounter tpsCounter = profilerProvider.provideTPSCounter();
         fpsCounter.startProfiling();
@@ -153,7 +140,7 @@ public class GameLoop extends Canvas implements Runnable {
                 tickThresholdRatio--;
             }
 
-            this.composeGraphics();
+            composeGraphics();
             fpsCounter.countFrame();
 
             loopProfiler.measureLoop();
@@ -169,6 +156,7 @@ public class GameLoop extends Canvas implements Runnable {
 
     // CANVAS / IMAGE-BUFFER HANDLING
     private void composeGraphics() {
+        //@TODO: prepare a runnable; instead having to execute this IF each frame
         if (rendererProperties.getComposer().isParallelizedBackBufferHandler()) {
             // @TODO -> das sind Strategies!
             composeGraphicsMultithreaded();
@@ -179,51 +167,25 @@ public class GameLoop extends Canvas implements Runnable {
     }
 
     private void composeGraphicsMultithreaded() {
-        final BufferStrategy bufferStrategy = this.getBufferStrategy();
-        if (bufferStrategy == null) { // @TODO Null check teurer als boolean check?
-            createBufferStrategy(3);
-            return;
-        }
-
-        // Show LAST image in composer buffer
-        final Graphics graphicsContext = bufferStrategy.getDrawGraphics();
-        graphicsContext.drawImage(bufferedImage, 0, 0, rendererProperties.getScaledWidth(), rendererProperties.getScaledHeight(), null);
-        graphicsContext.dispose();
-        bufferStrategy.show();
-
         // Render NEXT frame in buffer
         final int backBufferIndex = screenComposer.compose();
 
         // Copy NEXT composer image to canvas buffer for showing up in NEXT iteration
-        backBufferExecuter.execute(() -> {
+        backBufferExecutor.execute(() -> {
             copyComposedBackBufferToCanvasFrontBuffer(backBufferIndex);
         });
     }
 
     private void composeGraphicsSinglethreaded() {
-        final BufferStrategy bufferStrategy = this.getBufferStrategy();
-        if (bufferStrategy == null) { // @TODO Null check teurer als boolean check?
-            createBufferStrategy(3);
-            return;
-        }
-
+        // Render NEXT frame in buffer
         final int backBufferIndex = screenComposer.compose();
         copyComposedBackBufferToCanvasFrontBuffer(backBufferIndex);
-
-        final Graphics graphicsContext = bufferStrategy.getDrawGraphics();
-        graphicsContext.drawImage(bufferedImage, 0, 0, rendererProperties.getScaledWidth(), rendererProperties.getScaledHeight(), null);
-        graphicsContext.dispose();
-        bufferStrategy.show();
     }
 
     private void copyComposedBackBufferToCanvasFrontBuffer(int backBufferIndex) {
-        System.arraycopy(
-                screenComposer.getBackPixelBuffer(backBufferIndex).directBufferAccess(),
-                0,
-                bufferedImagePixelRaster,
-                0,
-                screenComposer.getBackPixelBuffer(backBufferIndex).getBufferSize() - 1
-        );
+        pixelBuffer.getBuffer().put(screenComposer.getBackPixelBuffer(backBufferIndex).directBufferAccess());
+        pixelBuffer.getBuffer().flip();
+        pixelBuffer.updateBuffer(__ -> null);
     }
 
 }

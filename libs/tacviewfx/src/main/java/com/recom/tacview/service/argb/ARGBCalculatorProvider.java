@@ -1,6 +1,7 @@
 package com.recom.tacview.service.argb;
 
 import com.recom.rendertools.ARGBCalculator;
+import jakarta.annotation.PostConstruct;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +13,8 @@ public final class ARGBCalculatorProvider {
 
 //    @PostConstruct
 //    public void postConstruct() {
-//      provide(); <<<<
+//        provide();
 //    }
-// @TODO Load in advance
 
     public ARGBCalculator provide() {
         if (instance == null) {

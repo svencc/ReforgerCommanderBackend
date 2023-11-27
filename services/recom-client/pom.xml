@@ -36,7 +36,7 @@
         </dependency>
         <dependency>
             <groupId>com.recom</groupId>
-            <artifactId>recom-tacview</artifactId>
+            <artifactId>recom-tacviewfx</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>

@@ -17,18 +17,18 @@ public class RendererProperties {
     private static PixelDimension singletonPixelDimension = null;
     private int width;
     private int height;
-    private int scale;
+//    private int scale;
     private boolean parallelizedRendering;
     private int threadPoolSize;
     private ComposerProperties composer;
 
-    public int getScaledWidth() {
-        return width;
-    }
-
-    public int getScaledHeight() {
-        return height;
-    }
+//    public int getScaledWidth() {
+//        return width;
+//    }
+//
+//    public int getScaledHeight() {
+//        return height;
+//    }
 
     public PixelDimension toRendererDimension() {
         if (singletonPixelDimension == null) {
@@ -41,12 +41,12 @@ public class RendererProperties {
         return singletonPixelDimension;
     }
 
-    public int getWidth() {
-        return width / scale;
-    }
-
-    public int getHeight() {
-        return height / scale;
-    }
+//    public int getWidth() {
+//        return width / scale;
+//    }
+//
+//    public int getHeight() {
+//        return height / scale;
+//    }
 
 }
