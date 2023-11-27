@@ -1,6 +1,6 @@
 # TODO LIST
 
-* better integrate tacview
+* better integrate TacView
   * use virtual thread pool for TacView renderer
 
 * normalize gameMap entities

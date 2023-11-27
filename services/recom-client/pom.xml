@@ -18,6 +18,18 @@
 
         <dependency>
             <groupId>com.recom</groupId>
+            <artifactId>recom-sharedmodels</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.recom</groupId>
+            <artifactId>recom-javafxdependencies</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.recom</groupId>
             <artifactId>recom-rendertools</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <scope>compile</scope>
@@ -54,27 +66,11 @@
         <!-- COMPILER UTILS  -->
 
         <!-- JAVA FX -->
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-controls</artifactId>
-            <version>21.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-fxml</artifactId>
-            <version>21.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.controlsfx</groupId>
-            <artifactId>controlsfx</artifactId>
-            <version>11.2.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.recom</groupId>
-            <artifactId>recom-sharedmodels</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.controlsfx</groupId>-->
+<!--            <artifactId>controlsfx</artifactId>-->
+<!--            <version>11.2.0</version>-->
+<!--        </dependency>-->
         <!-- JAVA FX -->
 
     </dependencies>

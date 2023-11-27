@@ -20,6 +20,7 @@
         <module>rendertools</module>
         <module>maze</module>
         <module>tacview</module>
+        <module>javafxdependencies</module>
     </modules>
 
     <dependencies>

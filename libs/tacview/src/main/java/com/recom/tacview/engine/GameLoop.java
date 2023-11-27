@@ -12,7 +12,7 @@ import com.recom.tacview.service.profiler.ProfilerProvider;
 import com.recom.tacview.service.profiler.TPSCounter;
 import com.recom.tacview.service.tick.TickThresholdCalculator;
 import com.recom.tacview.service.tick.TickerService;
-import com.recom.tacview.strategy.SetJFrameTitleStrategy;
+import com.recom.tacview.strategy.SetFPSStrategy;
 import jakarta.annotation.PostConstruct;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -69,7 +69,7 @@ public class GameLoop extends Canvas implements Runnable {
 
 
     @Nullable
-    private SetJFrameTitleStrategy setJFrameTitleStrategy;
+    private SetFPSStrategy setFPSStrategy;
 
 
     // INPUT
@@ -113,9 +113,7 @@ public class GameLoop extends Canvas implements Runnable {
     }
 
     // GAMELOOP RUNNABLE METHODS
-    public synchronized void start(@NonNull final SetJFrameTitleStrategy setJFrameTitleStrategy) {
-        this.setJFrameTitleStrategy = setJFrameTitleStrategy;
-
+    public synchronized void start() {
         bufferedImage = new BufferedImage(rendererProperties.getWidth(), rendererProperties.getHeight(), BufferedImage.TYPE_INT_RGB); // @TODO Initialisieren
         bufferedImagePixelRaster = ((DataBufferInt) bufferedImage.getRaster().getDataBuffer()).getData();
 
@@ -161,7 +159,9 @@ public class GameLoop extends Canvas implements Runnable {
             loopProfiler.measureLoop();
 
             if (fpsCounter.oneSecondPassed()) {
-                setJFrameTitleStrategy.execute(metaProperties.getName() + " | " + tpsCounter.profileTicksPerSecond() + " | " + fpsCounter.profileFramesPerSecond() + " | " + loopProfiler.stringifyResult());
+                // TODO: setFPS into stage title .... generic
+//                setFPSStrategy.execute(() ->);
+//                setFPSStrategy.execute(metaProperties.getName() + " | " + tpsCounter.profileTicksPerSecond() + " | " + fpsCounter.profileFramesPerSecond() + " | " + loopProfiler.stringifyResult());
             }
         }
     }
@@ -217,7 +217,13 @@ public class GameLoop extends Canvas implements Runnable {
     }
 
     private void copyComposedBackBufferToCanvasFrontBuffer(int backBufferIndex) {
-        System.arraycopy(screenComposer.getBackPixelBuffer(backBufferIndex).directBufferAccess(), 0, bufferedImagePixelRaster, 0, screenComposer.getBackPixelBuffer(backBufferIndex).getBufferSize() - 1);
+        System.arraycopy(
+                screenComposer.getBackPixelBuffer(backBufferIndex).directBufferAccess(),
+                0,
+                bufferedImagePixelRaster,
+                0,
+                screenComposer.getBackPixelBuffer(backBufferIndex).getBufferSize() - 1
+        );
     }
 
 }
