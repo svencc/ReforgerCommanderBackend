@@ -6,9 +6,16 @@ public interface Bufferable extends Scanable {
 
     PixelDimension getDimension();
 
-    void bufferPixelAt(final int x, final int y, final int newPixelValue);
+    void bufferPixelAt(
+            final int x,
+            final int y,
+            final int newPixelValue
+    );
 
-    void bufferPixelAtIndex(final int index, final int newPixelValue);
+    void bufferPixelAtIndex(
+            final int index,
+            final int newPixelValue
+    );
 
     void clearBuffer();
 

@@ -16,14 +16,25 @@ public class Sprite implements HasPixelBuffer {
         pixelBuffer = new PixelBuffer(dimension);
     }
 
-    public Sprite(@NonNull final PixelDimension dimension, @NonNull final SpriteAtlas spriteAtlas, final int atlasOffsetX, final int atlasOffsetY) {
+    public Sprite(
+            @NonNull final PixelDimension dimension,
+            @NonNull final SpriteAtlas spriteAtlas,
+            final int atlasOffsetX,
+            final int atlasOffsetY
+    ) {
         pixelBuffer = new PixelBuffer(dimension);
         loadSpriteFromAtlas(spriteAtlas, atlasOffsetX, atlasOffsetY, false, false);
     }
 
     // @TODO: Put the invert options into the PixelBuffer copy function and use it here?
     // @TODO: Add Test
-    private void loadSpriteFromAtlas(@NonNull final SpriteAtlas spriteAtlas, final int atlasOffsetX, final int atlasOffsetY, final boolean invertX, final boolean invertY) {
+    private void loadSpriteFromAtlas(
+            @NonNull final SpriteAtlas spriteAtlas,
+            final int atlasOffsetX,
+            final int atlasOffsetY,
+            final boolean invertX,
+            final boolean invertY
+    ) {
         for (int y = 0; y < pixelBuffer.getDimension().getHeightY(); y++) {
             int pickY = y;
             if (invertY) {
@@ -40,11 +51,24 @@ public class Sprite implements HasPixelBuffer {
         }
     }
 
-    private static int getPixelAtIndex(@NonNull final SpriteAtlas spriteAtlas, final int atlasOffsetX, final int atlasOffsetY, final int pickY, final int pickX) {
+    private static int getPixelAtIndex(
+            @NonNull final SpriteAtlas spriteAtlas,
+            final int atlasOffsetX,
+            final int atlasOffsetY,
+            final int pickY,
+            final int pickX
+    ) {
         return spriteAtlas.getPixelBuffer().scanPixelAtIndex((pickX + atlasOffsetX) + (pickY + atlasOffsetY) * spriteAtlas.getPixelBuffer().getDimension().getWidthX());
     }
 
-    public Sprite(@NonNull final PixelDimension dimension, @NonNull final SpriteAtlas spriteAtlas, final int offsetX, final int offsetY, final boolean invertX, final boolean invertY) {
+    public Sprite(
+            @NonNull final PixelDimension dimension,
+            @NonNull final SpriteAtlas spriteAtlas,
+            final int offsetX,
+            final int offsetY,
+            final boolean invertX,
+            final boolean invertY
+    ) {
         pixelBuffer = new PixelBuffer(dimension);
         loadSpriteFromAtlas(spriteAtlas, offsetX, offsetY, invertX, invertY);
     }

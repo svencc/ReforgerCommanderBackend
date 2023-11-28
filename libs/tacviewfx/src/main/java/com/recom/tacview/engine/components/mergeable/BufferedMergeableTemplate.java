@@ -19,18 +19,29 @@ public abstract class BufferedMergeableTemplate implements Mergeable, HasPixelBu
     @NonNull
     private final RenderProvider renderProvider;
 
-    public BufferedMergeableTemplate(@NonNull final PixelDimension dimension, @NonNull final RenderProvider renderProvider) {
+    public BufferedMergeableTemplate(
+            @NonNull final PixelDimension dimension,
+            @NonNull final RenderProvider renderProvider
+    ) {
         this.pixelBuffer = new PixelBuffer(dimension);
         this.renderProvider = renderProvider;
     }
 
     @Override
-    public void mergeBufferWith(@NonNull final PixelBuffer targetBuffer, final int offsetX, final int offsetY) {
+    public void mergeBufferWith(
+            @NonNull final PixelBuffer targetBuffer,
+            final int offsetX,
+            final int offsetY
+    ) {
         renderProvider.provide().render(pixelBuffer, targetBuffer, offsetX, offsetY);
     }
 
     @Override
-    public void mergeBufferWith(@NonNull final Bufferable targetBuffer, final int offsetX, final int offsetY) {
+    public void mergeBufferWith(
+            @NonNull final Bufferable targetBuffer,
+            final int offsetX,
+            final int offsetY
+    ) {
         renderProvider.provide().render(pixelBuffer, targetBuffer, offsetX, offsetY);
     }
 

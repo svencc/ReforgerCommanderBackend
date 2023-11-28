@@ -14,21 +14,32 @@ public class PixelBuffer implements Bufferable {
 
     protected int[] pixelBuffer;
 
-    public PixelBuffer(@NonNull PixelDimension dimension) {
+    public PixelBuffer(@NonNull final PixelDimension dimension) {
         this.dimension = dimension;
         pixelBuffer = new int[dimension.getWidthX() * dimension.getHeightY()];
     }
 
-    public PixelBuffer(@NonNull PixelDimension dimension, int[] useBuffer) {
+    public PixelBuffer(
+            @NonNull final PixelDimension dimension,
+            final int[] useBuffer
+    ) {
         this.dimension = dimension;
         pixelBuffer = useBuffer;
     }
 
-    public static void copy(@NonNull PixelBuffer sourcePixelBuffer, @NonNull PixelBuffer targetPixelBuffer) {
+    public static void copy(
+            @NonNull final PixelBuffer sourcePixelBuffer,
+            @NonNull final PixelBuffer targetPixelBuffer
+    ) {
         copyWithOffset(sourcePixelBuffer, targetPixelBuffer, 0, 0);
     }
 
-    public static void copyWithOffset(@NonNull PixelBuffer sourcePixelBuffer, @NonNull PixelBuffer targetPixelBuffer, int offsetX, int offsetY) {
+    public static void copyWithOffset(
+            @NonNull final PixelBuffer sourcePixelBuffer,
+            @NonNull final PixelBuffer targetPixelBuffer,
+            int offsetX,
+            int offsetY
+    ) {
         for (int y = 0; (y < targetPixelBuffer.dimension.getHeightY() && y < sourcePixelBuffer.dimension.getHeightY()); y++) {
             int copyToY = y + offsetY;
             if (copyToY >= targetPixelBuffer.dimension.getHeightY()) break;
@@ -42,7 +53,7 @@ public class PixelBuffer implements Bufferable {
         }
     }
 
-    public void resizeBuffer(@NonNull PixelDimension newDimension) {
+    public void resizeBuffer(@NonNull final PixelDimension newDimension) {
         if (dimension.getWidthX() == newDimension.getWidthX() && dimension.getHeightY() == newDimension.getHeightY()) {
             return;
         }
@@ -57,7 +68,12 @@ public class PixelBuffer implements Bufferable {
         dimension = newDimension;
     }
 
-    public static void copy(@NonNull PixelDimension sourceDimension, int[] sourceBuffer, @NonNull PixelDimension targetDimension, int[] targetBuffer) {
+    public static void copy(
+            @NonNull final PixelDimension sourceDimension,
+            final int[] sourceBuffer,
+            @NonNull final PixelDimension targetDimension,
+            final int[] targetBuffer
+    ) {
         for (int y = 0; (y < targetDimension.getHeightY() && y < sourceDimension.getHeightY()); y++) {
             for (int x = 0; x < targetDimension.getWidthX() && x < sourceDimension.getWidthX(); x++) {
                 targetBuffer[x + y * targetDimension.getWidthX()] = sourceBuffer[x + y * sourceDimension.getWidthX()];
@@ -66,22 +82,32 @@ public class PixelBuffer implements Bufferable {
     }
 
     @Override
-    public int scanPixelAt(int x, int y) {
+    public int scanPixelAt(
+            final int x,
+            final int y
+    ) {
         return pixelBuffer[x + y * dimension.getWidthX()];
     }
 
     @Override
-    public int scanPixelAtIndex(int index) {
+    public int scanPixelAtIndex(final int index) {
         return pixelBuffer[index];
     }
 
     @Override
-    public void bufferPixelAt(int x, int y, int newPixelValue) {
+    public void bufferPixelAt(
+            final int x,
+            final int y,
+            final int newPixelValue
+    ) {
         pixelBuffer[x + y * dimension.getWidthX()] = newPixelValue;
     }
 
     @Override
-    public void bufferPixelAtIndex(int index, int newPixelValue) {
+    public void bufferPixelAtIndex(
+            final int index,
+            final int newPixelValue
+    ) {
         pixelBuffer[index] = newPixelValue;
     }
 
@@ -89,7 +115,7 @@ public class PixelBuffer implements Bufferable {
         Arrays.fill(pixelBuffer, 0);
     }
 
-    public void fillBuffer(int value) {
+    public void fillBuffer(final int value) {
         Arrays.fill(pixelBuffer, value);
     }
 

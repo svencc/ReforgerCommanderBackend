@@ -15,19 +15,31 @@ public class ScanableNoiseMergeable extends ScanableMergeableTemplate {
     @NonNull
     private final ScanableNoise scanableNoiseDelegate;
 
-    public ScanableNoiseMergeable(@NonNull final RenderProvider renderProvider, @NonNull final PixelDimension dimension, @NonNull final RandomProvider randomProvider) {
+    public ScanableNoiseMergeable(
+            @NonNull final RenderProvider renderProvider,
+            @NonNull final PixelDimension dimension,
+            @NonNull final RandomProvider randomProvider
+    ) {
         super(dimension);
         this.renderProvider = renderProvider;
         this.scanableNoiseDelegate = new ScanableNoise(randomProvider, dimension);
     }
 
     @Override
-    public void mergeBufferWith(@NonNull final PixelBuffer targetBuffer, final int offsetX, final int offsetY) {
+    public void mergeBufferWith(
+            @NonNull final PixelBuffer targetBuffer,
+            final int offsetX,
+            final int offsetY
+    ) {
         renderProvider.provide().render(scanableNoiseDelegate, targetBuffer, offsetX, offsetY);
     }
 
     @Override
-    public void mergeBufferWith(@NonNull final Bufferable targetBuffer, final int offsetX, final int offsetY) {
+    public void mergeBufferWith(
+            @NonNull final Bufferable targetBuffer,
+            final int offsetX,
+            final int offsetY
+    ) {
         renderProvider.provide().render(scanableNoiseDelegate, targetBuffer, offsetX, offsetY);
     }
 
@@ -42,12 +54,15 @@ public class ScanableNoiseMergeable extends ScanableMergeableTemplate {
     }
 
     @Override
-    public int scanPixelAt(int x, int y) {
+    public int scanPixelAt(
+            final int x,
+            final int y
+    ) {
         return scanableNoiseDelegate.scanPixelAt(x, y);
     }
 
     @Override
-    public int scanPixelAtIndex(int index) {
+    public int scanPixelAtIndex(final int index) {
         return scanableNoiseDelegate.scanPixelAtIndex(index);
     }
 

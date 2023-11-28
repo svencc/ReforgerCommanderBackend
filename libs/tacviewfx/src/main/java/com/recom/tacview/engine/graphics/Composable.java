@@ -8,6 +8,6 @@ public interface Composable {
     int compose();
 
     @NonNull
-    PixelBuffer getBackPixelBuffer(int index);
+    PixelBuffer getBackPixelBuffer(final int index);
 
 }

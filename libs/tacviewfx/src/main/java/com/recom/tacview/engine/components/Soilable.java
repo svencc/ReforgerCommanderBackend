@@ -4,6 +4,6 @@ public interface Soilable {
 
     boolean isDirty();
 
-    void setDirty(boolean isDirty);
+    void setDirty(final boolean isDirty);
 
 }

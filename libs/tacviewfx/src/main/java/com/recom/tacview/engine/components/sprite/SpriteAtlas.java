@@ -26,12 +26,22 @@ public class SpriteAtlas implements HasPixelBuffer {
         pixelBuffer = new PixelBuffer(dimension, preparedBuffer);
     }
 
-    public Sprite createSprite(@NonNull final PixelDimension pixelDimension, final int atlasOffsetX, final int atlasOffsetY) {
+    public Sprite createSprite(
+            @NonNull final PixelDimension pixelDimension,
+            final int atlasOffsetX,
+            final int atlasOffsetY
+    ) {
         final PixelDimension dimension = PixelDimension.builder().widthX(pixelDimension.getWidthX()).heightY(pixelDimension.getHeightY()).build();
         return new Sprite(dimension, this, atlasOffsetX, atlasOffsetY);
     }
 
-    public Sprite createSprite(@NonNull final PixelDimension pixelDimension, final int atlasOffsetX, final int atlasOffsetY, final boolean invertX, final boolean invertY) {
+    public Sprite createSprite(
+            @NonNull final PixelDimension pixelDimension,
+            final int atlasOffsetX,
+            final int atlasOffsetY,
+            final boolean invertX,
+            final boolean invertY
+    ) {
         final PixelDimension dimension = PixelDimension.builder().widthX(pixelDimension.getWidthX()).heightY(pixelDimension.getHeightY()).build();
         return new Sprite(dimension, this, atlasOffsetX, atlasOffsetY, invertX, invertY);
     }

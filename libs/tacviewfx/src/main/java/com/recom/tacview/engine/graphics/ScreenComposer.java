@@ -80,7 +80,7 @@ public class ScreenComposer implements Composable {
 
     @NonNull
     @Override
-    public PixelBuffer getBackPixelBuffer(int index) {
+    public PixelBuffer getBackPixelBuffer(final int index) {
         return ringPixelBuffer[index];
     }
 

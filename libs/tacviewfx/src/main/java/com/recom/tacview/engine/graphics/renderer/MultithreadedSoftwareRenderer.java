@@ -17,13 +17,22 @@ class MultithreadedSoftwareRenderer extends RendererTemplate {
     @NonNull
     private final ExecutorService multithreadedExecutorService;
 
-    MultithreadedSoftwareRenderer(@NonNull final RendererProperties rendererProperties, @NonNull final ARGBCalculatorProvider argbCalculatorProvider) {
+
+    MultithreadedSoftwareRenderer(
+            @NonNull final RendererProperties rendererProperties,
+            @NonNull final ARGBCalculatorProvider argbCalculatorProvider
+    ) {
         super(rendererProperties, argbCalculatorProvider);
         multithreadedExecutorService = Executors.newFixedThreadPool(rendererProperties.getThreadPoolSize());
     }
 
     @Override
-    public void render(@NonNull final Scanable source, @NonNull final Bufferable target, final int xOffset, final int yOffset) {
+    public void render(
+            @NonNull final Scanable source,
+            @NonNull final Bufferable target,
+            final int xOffset,
+            final int yOffset
+    ) {
         final CountDownLatch latch = new CountDownLatch(source.getDimension().getHeightY());
         for (int y = 0; y < source.getDimension().getHeightY(); y++) {
             final int copyToY = y + yOffset;

@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 public class DefaultGame extends GameTemplate {
 
     @NonNull
-    private final RendererProperties rendererResolution;
+    private final RendererProperties rendererProperties;
     @NonNull
     private final ScreenComposer screenComposer;
     @NonNull
@@ -26,7 +26,7 @@ public class DefaultGame extends GameTemplate {
     private final RenderProvider renderProvider;
 
     public void init() {
-        final ScanableNoiseMergeable scanableNoiseLayer = new ScanableNoiseMergeable(renderProvider, rendererResolution.toRendererDimension(), randomProvider);
+        final ScanableNoiseMergeable scanableNoiseLayer = new ScanableNoiseMergeable(renderProvider, rendererProperties.toRendererDimension(), randomProvider);
         screenComposer.getLayerPipeline().clear();
         screenComposer.getLayerPipeline().add(scanableNoiseLayer);
     }

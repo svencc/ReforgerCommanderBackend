@@ -3,7 +3,6 @@ package com.recom.tacview.engine;
 import com.recom.tacview.engine.graphics.ScreenComposer;
 import com.recom.tacview.engine.input.KeyboardInput;
 import com.recom.tacview.engine.input.MouseInput;
-import com.recom.tacview.property.MetaProperties;
 import com.recom.tacview.property.RendererProperties;
 import com.recom.tacview.service.profiler.FPSCounter;
 import com.recom.tacview.service.profiler.Profiler;
@@ -38,8 +37,6 @@ public class TacViewer extends Canvas implements Runnable {
     // DEPENDENCIES
     @NonNull
     private final RendererProperties rendererProperties;
-    @NonNull
-    private final MetaProperties metaProperties;
     @NonNull
     private final ProfilerProvider profilerProvider;
     @NonNull
@@ -182,7 +179,7 @@ public class TacViewer extends Canvas implements Runnable {
         copyComposedBackBufferToCanvasFrontBuffer(backBufferIndex);
     }
 
-    private void copyComposedBackBufferToCanvasFrontBuffer(int backBufferIndex) {
+    private void copyComposedBackBufferToCanvasFrontBuffer(final int backBufferIndex) {
         pixelBuffer.getBuffer().put(screenComposer.getBackPixelBuffer(backBufferIndex).directBufferAccess());
         pixelBuffer.getBuffer().flip();
         pixelBuffer.updateBuffer(__ -> null);
