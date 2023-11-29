@@ -112,7 +112,7 @@ public class PixelBuffer implements Bufferable {
     }
 
     public void clearBuffer() {
-        Arrays.fill(pixelBuffer, 0);
+        Arrays.fill(pixelBuffer, 0xff000000);
     }
 
     public void fillBuffer(final int value) {

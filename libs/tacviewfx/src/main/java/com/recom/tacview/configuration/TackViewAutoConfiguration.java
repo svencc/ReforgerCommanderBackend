@@ -22,10 +22,10 @@ public class TackViewAutoConfiguration {
     @Bean
     public RendererProperties rendererProperties(@NonNull final ComposerProperties composerProperties) {
         return RendererProperties.builder()
-                .width(1920)
-                .height(1080)
+                .width(640)
+                .height(480)
                 .parallelizedRendering(true)
-                .threadPoolSize(4)
+                .threadPoolSize(8)
                 .composer(composerProperties)
                 .build();
     }

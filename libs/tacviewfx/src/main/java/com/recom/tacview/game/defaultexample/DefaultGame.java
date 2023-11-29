@@ -8,11 +8,11 @@ import com.recom.tacview.property.RendererProperties;
 import com.recom.tacview.service.RandomProvider;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Profile;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile("default")
+//@ConditionalOnMissingBean(GameTemplate.class)
 @RequiredArgsConstructor
 public class DefaultGame extends GameTemplate {
 
