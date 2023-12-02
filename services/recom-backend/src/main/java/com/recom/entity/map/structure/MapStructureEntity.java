@@ -19,8 +19,8 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(indexes = {
-        @Index(name = "IDX_gameMap_className", columnList = "game_map_id, className", unique = false),
-        @Index(name = "IDX_gameMap_prefabName", columnList = "game_map_id, prefabName", unique = false),
+//        @Index(name = "IDX_gameMap_className", columnList = "game_map_id, className", unique = false),
+//        @Index(name = "IDX_gameMap_prefabName", columnList = "game_map_id, prefabName", unique = false),
         @Index(name = "IDX_gameMap_resourceName", columnList = "game_map_id, resourceName", unique = false),
         @Index(name = "IDX_gameMap_mapDescriptorType", columnList = "game_map_id, mapDescriptorType", unique = false),
         @Index(name = "IDX_gameMap_name", columnList = "game_map_id, name", unique = false),
