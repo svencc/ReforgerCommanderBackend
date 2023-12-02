@@ -1,6 +1,6 @@
 package com.recom.persistence.message;
 
-import com.recom.entity.GameMap;
+import com.recom.entity.map.GameMap;
 import com.recom.entity.Message;
 import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;

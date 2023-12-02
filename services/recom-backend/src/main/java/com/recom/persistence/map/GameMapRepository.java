@@ -1,6 +1,6 @@
 package com.recom.persistence.map;
 
-import com.recom.entity.GameMap;
+import com.recom.entity.map.GameMap;
 import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

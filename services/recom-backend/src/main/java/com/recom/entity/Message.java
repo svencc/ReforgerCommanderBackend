@@ -1,6 +1,7 @@
 package com.recom.entity;
 
 import com.recom.dto.message.MessageType;
+import com.recom.entity.map.GameMap;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Cache;

@@ -3,7 +3,7 @@ package com.recom.event.listener;
 import com.recom.dto.map.scanner.TransactionIdentifierDto;
 import com.recom.dto.map.scanner.topography.MapTopographyEntityDto;
 import com.recom.dto.map.scanner.topography.TransactionalMapTopographyEntityPackageDto;
-import com.recom.entity.GameMap;
+import com.recom.entity.map.GameMap;
 import com.recom.event.event.async.map.addmappackage.AddMapTopographyPackageAsyncEvent;
 import com.recom.event.event.async.map.commit.CommitMapTopographyTransactionAsyncEvent;
 import com.recom.event.event.async.map.open.OpenMapTopographyTransactionAsyncEvent;

@@ -3,7 +3,7 @@ package com.recom.api.map;
 import com.recom.api.commons.HttpCommons;
 import com.recom.dto.map.topography.HeightMapDescriptorDto;
 import com.recom.dto.map.topography.MapTopographyRequestDto;
-import com.recom.entity.GameMap;
+import com.recom.entity.map.GameMap;
 import com.recom.exception.HttpNotFoundException;
 import com.recom.mapper.HeightMapDescriptorMapper;
 import com.recom.model.HeightMapDescriptor;

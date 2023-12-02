@@ -1,9 +1,9 @@
 package com.recom.service.map;
 
 import com.recom.dto.map.meta.MapMetaDto;
-import com.recom.entity.GameMap;
+import com.recom.entity.map.GameMap;
 import com.recom.persistence.map.GameMapPersistenceLayer;
-import com.recom.persistence.map.structure.MapLocatedStructurePersistenceLayer;
+import com.recom.persistence.map.structure.MapStructurePersistenceLayer;
 import com.recom.service.dbcached.DBCachedService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class GameMapService {
     @NonNull
     private final GameMapPersistenceLayer gameMapPersistenceLayer;
     @NonNull
-    private final MapLocatedStructurePersistenceLayer mapStructurePersistenceLayer;
+    private final MapStructurePersistenceLayer mapStructurePersistenceLayer;
     @NonNull
     private final DBCachedService dbCachedService;
 

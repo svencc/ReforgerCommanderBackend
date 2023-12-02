@@ -1,12 +1,17 @@
 # TODO LIST
 
-* better integrate TacView
-  * use virtual thread pool for TacView renderer
-
 * normalize gameMap entities
   * gameMap-meta-entity
     * size
     * ocean_base_height
+    * fix MapStructureRepository (see comments)
+
+* load map into tacviewer
+* panning
+* zooming (scaling)
+* add scale bar
+* add measurement tool
+* add menu
 
 * scanner -> qubus
 * Cache Reset Map Exists!

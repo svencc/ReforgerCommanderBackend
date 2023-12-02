@@ -1,5 +1,6 @@
-package com.recom.entity;
+package com.recom.entity.map.structure;
 
+import com.recom.entity.map.GameMap;
 import com.recom.event.listener.generic.maplocated.MapLocatedEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -49,13 +50,11 @@ public class MapStructureEntity implements Persistable<Long>, Serializable, MapL
     @Column(insertable = true, updatable = false, nullable = true, length = 255)
     private String name;
 
-    @Nationalized
-    @Column(insertable = true, updatable = false, nullable = true, length = 255)
-    private String className;
+    @ManyToOne(optional = false, fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    private ClassNameEntity className;
 
-    @Nationalized
-    @Column(insertable = true, updatable = false, nullable = true, length = 255)
-    private String prefabName;
+    @ManyToOne(optional = false, fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    private PrefabNameEntity prefabName;
 
     @Lob
     @Nationalized

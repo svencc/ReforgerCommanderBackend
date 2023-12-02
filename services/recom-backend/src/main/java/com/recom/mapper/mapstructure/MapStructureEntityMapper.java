@@ -1,10 +1,10 @@
-package com.recom.mapper;
+package com.recom.mapper.mapstructure;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.recom.dto.map.scanner.structure.MapStructureEntityDto;
-import com.recom.entity.MapStructureEntity;
+import com.recom.entity.map.structure.MapStructureEntity;
 import com.recom.event.listener.generic.maplocated.MapLocatedEntity;
-import com.recom.event.listener.generic.maplocated.TransactionalMapLocatedEntityMappable;
+import com.recom.mapper.MapperUtil;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Mapper
-public interface MapStructureEntityMapper extends TransactionalMapLocatedEntityMappable<MapStructureEntity, MapStructureEntityDto> {
+public interface MapStructureEntityMapper {
 
     MapStructureEntityMapper INSTANCE = Mappers.getMapper(MapStructureEntityMapper.class);
 
@@ -65,8 +65,8 @@ public interface MapStructureEntityMapper extends TransactionalMapLocatedEntityM
     @BeanMapping(ignoreByDefault = true)
     @Mapping(source = "entityId", target = "entityId")
     @Mapping(source = "name", target = "name", qualifiedByName = "blankStringToNull")
-    @Mapping(source = "className", target = "className")
-    @Mapping(source = "prefabName", target = "prefabName", qualifiedByName = "blankStringToNull")
+//    @Mapping(source = "className", target = "className", qualifiedByName = "classNameStringToClassNameEntity")
+//    @Mapping(source = "prefabName", target = "prefabName", qualifiedByName = "blankStringToNull")
     @Mapping(source = "resourceName", target = "resourceName", qualifiedByName = "blankStringToNull")
     @Mapping(source = "mapDescriptorType", target = "mapDescriptorType", qualifiedByName = "blankStringToNull")
     @Mapping(source = "rotationX", target = "rotationX", qualifiedByName = "encodeVectorToJsonString")
@@ -80,8 +80,8 @@ public interface MapStructureEntityMapper extends TransactionalMapLocatedEntityM
     @BeanMapping(ignoreByDefault = true)
     @Mapping(source = "entityId", target = "entityId")
     @Mapping(source = "name", target = "name")
-    @Mapping(source = "className", target = "className")
-    @Mapping(source = "prefabName", target = "prefabName")
+    @Mapping(source = "className.name", target = "className")
+    @Mapping(source = "prefabName.name", target = "prefabName")
     @Mapping(source = "resourceName", target = "resourceName")
     @Mapping(source = "mapDescriptorType", target = "mapDescriptorType")
     @Mapping(source = "rotationX", target = "rotationX", qualifiedByName = "decodeJsonStringToVector")

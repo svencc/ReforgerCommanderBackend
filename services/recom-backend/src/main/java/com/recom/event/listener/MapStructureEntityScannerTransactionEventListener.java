@@ -2,14 +2,14 @@ package com.recom.event.listener;
 
 import com.recom.dto.map.scanner.structure.MapStructureEntityDto;
 import com.recom.dto.map.scanner.structure.TransactionalMapStructureEntityPackageDto;
-import com.recom.entity.MapStructureEntity;
+import com.recom.entity.map.structure.MapStructureEntity;
 import com.recom.event.event.async.map.addmappackage.AddMapPackageAsyncEvent;
 import com.recom.event.event.async.map.commit.CommitMapTransactionAsyncEvent;
 import com.recom.event.event.async.map.open.OpenMapTransactionAsyncEvent;
 import com.recom.event.listener.generic.maplocated.TransactionalMapLocatedPackageEventListenerTemplate;
-import com.recom.mapper.MapStructureEntityMapper;
+import com.recom.mapper.mapstructure.MapStructureEntitySuperMapper;
 import com.recom.persistence.map.GameMapPersistenceLayer;
-import com.recom.persistence.map.structure.MapLocatedStructurePersistenceLayer;
+import com.recom.persistence.map.structure.MapStructurePersistenceLayer;
 import com.recom.service.map.MapTransactionValidatorService;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -25,12 +25,12 @@ public class MapStructureEntityScannerTransactionEventListener extends Transacti
 
     public MapStructureEntityScannerTransactionEventListener(
             @NonNull final TransactionTemplate transactionTemplate,
-            @NonNull final MapLocatedStructurePersistenceLayer entityPersistenceLayer,
+            @NonNull final MapStructurePersistenceLayer entityPersistenceLayer,
             @NonNull final MapTransactionValidatorService<MapStructureEntityDto, TransactionalMapStructureEntityPackageDto> mapTransactionValidator,
             @NonNull final GameMapPersistenceLayer gameMapPersistenceLayer,
             @NonNull final ApplicationEventPublisher applicationEventPublisher
     ) {
-        super(transactionTemplate, entityPersistenceLayer, mapTransactionValidator, MapStructureEntityMapper.INSTANCE, gameMapPersistenceLayer, applicationEventPublisher);
+        super(transactionTemplate, entityPersistenceLayer, mapTransactionValidator, new MapStructureEntitySuperMapper(entityPersistenceLayer), gameMapPersistenceLayer, applicationEventPublisher);
     }
 
     @Async("AsyncMapTransactionExecutor")

@@ -1,6 +1,5 @@
 package com.recom.tacview.engine.graphics.buffer;
 
-import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
 import com.recom.tacview.engine.units.PixelDimension;
 import org.junit.jupiter.api.Test;
 
@@ -212,6 +211,7 @@ class PixelBufferTest {
         assertEquals(sourceBufferContent, targetBuffer.scanPixelAt(1, 2));
         assertEquals(sourceBufferContent, targetBuffer.scanPixelAt(2, 2));
     }
+
     @Test
     void copyWithOffsetToSmallerBuffer() {
         // PREPARE
@@ -241,6 +241,7 @@ class PixelBufferTest {
         assertEquals(targetBufferContent, targetBuffer.scanPixelAt(1, 2));
         assertEquals(sourceBufferContent, targetBuffer.scanPixelAt(2, 2));
     }
+
     @Test
     void copyWithNegativeOffsetToSmallerBuffer() {
         // PREPARE

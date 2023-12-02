@@ -3,7 +3,7 @@ package com.recom.service.map;
 import com.recom.dto.map.renderer.MapRenderCommandDto;
 import com.recom.dto.map.renderer.MapRenderCommandType;
 import com.recom.dto.map.renderer.MapRenderResponseDto;
-import com.recom.entity.GameMap;
+import com.recom.entity.map.GameMap;
 import com.recom.service.map.cluster.ClusteringService;
 import com.recom.rendertools.util.ColorCalculator;
 import lombok.NonNull;

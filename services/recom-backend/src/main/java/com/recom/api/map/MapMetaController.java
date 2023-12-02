@@ -2,7 +2,7 @@ package com.recom.api.map;
 
 import com.recom.api.commons.HttpCommons;
 import com.recom.dto.map.meta.MapMetaDto;
-import com.recom.entity.GameMap;
+import com.recom.entity.map.GameMap;
 import com.recom.service.AssertionService;
 import com.recom.service.map.GameMapService;
 import io.swagger.v3.oas.annotations.Operation;

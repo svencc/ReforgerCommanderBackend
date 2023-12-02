@@ -1,7 +1,7 @@
 package com.recom.persistence.message;
 
 import com.recom.dto.message.MessageDto;
-import com.recom.entity.GameMap;
+import com.recom.entity.map.GameMap;
 import com.recom.entity.Message;
 import com.recom.mapper.MessageMapper;
 import lombok.NonNull;

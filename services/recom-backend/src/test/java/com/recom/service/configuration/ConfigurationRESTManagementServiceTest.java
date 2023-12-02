@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.recom.dto.configuration.OverridableConfigurationDto;
 import com.recom.dto.configuration.OverrideConfigurationDto;
 import com.recom.entity.Configuration;
-import com.recom.entity.GameMap;
+import com.recom.entity.map.GameMap;
 import com.recom.model.configuration.ConfigurationType;
 import com.recom.persistence.configuration.ConfigurationPersistenceLayer;
 import com.recom.service.provider.StaticObjectMapperProvider;

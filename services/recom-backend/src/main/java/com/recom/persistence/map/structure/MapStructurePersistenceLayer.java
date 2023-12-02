@@ -1,7 +1,9 @@
 package com.recom.persistence.map.structure;
 
-import com.recom.entity.GameMap;
-import com.recom.entity.MapStructureEntity;
+import com.recom.entity.map.GameMap;
+import com.recom.entity.map.structure.ClassNameEntity;
+import com.recom.entity.map.structure.MapStructureEntity;
+import com.recom.entity.map.structure.PrefabNameEntity;
 import com.recom.event.listener.generic.generic.MapLocatedEntityPersistable;
 import com.recom.model.map.EnumMapDescriptorType;
 import lombok.NonNull;
@@ -14,10 +16,14 @@ import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
-public class MapLocatedStructurePersistenceLayer implements MapLocatedEntityPersistable<MapStructureEntity> {
+public class MapStructurePersistenceLayer implements MapLocatedEntityPersistable<MapStructureEntity> {
 
     @NonNull
     private final MapStructureRepository mapStructureRepository;
+    @NonNull
+    private final ClassNameRepository classNameRepository;
+    @NonNull
+    private final PrefabNameRepository prefabNameRepository;
 
     @NonNull
     public List<MapStructureEntity> saveAll(@NonNull List<MapStructureEntity> distinctEntities) {
@@ -108,6 +114,15 @@ public class MapLocatedStructurePersistenceLayer implements MapLocatedEntityPers
             @NonNull final List<String> descriptorTypes
     ) {
         return mapStructureRepository.findAllByGameMapAndMapDescriptorTypeIn(gameMap, descriptorTypes);
+    }
+
+    @NonNull
+    public List<ClassNameEntity> findAllClassNameEntities() {
+        return classNameRepository.findAll();
+    }
+    @NonNull
+    public List<PrefabNameEntity> findAllPrefabNameEntities() {
+        return prefabNameRepository.findAll();
     }
 
 }

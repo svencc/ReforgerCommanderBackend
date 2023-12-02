@@ -3,14 +3,14 @@ package com.recom.event.listener;
 import com.recom.dto.map.scanner.TransactionIdentifierDto;
 import com.recom.dto.map.scanner.structure.MapStructureEntityDto;
 import com.recom.dto.map.scanner.structure.TransactionalMapStructureEntityPackageDto;
-import com.recom.entity.GameMap;
+import com.recom.entity.map.GameMap;
 import com.recom.event.event.async.map.addmappackage.AddMapPackageAsyncEvent;
 import com.recom.event.event.async.map.commit.CommitMapTransactionAsyncEvent;
 import com.recom.event.event.async.map.open.OpenMapTransactionAsyncEvent;
 import com.recom.event.event.sync.cache.CacheResetSyncEvent;
 import com.recom.model.map.MapTransaction;
 import com.recom.persistence.map.GameMapPersistenceLayer;
-import com.recom.persistence.map.structure.MapLocatedStructurePersistenceLayer;
+import com.recom.persistence.map.structure.MapStructurePersistenceLayer;
 import com.recom.service.map.MapTransactionValidatorService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,7 +38,7 @@ public class MapStructureEntityScannerTransactionEventListenerTest {
     @Mock
     private ApplicationEventPublisher applicationEventPublisher;
     @Mock
-    private MapLocatedStructurePersistenceLayer mapStructurePersistenceLayer;
+    private MapStructurePersistenceLayer mapStructurePersistenceLayer;
     @Mock
     private MapTransactionValidatorService<MapStructureEntityDto, TransactionalMapStructureEntityPackageDto> mapTransactionValidator;
     @Mock

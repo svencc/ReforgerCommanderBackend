@@ -1,4 +1,4 @@
-package com.recom.entity;
+package com.recom.entity.map;
 
 import com.recom.event.listener.generic.maprelated.MapRelatedEntity;
 import jakarta.persistence.*;

@@ -1,4 +1,4 @@
-package com.recom.entity;
+package com.recom.entity.map.structure;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,42 +17,30 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(indexes = {
-        @Index(name = "IDX_name", columnList = "name", unique = false)
-})
+//@Table(indexes = {})
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class GameMap implements Persistable<Long>, Serializable {
+public class PrefabNameEntity implements Persistable<Long>, Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(insertable = true, updatable = false, nullable = false)
     private Long id;
 
+    @Builder.Default
+    @OneToMany(mappedBy = "prefabName", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<MapStructureEntity> mapStructureEntities = new HashSet<>();
+
     @Nationalized
-    @Column(insertable = true, updatable = false, nullable = false, length = 255)
+    @Column(insertable = true, updatable = false, nullable = true, length = 255)
     private String name;
-
-    @Builder.Default
-    @OneToMany(mappedBy = "gameMap", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<MapStructureEntity> mapStructures = new HashSet<>();
-
-    @OneToOne(mappedBy = "gameMap", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private MapTopography mapTopography;
-
-    @Builder.Default
-    @OneToMany(mappedBy = "gameMap", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Configuration> configurations = new HashSet<>();
-
-    @Builder.Default
-    @OneToMany(mappedBy = "gameMap", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Message> messages = new HashSet<>();
 
 
     @Override
     public int hashCode() {
-        return GameMap.class.hashCode();
+        return PrefabNameEntity.class.hashCode();
     }
+
 
     @Override
     public boolean equals(Object obj) {
@@ -63,7 +51,7 @@ public class GameMap implements Persistable<Long>, Serializable {
         } else if (getClass() != obj.getClass()) {
             return false;
         } else {
-            final GameMap other = (GameMap) obj;
+            final PrefabNameEntity other = (PrefabNameEntity) obj;
             if (getId() == null) {
                 return false;
             } else return getId().equals(other.getId());
