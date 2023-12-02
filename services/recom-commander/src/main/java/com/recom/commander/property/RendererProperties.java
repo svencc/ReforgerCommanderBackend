@@ -1,4 +1,4 @@
-package com.recom.client.property;
+package com.recom.commander.property;
 
 import com.recom.tacview.engine.units.PixelDimension;
 import com.recom.tacview.property.ComposerProperties;

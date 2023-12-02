@@ -1,7 +1,7 @@
-package com.recom.client;
+package com.recom.commander;
 
-import com.recom.client.property.RendererProperties;
-import com.recom.client.property.SpringApplicationProperties;
+import com.recom.commander.property.RendererProperties;
+import com.recom.commander.property.SpringApplicationProperties;
 import javafx.application.Application;
 import lombok.NonNull;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,7 +12,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
         SpringApplicationProperties.class,
         RendererProperties.class
 })
-public class RecomClientApplication {
+public class RecomCommanderApplication {
 
     public static void main(@NonNull final String[] args) {
         Application.launch(JavaFxApplication.class, args);

@@ -1,7 +1,6 @@
-package com.recom.client;
+package com.recom.commander;
 
 import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest

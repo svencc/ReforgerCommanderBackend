@@ -1,4 +1,4 @@
-package com.recom.client.event;
+package com.recom.commander.event;
 
 import javafx.stage.Stage;
 import lombok.NonNull;

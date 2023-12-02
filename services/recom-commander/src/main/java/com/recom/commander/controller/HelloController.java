@@ -1,4 +1,4 @@
-package com.recom.client.controller;
+package com.recom.commander.controller;
 
 import com.recom.dto.ServerMessageDto;
 import javafx.fxml.FXML;

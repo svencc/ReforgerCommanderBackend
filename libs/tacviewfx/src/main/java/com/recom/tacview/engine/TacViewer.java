@@ -11,6 +11,7 @@ import com.recom.tacview.service.profiler.TPSCounter;
 import com.recom.tacview.service.tick.TickThresholdCalculator;
 import com.recom.tacview.service.tick.TickerService;
 import com.recom.tacview.strategy.SetFPSStrategy;
+import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.PixelBuffer;
@@ -21,7 +22,6 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.nio.IntBuffer;
-import java.util.concurrent.ExecutorService;
 
 @Component
 public class TacViewer extends Canvas implements Runnable {
@@ -44,8 +44,6 @@ public class TacViewer extends Canvas implements Runnable {
     private final ScreenComposer screenComposer;
     @NonNull
     private final GameTemplate game;
-//    @NonNull
-//    private final InputChannelService inputChannelService;
 
 
     // IMAGE RENDERING BUFFER
@@ -58,12 +56,13 @@ public class TacViewer extends Canvas implements Runnable {
 
     // EXECUTION THREADS
     @Nullable
-    private Thread renderLoopThread;
+    private Thread renderLoopThread = null;
+    private AnimationTimer bufferToCanvasUpdaterLoop = null;
     private boolean running = false;
 
 
-    @Nullable
-    private SetFPSStrategy setFPSStrategy;
+//    @Nullable
+//    private SetFPSStrategy setFPSStrategy;
 
 
     public TacViewer(
@@ -88,6 +87,13 @@ public class TacViewer extends Canvas implements Runnable {
         pixelBuffer = new PixelBuffer<>(rendererProperties.getWidth(), rendererProperties.getHeight(), intBuffer, pixelFormat);
         img = new WritableImage(pixelBuffer);
 
+        bufferToCanvasUpdaterLoop = new AnimationTimer() {
+            @Override
+            public void handle(final long now) {
+                copyComposedBackBufferToCanvasFrontBuffer();
+            }
+        };
+
 
 //        setSize(canvasSize);
 //        setPreferredSize(canvasSize);
@@ -111,10 +117,12 @@ public class TacViewer extends Canvas implements Runnable {
         renderLoopThread = new Thread(this, THREAD_NAME);
         game.run();
         renderLoopThread.start();
+        bufferToCanvasUpdaterLoop.start();
     }
 
     public synchronized void stop() {
         running = false;
+        bufferToCanvasUpdaterLoop.stop();
         try {
             renderLoopThread.join();
         } catch (InterruptedException e) {
@@ -163,7 +171,7 @@ public class TacViewer extends Canvas implements Runnable {
         backBufferIndex = screenComposer.compose();
     }
 
-    public void copyComposedBackBufferToCanvasFrontBuffer() {
+    private void copyComposedBackBufferToCanvasFrontBuffer() {
         pixelBuffer.getBuffer().put(screenComposer.getBackPixelBuffer(backBufferIndex).directBufferAccess());
         pixelBuffer.getBuffer().flip();
         pixelBuffer.updateBuffer(__ -> null);

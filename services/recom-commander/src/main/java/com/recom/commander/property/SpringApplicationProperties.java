@@ -1,4 +1,4 @@
-package com.recom.client.property;
+package com.recom.commander.property;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

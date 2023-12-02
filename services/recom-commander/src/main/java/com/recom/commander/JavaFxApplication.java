@@ -1,6 +1,7 @@
-package com.recom.client;
+package com.recom.commander;
 
-import com.recom.client.event.StageReadyEvent;
+import com.recom.commander.event.ShutdownEvent;
+import com.recom.commander.event.StageReadyEvent;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -18,7 +19,7 @@ public class JavaFxApplication extends Application {
 
     @Override
     public void init() {
-        applicationContext = new SpringApplicationBuilder(RecomClientApplication.class).run();
+        applicationContext = new SpringApplicationBuilder(RecomCommanderApplication.class).run();
     }
 
     @Override
@@ -28,8 +29,10 @@ public class JavaFxApplication extends Application {
 
     @Override
     public void stop() {
-        log.warn("Closing application context...");
+        log.warn("Closing application context ...");
+        applicationContext.publishEvent(new ShutdownEvent(this));
         applicationContext.close();
+        log.warn("Exit ...");
         Platform.exit();
     }
 

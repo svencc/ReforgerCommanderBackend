@@ -53,7 +53,7 @@ class PixelBufferTest {
 
         // ASSERT
         for (int i = 0; i < pixelBufferToTest.getBufferSize(); i++) {
-            assertEquals(0x000000, pixelBufferToTest.scanPixelAtIndex(i));
+            assertEquals(0xff000000, pixelBufferToTest.scanPixelAtIndex(i));
         }
     }
 

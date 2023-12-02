@@ -15,7 +15,7 @@
 
     <modules>
         <module>recom-backend</module>
-        <module>recom-client</module>
+        <module>recom-commander</module>
     </modules>
 
 </project>

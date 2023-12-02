@@ -1,7 +1,8 @@
-package com.recom.client.initializr;
+package com.recom.commander.initializr;
 
-import com.recom.client.event.StageReadyEvent;
-import com.recom.client.property.SpringApplicationProperties;
+import com.recom.commander.event.ShutdownEvent;
+import com.recom.commander.event.StageReadyEvent;
+import com.recom.commander.property.SpringApplicationProperties;
 import com.recom.tacview.engine.GameTemplate;
 import com.recom.tacview.engine.TacViewer;
 import com.recom.tacview.engine.graphics.ScreenComposer;
@@ -18,10 +19,13 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class TacViewStageInitializer implements ApplicationListener<StageReadyEvent> {
@@ -41,20 +45,25 @@ public class TacViewStageInitializer implements ApplicationListener<StageReadyEv
     @NonNull
     private final GameTemplate game;
 
+
+    private Stage stage = null;
+    private TacViewer tacViewer = null;
     private AnimationTimer bufferToCanvasUpdaterLoop = null;
 
     @Override
     public void onApplicationEvent(@NonNull final StageReadyEvent event) {
+        log.info("Initializing TacView ...");
         final Stage tacViewStage = event.getStage();
         populateTacViewStage(tacViewStage);
         tacViewStage.show();
     }
 
     private void populateTacViewStage(@NonNull final Stage canvasStage) {
+        this.stage = canvasStage;
         final BorderPane root = new BorderPane();
-//        root.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
+        root.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
 
-        final TacViewer tacViewer = new TacViewer(
+        tacViewer = new TacViewer(
                 rendererProperties,
                 profilerProvider,
                 tickThresholdCalculator,
@@ -62,22 +71,19 @@ public class TacViewStageInitializer implements ApplicationListener<StageReadyEv
                 screenComposer,
                 game
         );
-
         root.setCenter(tacViewer);
         tacViewer.start();
-
-        bufferToCanvasUpdaterLoop = new AnimationTimer() {
-            @Override
-            public void handle(final long now) {
-                tacViewer.copyComposedBackBufferToCanvasFrontBuffer();
-            }
-        };
-        bufferToCanvasUpdaterLoop.start();
 
         final Scene scene = new Scene(root, rendererProperties.getWidth(), rendererProperties.getHeight());
         canvasStage.setTitle(springApplicationProperties.getName());
         canvasStage.setResizable(false);
         canvasStage.setScene(scene);
+    }
+
+    @EventListener(classes = ShutdownEvent.class)
+    public void shutdown() {
+        log.warn("Shutdown TacView ...");
+        tacViewer.stop();
     }
 
 }
