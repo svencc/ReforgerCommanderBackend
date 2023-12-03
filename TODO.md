@@ -2,6 +2,7 @@
 
 
   * fix MapStructureRepository (see comments)
+  *  hqls are broken! -> fix them!
   * 
   * add metadata to openstransaction!
     * size, width, height
