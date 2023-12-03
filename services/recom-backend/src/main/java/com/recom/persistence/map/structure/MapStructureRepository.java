@@ -31,7 +31,7 @@ interface MapStructureRepository extends JpaRepository<MapStructureEntity, Long>
             SELECT DISTINCT structure.className
               FROM MapStructureEntity structure
              WHERE structure.className IS NOT NULL
-             ORDER BY structure.className ASC
+             ORDER BY structure.className.name ASC
              """)
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< mapMeta Einschränkung
     List<String> projectUtilizedClassNamesByGameMap(@NonNull final GameMap gameMap);
@@ -41,7 +41,7 @@ interface MapStructureRepository extends JpaRepository<MapStructureEntity, Long>
             SELECT DISTINCT structure.resourceName
               FROM MapStructureEntity structure
              WHERE structure.resourceName IS NOT NULL
-             ORDER BY structure.resourceName ASC
+             ORDER BY structure.resourceName.name ASC
             """)
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< mapMeta Einschränkung
     List<String> projectUtilizedResourceNamesByGameMap(@NonNull final GameMap gameMap);
@@ -51,7 +51,7 @@ interface MapStructureRepository extends JpaRepository<MapStructureEntity, Long>
             SELECT DISTINCT structure.prefabName
               FROM MapStructureEntity structure
              WHERE structure.prefabName IS NOT NULL
-             ORDER BY structure.prefabName ASC
+             ORDER BY structure.prefabName.name ASC
             """)
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< mapMeta Einschränkung
     List<String> projectUtilizedPrefabNameByGameMap(@NonNull final GameMap gameMap);
@@ -71,7 +71,7 @@ interface MapStructureRepository extends JpaRepository<MapStructureEntity, Long>
             SELECT DISTINCT structure.mapDescriptorType
               FROM MapStructureEntity structure
              WHERE structure.mapDescriptorType IS NOT NULL
-             ORDER BY structure.mapDescriptorType ASC
+             ORDER BY structure.mapDescriptorType.name ASC
             """)
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< mapMeta Einschränkung
     List<String> projectMapMetaTypesByGameMap(@NonNull final GameMap gameMap);
@@ -83,9 +83,9 @@ interface MapStructureRepository extends JpaRepository<MapStructureEntity, Long>
     );
 
     @NonNull
-    List<MapStructureEntity> findAllByGameMapAndResourceNameIn(
+    List<MapStructureEntity> findAllByGameMapAndResourceNameNameIn(
             @NonNull final GameMap gameMap,
-            @NonNull final List<String> className
+            @NonNull final List<String> names
     );
 
     @NonNull

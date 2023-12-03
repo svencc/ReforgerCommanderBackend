@@ -6,7 +6,7 @@ on:
     paths:
       - libs/**
       - services/recom-client/**
-      - .github/workflows/recom-client.yml
+      - .github/workflows/recom-commander.yml
 
 jobs:
   run:

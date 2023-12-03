@@ -43,7 +43,7 @@ import java.util.stream.Collectors;
 public class ClusteringService {
 
     @NonNull
-    public static final String MAPENTITYPERSISTENCELAYER_GENERATECLUSTERS_CACHE = "MapEntityPersistenceLayer.generateClusters";
+    public static final String CLUSTERINGSERVICE_GENERATECLUSTERS_CACHE = "ClusteringService.generateClusters";
 
     @NonNull
     private final ConfigurationValueProvider configurationValueProvider;
@@ -74,7 +74,7 @@ public class ClusteringService {
         concaveHullGenerator = new ConcaveHull();
     }
 
-    @Cacheable(cacheNames = MAPENTITYPERSISTENCELAYER_GENERATECLUSTERS_CACHE)
+    @Cacheable(cacheNames = CLUSTERINGSERVICE_GENERATECLUSTERS_CACHE)
     public ClusterResponseDto generateClusters(@NonNull final GameMap gameMap) {
         final List<ClusterConfiguration> clusterConfigurations = List.of(
                 ClusterConfiguration.builder()
@@ -94,7 +94,7 @@ public class ClusteringService {
 //                        .build()
         );
         return dbCachedService.proxyToDBCacheSafe(
-                MAPENTITYPERSISTENCELAYER_GENERATECLUSTERS_CACHE,
+                CLUSTERINGSERVICE_GENERATECLUSTERS_CACHE,
                 gameMap.getName(),
                 () -> {
                     ArrayList<ClusterDto> clusterList = clusterConfigurations.stream()

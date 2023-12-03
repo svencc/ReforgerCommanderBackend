@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.function.Supplier;
 
 @Slf4j
@@ -45,8 +47,12 @@ public class DBCachedService {
     ) throws DBCachedDeserializationException {
         return dbCachedPersistenceLayer.<V>get(cacheName, cacheKey)
                 .orElseGet(() -> {
-                            log.debug("Executing cacheLoader {} - {} ", cacheName, cacheKey);
+                            log.debug("Executing cacheLoader {} - {}", cacheName, cacheKey);
+                            final Instant start = Instant.now();
+
                             final V value = cacheLoader.get();
+
+                            log.debug("Executed cacheLoader in {} ms; put value to cache {} - {} now.", ChronoUnit.MILLIS.between(start, Instant.now()), cacheName, cacheKey);
                             dbCachedPersistenceLayer.put(cacheName, cacheKey, value);
 
                             return value;

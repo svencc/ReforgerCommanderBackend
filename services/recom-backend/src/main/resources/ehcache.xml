@@ -43,11 +43,13 @@
     </cache>
 
 
+    <cache alias="ClusteringService.generateClusters" uses-template="recomDefaultCache">
+    </cache>
+
+
     <cache alias="MapStructurePersistenceLayer.findAllByMapNameAndResourceNameIn" uses-template="recomDefaultCache">
     </cache>
     <cache alias="MapStructurePersistenceLayer.findAllTownEntities" uses-template="recomDefaultCache">
-    </cache>
-    <cache alias="MapStructurePersistenceLayer.generateClusters" uses-template="recomDefaultCache">
     </cache>
     <cache alias="MapStructurePersistenceLayer.findAllMapNames" uses-template="recomDefaultCache">
     </cache>

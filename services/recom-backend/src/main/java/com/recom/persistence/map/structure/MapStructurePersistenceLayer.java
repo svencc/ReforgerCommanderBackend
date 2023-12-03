@@ -41,7 +41,8 @@ public class MapStructurePersistenceLayer implements MapLocatedEntityPersistable
             @NonNull final GameMap gameMap,
             @NonNull final List<String> resourceNames
     ) {
-        return mapStructureRepository.findAllByGameMapAndResourceNameIn(gameMap, resourceNames);
+        List<MapStructureEntity> allByGameMapAndResourceNameIn = mapStructureRepository.findAllByGameMapAndResourceNameNameIn(gameMap, resourceNames);
+        return allByGameMapAndResourceNameIn;
     }
 
     @Cacheable(cacheNames = "MapStructurePersistenceLayer.findAllTownEntities")

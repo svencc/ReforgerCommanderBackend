@@ -80,7 +80,7 @@ public class MapClustersController {
         final GameMap gameMap = assertionService.provideMap(clusterRequestDto.getMapName());
 
         return asyncCacheableRequestProcessor.processRequest(
-                ClusteringService.MAPENTITYPERSISTENCELAYER_GENERATECLUSTERS_CACHE,
+                ClusteringService.CLUSTERINGSERVICE_GENERATECLUSTERS_CACHE,
                 clusterRequestDto.getMapName(),
                 () -> clusteringService.generateClusters(gameMap)
         );
