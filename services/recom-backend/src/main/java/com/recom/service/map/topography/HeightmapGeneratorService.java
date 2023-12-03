@@ -1,6 +1,6 @@
 package com.recom.service.map.topography;
 
-import com.recom.entity.MapTopography;
+import com.recom.entity.map.MapTopography;
 import com.recom.model.HeightMapDescriptor;
 import com.recom.model.map.TopographyData;
 import com.recom.service.SerializationService;

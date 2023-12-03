@@ -3,7 +3,7 @@ package com.recom.api.messagebus;
 import com.recom.api.commons.HttpCommons;
 import com.recom.dto.message.MessageBusLongPollRequestDto;
 import com.recom.dto.message.MessageBusResponseDto;
-import com.recom.entity.GameMap;
+import com.recom.entity.map.GameMap;
 import com.recom.service.AssertionService;
 import com.recom.service.ReforgerPayloadParserService;
 import com.recom.service.messagebus.MessageBusService;

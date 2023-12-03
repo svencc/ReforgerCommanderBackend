@@ -3,7 +3,7 @@ package com.recom.service.messagebus;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.recom.dto.message.MessageBusResponseDto;
 import com.recom.dto.message.MessageDto;
-import com.recom.entity.GameMap;
+import com.recom.entity.map.GameMap;
 import com.recom.entity.Message;
 import com.recom.model.message.MessageContainer;
 import com.recom.observer.HasSubject;

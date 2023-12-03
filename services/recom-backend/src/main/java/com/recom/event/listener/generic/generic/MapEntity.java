@@ -1,6 +1,6 @@
 package com.recom.event.listener.generic.generic;
 
-import com.recom.entity.GameMap;
+import com.recom.entity.map.GameMap;
 import org.springframework.lang.Nullable;
 
 public interface MapEntity {

@@ -1,7 +1,7 @@
 package com.recom.persistence.map.topography;
 
-import com.recom.entity.GameMap;
-import com.recom.entity.MapTopography;
+import com.recom.entity.map.GameMap;
+import com.recom.entity.map.MapTopography;
 import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

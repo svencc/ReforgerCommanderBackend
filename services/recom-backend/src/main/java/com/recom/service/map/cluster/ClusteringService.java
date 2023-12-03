@@ -6,11 +6,11 @@ import com.recom.dto.map.cluster.ClusterResponseDto;
 import com.recom.dto.map.cluster.ConcaveHullDto;
 import com.recom.dto.map.cluster.ConvexHullDto;
 import com.recom.dto.map.scanner.structure.MapStructureEntityDto;
-import com.recom.entity.GameMap;
-import com.recom.mapper.MapStructureEntityMapper;
+import com.recom.entity.map.GameMap;
+import com.recom.mapper.mapstructure.MapStructureEntityMapper;
 import com.recom.model.map.ClusterConfiguration;
 import com.recom.persistence.map.GameMapPersistenceLayer;
-import com.recom.persistence.map.structure.MapLocatedStructurePersistenceLayer;
+import com.recom.persistence.map.structure.MapStructurePersistenceLayer;
 import com.recom.service.configuration.ConfigurationDescriptorProvider;
 import com.recom.service.configuration.ConfigurationValueProvider;
 import com.recom.service.dbcached.DBCachedService;
@@ -48,7 +48,7 @@ public class ClusteringService {
     @NonNull
     private final ConfigurationValueProvider configurationValueProvider;
     @NonNull
-    private final MapLocatedStructurePersistenceLayer mapStructurePersistenceLayer;
+    private final MapStructurePersistenceLayer mapStructurePersistenceLayer;
     @NonNull
     private final GameMapPersistenceLayer gameMapPersistenceLayer;
     @NonNull

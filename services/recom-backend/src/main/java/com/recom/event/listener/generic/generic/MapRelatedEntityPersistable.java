@@ -1,6 +1,6 @@
 package com.recom.event.listener.generic.generic;
 
-import com.recom.entity.GameMap;
+import com.recom.entity.map.GameMap;
 import lombok.NonNull;
 
 public interface MapRelatedEntityPersistable<ENTITY_TYPE extends MapEntity> {

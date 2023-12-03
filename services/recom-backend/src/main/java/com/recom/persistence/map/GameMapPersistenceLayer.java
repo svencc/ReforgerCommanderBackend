@@ -1,6 +1,6 @@
 package com.recom.persistence.map;
 
-import com.recom.entity.GameMap;
+import com.recom.entity.map.GameMap;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

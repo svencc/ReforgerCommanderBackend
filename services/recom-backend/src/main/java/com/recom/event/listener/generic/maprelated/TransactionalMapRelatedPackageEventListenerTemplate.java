@@ -1,21 +1,18 @@
 package com.recom.event.listener.generic.maprelated;
 
-import com.recom.entity.GameMap;
+import com.recom.entity.map.GameMap;
 import com.recom.event.BaseRecomEntityScannerEventListener;
 import com.recom.event.listener.generic.generic.MapRelatedEntityPersistable;
 import com.recom.event.listener.generic.generic.TransactionalMapEntityPackable;
 import com.recom.model.map.MapTransaction;
 import com.recom.persistence.map.GameMapPersistenceLayer;
 import com.recom.service.map.MapTransactionValidatorService;
-import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /*
@@ -65,7 +62,6 @@ public abstract class TransactionalMapRelatedPackageEventListenerTemplate<
                     final Boolean transactionExecuted = transactionTemplate.execute(status -> {
                         entityPersistenceLayer.deleteMapEntities(maybeGameMap.get());
                         entityPersistenceLayer.save(entity);
-//                        gameMapPersistenceLayer.save(maybeGameMap.get()); // @TODO DELETE THIS LINE
                         log.info("Transaction named {} persisted!", sessionIdentifier);
 
                         return true;

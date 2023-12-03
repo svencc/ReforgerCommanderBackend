@@ -1,6 +1,6 @@
 package com.recom.model.message;
 
-import com.recom.entity.GameMap;
+import com.recom.entity.map.GameMap;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

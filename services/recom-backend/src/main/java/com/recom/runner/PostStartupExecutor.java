@@ -20,6 +20,7 @@ public class PostStartupExecutor implements ApplicationRunner {
     @NonNull
     private final List<PostStartExecutable> registeredPostStarters = new ArrayList<>();
 
+
     public void registerPostStartRunner(@NonNull final PostStartExecutable runner) {
         log.info("Register '{}' for post startup execution.", runner.identifyPostStartRunner());
         registeredPostStarters.add(runner);
