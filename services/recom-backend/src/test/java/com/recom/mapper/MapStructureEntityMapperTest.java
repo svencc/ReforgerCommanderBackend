@@ -3,7 +3,8 @@ package com.recom.mapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.recom.dto.map.scanner.structure.MapStructureEntityDto;
-import com.recom.entity.MapStructureEntity;
+import com.recom.entity.map.structure.*;
+import com.recom.mapper.mapstructure.MapStructureEntityMapper;
 import com.recom.service.provider.StaticObjectMapperProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -56,10 +57,10 @@ class MapStructureEntityMapperTest {
         // Assert
         assertEquals(entityId, entityToTest.getEntityId());
         assertNull(entityToTest.getName());
-        assertEquals(dto.getClassName(), entityToTest.getClassName());
-        assertEquals(prefabName, entityToTest.getPrefabName());
-        assertEquals(resourceName, entityToTest.getResourceName());
-        assertEquals(mapTypeDescriptor, entityToTest.getMapDescriptorType());
+        assertNull(entityToTest.getClassName());
+        assertNull(entityToTest.getPrefabName());
+        assertNull(entityToTest.getResourceName());
+        assertNull(entityToTest.getMapDescriptorType());
         assertEquals(objectMapper.writeValueAsString(rotationX), entityToTest.getRotationX());
         assertEquals(objectMapper.writeValueAsString(rotationY), entityToTest.getRotationY());
         assertEquals(objectMapper.writeValueAsString(rotationZ), entityToTest.getRotationZ());
@@ -83,10 +84,10 @@ class MapStructureEntityMapperTest {
         final MapStructureEntity entity = MapStructureEntity.builder()
                 .entityId(entityId)
                 .name(null)
-                .className(className)
-                .prefabName(prefabName)
-                .resourceName(resourceName)
-                .mapDescriptorType(mapTypeDescriptor)
+                .className(ClassNameEntity.builder().name(className).build())
+                .prefabName(PrefabNameEntity.builder().name(prefabName).build())
+                .resourceName(ResourceNameEntity.builder().name(resourceName).build())
+                .mapDescriptorType(MapDescriptorTypeEntity.builder().name(mapTypeDescriptor).build())
                 .rotationX(objectMapper.writeValueAsString(rotationX))
                 .rotationY(objectMapper.writeValueAsString(rotationY))
                 .rotationZ(objectMapper.writeValueAsString(rotationZ))

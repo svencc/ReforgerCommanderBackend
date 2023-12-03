@@ -3,7 +3,7 @@ package com.recom.api.map;
 import com.recom.api.commons.HttpCommons;
 import com.recom.dto.map.renderer.MapRenderResponseDto;
 import com.recom.dto.map.renderer.MapRendererRequestDto;
-import com.recom.entity.GameMap;
+import com.recom.entity.map.GameMap;
 import com.recom.service.AssertionService;
 import com.recom.service.ReforgerPayloadParserService;
 import com.recom.service.dbcached.AsyncCacheableRequestProcessor;

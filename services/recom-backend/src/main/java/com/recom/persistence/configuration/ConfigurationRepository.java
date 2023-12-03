@@ -1,7 +1,7 @@
 package com.recom.persistence.configuration;
 
 import com.recom.entity.Configuration;
-import com.recom.entity.GameMap;
+import com.recom.entity.map.GameMap;
 import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

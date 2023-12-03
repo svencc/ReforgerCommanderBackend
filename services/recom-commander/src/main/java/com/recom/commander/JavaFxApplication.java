@@ -1,0 +1,39 @@
+package com.recom.commander;
+
+import com.recom.commander.event.ShutdownEvent;
+import com.recom.commander.event.StageReadyEvent;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.stage.Stage;
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.lang.Nullable;
+
+@Slf4j
+public class JavaFxApplication extends Application {
+
+    @Nullable
+    private ConfigurableApplicationContext applicationContext;
+
+    @Override
+    public void init() {
+        applicationContext = new SpringApplicationBuilder(RecomCommanderApplication.class).run();
+    }
+
+    @Override
+    public void start(@NonNull final Stage stage) {
+        applicationContext.publishEvent(new StageReadyEvent(stage));
+    }
+
+    @Override
+    public void stop() {
+        log.warn("Closing application context ...");
+        applicationContext.publishEvent(new ShutdownEvent(this));
+        applicationContext.close();
+        log.warn("Exit ...");
+        Platform.exit();
+    }
+
+}

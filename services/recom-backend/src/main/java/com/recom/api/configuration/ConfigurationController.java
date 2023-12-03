@@ -3,7 +3,7 @@ package com.recom.api.configuration;
 import com.recom.api.commons.HttpCommons;
 import com.recom.dto.configuration.OverridableConfigurationDto;
 import com.recom.dto.configuration.OverrideConfigurationDto;
-import com.recom.entity.GameMap;
+import com.recom.entity.map.GameMap;
 import com.recom.event.event.async.cache.CacheResetAsyncEvent;
 import com.recom.service.AssertionService;
 import com.recom.service.configuration.ConfigurationRESTManagementService;

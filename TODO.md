@@ -1,12 +1,19 @@
 # TODO LIST
 
-* better integrate TacView
-  * use virtual thread pool for TacView renderer
 
-* normalize gameMap entities
-  * gameMap-meta-entity
-    * size
+  * fix MapStructureRepository (see comments)
+  * 
+  * add metadata to openstransaction!
+    * size, width, height
+    * @Embeddable for rotation
     * ocean_base_height
+
+* load map into tacviewer
+* panning
+* zooming (scaling)
+* add scale bar
+* add measurement tool
+* add menu
 
 * scanner -> qubus
 * Cache Reset Map Exists!

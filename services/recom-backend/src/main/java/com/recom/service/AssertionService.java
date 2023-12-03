@@ -1,6 +1,6 @@
 package com.recom.service;
 
-import com.recom.entity.GameMap;
+import com.recom.entity.map.GameMap;
 import com.recom.exception.HttpNotFoundException;
 import com.recom.service.map.GameMapService;
 import jakarta.validation.constraints.NotNull;

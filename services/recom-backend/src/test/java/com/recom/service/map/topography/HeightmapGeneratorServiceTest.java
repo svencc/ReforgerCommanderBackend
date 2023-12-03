@@ -1,7 +1,7 @@
 package com.recom.service.map.topography;
 
-import com.recom.entity.GameMap;
-import com.recom.entity.MapTopography;
+import com.recom.entity.map.GameMap;
+import com.recom.entity.map.MapTopography;
 import com.recom.model.map.TopographyData;
 import com.recom.service.SerializationService;
 import com.recom.testhelper.SerializeObjectHelper;

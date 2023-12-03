@@ -1,6 +1,6 @@
 package com.recom.event.listener.generic.maplocated;
 
-import com.recom.entity.GameMap;
+import com.recom.entity.map.GameMap;
 import com.recom.event.BaseRecomEntityScannerEventListener;
 import com.recom.event.listener.generic.generic.MapLocatedEntityPersistable;
 import com.recom.event.listener.generic.generic.TransactionalMapEntityPackable;
@@ -13,6 +13,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -62,17 +63,18 @@ public abstract class TransactionalMapLocatedPackageEventListenerTemplate<
                 final Optional<GameMap> maybeGameMap = gameMapPersistenceLayer.findByName(sessionIdentifier);
 
                 if (maybeGameMap.isPresent()) {
+                    entityMapper.init();
+
                     final List<ENTITY_TYPE> distinctEntities = existingTransaction.getPackages().stream()
                             .flatMap(packageDto -> packageDto.getEntities().stream())
                             .distinct()
-                            .map(entityMapper::toEntity)
+                            .map((x)-> entityMapper.toEntity(x))
                             .peek(mapEntity -> mapEntity.setGameMap(maybeGameMap.get()))
                             .collect(Collectors.toList());
 
                     log.info("... persist {} entities.", distinctEntities.size());
 
                     final Boolean transactionExecuted = transactionTemplate.execute(status -> {
-
                         entityPersistenceLayer.deleteMapEntities(maybeGameMap.get());
                         distinctEntities.forEach(entity -> entity.setGameMap(maybeGameMap.get()));
                         entityPersistenceLayer.saveAll(distinctEntities);

@@ -1,12 +1,13 @@
 package com.recom.service.configuration;
 
 import com.recom.entity.Configuration;
-import com.recom.entity.GameMap;
-import com.recom.entity.MapStructureEntity;
+import com.recom.entity.map.GameMap;
+import com.recom.entity.map.structure.MapStructureEntity;
+import com.recom.entity.map.structure.ResourceNameEntity;
 import com.recom.event.event.async.cache.CacheResetAsyncEvent;
 import com.recom.model.configuration.descriptor.RegisteredListConfigurationValueDescriptor;
 import com.recom.persistence.configuration.ConfigurationPersistenceLayer;
-import com.recom.persistence.map.structure.MapLocatedStructurePersistenceLayer;
+import com.recom.persistence.map.structure.MapStructurePersistenceLayer;
 import com.recom.service.map.GameMapService;
 import com.recom.service.provider.StaticObjectMapperProvider;
 import lombok.NonNull;
@@ -36,7 +37,7 @@ public class ConfigurationMapToolsService {
     @NonNull
     private final ConfigurationPersistenceLayer configurationPersistenceLayer;
     @NonNull
-    private final MapLocatedStructurePersistenceLayer mapStructurePersistenceLayer;
+    private final MapStructurePersistenceLayer mapStructurePersistenceLayer;
 
     @NonNull
     @Transactional(readOnly = false)
@@ -75,6 +76,7 @@ public class ConfigurationMapToolsService {
                             .toList();
                     final List<String> matchedResourcesByPrefabs = mapStructurePersistenceLayer.findAllByPrefabIn(gameMap, matchedPrefabs).stream()
                             .map(MapStructureEntity::getResourceName)
+                            .map(ResourceNameEntity::getName)
                             .toList();
                     resourcesToAdd.addAll(matchedResourcesByPrefabs);
 
@@ -83,6 +85,7 @@ public class ConfigurationMapToolsService {
                             .toList();
                     final List<String> matchedResourcesByClasses = mapStructurePersistenceLayer.findAllByClassIn(gameMap, matchedClasses).stream()
                             .map(MapStructureEntity::getResourceName)
+                            .map(ResourceNameEntity::getName)
                             .toList();
                     resourcesToAdd.addAll(matchedResourcesByClasses);
 
@@ -91,6 +94,7 @@ public class ConfigurationMapToolsService {
                             .toList();
                     final List<String> matchedResourcesByMapDescriptorTypes = mapStructurePersistenceLayer.findAllByMapDescriptorTypeIn(gameMap, matchedMapDescriptorTypes).stream()
                             .map(MapStructureEntity::getResourceName)
+                            .map(ResourceNameEntity::getName)
                             .toList();
                     resourcesToAdd.addAll(matchedResourcesByMapDescriptorTypes);
                 });

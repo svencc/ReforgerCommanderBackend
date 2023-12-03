@@ -1,7 +1,7 @@
 package com.recom.persistence.map.topography;
 
-import com.recom.entity.GameMap;
-import com.recom.entity.MapTopography;
+import com.recom.entity.map.GameMap;
+import com.recom.entity.map.MapTopography;
 import com.recom.event.listener.generic.generic.MapRelatedEntityPersistable;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

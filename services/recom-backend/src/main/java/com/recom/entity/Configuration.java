@@ -1,5 +1,6 @@
 package com.recom.entity;
 
+import com.recom.entity.map.GameMap;
 import com.recom.model.configuration.ConfigurationType;
 import jakarta.persistence.*;
 import lombok.*;

@@ -1,7 +1,7 @@
 package com.recom.api.configuration;
 
 import com.recom.api.commons.HttpCommons;
-import com.recom.entity.GameMap;
+import com.recom.entity.map.GameMap;
 import com.recom.service.AssertionService;
 import com.recom.service.configuration.ConfigurationDescriptorProvider;
 import com.recom.service.configuration.ConfigurationMapToolsService;
