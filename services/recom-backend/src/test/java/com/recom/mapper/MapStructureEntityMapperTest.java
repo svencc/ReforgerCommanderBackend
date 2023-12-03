@@ -3,9 +3,7 @@ package com.recom.mapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.recom.dto.map.scanner.structure.MapStructureEntityDto;
-import com.recom.entity.map.structure.ClassNameEntity;
-import com.recom.entity.map.structure.MapStructureEntity;
-import com.recom.entity.map.structure.PrefabNameEntity;
+import com.recom.entity.map.structure.*;
 import com.recom.mapper.mapstructure.MapStructureEntityMapper;
 import com.recom.service.provider.StaticObjectMapperProvider;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,8 +59,8 @@ class MapStructureEntityMapperTest {
         assertNull(entityToTest.getName());
         assertNull(entityToTest.getClassName());
         assertNull(entityToTest.getPrefabName());
-        assertEquals(resourceName, entityToTest.getResourceName());
-        assertEquals(mapTypeDescriptor, entityToTest.getMapDescriptorType());
+        assertNull(entityToTest.getResourceName());
+        assertNull(entityToTest.getMapDescriptorType());
         assertEquals(objectMapper.writeValueAsString(rotationX), entityToTest.getRotationX());
         assertEquals(objectMapper.writeValueAsString(rotationY), entityToTest.getRotationY());
         assertEquals(objectMapper.writeValueAsString(rotationZ), entityToTest.getRotationZ());
@@ -88,8 +86,8 @@ class MapStructureEntityMapperTest {
                 .name(null)
                 .className(ClassNameEntity.builder().name(className).build())
                 .prefabName(PrefabNameEntity.builder().name(prefabName).build())
-                .resourceName(resourceName)
-                .mapDescriptorType(mapTypeDescriptor)
+                .resourceName(ResourceNameEntity.builder().name(resourceName).build())
+                .mapDescriptorType(MapDescriptorTypeEntity.builder().name(mapTypeDescriptor).build())
                 .rotationX(objectMapper.writeValueAsString(rotationX))
                 .rotationY(objectMapper.writeValueAsString(rotationY))
                 .rotationZ(objectMapper.writeValueAsString(rotationZ))

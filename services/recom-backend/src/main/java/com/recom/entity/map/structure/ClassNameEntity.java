@@ -17,7 +17,9 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-//@Table(indexes = {})
+@Table(indexes = {
+        @Index(name = "IDX_name", columnList = "name", unique = true)
+})
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class ClassNameEntity implements Persistable<Long>, Serializable {

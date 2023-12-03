@@ -1,9 +1,7 @@
 package com.recom.persistence.map.structure;
 
 import com.recom.entity.map.GameMap;
-import com.recom.entity.map.structure.ClassNameEntity;
-import com.recom.entity.map.structure.MapStructureEntity;
-import com.recom.entity.map.structure.PrefabNameEntity;
+import com.recom.entity.map.structure.*;
 import com.recom.event.listener.generic.generic.MapLocatedEntityPersistable;
 import com.recom.model.map.EnumMapDescriptorType;
 import lombok.NonNull;
@@ -24,6 +22,10 @@ public class MapStructurePersistenceLayer implements MapLocatedEntityPersistable
     private final ClassNameRepository classNameRepository;
     @NonNull
     private final PrefabNameRepository prefabNameRepository;
+    @NonNull
+    private final ResourceNameRepository resourceNameRepository;
+    @NonNull
+    private final MapDescriptorTypeRepository mapDescriptorTypeRepository;
 
     @NonNull
     public List<MapStructureEntity> saveAll(@NonNull List<MapStructureEntity> distinctEntities) {
@@ -120,9 +122,20 @@ public class MapStructurePersistenceLayer implements MapLocatedEntityPersistable
     public List<ClassNameEntity> findAllClassNameEntities() {
         return classNameRepository.findAll();
     }
+
     @NonNull
     public List<PrefabNameEntity> findAllPrefabNameEntities() {
         return prefabNameRepository.findAll();
+    }
+
+    @NonNull
+    public List<ResourceNameEntity> findAllResourceNameEntities() {
+        return resourceNameRepository.findAll();
+    }
+
+    @NonNull
+    public List<MapDescriptorTypeEntity> findAllMapDescriptorTypeEntities() {
+        return mapDescriptorTypeRepository.findAll();
     }
 
 }

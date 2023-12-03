@@ -3,6 +3,7 @@ package com.recom.service.configuration;
 import com.recom.entity.Configuration;
 import com.recom.entity.map.GameMap;
 import com.recom.entity.map.structure.MapStructureEntity;
+import com.recom.entity.map.structure.ResourceNameEntity;
 import com.recom.event.event.async.cache.CacheResetAsyncEvent;
 import com.recom.model.configuration.descriptor.RegisteredListConfigurationValueDescriptor;
 import com.recom.persistence.configuration.ConfigurationPersistenceLayer;
@@ -75,6 +76,7 @@ public class ConfigurationMapToolsService {
                             .toList();
                     final List<String> matchedResourcesByPrefabs = mapStructurePersistenceLayer.findAllByPrefabIn(gameMap, matchedPrefabs).stream()
                             .map(MapStructureEntity::getResourceName)
+                            .map(ResourceNameEntity::getName)
                             .toList();
                     resourcesToAdd.addAll(matchedResourcesByPrefabs);
 
@@ -83,6 +85,7 @@ public class ConfigurationMapToolsService {
                             .toList();
                     final List<String> matchedResourcesByClasses = mapStructurePersistenceLayer.findAllByClassIn(gameMap, matchedClasses).stream()
                             .map(MapStructureEntity::getResourceName)
+                            .map(ResourceNameEntity::getName)
                             .toList();
                     resourcesToAdd.addAll(matchedResourcesByClasses);
 
@@ -91,6 +94,7 @@ public class ConfigurationMapToolsService {
                             .toList();
                     final List<String> matchedResourcesByMapDescriptorTypes = mapStructurePersistenceLayer.findAllByMapDescriptorTypeIn(gameMap, matchedMapDescriptorTypes).stream()
                             .map(MapStructureEntity::getResourceName)
+                            .map(ResourceNameEntity::getName)
                             .toList();
                     resourcesToAdd.addAll(matchedResourcesByMapDescriptorTypes);
                 });

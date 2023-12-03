@@ -19,16 +19,11 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(indexes = {
-//        @Index(name = "IDX_gameMap_className", columnList = "game_map_id, className", unique = false),
-//        @Index(name = "IDX_gameMap_prefabName", columnList = "game_map_id, prefabName", unique = false),
-        @Index(name = "IDX_gameMap_resourceName", columnList = "game_map_id, resourceName", unique = false),
-        @Index(name = "IDX_gameMap_mapDescriptorType", columnList = "game_map_id, mapDescriptorType", unique = false),
         @Index(name = "IDX_gameMap_name", columnList = "game_map_id, name", unique = false),
-//        @Index(name = "IDX_gameMap_coordinates", columnList = "game_map_id, coordinateX, coordinateY, coordinateZ", unique = false),
-//        @Index(name = "IDX_gameMap_coordinateX", columnList = "game_map_id, coordinateX", unique = false),
-//        @Index(name = "IDX_gameMap_coordinateY", columnList = "game_map_id, coordinateY", unique = false),
-//        @Index(name = "IDX_gameMap_coordinateZ", columnList = "game_map_id, coordinateZ", unique = false),
-//        @Index(name = "IDX_gameMap_coordinate_xz", columnList = "game_map_id, coordinateX, coordinateZ,", unique = false)
+        @Index(name = "IDX_gameMap_className", columnList = "game_map_id, class_name_id", unique = false),
+        @Index(name = "IDX_gameMap_prefabName", columnList = "game_map_id, prefab_name_id", unique = false),
+        @Index(name = "IDX_gameMap_resourceName", columnList = "game_map_id, resource_name_id", unique = false),
+        @Index(name = "IDX_gameMap_mapDescriptorType", columnList = "game_map_id, map_descriptor_type_id", unique = false)
 })
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -50,19 +45,17 @@ public class MapStructureEntity implements Persistable<Long>, Serializable, MapL
     @Column(insertable = true, updatable = false, nullable = true, length = 255)
     private String name;
 
-    @ManyToOne(optional = false, fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToOne(optional = true, fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private ClassNameEntity className;
 
-    @ManyToOne(optional = false, fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToOne(optional = true, fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private PrefabNameEntity prefabName;
 
-    @Lob
-    @Nationalized
-    @Column(insertable = true, updatable = false, nullable = true)
-    private String resourceName;
+    @ManyToOne(optional = true, fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    private ResourceNameEntity resourceName;
 
-    @Column(insertable = true, updatable = false, nullable = true)
-    private String mapDescriptorType;
+    @ManyToOne(optional = true, fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    private MapDescriptorTypeEntity mapDescriptorType;
 
     @Lob
     @Column(insertable = true, updatable = false, nullable = true)

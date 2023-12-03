@@ -3,10 +3,7 @@ package com.recom.mapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.recom.dto.map.scanner.structure.MapStructureEntityDto;
-import com.recom.entity.map.structure.ClassNameEntity;
 import com.recom.entity.map.structure.MapStructureEntity;
-import com.recom.entity.map.structure.PrefabNameEntity;
-import com.recom.mapper.mapstructure.MapStructureEntityMapper;
 import com.recom.mapper.mapstructure.MapStructureEntitySuperMapper;
 import com.recom.persistence.map.structure.MapStructurePersistenceLayer;
 import com.recom.service.provider.StaticObjectMapperProvider;
@@ -71,14 +68,19 @@ class MapStructureEntitySuperMapperTest {
         // Assert
         assertEquals(entityId, entityToTest.getEntityId());
         assertNull(entityToTest.getName());
+
         assertNotNull(entityToTest.getClassName());
         assertEquals(className, entityToTest.getClassName().getName());
 
         assertNotNull(entityToTest.getPrefabName());
         assertEquals(prefabName, entityToTest.getPrefabName().getName());
 
-        assertEquals(resourceName, entityToTest.getResourceName());
-        assertEquals(mapTypeDescriptor, entityToTest.getMapDescriptorType());
+        assertNotNull(entityToTest.getResourceName());
+        assertEquals(resourceName, entityToTest.getResourceName().getName());
+
+        assertNotNull(entityToTest.getMapDescriptorType());
+        assertEquals(mapTypeDescriptor, entityToTest.getMapDescriptorType().getName());
+
         assertEquals(objectMapper.writeValueAsString(rotationX), entityToTest.getRotationX());
         assertEquals(objectMapper.writeValueAsString(rotationY), entityToTest.getRotationY());
         assertEquals(objectMapper.writeValueAsString(rotationZ), entityToTest.getRotationZ());

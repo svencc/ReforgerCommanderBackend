@@ -1,10 +1,12 @@
 # TODO LIST
 
-* normalize gameMap entities
-  * gameMap-meta-entity
-    * size
+
+  * fix MapStructureRepository (see comments)
+  * 
+  * add metadata to openstransaction!
+    * size, width, height
+    * @Embeddable for rotation
     * ocean_base_height
-    * fix MapStructureRepository (see comments)
 
 * load map into tacviewer
 * panning

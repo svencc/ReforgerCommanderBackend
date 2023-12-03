@@ -1,9 +1,7 @@
 package com.recom.mapper.mapstructure;
 
 import com.recom.dto.map.scanner.structure.MapStructureEntityDto;
-import com.recom.entity.map.structure.ClassNameEntity;
-import com.recom.entity.map.structure.MapStructureEntity;
-import com.recom.entity.map.structure.PrefabNameEntity;
+import com.recom.entity.map.structure.*;
 import com.recom.event.listener.generic.maplocated.TransactionalMapLocatedEntityMappable;
 import com.recom.persistence.map.structure.MapStructurePersistenceLayer;
 import lombok.RequiredArgsConstructor;
@@ -23,11 +21,19 @@ public class MapStructureEntitySuperMapper implements TransactionalMapLocatedEnt
     private final Map<String, ClassNameEntity> newClassNameEntities = new HashMap();
     @NonNull
     private final Map<String, PrefabNameEntity> newPrefabNameEntities = new HashMap();
+    @NonNull
+    private final Map<String, ResourceNameEntity> newResourceNameEntities = new HashMap();
+    @NonNull
+    private final Map<String, MapDescriptorTypeEntity> newMapDescriptorTypeEntities = new HashMap();
 
     @NonNull
     private final Map<String, ClassNameEntity> indexedExistingClassNameEntities = new HashMap();
     @NonNull
     private final Map<String, PrefabNameEntity> indexedExistingPrefabNameEntities = new HashMap();
+    @NonNull
+    private final Map<String, ResourceNameEntity> indexedExistingResourceNameEntities = new HashMap();
+    @NonNull
+    private final Map<String, MapDescriptorTypeEntity> indexedMapDescriptorTypeEntities = new HashMap();
 
 
     @Override
@@ -50,6 +56,16 @@ public class MapStructureEntitySuperMapper implements TransactionalMapLocatedEnt
                 mapStructurePersistenceLayer.findAllPrefabNameEntities().stream()
                         .collect(Collectors.toMap(PrefabNameEntity::getName, Function.identity()))
         );
+
+        indexedExistingResourceNameEntities.putAll(
+                mapStructurePersistenceLayer.findAllResourceNameEntities().stream()
+                        .collect(Collectors.toMap(ResourceNameEntity::getName, Function.identity()))
+        );
+
+        indexedMapDescriptorTypeEntities.putAll(
+                mapStructurePersistenceLayer.findAllMapDescriptorTypeEntities().stream()
+                        .collect(Collectors.toMap(MapDescriptorTypeEntity::getName, Function.identity()))
+        );
     }
 
     @NonNull
@@ -58,6 +74,8 @@ public class MapStructureEntitySuperMapper implements TransactionalMapLocatedEnt
 
         augmentWithClassNameEntity(mapStructureEntityDto, preparedStructure);
         augmentWithPrefabNameEntity(mapStructureEntityDto, preparedStructure);
+        augmentWithResourceNameEntity(mapStructureEntityDto, preparedStructure);
+        augmentMapDescriptorTypeEntity(mapStructureEntityDto, preparedStructure);
 
         return preparedStructure;
     }
@@ -66,7 +84,9 @@ public class MapStructureEntitySuperMapper implements TransactionalMapLocatedEnt
             @NonNull final MapStructureEntityDto structureDto,
             @NonNull final MapStructureEntity mapStructureEntity
     ) {
-        if (indexedExistingClassNameEntities.containsKey(structureDto.getClassName())) {
+        if (structureDto.getClassName() == null || structureDto.getClassName().isBlank()) {
+            return;
+        } else if (indexedExistingClassNameEntities.containsKey(structureDto.getClassName())) {
             mapStructureEntity.setClassName(indexedExistingClassNameEntities.get(structureDto.getClassName()));
         } else if (newClassNameEntities.containsKey(structureDto.getClassName())) {
             mapStructureEntity.setClassName(newClassNameEntities.get(structureDto.getClassName()));
@@ -83,7 +103,9 @@ public class MapStructureEntitySuperMapper implements TransactionalMapLocatedEnt
             @NonNull final MapStructureEntityDto structureDto,
             @NonNull final MapStructureEntity mapStructureEntity
     ) {
-        if (indexedExistingPrefabNameEntities.containsKey(structureDto.getPrefabName())) {
+        if (structureDto.getPrefabName() == null || structureDto.getPrefabName().isBlank()) {
+            return;
+        } else if (indexedExistingPrefabNameEntities.containsKey(structureDto.getPrefabName())) {
             mapStructureEntity.setPrefabName(indexedExistingPrefabNameEntities.get(structureDto.getPrefabName()));
         } else if (newPrefabNameEntities.containsKey(structureDto.getPrefabName())) {
             mapStructureEntity.setPrefabName(newPrefabNameEntities.get(structureDto.getPrefabName()));
@@ -93,6 +115,44 @@ public class MapStructureEntitySuperMapper implements TransactionalMapLocatedEnt
                     .build();
             newPrefabNameEntities.put(structureDto.getPrefabName(), newEntity);
             mapStructureEntity.setPrefabName(newEntity);
+        }
+    }
+
+    private void augmentWithResourceNameEntity(
+            @NonNull final MapStructureEntityDto structureDto,
+            @NonNull final MapStructureEntity mapStructureEntity
+    ) {
+        if (structureDto.getResourceName() == null || structureDto.getResourceName().isBlank()) {
+            return;
+        } else if (indexedExistingResourceNameEntities.containsKey(structureDto.getResourceName())) {
+            mapStructureEntity.setResourceName(indexedExistingResourceNameEntities.get(structureDto.getResourceName()));
+        } else if (newResourceNameEntities.containsKey(structureDto.getResourceName())) {
+            mapStructureEntity.setResourceName(newResourceNameEntities.get(structureDto.getResourceName()));
+        } else {
+            final ResourceNameEntity newEntity = ResourceNameEntity.builder()
+                    .name(structureDto.getResourceName())
+                    .build();
+            newResourceNameEntities.put(structureDto.getResourceName(), newEntity);
+            mapStructureEntity.setResourceName(newEntity);
+        }
+    }
+
+    private void augmentMapDescriptorTypeEntity(
+            @NonNull final MapStructureEntityDto structureDto,
+            @NonNull final MapStructureEntity mapStructureEntity
+    ) {
+        if (structureDto.getMapDescriptorType() == null || structureDto.getMapDescriptorType().isBlank()) {
+            return;
+        } else if (indexedMapDescriptorTypeEntities.containsKey(structureDto.getMapDescriptorType())) {
+            mapStructureEntity.setMapDescriptorType(indexedMapDescriptorTypeEntities.get(structureDto.getMapDescriptorType()));
+        } else if (newMapDescriptorTypeEntities.containsKey(structureDto.getMapDescriptorType())) {
+            mapStructureEntity.setMapDescriptorType(newMapDescriptorTypeEntities.get(structureDto.getMapDescriptorType()));
+        } else {
+            final MapDescriptorTypeEntity newEntity = MapDescriptorTypeEntity.builder()
+                    .name(structureDto.getMapDescriptorType())
+                    .build();
+            newMapDescriptorTypeEntities.put(structureDto.getMapDescriptorType(), newEntity);
+            mapStructureEntity.setMapDescriptorType(newEntity);
         }
     }
 

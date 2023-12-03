@@ -22,7 +22,7 @@ import java.util.Set;
 })
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class PrefabNameEntity implements Persistable<Long>, Serializable {
+public class ResourceNameEntity implements Persistable<Long>, Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -30,7 +30,7 @@ public class PrefabNameEntity implements Persistable<Long>, Serializable {
     private Long id;
 
     @Builder.Default
-    @OneToMany(mappedBy = "prefabName", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "resourceName", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MapStructureEntity> mapStructureEntities = new HashSet<>();
 
     @Nationalized
@@ -40,7 +40,7 @@ public class PrefabNameEntity implements Persistable<Long>, Serializable {
 
     @Override
     public int hashCode() {
-        return PrefabNameEntity.class.hashCode();
+        return ResourceNameEntity.class.hashCode();
     }
 
 
@@ -53,7 +53,7 @@ public class PrefabNameEntity implements Persistable<Long>, Serializable {
         } else if (getClass() != obj.getClass()) {
             return false;
         } else {
-            final PrefabNameEntity other = (PrefabNameEntity) obj;
+            final ResourceNameEntity other = (ResourceNameEntity) obj;
             if (getId() == null) {
                 return false;
             } else return getId().equals(other.getId());
