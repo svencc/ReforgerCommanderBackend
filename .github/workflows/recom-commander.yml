@@ -12,4 +12,4 @@ jobs:
   run:
     uses: ./.github/workflows/service-workflow.yml
     with:
-      service: recom-client
+      service: recom-commander
