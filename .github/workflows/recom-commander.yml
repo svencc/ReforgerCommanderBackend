@@ -1,4 +1,4 @@
-name: recom-client
+name: recom-commander
 
 on:
   push:
