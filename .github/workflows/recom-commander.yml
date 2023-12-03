@@ -5,7 +5,7 @@ on:
     branches: [ develop ]
     paths:
       - libs/**
-      - services/recom-client/**
+      - services/recom-commander/**
       - .github/workflows/recom-commander.yml
 
 jobs:
