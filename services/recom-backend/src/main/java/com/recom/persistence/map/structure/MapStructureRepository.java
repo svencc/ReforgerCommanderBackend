@@ -28,58 +28,58 @@ interface MapStructureRepository extends JpaRepository<MapStructureEntity, Long>
 
     @NonNull
     @Query(value = """
-            SELECT DISTINCT structure.className
+            SELECT DISTINCT structure.className.name
               FROM MapStructureEntity structure
-             WHERE structure.className IS NOT NULL
+             WHERE structure.gameMap = :gameMap
+               AND structure.className IS NOT NULL
              ORDER BY structure.className.name ASC
              """)
-// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< mapMeta Einschränkung
     List<String> projectUtilizedClassNamesByGameMap(@NonNull final GameMap gameMap);
 
     @NonNull
     @Query(value = """
-            SELECT DISTINCT structure.resourceName
+            SELECT DISTINCT structure.resourceName.name
               FROM MapStructureEntity structure
-             WHERE structure.resourceName IS NOT NULL
+             WHERE structure.gameMap = :gameMap
+               AND structure.resourceName IS NOT NULL
              ORDER BY structure.resourceName.name ASC
             """)
-// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< mapMeta Einschränkung
     List<String> projectUtilizedResourceNamesByGameMap(@NonNull final GameMap gameMap);
 
     @NonNull
     @Query(value = """
-            SELECT DISTINCT structure.prefabName
+            SELECT DISTINCT structure.prefabName.name
               FROM MapStructureEntity structure
-             WHERE structure.prefabName IS NOT NULL
+             WHERE structure.gameMap = :gameMap
+               AND structure.prefabName IS NOT NULL
              ORDER BY structure.prefabName.name ASC
             """)
-// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< mapMeta Einschränkung
     List<String> projectUtilizedPrefabNameByGameMap(@NonNull final GameMap gameMap);
 
     @NonNull
     @Query(value = """
             SELECT DISTINCT structure.name
               FROM MapStructureEntity structure
-             WHERE structure.name IS NOT NULL
+             WHERE structure.gameMap = :gameMap
+               AND structure.name IS NOT NULL
              ORDER BY structure.name ASC
             """)
-// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< mapMeta Einschränkung
     List<String> projectNamedEntitiesByGameMap(@NonNull final GameMap gameMap);
 
     @NonNull
     @Query(value = """
-            SELECT DISTINCT structure.mapDescriptorType
+            SELECT DISTINCT structure.mapDescriptorType.name
               FROM MapStructureEntity structure
-             WHERE structure.mapDescriptorType IS NOT NULL
+             WHERE structure.gameMap = :gameMap
+               AND structure.mapDescriptorType IS NOT NULL
              ORDER BY structure.mapDescriptorType.name ASC
             """)
-// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< mapMeta Einschränkung
     List<String> projectMapMetaTypesByGameMap(@NonNull final GameMap gameMap);
 
     @NonNull
-    List<MapStructureEntity> findAllByGameMapAndMapDescriptorTypeIn(
+    List<MapStructureEntity> findAllByGameMapAndMapDescriptorTypeNameIn(
             @NonNull final GameMap gameMap,
-            @NonNull final List<String> descriptorTypes
+            @NonNull final List<String> names
     );
 
     @NonNull
@@ -89,15 +89,15 @@ interface MapStructureRepository extends JpaRepository<MapStructureEntity, Long>
     );
 
     @NonNull
-    List<MapStructureEntity> findAllByGameMapAndPrefabNameIn(
+    List<MapStructureEntity> findAllByGameMapAndPrefabNameNameIn(
             @NonNull final GameMap gameMap,
-            @NonNull final List<String> prefabNames
+            @NonNull final List<String> names
     );
 
     @NonNull
-    List<MapStructureEntity> findAllByGameMapAndClassNameIn(
+    List<MapStructureEntity> findAllByGameMapAndClassNameNameIn(
             @NonNull final GameMap gameMap,
-            @NonNull final List<String> classNames
+            @NonNull final List<String> names
     );
 
 }

@@ -1,14 +1,12 @@
 # TODO LIST
 
+# 1
+* add metadata to openstransaction!
+  * size, width, height
+  * @Embeddable for rotation
+  * ocean_base_height
 
-  * fix MapStructureRepository (see comments)
-  *  hqls are broken! -> fix them!
-  * 
-  * add metadata to openstransaction!
-    * size, width, height
-    * @Embeddable for rotation
-    * ocean_base_height
-
+# 1
 * load map into tacviewer
 * panning
 * zooming (scaling)
@@ -16,6 +14,7 @@
 * add measurement tool
 * add menu
 
+# 2
 * scanner -> qubus
 * Cache Reset Map Exists!
 * Account Settings are also cached -> reset when creating new account!....

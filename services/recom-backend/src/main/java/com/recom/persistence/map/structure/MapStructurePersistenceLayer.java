@@ -47,7 +47,7 @@ public class MapStructurePersistenceLayer implements MapLocatedEntityPersistable
 
     @Cacheable(cacheNames = "MapStructurePersistenceLayer.findAllTownEntities")
     public List<MapStructureEntity> findAllTownEntities(@NonNull final GameMap gameMap) {
-        return mapStructureRepository.findAllByGameMapAndMapDescriptorTypeIn(gameMap, Stream.of(
+        return mapStructureRepository.findAllByGameMapAndMapDescriptorTypeNameIn(gameMap, Stream.of(
                         EnumMapDescriptorType.MDT_NAME_SETTLEMENT,
                         EnumMapDescriptorType.MDT_NAME_CITY,
                         EnumMapDescriptorType.MDT_NAME_TOWN,
@@ -98,7 +98,7 @@ public class MapStructurePersistenceLayer implements MapLocatedEntityPersistable
             @NonNull final GameMap gameMap,
             @NonNull final List<String> prefabNames
     ) {
-        return mapStructureRepository.findAllByGameMapAndPrefabNameIn(gameMap, prefabNames);
+        return mapStructureRepository.findAllByGameMapAndPrefabNameNameIn(gameMap, prefabNames);
     }
 
     @NonNull
@@ -107,7 +107,7 @@ public class MapStructurePersistenceLayer implements MapLocatedEntityPersistable
             @NonNull final GameMap gameMap,
             @NonNull final List<String> classNames
     ) {
-        return mapStructureRepository.findAllByGameMapAndClassNameIn(gameMap, classNames);
+        return mapStructureRepository.findAllByGameMapAndClassNameNameIn(gameMap, classNames);
     }
 
     @NonNull
@@ -116,7 +116,7 @@ public class MapStructurePersistenceLayer implements MapLocatedEntityPersistable
             @NonNull final GameMap gameMap,
             @NonNull final List<String> descriptorTypes
     ) {
-        return mapStructureRepository.findAllByGameMapAndMapDescriptorTypeIn(gameMap, descriptorTypes);
+        return mapStructureRepository.findAllByGameMapAndMapDescriptorTypeNameIn(gameMap, descriptorTypes);
     }
 
     @NonNull
