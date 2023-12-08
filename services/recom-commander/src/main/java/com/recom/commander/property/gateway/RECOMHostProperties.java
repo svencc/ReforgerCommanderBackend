@@ -1,20 +1,21 @@
-package com.recom.tacview.property;
+package com.recom.commander.property.gateway;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Configuration
-@ConfigurationProperties("renderer.composer")
-public class ComposerProperties {
+@ConfigurationProperties("recom.host")
+public class RECOMHostProperties {
 
-    private int backBufferSize;
+    private String protocol;
+    private String hostname;
+    private String port;
+    private String hostBasePath;
 
 }

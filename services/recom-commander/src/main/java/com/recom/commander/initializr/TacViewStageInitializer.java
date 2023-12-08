@@ -3,6 +3,7 @@ package com.recom.commander.initializr;
 import com.recom.commander.event.ShutdownEvent;
 import com.recom.commander.event.StageReadyEvent;
 import com.recom.commander.property.SpringApplicationProperties;
+import com.recom.commander.service.gateway.MapTopographyGateway;
 import com.recom.tacview.engine.GameTemplate;
 import com.recom.tacview.engine.TacViewer;
 import com.recom.tacview.engine.graphics.ScreenComposer;
@@ -45,6 +46,9 @@ public class TacViewStageInitializer implements ApplicationListener<StageReadyEv
     @NonNull
     private final GameTemplate game;
 
+    @NonNull
+    private final MapTopographyGateway mapTopographyGateway;
+
 
     private Stage stage = null;
     private TacViewer tacViewer = null;
@@ -73,6 +77,10 @@ public class TacViewStageInitializer implements ApplicationListener<StageReadyEv
         );
         root.setCenter(tacViewer);
         tacViewer.start();
+
+        tacViewer.setOnMouseClicked(event -> {
+            mapTopographyGateway.provideMapTopographyData();
+        });
 
         final Scene scene = new Scene(root, rendererProperties.getWidth(), rendererProperties.getHeight());
         canvasStage.setTitle(springApplicationProperties.getName());
