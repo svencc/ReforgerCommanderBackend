@@ -8,12 +8,12 @@ import java.nio.file.Path;
 public class TestProperties extends DynamicProperties {
 
     @Override
-    String getApplicationName() {
+    public String getApplicationName() {
         return "RECOMCommander";
     }
 
     @Override
-    Path getPropertiesBasePath() {
+    public Path getPropertiesBasePath() {
         return PropertiesTest.TEST_BASE_PATH;
     }
 

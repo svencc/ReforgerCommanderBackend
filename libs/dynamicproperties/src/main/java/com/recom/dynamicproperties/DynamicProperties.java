@@ -28,11 +28,11 @@ public abstract class DynamicProperties {
 
 
     @Nullable
-    Path getPropertiesBasePath() {
+    public Path getPropertiesBasePath() {
         return null;
     }
 
-    abstract String getApplicationName();
+    public abstract String getApplicationName();
 
     abstract String getPropertyFileName();
 
