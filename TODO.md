@@ -1,5 +1,17 @@
 # TODO LIST
 
+
+* configurable rest call
+* loggable rest call
+* user property system (/)
+* basic property editor
+* AUTHENTICATION
+* synchronize renderer (max frames?)
+  * in relation to ring buffer size
+  * fps output
+    * renderer
+    * javafx
+
 # 1
 * add metadata to openstransaction!
   * size, width, height
