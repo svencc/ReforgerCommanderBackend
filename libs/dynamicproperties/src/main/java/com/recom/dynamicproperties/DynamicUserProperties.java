@@ -6,7 +6,7 @@ import java.util.Optional;
 public abstract class DynamicUserProperties extends DynamicProperties {
 
     @Override
-    Path getPropertiesPath() {
+    Path getPropertiesBasePath() {
         return Path.of(Optional.ofNullable(System.getProperty("user.home"))
                 .orElseThrow(() -> Exceptional.whenPropertyNotSet("user.home")));
     }

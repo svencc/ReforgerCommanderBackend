@@ -20,13 +20,13 @@ class DynamicPropertySystem<T extends DynamicProperties> {
     private final T dynamicPropertyObject;
     @NonNull
     private final ConversionService conversionService;
-    
+
 
     public DynamicPropertySystem(
             @NonNull final T dynamicPropertyObject,
             @NonNull final ConversionService conversionService
     ) {
-        this.basePath = dynamicPropertyObject.getPropertiesPath();
+        this.basePath = dynamicPropertyObject.getPropertiesBasePath();
         this.dynamicPropertyObject = dynamicPropertyObject;
         this.conversionService = conversionService;
         loadOrCreateFromFilesystem();

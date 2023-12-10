@@ -1,14 +1,16 @@
 package com.recom.commander.property.user;
 
 import com.recom.dynamicproperties.DynamicUserProperties;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserProperties extends DynamicUserProperties {
-
-    public UserProperties() {
-        super();
-    }
 
     @Override
     public String getApplicationName() {
@@ -20,8 +22,13 @@ public class UserProperties extends DynamicUserProperties {
         return "user";
     }
 
+    @Builder.Default
     private String protocol = "http";
+
+    @Builder.Default
     private String hostname = "localhost";
+
+    @Builder.Default
     private String port = "8080";
 
 }

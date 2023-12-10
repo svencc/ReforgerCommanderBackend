@@ -11,23 +11,37 @@ import java.util.Properties;
 
 public abstract class DynamicProperties {
 
+    @NonNull
+    private static List<String> EXCLUDED_FIELDS = List.of(
+            "this",
+            "dynamicPropertySystem",
+            "properties",
+            "propertiesBasePath",
+            "applicationName",
+            "propertyFileName"
+    );
+
     DynamicPropertySystem<? extends DynamicProperties> dynamicPropertySystem;
 
     final Properties properties = new Properties();
 
 
-    public abstract String getApplicationName();
 
     @Nullable
-    Path getPropertiesPath() {
+    Path getPropertiesBasePath() {
         return null;
     }
+
+    abstract String getApplicationName();
 
     abstract String getPropertyFileName();
 
     @NonNull
     List<Field> listDynamicProperties() {
-        return Arrays.asList(getClass().getDeclaredFields());
+        final List<Field> fields = Arrays.asList(getClass().getDeclaredFields());
+        fields.removeIf(field -> EXCLUDED_FIELDS.contains(field.getName()));
+
+        return fields;
     }
 
     public void persist() {
