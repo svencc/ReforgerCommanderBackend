@@ -1,10 +1,10 @@
 package com.recom.dynamicproperties;
 
-import lombok.Data;
+import lombok.Getter;
 
 import java.nio.file.Path;
 
-@Data
+@Getter
 public class TestProperties extends DynamicProperties {
 
     @Override
