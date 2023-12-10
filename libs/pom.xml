@@ -21,6 +21,7 @@
         <module>maze</module>
         <module>tacviewfx</module>
         <module>javafxdependencies</module>
+        <module>dynamicproperties</module>
     </modules>
 
     <dependencies>

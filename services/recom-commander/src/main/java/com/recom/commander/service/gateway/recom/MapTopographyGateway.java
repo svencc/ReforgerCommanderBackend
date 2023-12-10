@@ -1,4 +1,4 @@
-package com.recom.commander.service.gateway;
+package com.recom.commander.service.gateway.recom;
 
 import com.recom.commander.exception.HttpErrorException;
 import com.recom.commander.exception.RequestLogger;

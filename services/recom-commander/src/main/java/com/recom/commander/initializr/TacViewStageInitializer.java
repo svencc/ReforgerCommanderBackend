@@ -3,7 +3,9 @@ package com.recom.commander.initializr;
 import com.recom.commander.event.ShutdownEvent;
 import com.recom.commander.event.StageReadyEvent;
 import com.recom.commander.property.SpringApplicationProperties;
-import com.recom.commander.service.gateway.MapTopographyGateway;
+import com.recom.commander.property.user.UserProperties;
+import com.recom.commander.service.gateway.recom.MapTopographyGateway;
+import com.recom.dynamicproperties.PropertyBinder;
 import com.recom.tacview.engine.GameTemplate;
 import com.recom.tacview.engine.TacViewer;
 import com.recom.tacview.engine.graphics.ScreenComposer;
@@ -48,6 +50,8 @@ public class TacViewStageInitializer implements ApplicationListener<StageReadyEv
 
     @NonNull
     private final MapTopographyGateway mapTopographyGateway;
+    @NonNull
+    private final PropertyBinder propertyBinder;
 
 
     private Stage stage = null;
@@ -78,8 +82,23 @@ public class TacViewStageInitializer implements ApplicationListener<StageReadyEv
         root.setCenter(tacViewer);
         tacViewer.start();
 
+//        tacViewer.setOnMouseClicked(event -> {
+//            mapTopographyGateway.provideMapTopographyData();
+//        });
         tacViewer.setOnMouseClicked(event -> {
-            mapTopographyGateway.provideMapTopographyData();
+            UserProperties userProperties = new UserProperties();
+            propertyBinder.bindToFilesystem(userProperties);
+            log.info("UserProperties synchronised: {}", userProperties);
+
+
+            userProperties.setProtocol("udp");
+            userProperties.setHostname("horst");
+            userProperties.setPort("1234");
+            userProperties.persist();
+            log.info("UserProperties saved: {}", userProperties);
+
+            userProperties.load();
+            log.info("UserProperties loaded(2): {}", userProperties);
         });
 
         final Scene scene = new Scene(root, rendererProperties.getWidth(), rendererProperties.getHeight());

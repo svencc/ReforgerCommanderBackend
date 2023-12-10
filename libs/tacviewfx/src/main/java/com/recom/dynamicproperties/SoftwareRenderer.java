@@ -1,4 +1,4 @@
-package com.recom.tacview.engine.graphics.renderer;
+package com.recom.dynamicproperties;
 
 import com.recom.tacview.property.RendererProperties;
 import com.recom.tacview.service.argb.ARGBCalculatorProvider;
