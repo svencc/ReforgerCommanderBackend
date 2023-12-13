@@ -16,6 +16,12 @@
 
     <dependencies>
 
+        <dependency>
+            <groupId>com.recom</groupId>
+            <artifactId>recom-observer</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+
         <!-- SPRING BOOT -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

@@ -15,7 +15,6 @@ public class PropertyBinder {
     @NonNull
     private final ConversionService conversionService;
 
-
     @NonNull
     public <T extends DynamicProperties> void bindToFilesystem(@NonNull final T dynamicProperties) {
         final DynamicPropertySystem<T> dynamicPropertySystem = new DynamicPropertySystem(

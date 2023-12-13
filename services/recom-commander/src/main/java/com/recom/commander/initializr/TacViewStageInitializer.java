@@ -3,9 +3,8 @@ package com.recom.commander.initializr;
 import com.recom.commander.event.ShutdownEvent;
 import com.recom.commander.event.StageReadyEvent;
 import com.recom.commander.property.SpringApplicationProperties;
-import com.recom.commander.property.user.UserProperties;
+import com.recom.commander.property.user.HostProperties;
 import com.recom.commander.service.gateway.recom.MapTopographyGateway;
-import com.recom.dynamicproperties.PropertyBinder;
 import com.recom.tacview.engine.GameTemplate;
 import com.recom.tacview.engine.TacViewer;
 import com.recom.tacview.engine.graphics.ScreenComposer;
@@ -51,7 +50,7 @@ public class TacViewStageInitializer implements ApplicationListener<StageReadyEv
     @NonNull
     private final MapTopographyGateway mapTopographyGateway;
     @NonNull
-    private final PropertyBinder propertyBinder;
+    private final HostProperties hostProperties;
 
 
     private Stage stage = null;
@@ -86,19 +85,18 @@ public class TacViewStageInitializer implements ApplicationListener<StageReadyEv
 //            mapTopographyGateway.provideMapTopographyData();
 //        });
         tacViewer.setOnMouseClicked(event -> {
-            UserProperties userProperties = new UserProperties();
-            propertyBinder.bindToFilesystem(userProperties);
-            log.info("UserProperties synchronised: {}", userProperties);
+            hostProperties.load();
+            log.info("UserProperties synchronised: {}", hostProperties);
 
 
-            userProperties.setProtocol("udp");
-            userProperties.setHostname("horst");
-            userProperties.setPort("1234");
-            userProperties.persist();
-            log.info("UserProperties saved: {}", userProperties);
+            hostProperties.setProtocol("udp");
+            hostProperties.setHostname("horst");
+            hostProperties.setPort("1234");
+            hostProperties.persist();
+            log.info("UserProperties saved: {}", hostProperties);
 
-            userProperties.load();
-            log.info("UserProperties loaded(2): {}", userProperties);
+            hostProperties.load();
+            log.info("UserProperties loaded(2): {}", hostProperties);
         });
 
         final Scene scene = new Scene(root, rendererProperties.getWidth(), rendererProperties.getHeight());

@@ -1,16 +1,18 @@
 package com.recom.commander.property.user;
 
-import com.recom.dynamicproperties.DynamicUserProperties;
+import com.recom.dynamicproperties.ObservableDynamicUserProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Duration;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserProperties extends DynamicUserProperties {
+public class HostProperties extends ObservableDynamicUserProperties<HostProperties> {
 
     @Override
     public String getApplicationName() {
@@ -19,7 +21,7 @@ public class UserProperties extends DynamicUserProperties {
 
     @Override
     public String getPropertyFileName() {
-        return "user";
+        return "host";
     }
 
     @Builder.Default
@@ -30,5 +32,12 @@ public class UserProperties extends DynamicUserProperties {
 
     @Builder.Default
     private String port = "8080";
+
+    @Builder.Default
+    private Duration duration = Duration.ofSeconds(10);
+
+    public String getHostBasePath() {
+        return protocol + "://" + hostname + ":" + port;
+    }
 
 }
