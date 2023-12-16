@@ -2,17 +2,16 @@ package com.recom.commander.service.gateway.recom;
 
 import com.recom.commander.exception.HttpErrorException;
 import com.recom.commander.exception.RequestLogger;
+import com.recom.commander.property.RECOMRestClientProvider;
 import com.recom.commander.property.gateway.MapTopographyGatewayProperties;
 import com.recom.dto.map.topography.HeightMapDescriptorDto;
 import com.recom.dto.map.topography.MapTopographyRequestDto;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -24,17 +23,17 @@ import java.util.Map;
 public class MapTopographyGateway {
 
     @NonNull
-    @Qualifier("recomRestClient")
-    private final RestClient recomRestClient;
+    private final RECOMRestClientProvider recomRestClientProvider;
     @NonNull
     private final RequestLogger requestLogger;
     @NonNull
     private final MapTopographyGatewayProperties mapTopographyGatewayProperties;
 
+
     @NonNull
     public HeightMapDescriptorDto provideMapTopographyData() throws HttpErrorException {
         final Instant start = Instant.now();
-        final ResponseEntity<HeightMapDescriptorDto> responseEntity = recomRestClient
+        final ResponseEntity<HeightMapDescriptorDto> responseEntity = recomRestClientProvider.provide()
                 .post()
                 .uri(mapTopographyGatewayProperties.getEndpoint())
                 .accept(MediaType.APPLICATION_JSON)
@@ -66,7 +65,8 @@ public class MapTopographyGateway {
                 .buildAndExpand(uriVariables);
 //                .buildAndExpand(1);
 
-        ResponseEntity<HeightMapDescriptorDto> topography = recomRestClient.get()
+        ResponseEntity<HeightMapDescriptorDto> topography = recomRestClientProvider.provide()
+                .get()
                 .uri(localhost.toUri())
 //                .uri("/persons/1")
                 .accept(MediaType.APPLICATION_JSON)
@@ -93,8 +93,6 @@ public class MapTopographyGateway {
 
 //        https://stackoverflow.com/questions/8297215/spring-resttemplate-get-with-parameters
 //        https://docs.spring.io/spring-framework/reference/integration/rest-clients.html#rest-http-interface
-
-
     }
 
 }

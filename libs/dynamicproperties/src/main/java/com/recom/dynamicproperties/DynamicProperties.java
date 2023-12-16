@@ -27,14 +27,14 @@ public abstract class DynamicProperties {
 
 
 
-    @Nullable
-    public Path getPropertiesBasePath() {
-        return null;
-    }
+    @NonNull
+    public abstract Path getPropertiesBasePath();
 
+    @NonNull
     public abstract String getApplicationName();
 
-    abstract String getPropertyFileName();
+    @NonNull
+    public abstract String getPropertyFileName();
 
     @NonNull
     List<Field> listDynamicProperties() {

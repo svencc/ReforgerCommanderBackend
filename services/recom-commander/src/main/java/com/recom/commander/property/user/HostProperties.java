@@ -1,10 +1,7 @@
 package com.recom.commander.property.user;
 
 import com.recom.dynamicproperties.ObservableDynamicUserProperties;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.Duration;
 
@@ -14,11 +11,13 @@ import java.time.Duration;
 @AllArgsConstructor
 public class HostProperties extends ObservableDynamicUserProperties<HostProperties> {
 
+    @NonNull
     @Override
     public String getApplicationName() {
         return "RECOMCommander";
     }
 
+    @NonNull
     @Override
     public String getPropertyFileName() {
         return "host";

@@ -1,5 +1,8 @@
 # TODO LIST
 
+filewatcher works; but does not recreate original default values;
+* add default values to application.properties !?
+
 # 0
 * configurable rest call
 * loggable rest call
@@ -12,6 +15,8 @@
   * fps output
     * renderer
     * javafx
+
+------------------------------------------------------------
 
 # 1
 * add metadata to openstransaction!
@@ -26,6 +31,9 @@
 * add scale bar
 * add measurement tool
 * add menu
+
+# 1.1
+* Spring Boot Executors -> use virtual threads
 
 # 2
 * scanner -> qubus

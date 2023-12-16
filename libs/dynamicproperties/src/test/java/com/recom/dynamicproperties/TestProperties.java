@@ -20,7 +20,7 @@ public class TestProperties extends DynamicProperties {
     }
 
     @Override
-    String getPropertyFileName() {
+    public String getPropertyFileName() {
         return "file";
     }
 
