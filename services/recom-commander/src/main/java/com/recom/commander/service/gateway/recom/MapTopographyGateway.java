@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -25,14 +26,14 @@ public class MapTopographyGateway {
     @NonNull
     private final RECOMRestClientProvider recomRestClientProvider;
     @NonNull
-    private final RequestLogger requestLogger;
-    @NonNull
     private final MapTopographyGatewayProperties mapTopographyGatewayProperties;
+    @NonNull
+    private final RequestLogger requestLogger;
 
 
     @NonNull
-    public HeightMapDescriptorDto provideMapTopographyData() throws HttpErrorException {
-        final Instant start = Instant.now();
+    public HeightMapDescriptorDto provideMapTopographyData() throws HttpErrorException, ResourceAccessException {
+        final Instant started = Instant.now();
         final ResponseEntity<HeightMapDescriptorDto> responseEntity = recomRestClientProvider.provide()
                 .post()
                 .uri(mapTopographyGatewayProperties.getEndpoint())
@@ -42,14 +43,8 @@ public class MapTopographyGateway {
                         .build()
                 )
                 .retrieve()
-                .onStatus(
-                        httpStatus -> !httpStatus.is2xxSuccessful(),
-                        requestLogger::logRequestInErrorCase
-                )
-                .onStatus(
-                        HttpStatusCode::is2xxSuccessful,
-                        (request, response) -> requestLogger.profileRequest(start)
-                )
+                .onStatus(httpStatus -> !httpStatus.is2xxSuccessful(), requestLogger::logRequestInErrorCase)
+                .onStatus(HttpStatusCode::is2xxSuccessful, (request, response) -> requestLogger.profileRequest(request, response, started))
                 .toEntity(HeightMapDescriptorDto.class);
 
         return responseEntity.getBody();

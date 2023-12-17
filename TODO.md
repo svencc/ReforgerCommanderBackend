@@ -1,11 +1,10 @@
 # TODO LIST
 
 # 0
-* configurable rest call
-* loggable rest call
-* user property system (/)
-* basic property editor
 * AUTHENTICATION
+* (test Duration Logger)
+* 
+* basic property editor
 * 
 * synchronize renderer (max frames?)
   * in relation to ring buffer size

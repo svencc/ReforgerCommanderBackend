@@ -81,9 +81,10 @@ public class TacViewStageInitializer implements ApplicationListener<StageReadyEv
         root.setCenter(tacViewer);
         tacViewer.start();
 
-//        tacViewer.setOnMouseClicked(event -> {
-//            mapTopographyGateway.provideMapTopographyData();
-//        });
+        tacViewer.setOnMouseClicked(event -> {
+            mapTopographyGateway.provideMapTopographyData();
+        });
+        /*
         tacViewer.setOnMouseClicked(event -> {
             hostProperties.load();
             log.info("UserProperties synchronised: {}", hostProperties);
@@ -98,6 +99,7 @@ public class TacViewStageInitializer implements ApplicationListener<StageReadyEv
             hostProperties.load();
             log.info("UserProperties loaded(2): {}", hostProperties);
         });
+        */
 
         final Scene scene = new Scene(root, rendererProperties.getWidth(), rendererProperties.getHeight());
         canvasStage.setTitle(springApplicationProperties.getName());
