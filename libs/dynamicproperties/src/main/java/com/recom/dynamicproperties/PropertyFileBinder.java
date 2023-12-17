@@ -5,12 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
-import java.nio.file.Path;
-import java.util.Optional;
-
 @Component
 @RequiredArgsConstructor
-public class PropertyBinder {
+public class PropertyFileBinder {
 
     @NonNull
     private final ConversionService conversionService;

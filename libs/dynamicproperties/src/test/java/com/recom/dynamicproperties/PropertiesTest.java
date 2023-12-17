@@ -19,7 +19,7 @@ class PropertiesTest {
     final static Path TEST_BASE_PATH = Path.of("src/test/resources/testpath");
     final static Path PATH_TO_TESTFILE = TEST_BASE_PATH.resolve("RECOMCommander").resolve("file.properties");
 
-    private PropertyBinder propertyBinder;
+    private PropertyFileBinder propertyFileBinder;
     private ConversionService conversionService;
 
     @BeforeEach
@@ -28,7 +28,7 @@ class PropertiesTest {
         bean.afterPropertiesSet();
         conversionService = bean.getObject();
 
-        propertyBinder = new PropertyBinder(conversionService);
+        propertyFileBinder = new PropertyFileBinder(conversionService);
     }
 
     @Test
@@ -41,7 +41,7 @@ class PropertiesTest {
         final TestProperties testProperties = new TestProperties();
 
         // Act 1
-        propertyBinder.bindToFilesystem(testProperties); // if not extists, create with default values
+        propertyFileBinder.bindToFilesystem(testProperties); // if not extists, create with default values
 
         // Assert Object
         assertEquals("http", testProperties.getProtocol());

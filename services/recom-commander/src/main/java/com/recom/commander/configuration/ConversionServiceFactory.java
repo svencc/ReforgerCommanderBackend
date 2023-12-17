@@ -12,12 +12,6 @@ public class ConversionServiceFactory {
     @Bean
     public ConversionService conversionService() {
         return new DefaultFormattingConversionService();
-//        DefaultFormattingConversionServiceFactoryBean bean = new DefaultFormattingConversionServiceF();
-//        ConversionServiceFactoryBean bean = new ConversionServiceFactoryBean();
-////        bean.setConverters(...); //add converters
-//        bean.afterPropertiesSet();
-//
-//        return bean.getObject();
     }
 
 }
