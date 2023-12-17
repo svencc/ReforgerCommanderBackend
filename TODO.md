@@ -1,8 +1,5 @@
 # TODO LIST
 
-filewatcher works; but does not recreate original default values;
-* add default values to application.properties !?
-
 # 0
 * configurable rest call
 * loggable rest call

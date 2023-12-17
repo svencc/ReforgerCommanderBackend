@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 class DynamicPropertySystem<T extends DynamicProperties> {
 
@@ -112,7 +115,43 @@ class DynamicPropertySystem<T extends DynamicProperties> {
     }
 
     private void createWithDefaultProperties() throws InitializationException {
+        copyValuesFromDefaultConstructedInstance();
         persistObjectToProperties();
+    }
+
+    /**
+     * Creates a new instance of the same class as the dynamicPropertyObject and copies all values from the default instance to the dynamicPropertyObject.
+     * This is done to ensure that all properties are present in the properties file.
+     */
+    private void copyValuesFromDefaultConstructedInstance() {
+        // create a new instance of the same class as the dynamicPropertyObject
+        final DynamicProperties dynamicPropertyWithDefaults;
+        try {
+            dynamicPropertyWithDefaults = dynamicPropertyObject.getClass().getDeclaredConstructor().newInstance();
+        } catch (ReflectiveOperationException e) {
+            throw new InitializationException(e.getMessage());
+        }
+
+        // create a map of all fields of the default instance
+        final Map<String, Field> indexedFieldsWithOriginalValues = dynamicPropertyWithDefaults.listDynamicProperties().stream()
+                .peek((final Field field) -> field.setAccessible(true))
+                .collect(Collectors.toMap(Field::getName, Function.identity()));
+
+        // copy all values from the default instance to the dynamicPropertyObject
+        dynamicPropertyObject.listDynamicProperties().forEach((final Field propertyField) -> {
+            final boolean originalAccessibleState = propertyField.canAccess(dynamicPropertyObject);
+            propertyField.setAccessible(true);
+            final Field fieldWithDefaultValue = indexedFieldsWithOriginalValues.get(propertyField.getName());
+
+            try {
+                final Object defaultValue = fieldWithDefaultValue.get(dynamicPropertyWithDefaults);
+                propertyField.set(dynamicPropertyObject, defaultValue);
+            } catch (IllegalAccessException e) {
+                throw new InitializationException(e.getMessage());
+            }
+
+            propertyField.setAccessible(originalAccessibleState);
+        });
     }
 
     @NonNull
