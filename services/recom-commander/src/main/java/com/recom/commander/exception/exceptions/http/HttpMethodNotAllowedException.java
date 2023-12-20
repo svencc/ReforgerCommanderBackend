@@ -1,11 +1,11 @@
-package com.recom.commander.exception;
+package com.recom.commander.exception.exceptions.http;
 
 import lombok.NonNull;
 import org.springframework.lang.Nullable;
 
-public class HttpTooManyRequestsException extends HttpErrorException {
+public class HttpMethodNotAllowedException extends HttpErrorException {
 
-    public HttpTooManyRequestsException(
+    public HttpMethodNotAllowedException(
             @NonNull final String message,
             @Nullable final String responseBody
     ) {

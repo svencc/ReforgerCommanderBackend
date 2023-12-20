@@ -1,11 +1,11 @@
-package com.recom.commander.exception;
+package com.recom.commander.exception.exceptions.http;
 
 import lombok.NonNull;
 import org.springframework.lang.Nullable;
 
-public class HttpUnauthorizedException extends HttpErrorException {
+public class HttpBadRequestException extends HttpErrorException {
 
-    public HttpUnauthorizedException(
+    public HttpBadRequestException(
             @NonNull final String message,
             @Nullable final String responseBody
     ) {

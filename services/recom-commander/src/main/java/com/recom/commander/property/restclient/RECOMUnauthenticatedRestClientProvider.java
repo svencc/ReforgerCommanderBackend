@@ -1,5 +1,6 @@
-package com.recom.commander.property;
+package com.recom.commander.property.restclient;
 
+import com.recom.commander.property.RestClientProperties;
 import com.recom.commander.property.user.HostProperties;
 import com.recom.observer.Notification;
 import com.recom.observer.ObserverTemplate;
@@ -13,7 +14,7 @@ import org.springframework.web.client.RestClient;
 
 @Slf4j
 @Service
-public class RECOMRestClientProvider extends ObserverTemplate<HostProperties> {
+public class RECOMUnauthenticatedRestClientProvider extends ObserverTemplate<HostProperties> {
 
     @NonNull
     private final RestClientProperties restClientProperties;
@@ -24,8 +25,10 @@ public class RECOMRestClientProvider extends ObserverTemplate<HostProperties> {
     @Nullable
     private RestClient restClient;
 
+    //TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    //TODO rework this class
 
-    public RECOMRestClientProvider(
+    public RECOMUnauthenticatedRestClientProvider(
             @NonNull final RestClientProperties restClientProperties,
             @NonNull final HostProperties hostProperties
     ) {
@@ -60,8 +63,9 @@ public class RECOMRestClientProvider extends ObserverTemplate<HostProperties> {
             @NonNull final Subjective<HostProperties> subject,
             @NonNull final Notification<HostProperties> notification
     ) {
-        log.info("HostProperties changed. Creating new RestClient.");
+        log.info("HostProperties changed. Creating new UnauthenticatedRestClient.");
         restClient = createNewRestClient();
     }
+
 
 }

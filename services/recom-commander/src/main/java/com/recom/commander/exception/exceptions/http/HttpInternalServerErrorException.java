@@ -1,11 +1,11 @@
-package com.recom.commander.exception;
+package com.recom.commander.exception.exceptions.http;
 
 import lombok.NonNull;
 import org.springframework.lang.Nullable;
 
-public class HttpForbiddenException extends HttpErrorException {
+public class HttpInternalServerErrorException extends HttpErrorException {
 
-    public HttpForbiddenException(
+    public HttpInternalServerErrorException(
             @NonNull final String message,
             @Nullable final String responseBody
     ) {

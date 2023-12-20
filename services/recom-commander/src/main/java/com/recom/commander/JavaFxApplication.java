@@ -2,6 +2,7 @@ package com.recom.commander;
 
 import com.recom.commander.event.ShutdownEvent;
 import com.recom.commander.event.StageReadyEvent;
+import com.recom.commander.exception.GlobalExceptionHandler;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -20,6 +21,8 @@ public class JavaFxApplication extends Application {
     @Override
     public void init() {
         applicationContext = new SpringApplicationBuilder(RecomCommanderApplication.class).run();
+        final GlobalExceptionHandler globalExceptionHandler = (GlobalExceptionHandler) applicationContext.getBean("globalExceptionHandler");
+        Thread.setDefaultUncaughtExceptionHandler(globalExceptionHandler);
     }
 
     @Override

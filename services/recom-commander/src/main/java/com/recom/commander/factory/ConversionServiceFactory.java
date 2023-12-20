@@ -1,6 +1,5 @@
-package com.recom.commander.configuration;
+package com.recom.commander.factory;
 
-import lombok.NonNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.ConversionService;

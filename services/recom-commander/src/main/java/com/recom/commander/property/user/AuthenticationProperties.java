@@ -10,7 +10,7 @@ import java.time.Duration;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class HostProperties extends ObservableDynamicUserProperties<HostProperties> {
+public class AuthenticationProperties extends ObservableDynamicUserProperties<AuthenticationProperties> {
 
     @NonNull
     @Override
@@ -21,23 +21,16 @@ public class HostProperties extends ObservableDynamicUserProperties<HostProperti
     @NonNull
     @Override
     public String getPropertyFileName() {
-        return "host";
+        return "authentication";
     }
 
     @Builder.Default
-    private String protocol = "http";
+    private String accountUUID = "<accountUUID>";
 
     @Builder.Default
-    private String hostname = "localhost";
+    private String accessKey = "<accessKey>";
 
     @Builder.Default
-    private String port = "8080";
-
-    @Builder.Default
-    private Duration duration = Duration.ofSeconds(10);
-
-    public String getHostBasePath() {
-        return protocol + "://" + hostname + ":" + port;
-    }
+    private Duration reAuthenticateInAdvance = Duration.ofMinutes(1);
 
 }

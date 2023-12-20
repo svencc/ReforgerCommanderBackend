@@ -1,4 +1,4 @@
-package com.recom.commander.exception;
+package com.recom.commander.exception.exceptions.http;
 
 import lombok.Getter;
 import lombok.NonNull;

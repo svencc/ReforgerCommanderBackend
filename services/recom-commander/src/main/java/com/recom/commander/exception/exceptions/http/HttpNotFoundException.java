@@ -1,11 +1,11 @@
-package com.recom.commander.exception;
+package com.recom.commander.exception.exceptions.http;
 
 import lombok.NonNull;
 import org.springframework.lang.Nullable;
 
-public class HttpServiceUnavailableException extends HttpErrorException {
+public class HttpNotFoundException extends HttpErrorException {
 
-    public HttpServiceUnavailableException(
+    public HttpNotFoundException(
             @NonNull final String message,
             @Nullable final String responseBody
     ) {

@@ -1,8 +1,8 @@
 package com.recom.commander.service.gateway.recom;
 
-import com.recom.commander.exception.HttpErrorException;
+import com.recom.commander.exception.exceptions.http.HttpErrorException;
 import com.recom.commander.exception.RequestLogger;
-import com.recom.commander.property.RECOMRestClientProvider;
+import com.recom.commander.property.restclient.RECOMRestClientProvider;
 import com.recom.commander.property.gateway.MapTopographyGatewayProperties;
 import com.recom.dto.map.topography.HeightMapDescriptorDto;
 import com.recom.dto.map.topography.MapTopographyRequestDto;
