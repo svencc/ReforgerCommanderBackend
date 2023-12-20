@@ -14,7 +14,6 @@ public class TackViewAutoConfiguration {
     @Bean
     public ComposerProperties composerProperties() {
         return ComposerProperties.builder()
-                .parallelizedBackBufferHandler(true)
                 .backBufferSize(6)
                 .build();
     }

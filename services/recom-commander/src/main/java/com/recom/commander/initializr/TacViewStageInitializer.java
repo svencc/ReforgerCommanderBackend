@@ -3,6 +3,8 @@ package com.recom.commander.initializr;
 import com.recom.commander.event.ShutdownEvent;
 import com.recom.commander.event.StageReadyEvent;
 import com.recom.commander.property.SpringApplicationProperties;
+import com.recom.commander.property.user.HostProperties;
+import com.recom.commander.service.gateway.recom.MapTopographyGateway;
 import com.recom.tacview.engine.GameTemplate;
 import com.recom.tacview.engine.TacViewer;
 import com.recom.tacview.engine.graphics.ScreenComposer;
@@ -45,6 +47,11 @@ public class TacViewStageInitializer implements ApplicationListener<StageReadyEv
     @NonNull
     private final GameTemplate game;
 
+    @NonNull
+    private final MapTopographyGateway mapTopographyGateway;
+    @NonNull
+    private final HostProperties hostProperties;
+
 
     private Stage stage = null;
     private TacViewer tacViewer = null;
@@ -52,7 +59,7 @@ public class TacViewStageInitializer implements ApplicationListener<StageReadyEv
 
     @Override
     public void onApplicationEvent(@NonNull final StageReadyEvent event) {
-        log.info("Initializing TacView ...");
+        log.info("Starting TacView");
         final Stage tacViewStage = event.getStage();
         populateTacViewStage(tacViewStage);
         tacViewStage.show();
@@ -74,6 +81,26 @@ public class TacViewStageInitializer implements ApplicationListener<StageReadyEv
         root.setCenter(tacViewer);
         tacViewer.start();
 
+        tacViewer.setOnMouseClicked(event -> {
+            mapTopographyGateway.provideMapTopographyData();
+        });
+        /*
+        tacViewer.setOnMouseClicked(event -> {
+            hostProperties.load();
+            log.info("UserProperties synchronised: {}", hostProperties);
+
+
+            hostProperties.setProtocol("udp");
+            hostProperties.setHostname("horst");
+            hostProperties.setPort("1234");
+            hostProperties.persist();
+            log.info("UserProperties saved: {}", hostProperties);
+
+            hostProperties.load();
+            log.info("UserProperties loaded(2): {}", hostProperties);
+        });
+        */
+
         final Scene scene = new Scene(root, rendererProperties.getWidth(), rendererProperties.getHeight());
         canvasStage.setTitle(springApplicationProperties.getName());
         canvasStage.setResizable(false);
@@ -90,3 +117,8 @@ public class TacViewStageInitializer implements ApplicationListener<StageReadyEv
 
 //      https://www.youtube.com/watch?v=UDNrJAvKc0k https://youtu.be/UDNrJAvKc0k?si=GDu7RdGS3CeVM0rc&t=819
 //      fetch data with new REST Client
+
+// @INFO
+// run on JavaFX thread:
+// Platform.runLater(() -> {} ... );
+// https://chat.openai.com/share/d180cc05-76ed-4139-8604-e28027ab4876

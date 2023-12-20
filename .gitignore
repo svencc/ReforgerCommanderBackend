@@ -12,6 +12,8 @@
 /libs/rendertools/target/
 /libs/maze/target/
 /libs/tacviewfx/target/
+/libs/dynamicproperties/target/
+/libs/dynamicproperties/src/test/resources/testpath/RECOMCommander/file.properties
 
 /services/recom-backend/target/
 /services/recom-backend/src/test/resources/test

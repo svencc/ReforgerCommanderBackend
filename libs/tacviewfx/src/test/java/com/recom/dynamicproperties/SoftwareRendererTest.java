@@ -1,4 +1,4 @@
-package com.recom.tacview.engine.graphics.renderer;
+package com.recom.dynamicproperties;
 
 import com.recom.tacview.engine.components.sprite.SpriteAtlas;
 import com.recom.tacview.engine.graphics.Scanable;
@@ -19,18 +19,18 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @RequiredArgsConstructor
-class MultithreadedSoftwareRendererTest {
+class SoftwareRendererTest {
 
     private RendererProperties rendererProperties;
     private ARGBCalculatorProvider argbCalculatorProvider;
-    private MultithreadedSoftwareRenderer rendererToTest;
+    private SoftwareRenderer rendererToTest;
     private PixelBuffer targetBuffer;
 
     @BeforeEach
     void beforeEach() {
-        rendererProperties = RendererProperties.builder().parallelizedRendering(true).threadPoolSize(2).build();
+        rendererProperties = RendererProperties.builder().build();
         argbCalculatorProvider = new ARGBCalculatorProvider();
-        rendererToTest = new MultithreadedSoftwareRenderer(rendererProperties, argbCalculatorProvider);
+        rendererToTest = new SoftwareRenderer(rendererProperties, argbCalculatorProvider);
     }
 
     @Test

@@ -1,5 +1,19 @@
 # TODO LIST
 
+# 0
+* AUTHENTICATION
+* (test Duration Logger)
+* 
+* basic property editor
+* 
+* synchronize renderer (max frames?)
+  * in relation to ring buffer size
+  * fps output
+    * renderer
+    * javafx
+
+------------------------------------------------------------
+
 # 1
 * add metadata to openstransaction!
   * size, width, height
@@ -13,6 +27,9 @@
 * add scale bar
 * add measurement tool
 * add menu
+
+# 1.1
+* Spring Boot Executors -> use virtual threads
 
 # 2
 * scanner -> qubus

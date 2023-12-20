@@ -23,7 +23,7 @@ import java.util.UUID;
 
 
 @Slf4j
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @RequiredArgsConstructor
 public class RSAKeyGenerator {
 

@@ -1,4 +1,4 @@
-package com.recom.tacview.engine.graphics.renderer;
+package com.recom.dynamicproperties;
 
 import com.recom.tacview.engine.graphics.Renderable;
 import com.recom.tacview.property.RendererProperties;

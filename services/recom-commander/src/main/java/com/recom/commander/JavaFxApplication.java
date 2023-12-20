@@ -1,7 +1,9 @@
 package com.recom.commander;
 
+import com.recom.commander.event.InitEvent;
 import com.recom.commander.event.ShutdownEvent;
 import com.recom.commander.event.StageReadyEvent;
+import com.recom.commander.exception.GlobalExceptionHandler;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -19,7 +21,15 @@ public class JavaFxApplication extends Application {
 
     @Override
     public void init() {
+        // Start Spring Boot Application
         applicationContext = new SpringApplicationBuilder(RecomCommanderApplication.class).run();
+        final GlobalExceptionHandler globalExceptionHandler = (GlobalExceptionHandler) applicationContext.getBean("globalExceptionHandler");
+        Thread.setDefaultUncaughtExceptionHandler(globalExceptionHandler);
+
+        // SPRING Context is ready; publish InitEvent
+        log.info("* Spring Context initialized > Initializing Application ...");
+        applicationContext.publishEvent(new InitEvent(this));
+        log.info("+--- all application components initialized.");
     }
 
     @Override

@@ -16,11 +16,12 @@ import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Slf4j
 @EnableAsync
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @RequiredArgsConstructor
 public class AsyncConfiguration implements AsyncConfigurer {
 
@@ -33,10 +34,11 @@ public class AsyncConfiguration implements AsyncConfigurer {
     // First Async Executor
     @Primary
     @Override
-    public SimpleAsyncTaskExecutor getAsyncExecutor() {
-        final SimpleAsyncTaskExecutor executor = new SimpleAsyncTaskExecutor("Async-Executor");
-
-        return executor;
+    public AsyncTaskExecutor  getAsyncExecutor() {
+        return new TaskExecutorAdapter(Executors.newVirtualThreadPerTaskExecutor()); // TODO <<<<<<<<<<<<<<<< migrate all to this; especially the async map transaction executor
+//        final SimpleAsyncTaskExecutor executor = new SimpleAsyncTaskExecutor("Async-Executor");
+//
+//        return executor;
     }
 
     @Override

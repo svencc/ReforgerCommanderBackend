@@ -15,7 +15,6 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties("renderer.composer")
 public class ComposerProperties {
 
-    private boolean parallelizedBackBufferHandler;
     private int backBufferSize;
 
 }

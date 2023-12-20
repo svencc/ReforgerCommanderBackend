@@ -13,15 +13,15 @@
     <name>RECOM Observer</name>
     <description>RECOM Observer</description>
 
-<!--    <dependencies>-->
+    <dependencies>
 
-<!--        &lt;!&ndash; COMPILER UTILS  &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.projectlombok</groupId>-->
-<!--            <artifactId>lombok</artifactId>-->
-<!--            <optional>true</optional>-->
-<!--        </dependency>-->
-<!--        &lt;!&ndash; COMPILER UTILS  &ndash;&gt;-->
-<!--    </dependencies>-->
+        <!-- NEEDED FOR: import org.springframework.lang.Nullable -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+        </dependency>
+        <!-- NEEDED FOR: import org.springframework.lang.Nullable -->
+
+    </dependencies>
 
 </project>
