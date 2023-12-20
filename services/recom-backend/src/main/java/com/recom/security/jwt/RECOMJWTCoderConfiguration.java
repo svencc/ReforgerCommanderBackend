@@ -14,7 +14,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class RECOMJWTCoderConfiguration {
 
     @Primary

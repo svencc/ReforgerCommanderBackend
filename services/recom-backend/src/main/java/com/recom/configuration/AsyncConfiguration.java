@@ -21,7 +21,7 @@ import java.util.concurrent.Executors;
 
 @Slf4j
 @EnableAsync
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @RequiredArgsConstructor
 public class AsyncConfiguration implements AsyncConfigurer {
 

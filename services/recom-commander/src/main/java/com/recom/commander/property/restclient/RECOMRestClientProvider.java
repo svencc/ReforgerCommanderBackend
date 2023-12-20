@@ -1,12 +1,19 @@
 package com.recom.commander.property.restclient;
 
+import com.recom.commander.event.InitEvent;
 import com.recom.commander.property.RestClientProperties;
 import com.recom.commander.property.user.HostProperties;
 import com.recom.commander.service.authentication.AuthenticationService;
 import com.recom.dto.authentication.AuthenticationResponseDto;
+import com.recom.dynamicproperties.exception.InitializationException;
 import com.recom.observer.ReactiveObserver;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.lang.Nullable;
@@ -15,6 +22,7 @@ import org.springframework.web.client.RestClient;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class RECOMRestClientProvider {
 
     @NonNull
@@ -22,31 +30,28 @@ public class RECOMRestClientProvider {
     @NonNull
     private final HostProperties hostProperties;
     @NonNull
-    private final AuthenticationService authenticationService;
-    @NonNull
-    private final ReactiveObserver<HostProperties> hostPropertiesReactiveObserver;
-    @NonNull
-    private final ReactiveObserver<AuthenticationResponseDto> authenticationReactiveObserver;
+    private final ObjectProvider<AuthenticationService> authenticationServiceProvider;
 
-
+    @Nullable
+    private ReactiveObserver<HostProperties> hostPropertiesReactiveObserver;
+    @Nullable
+    private ReactiveObserver<AuthenticationResponseDto> authenticationReactiveObserver;
     @Nullable
     private RestClient restClient;
 
 
-    public RECOMRestClientProvider(
-            @NonNull final RestClientProperties restClientProperties,
-            @NonNull final HostProperties hostProperties,
-            @NonNull final AuthenticationService authenticationService
-    ) {
-        this.restClientProperties = restClientProperties;
-        this.hostProperties = hostProperties;
-        this.authenticationService = authenticationService;
-
+    @EventListener(InitEvent.class)
+    public void init(@NonNull final InitEvent event) {
+        event.log(log, this.getClass());
         authenticationReactiveObserver = ReactiveObserver.reactWith((__, ___) -> {
             log.info("Authentication changed. Update RestClient.");
             createNewRestClient();
         });
-        authenticationReactiveObserver.observe(authenticationService.getBufferedSubject());
+        try {
+            authenticationReactiveObserver.observe(authenticationServiceProvider.getIfAvailable().getBufferedSubject());
+        } catch (final BeansException e) {
+            throw new InitializationException("AuthenticationService not available!");
+        }
 
         hostPropertiesReactiveObserver = ReactiveObserver.reactWith((__, ___) -> {
             log.info("HostProperties changed. Update RestClient.");
@@ -73,7 +78,7 @@ public class RECOMRestClientProvider {
         return RestClient.builder()
                 .requestFactory(factory)
                 .baseUrl(hostProperties.getHostBasePath())
-                .defaultHeader(HttpHeaders.AUTHORIZATION, authenticationService.provideBearerToken())
+                .defaultHeader(HttpHeaders.AUTHORIZATION, authenticationServiceProvider.getIfAvailable().provideBearerToken())
                 .build();
     }
 

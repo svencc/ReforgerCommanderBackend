@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 
 
 @Slf4j
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @RequiredArgsConstructor
 public class PropertiesFactory {
 

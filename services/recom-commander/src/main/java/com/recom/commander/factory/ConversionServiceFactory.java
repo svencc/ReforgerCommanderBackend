@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.format.support.DefaultFormattingConversionService;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class ConversionServiceFactory {
 
     @Bean

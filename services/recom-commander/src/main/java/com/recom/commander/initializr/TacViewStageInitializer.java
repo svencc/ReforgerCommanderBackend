@@ -59,7 +59,7 @@ public class TacViewStageInitializer implements ApplicationListener<StageReadyEv
 
     @Override
     public void onApplicationEvent(@NonNull final StageReadyEvent event) {
-        log.info("Initializing TacView ...");
+        log.info("Starting TacView");
         final Stage tacViewStage = event.getStage();
         populateTacViewStage(tacViewStage);
         tacViewStage.show();

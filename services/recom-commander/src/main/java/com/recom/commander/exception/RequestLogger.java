@@ -22,7 +22,10 @@ public class RequestLogger {
     }
 
     @NonNull
-    private String prepareLogMessage(HttpRequest request, ClientHttpResponse response) {
+    private String prepareLogMessage(
+            @NonNull final HttpRequest request,
+            @NonNull final ClientHttpResponse response
+    ) {
         final String requestHeaders = request.getHeaders().entrySet().stream()
                 .map(entry -> String.format("| |- %s: %s", entry.getKey().trim(), entry.getValue().toString().trim()))
                 .reduce((a, b) -> String.format("%s\n%s", a, b))
@@ -34,7 +37,7 @@ public class RequestLogger {
 
         String responseStatusCodeString;
         try {
-            responseStatusCodeString = response.getStatusCode().toString();
+            responseStatusCodeString = String.valueOf(response.getStatusCode().value());
         } catch (final Throwable t) {
             responseStatusCodeString = "<status code>";
         }
