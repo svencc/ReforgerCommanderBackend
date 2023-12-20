@@ -56,6 +56,11 @@ public class AuthenticationService extends ObserverTemplate<AuthenticationRespon
 
     }
 
+    @NonNull
+    public String provideBearerToken() {
+        return String.format("Bearer %1s", provideAuthenticationToken());
+    }
+
     @Override
     public void takeNotice(
             @NonNull final Subjective<AuthenticationResponseDto> subject,

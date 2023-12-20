@@ -73,7 +73,7 @@ public class RECOMRestClientProvider {
         return RestClient.builder()
                 .requestFactory(factory)
                 .baseUrl(hostProperties.getHostBasePath())
-                .defaultHeader(HttpHeaders.AUTHORIZATION, authenticationService.provideAuthenticationToken())
+                .defaultHeader(HttpHeaders.AUTHORIZATION, authenticationService.provideBearerToken())
                 .build();
     }
 
