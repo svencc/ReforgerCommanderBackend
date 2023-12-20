@@ -117,3 +117,8 @@ public class TacViewStageInitializer implements ApplicationListener<StageReadyEv
 
 //      https://www.youtube.com/watch?v=UDNrJAvKc0k https://youtu.be/UDNrJAvKc0k?si=GDu7RdGS3CeVM0rc&t=819
 //      fetch data with new REST Client
+
+// @INFO
+// run on JavaFX thread:
+// Platform.runLater(() -> {} ... );
+// https://chat.openai.com/share/d180cc05-76ed-4139-8604-e28027ab4876
