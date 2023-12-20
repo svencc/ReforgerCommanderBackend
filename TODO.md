@@ -15,6 +15,8 @@
 
 ------------------------------------------------------------
 
+# 0 use userfolder in backend also for key storage (as default)?
+
 # 1
 * add metadata to openstransaction!
   * size, width, height
