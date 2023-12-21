@@ -6,6 +6,8 @@
 * 
 * basic property editor UI
 * 
+* basic property editor
+* 
 * synchronize renderer (max frames?)
   * in relation to ring buffer size
   * fps output
@@ -13,6 +15,8 @@
     * javafx
 
 ------------------------------------------------------------
+
+# 0 use userfolder in backend also for key storage (as default)?
 
 # 1
 * add metadata to openstransaction!
