@@ -4,16 +4,17 @@ import lombok.NonNull;
 import org.slf4j.Logger;
 import org.springframework.context.ApplicationEvent;
 
-public class InitEvent extends ApplicationEvent {
+public class InitializeComponentsEvent extends ApplicationEvent {
 
-    public InitEvent(@NonNull final Object source) {
+    public InitializeComponentsEvent(@NonNull final Object source) {
         super(source);
     }
 
-    public <T> void log(
+    public <T> void logComponentInitialization(
             @NonNull final Logger log,
             @NonNull final Class<T> clazz
     ) {
-        log.info("| +-  Initializing {}", clazz.getSimpleName());
+        log.info("| +-  InitializeComponentsEvent {}", clazz.getSimpleName());
     }
+
 }

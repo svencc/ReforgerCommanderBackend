@@ -4,7 +4,7 @@
 * AUTHENTICATION
 * (test Duration Logger)
 * 
-* basic property editor
+* basic property editor UI
 * 
 * synchronize renderer (max frames?)
   * in relation to ring buffer size

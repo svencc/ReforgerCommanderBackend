@@ -1,6 +1,6 @@
 package com.recom.commander.property.restclient;
 
-import com.recom.commander.event.InitEvent;
+import com.recom.commander.event.InitializeComponentsEvent;
 import com.recom.commander.property.RestClientProperties;
 import com.recom.commander.property.user.HostProperties;
 import com.recom.commander.service.authentication.AuthenticationService;
@@ -39,9 +39,9 @@ public class RECOMRestClientProvider {
     private RestClient restClient;
 
 
-    @EventListener(InitEvent.class)
-    public void init(@NonNull final InitEvent event) {
-        event.log(log, this.getClass());
+    @EventListener(InitializeComponentsEvent.class)
+    public void init(@NonNull final InitializeComponentsEvent event) {
+        event.logComponentInitialization(log, this.getClass());
         authenticationReactiveObserver = ReactiveObserver.reactWith((__, ___) -> {
             log.info("Authentication changed. Update RestClient.");
             createNewRestClient();

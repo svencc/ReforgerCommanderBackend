@@ -1,7 +1,7 @@
 package com.recom.commander.initializr;
 
+import com.recom.commander.event.InitializeStageEvent;
 import com.recom.commander.event.ShutdownEvent;
-import com.recom.commander.event.StageReadyEvent;
 import com.recom.commander.property.SpringApplicationProperties;
 import com.recom.commander.property.user.HostProperties;
 import com.recom.commander.service.gateway.recom.MapTopographyGateway;
@@ -22,7 +22,6 @@ import javafx.stage.Stage;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -30,7 +29,8 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class TacViewStageInitializer implements ApplicationListener<StageReadyEvent> {
+public class TacViewStageInitializer {
+//public class TacViewStageInitializer implements ApplicationListener<InitializeStageEvent> {
 
     @NonNull
     private final SpringApplicationProperties springApplicationProperties;
@@ -57,9 +57,10 @@ public class TacViewStageInitializer implements ApplicationListener<StageReadyEv
     private TacViewer tacViewer = null;
     private AnimationTimer bufferToCanvasUpdaterLoop = null;
 
-    @Override
-    public void onApplicationEvent(@NonNull final StageReadyEvent event) {
-        log.info("Starting TacView");
+    //    @Override
+    @EventListener(classes = InitializeStageEvent.class)
+    public void onApplicationEvent(@NonNull final InitializeStageEvent event) {
+        event.logStageInitializationWithMessage(log, TacViewStageInitializer.class, "Starting TacView");
         final Stage tacViewStage = event.getStage();
         populateTacViewStage(tacViewStage);
         tacViewStage.show();

@@ -1,6 +1,7 @@
 package com.recom.commander;
 
-import com.recom.commander.event.InitEvent;
+import com.recom.commander.event.InitializeComponentsEvent;
+import com.recom.commander.event.InitializeStageEvent;
 import com.recom.commander.event.ShutdownEvent;
 import com.recom.commander.event.StageReadyEvent;
 import com.recom.commander.exception.GlobalExceptionHandler;
@@ -28,13 +29,19 @@ public class JavaFxApplication extends Application {
 
         // SPRING Context is ready; publish InitEvent
         log.info("* Spring Context initialized > Initializing Application ...");
-        applicationContext.publishEvent(new InitEvent(this));
+        applicationContext.publishEvent(new InitializeComponentsEvent(this));
         log.info("+--- all application components initialized.");
     }
 
     @Override
     public void start(@NonNull final Stage stage) {
-        applicationContext.publishEvent(new StageReadyEvent(stage));
+        log.info("* Initializing Stage ...");
+        applicationContext.publishEvent(new InitializeStageEvent(this, stage));
+        log.info("+--- Stage initialized.");
+
+        log.info("* Stage Ready ...");
+        applicationContext.publishEvent(new StageReadyEvent(this, stage));
+        log.info("+--- Stage finalized.");
     }
 
     @Override
