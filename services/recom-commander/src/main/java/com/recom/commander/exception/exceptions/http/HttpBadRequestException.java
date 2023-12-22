@@ -7,9 +7,9 @@ public class HttpBadRequestException extends HttpErrorException {
 
     public HttpBadRequestException(
             @NonNull final String message,
-            @Nullable final String responseBody
+            @Nullable final String nullableResponseBody
     ) {
-        super(message,responseBody);
+        super(message, nullableResponseBody);
     }
 
 }

@@ -3,11 +3,11 @@ package com.recom.commander.service.authentication;
 import com.recom.commander.exception.exceptions.http.HttpErrorException;
 import com.recom.commander.property.user.AuthenticationProperties;
 import com.recom.commander.service.Scheduler;
+import com.recom.dto.authentication.AuthenticationRequestDto;
 import com.recom.dto.authentication.AuthenticationResponseDto;
 import com.recom.observer.*;
 import lombok.NonNull;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.ResourceAccessException;
 
 import java.time.Duration;
 import java.util.Objects;
@@ -68,9 +68,13 @@ public class AuthenticationService extends ObserverTemplate<AuthenticationRespon
         scheduler.schedule(this::authenticate, delayToReauthenticate);
     }
 
-    public void authenticate() throws HttpErrorException, ResourceAccessException {
-        final AuthenticationResponseDto authenticate = authenticationGateway.authenticate();
-        subject.notifyObserversWith(Notification.of(authenticate));
+    public void authenticate() throws HttpErrorException {
+        final AuthenticationRequestDto authenticationRequest = AuthenticationRequestDto.builder()
+                .accountUUID(authenticationProperties.getAccountUUID())
+                .accessKey(authenticationProperties.getAccessKey())
+                .build();
+        final AuthenticationResponseDto authentication = authenticationGateway.authenticate(authenticationRequest);
+        subject.notifyObserversWith(Notification.of(authentication));
     }
 
 }

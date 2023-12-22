@@ -3,6 +3,7 @@
 # 0
 * AUTHENTICATION
 * (test Duration Logger)
+* Authentication Service should be reactive on AuthenticationProperties
 * 
 * basic property editor UI
 * 

@@ -7,9 +7,9 @@ public class HttpForbiddenException extends HttpErrorException {
 
     public HttpForbiddenException(
             @NonNull final String message,
-            @Nullable final String responseBody
+            @Nullable final String nullableResponseBody
     ) {
-        super(message,responseBody);
+        super(message, nullableResponseBody);
     }
 
 }

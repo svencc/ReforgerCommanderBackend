@@ -7,9 +7,9 @@ public class HttpUnauthorizedException extends HttpErrorException {
 
     public HttpUnauthorizedException(
             @NonNull final String message,
-            @Nullable final String responseBody
+            @Nullable final String nullableResponseBody
     ) {
-        super(message,responseBody);
+        super(message, nullableResponseBody);
     }
 
 }
