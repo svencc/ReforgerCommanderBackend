@@ -1,11 +1,13 @@
 package com.recom.commander.service.authentication;
 
+import com.recom.commander.exception.exceptions.http.HttpErrorException;
 import com.recom.commander.property.user.AuthenticationProperties;
 import com.recom.commander.service.Scheduler;
 import com.recom.dto.authentication.AuthenticationResponseDto;
 import com.recom.observer.*;
 import lombok.NonNull;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
 
 import java.time.Duration;
 import java.util.Objects;
@@ -35,15 +37,9 @@ public class AuthenticationService extends ObserverTemplate<AuthenticationRespon
         subject.beObservedBy(this);
     }
 
-    public void authenticate() {
-        final AuthenticationResponseDto authenticate = authenticationGateway.authenticate();
-        subject.notifyObserversWith(Notification.of(authenticate));
-    }
-
     @NonNull
-    @Override
-    public BufferedSubject<AuthenticationResponseDto> getBufferedSubject() {
-        return subject;
+    public String provideBearerToken() {
+        return String.format("Bearer %1s", provideAuthenticationToken());
     }
 
     @NonNull
@@ -57,8 +53,9 @@ public class AuthenticationService extends ObserverTemplate<AuthenticationRespon
     }
 
     @NonNull
-    public String provideBearerToken() {
-        return String.format("Bearer %1s", provideAuthenticationToken());
+    @Override
+    public BufferedSubject<AuthenticationResponseDto> getBufferedSubject() {
+        return subject;
     }
 
     @Override
@@ -69,6 +66,11 @@ public class AuthenticationService extends ObserverTemplate<AuthenticationRespon
         final Duration expiresIn = Duration.ofSeconds(notification.getPayload().getExpiresInSeconds());
         final Duration delayToReauthenticate = expiresIn.minus(authenticationProperties.getReAuthenticateInAdvance());
         scheduler.schedule(this::authenticate, delayToReauthenticate);
+    }
+
+    public void authenticate() throws HttpErrorException, ResourceAccessException {
+        final AuthenticationResponseDto authenticate = authenticationGateway.authenticate();
+        subject.notifyObserversWith(Notification.of(authenticate));
     }
 
 }

@@ -39,7 +39,7 @@ public class JavaFxApplication extends Application {
         applicationContext.publishEvent(new InitializeStageEvent(this, stage));
         log.info("+--- Stage initialized.");
 
-        log.info("* Stage Ready ...");
+        log.info("* Finalizing Stage ...");
         applicationContext.publishEvent(new StageReadyEvent(this, stage));
         log.info("+--- Stage finalized.");
     }
