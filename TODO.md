@@ -1,6 +1,7 @@
 # TODO LIST
 
 # 0
+* fix MapTopology call (image/png result cannot be encoded)
 * basic property editor / UI
 * 
 * synchronize renderer (max frames?)
