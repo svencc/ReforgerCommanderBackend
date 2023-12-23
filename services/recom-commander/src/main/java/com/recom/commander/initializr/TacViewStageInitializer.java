@@ -4,7 +4,7 @@ import com.recom.commander.event.InitializeStageEvent;
 import com.recom.commander.event.ShutdownEvent;
 import com.recom.commander.property.SpringApplicationProperties;
 import com.recom.commander.property.user.HostProperties;
-import com.recom.commander.service.maptopography.MapTopographyDataService;
+import com.recom.commander.service.maptopography.data.MapTopographyDataService;
 import com.recom.dto.map.topography.MapTopographyRequestDto;
 import com.recom.tacview.engine.GameTemplate;
 import com.recom.tacview.engine.TacViewer;

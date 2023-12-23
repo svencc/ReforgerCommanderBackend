@@ -1,4 +1,4 @@
-package com.recom.commander.service.maptopography;
+package com.recom.commander.service.maptopography.data;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.recom.commander.exception.RequestLogger;
