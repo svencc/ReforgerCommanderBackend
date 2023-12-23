@@ -44,4 +44,13 @@
         <nimbus-jose-jwt.version>9.37.3</nimbus-jose-jwt.version>
     </properties>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>
