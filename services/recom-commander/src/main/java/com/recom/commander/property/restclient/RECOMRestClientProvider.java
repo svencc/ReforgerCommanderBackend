@@ -47,7 +47,7 @@ public class RECOMRestClientProvider extends ObserverTemplate<HostProperties> im
     public void init(@NonNull final InitializeComponentsEvent event) {
         event.logComponentInitialization(log, this.getClass());
         authenticationReactiveObserver = ReactiveObserver.reactWith((__, ___) -> {
-            log.info("Authentication changed. Update RestClient.");
+            log.info("Authentication changed. Update {}.", this.getClass().getSimpleName());
             createNewRestClient();
         });
         try {
@@ -57,7 +57,7 @@ public class RECOMRestClientProvider extends ObserverTemplate<HostProperties> im
         }
 
         hostPropertiesReactiveObserver = ReactiveObserver.reactWith((__, ___) -> {
-            log.info("HostProperties changed. Update RestClient.");
+            log.info("HostProperties changed. Update {}.", this.getClass().getSimpleName());
             createNewRestClient();
         });
         hostPropertiesReactiveObserver.observe(hostProperties.getSubject());
@@ -65,12 +65,12 @@ public class RECOMRestClientProvider extends ObserverTemplate<HostProperties> im
 
     @NonNull
     private RestClient createNewRestClient() {
-        final SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
-        factory.setConnectTimeout(restClientProperties.getConnectTimeout().toMillisPart());
-        factory.setReadTimeout(restClientProperties.getReadTimeout().toMillisPart());
+        final SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+        requestFactory.setConnectTimeout(restClientProperties.getConnectTimeout().toMillisPart());
+        requestFactory.setReadTimeout(restClientProperties.getReadTimeout().toMillisPart());
 
         return RestClient.builder()
-                .requestFactory(factory)
+                .requestFactory(requestFactory)
                 .baseUrl(hostProperties.getHostBasePath())
                 .defaultHeader(HttpHeaders.AUTHORIZATION, authenticationServiceProvider.getIfAvailable().provideBearerToken())
                 .build();

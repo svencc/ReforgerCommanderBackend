@@ -9,7 +9,6 @@ import com.recom.dto.map.topography.HeightMapDescriptorDto;
 import com.recom.dto.map.topography.MapTopographyRequestDto;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -46,8 +45,8 @@ public class MapTopographyGateway {
                     .accept(MediaType.IMAGE_PNG)
                     .body(body)
                     .retrieve()
-                    .onStatus(httpStatus -> !httpStatus.is2xxSuccessful(), (request, response) -> requestLogger.logRequestInErrorCase(request, response, body))
-                    .onStatus(HttpStatusCode::is2xxSuccessful, (request, response) -> requestLogger.profileRequest(request, response, body, started))
+                    .onStatus(httpStatus -> !httpStatus.is2xxSuccessful(), (request, response) -> requestLogger.logRequestInErrorCase(request, response, null, body))
+                    //.onStatus(HttpStatusCode::is2xxSuccessful, (request, response) -> requestLogger.profileRequest(request, response, body, null.started))
                     .toEntity(HeightMapDescriptorDto.class);
 
             return responseEntity.getBody();

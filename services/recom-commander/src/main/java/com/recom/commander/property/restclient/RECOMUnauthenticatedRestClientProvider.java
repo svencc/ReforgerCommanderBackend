@@ -38,7 +38,7 @@ public class RECOMUnauthenticatedRestClientProvider extends ObserverTemplate<Hos
     public void init(@NonNull final InitializeComponentsEvent event) {
         event.logComponentInitialization(log, this.getClass());
         hostPropertiesReactiveObserver = ReactiveObserver.reactWith((__, ___) -> {
-            log.info("HostProperties changed. Update RestClient.");
+            log.info("HostProperties changed. Update {}.", this.getClass().getSimpleName());
             createNewRestClient();
         });
         hostPropertiesReactiveObserver.observe(hostProperties.getSubject());
@@ -46,12 +46,12 @@ public class RECOMUnauthenticatedRestClientProvider extends ObserverTemplate<Hos
 
     @NonNull
     private RestClient createNewRestClient() {
-        final SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
-        factory.setConnectTimeout(restClientProperties.getConnectTimeout().toMillisPart());
-        factory.setReadTimeout(restClientProperties.getReadTimeout().toMillisPart());
+        final SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+        requestFactory.setConnectTimeout(restClientProperties.getConnectTimeout().toMillisPart());
+        requestFactory.setReadTimeout(restClientProperties.getReadTimeout().toMillisPart());
 
         return RestClient.builder()
-                .requestFactory(factory)
+                .requestFactory(requestFactory)
                 .baseUrl(hostProperties.getHostBasePath())
                 .build();
     }

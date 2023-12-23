@@ -1,9 +1,10 @@
 package com.recom.commander.service.authentication;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.recom.commander.exception.RequestLogger;
 import com.recom.commander.property.gateway.AuthenticationGatewayProperties;
 import com.recom.commander.property.restclient.RECOMUnauthenticatedRestClientProvider;
-import com.recom.commander.service.gateway.Gateway;
+import com.recom.commander.service.Gateway;
 import com.recom.dto.authentication.AuthenticationRequestDto;
 import com.recom.dto.authentication.AuthenticationResponseDto;
 import lombok.NonNull;
@@ -19,12 +20,13 @@ public class AuthenticationGateway extends Gateway<AuthenticationRequestDto, Aut
 
 
     public AuthenticationGateway(
-            @NonNull final RECOMUnauthenticatedRestClientProvider restClientProvider,
             @NonNull final RequestLogger requestLogger,
-            @NonNull final AuthenticationGatewayProperties authenticationGatewayProperties
+            @NonNull final RECOMUnauthenticatedRestClientProvider restClientProvider,
+            @NonNull final AuthenticationGatewayProperties authenticationGatewayProperties,
+            @NonNull final ObjectMapper objectMapper
 
     ) {
-        super(restClientProvider, requestLogger);
+        super(requestLogger, restClientProvider, AuthenticationResponseDto.class, objectMapper);
         this.authenticationGatewayProperties = authenticationGatewayProperties;
     }
 
@@ -44,7 +46,7 @@ public class AuthenticationGateway extends Gateway<AuthenticationRequestDto, Aut
 
     @NonNull
     public AuthenticationResponseDto authenticate(@NonNull final AuthenticationRequestDto authenticationRequestDto) {
-        return super.sendWithResponse(authenticationRequestDto, AuthenticationResponseDto.class);
+        return super.sendWithResponse(authenticationRequestDto);
     }
 
 }

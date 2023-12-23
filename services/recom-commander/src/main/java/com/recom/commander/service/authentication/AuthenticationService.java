@@ -7,11 +7,14 @@ import com.recom.dto.authentication.AuthenticationRequestDto;
 import com.recom.dto.authentication.AuthenticationResponseDto;
 import com.recom.observer.*;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.util.Objects;
 
+@Slf4j
 @Service
 public class AuthenticationService extends ObserverTemplate<AuthenticationResponseDto> implements HasBufferedSubject<AuthenticationResponseDto> {
 
@@ -24,6 +27,9 @@ public class AuthenticationService extends ObserverTemplate<AuthenticationRespon
     @NonNull
     private final BufferedSubject<AuthenticationResponseDto> subject;
 
+    @Nullable
+    private ReactiveObserver<AuthenticationProperties> authenticationPropertiesReactiveObserver;
+
 
     public AuthenticationService(
             @NonNull final Scheduler scheduler,
@@ -35,6 +41,24 @@ public class AuthenticationService extends ObserverTemplate<AuthenticationRespon
         this.authenticationProperties = authenticationProperties;
         subject = new BufferedSubject<>();
         subject.beObservedBy(this);
+        init();
+    }
+
+    public void init() {
+        authenticationPropertiesReactiveObserver = ReactiveObserver.reactWith((__, ___) -> {
+            log.info("AuthenticationProperties changed. Trigger re-authentication.");
+            authenticate();
+        });
+        authenticationPropertiesReactiveObserver.observe(authenticationProperties.getSubject());
+    }
+
+    public void authenticate() throws HttpErrorException {
+        final AuthenticationRequestDto authenticationRequest = AuthenticationRequestDto.builder()
+                .accountUUID(authenticationProperties.getAccountUUID())
+                .accessKey(authenticationProperties.getAccessKey())
+                .build();
+        final AuthenticationResponseDto authentication = authenticationGateway.authenticate(authenticationRequest);
+        subject.notifyObserversWith(Notification.of(authentication));
     }
 
     @NonNull
@@ -66,15 +90,6 @@ public class AuthenticationService extends ObserverTemplate<AuthenticationRespon
         final Duration expiresIn = Duration.ofSeconds(notification.getPayload().getExpiresInSeconds());
         final Duration delayToReauthenticate = expiresIn.minus(authenticationProperties.getReAuthenticateInAdvance());
         scheduler.schedule(this::authenticate, delayToReauthenticate);
-    }
-
-    public void authenticate() throws HttpErrorException {
-        final AuthenticationRequestDto authenticationRequest = AuthenticationRequestDto.builder()
-                .accountUUID(authenticationProperties.getAccountUUID())
-                .accessKey(authenticationProperties.getAccessKey())
-                .build();
-        final AuthenticationResponseDto authentication = authenticationGateway.authenticate(authenticationRequest);
-        subject.notifyObserversWith(Notification.of(authentication));
     }
 
 }

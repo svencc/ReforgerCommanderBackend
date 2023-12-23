@@ -1,13 +1,8 @@
 # TODO LIST
 
 # 0
-* AUTHENTICATION
-* (test Duration Logger)
-* Authentication Service should be reactive on AuthenticationProperties
-* 
-* basic property editor UI
-* 
-* basic property editor
+* REQUEST Logger -> run in different thread than main ui thread (serialization = UI stuttering)
+* basic property editor / UI
 * 
 * synchronize renderer (max frames?)
   * in relation to ring buffer size

@@ -24,9 +24,10 @@ public class RequestLogger {
     public void logRequestInErrorCase(
             @NonNull final HttpRequest request,
             @NonNull final ClientHttpResponse response,
-            @Nullable final Object nullableRequestBody
+            @Nullable final Object nullableRequestBody,
+            @Nullable final Object nullableResponseBody
     ) {
-        final String message = prepareLogMessage(request, response, nullableRequestBody);
+        final String message = prepareLogMessage(request, response, nullableRequestBody, nullableResponseBody);
         log.error(message + "\n");
         throw HttpStatusCodeToExceptionMapper.mapStatusCodeToException(response);
     }
@@ -35,7 +36,8 @@ public class RequestLogger {
     private String prepareLogMessage(
             @NonNull final HttpRequest request,
             @NonNull final ClientHttpResponse response,
-            @Nullable final Object nullableRequestBody
+            @Nullable final Object nullableRequestBody,
+            @Nullable final Object nullableResponseBody
     ) {
         final String requestHeaders = request.getHeaders().entrySet().stream()
                 .map(entry -> String.format("| |- %s: %s", entry.getKey().trim(), entry.getValue().toString().trim()))
@@ -72,7 +74,7 @@ public class RequestLogger {
 
         String responseBody = "<null>";
         try {
-            responseBody = new String(response.getBody().readAllBytes());
+            responseBody = objectMapper.writeValueAsString(nullableResponseBody);
         } catch (final Throwable __) {
         }
 
@@ -80,16 +82,7 @@ public class RequestLogger {
                                                 
                         +---- -------- -------- -------[ REQUEST LOGGER ]------- -------- -------- -----
                         |
-                        |=====> REQUEST: %s -> %s
-                        |\\
-                        | +---> Headers:
-                        %s
-                        |
-                        |\\
-                        | +---> Body:
-                        | |- %s
-                        |
-                        |=====> RESPONSE: %s -> %s
+                        *=====> [REQUEST]: %s -> %s
                         |\\
                         | +---> Headers:
                         %s
@@ -97,7 +90,18 @@ public class RequestLogger {
                          \\
                           +---> Body:
                         %s
-                                                
+                        
+                        +---- -------- -------- -------[ RESPONSE LOGGER ]------- -------- -------- ----
+                        |
+                        *=====> [RESPONSE]: %s -> %s
+                        |\\
+                        | +---> Headers:
+                        %s
+                        |
+                         \\
+                          +---> Body:
+                        %s          
+                                                              
                         --------------------------------------------------------------------------------
                         """.stripIndent(),
 
@@ -114,15 +118,16 @@ public class RequestLogger {
             @NonNull final HttpRequest request,
             @NonNull final ClientHttpResponse response,
             @NonNull final Object nullableRequestBody,
+            @NonNull final Object nullableResponseBody,
             @NonNull final Instant start
     ) {
-        log.debug(prepareLogMessage(request, response, nullableRequestBody) + prepareDurationInfo(start));
+        log.debug(prepareLogMessage(request, response, nullableRequestBody, nullableResponseBody) + prepareDurationInfo(start));
     }
 
     @NonNull
     private String prepareDurationInfo(Instant start) {
         return String.format("""
-                        | (i) Duration: %s
+                        | (i) Duration: %s ms
                         --------------------------------------------------------------------------------
                                                 
                         """.stripIndent(),
