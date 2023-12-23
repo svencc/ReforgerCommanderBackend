@@ -14,10 +14,18 @@ public class HttpErrorException extends RuntimeException {
 
     public HttpErrorException(
             @NonNull final String message,
-            @Nullable final String maybeResponseBody
+            @Nullable final String nullableResponseBody
     ) {
         super(message);
-        this.maybeResponseBody = Optional.ofNullable(maybeResponseBody);
+        this.maybeResponseBody = Optional.ofNullable(nullableResponseBody);
+    }
+
+    public HttpErrorException(
+            @NonNull final String message,
+            @Nullable final Throwable cause
+    ) {
+        super(message, cause);
+        this.maybeResponseBody = Optional.empty();
     }
 
 }

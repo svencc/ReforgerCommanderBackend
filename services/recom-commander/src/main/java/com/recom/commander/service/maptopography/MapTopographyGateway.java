@@ -1,14 +1,14 @@
-package com.recom.commander.service.gateway.recom;
+package com.recom.commander.service.maptopography;
 
-import com.recom.commander.exception.exceptions.http.HttpErrorException;
 import com.recom.commander.exception.RequestLogger;
-import com.recom.commander.property.restclient.RECOMRestClientProvider;
+import com.recom.commander.exception.exceptions.http.HttpErrorException;
+import com.recom.commander.exception.exceptions.http.HttpNoConnectionException;
 import com.recom.commander.property.gateway.MapTopographyGatewayProperties;
+import com.recom.commander.property.restclient.RECOMRestClientProvider;
 import com.recom.dto.map.topography.HeightMapDescriptorDto;
 import com.recom.dto.map.topography.MapTopographyRequestDto;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -32,22 +32,27 @@ public class MapTopographyGateway {
 
 
     @NonNull
-    public HeightMapDescriptorDto provideMapTopographyData() throws HttpErrorException, ResourceAccessException {
-        final Instant started = Instant.now();
-        final ResponseEntity<HeightMapDescriptorDto> responseEntity = recomRestClientProvider.provide()
-                .post()
-                .uri(mapTopographyGatewayProperties.getEndpoint())
-                .accept(MediaType.APPLICATION_JSON)
-                .body(MapTopographyRequestDto.builder()
-                        .mapName("$RECOMClient:worlds/Everon_CTI/RefCom_CTI_Campaign_Eden.ent")
-                        .build()
-                )
-                .retrieve()
-                .onStatus(httpStatus -> !httpStatus.is2xxSuccessful(), requestLogger::logRequestInErrorCase)
-                .onStatus(HttpStatusCode::is2xxSuccessful, (request, response) -> requestLogger.profileRequest(request, response, started))
-                .toEntity(HeightMapDescriptorDto.class);
+    public HeightMapDescriptorDto provideMapTopographyData() throws HttpErrorException {
+        try {
+            final Instant started = Instant.now();
+            final MapTopographyRequestDto body = MapTopographyRequestDto.builder()
+                    .mapName("$RECOMClient:worlds/Everon_CTI/RefCom_CTI_Campaign_Eden.ent")
+                    .build();
+            final ResponseEntity<HeightMapDescriptorDto> responseEntity = recomRestClientProvider.provide()
+                    .post()
+                    .uri(mapTopographyGatewayProperties.getEndpoint())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.IMAGE_PNG)
+                    .body(body)
+                    .retrieve()
+                    .onStatus(httpStatus -> !httpStatus.is2xxSuccessful(), (request, response) -> requestLogger.logRequestInErrorCase(request, response, null, body))
+                    //.onStatus(HttpStatusCode::is2xxSuccessful, (request, response) -> requestLogger.profileRequest(request, response, body, null.started))
+                    .toEntity(HeightMapDescriptorDto.class);
 
-        return responseEntity.getBody();
+            return responseEntity.getBody();
+        } catch (final ResourceAccessException e) {
+            throw new HttpNoConnectionException(getClass(), e);
+        }
     }
 
     public void doSomething() {

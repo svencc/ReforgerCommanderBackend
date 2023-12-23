@@ -1,15 +1,20 @@
 package com.recom.commander.service.authentication;
 
+import com.recom.commander.exception.exceptions.http.HttpErrorException;
 import com.recom.commander.property.user.AuthenticationProperties;
 import com.recom.commander.service.Scheduler;
+import com.recom.dto.authentication.AuthenticationRequestDto;
 import com.recom.dto.authentication.AuthenticationResponseDto;
 import com.recom.observer.*;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.util.Objects;
 
+@Slf4j
 @Service
 public class AuthenticationService extends ObserverTemplate<AuthenticationResponseDto> implements HasBufferedSubject<AuthenticationResponseDto> {
 
@@ -22,6 +27,9 @@ public class AuthenticationService extends ObserverTemplate<AuthenticationRespon
     @NonNull
     private final BufferedSubject<AuthenticationResponseDto> subject;
 
+    @Nullable
+    private ReactiveObserver<AuthenticationProperties> authenticationPropertiesReactiveObserver;
+
 
     public AuthenticationService(
             @NonNull final Scheduler scheduler,
@@ -33,17 +41,29 @@ public class AuthenticationService extends ObserverTemplate<AuthenticationRespon
         this.authenticationProperties = authenticationProperties;
         subject = new BufferedSubject<>();
         subject.beObservedBy(this);
+        init();
     }
 
-    public void authenticate() {
-        final AuthenticationResponseDto authenticate = authenticationGateway.authenticate();
-        subject.notifyObserversWith(Notification.of(authenticate));
+    public void init() {
+        authenticationPropertiesReactiveObserver = ReactiveObserver.reactWith((__, ___) -> {
+            log.info("AuthenticationProperties changed. Trigger re-authentication.");
+            authenticate();
+        });
+        authenticationPropertiesReactiveObserver.observe(authenticationProperties.getSubject());
+    }
+
+    public void authenticate() throws HttpErrorException {
+        final AuthenticationRequestDto authenticationRequest = AuthenticationRequestDto.builder()
+                .accountUUID(authenticationProperties.getAccountUUID())
+                .accessKey(authenticationProperties.getAccessKey())
+                .build();
+        final AuthenticationResponseDto authentication = authenticationGateway.authenticate(authenticationRequest);
+        subject.notifyObserversWith(Notification.of(authentication));
     }
 
     @NonNull
-    @Override
-    public BufferedSubject<AuthenticationResponseDto> getBufferedSubject() {
-        return subject;
+    public String provideBearerToken() {
+        return String.format("Bearer %1s", provideAuthenticationToken());
     }
 
     @NonNull
@@ -57,8 +77,9 @@ public class AuthenticationService extends ObserverTemplate<AuthenticationRespon
     }
 
     @NonNull
-    public String provideBearerToken() {
-        return String.format("Bearer %1s", provideAuthenticationToken());
+    @Override
+    public BufferedSubject<AuthenticationResponseDto> getBufferedSubject() {
+        return subject;
     }
 
     @Override

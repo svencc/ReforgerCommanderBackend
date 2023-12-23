@@ -1,12 +1,16 @@
 package com.recom.commander.property.restclient;
 
-import com.recom.commander.event.InitEvent;
+import com.recom.commander.event.InitializeComponentsEvent;
+import com.recom.commander.model.Provideable;
 import com.recom.commander.property.RestClientProperties;
 import com.recom.commander.property.user.HostProperties;
 import com.recom.commander.service.authentication.AuthenticationService;
 import com.recom.dto.authentication.AuthenticationResponseDto;
 import com.recom.dynamicproperties.exception.InitializationException;
+import com.recom.observer.Notification;
+import com.recom.observer.ObserverTemplate;
 import com.recom.observer.ReactiveObserver;
+import com.recom.observer.Subjective;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +26,7 @@ import org.springframework.web.client.RestClient;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class RECOMRestClientProvider {
+public class RECOMRestClientProvider extends ObserverTemplate<HostProperties> implements Provideable<RestClient> {
 
     @NonNull
     private final RestClientProperties restClientProperties;
@@ -39,11 +43,11 @@ public class RECOMRestClientProvider {
     private RestClient restClient;
 
 
-    @EventListener(InitEvent.class)
-    public void init(@NonNull final InitEvent event) {
-        event.log(log, this.getClass());
+    @EventListener(InitializeComponentsEvent.class)
+    public void init(@NonNull final InitializeComponentsEvent event) {
+        event.logComponentInitialization(log, this.getClass());
         authenticationReactiveObserver = ReactiveObserver.reactWith((__, ___) -> {
-            log.info("Authentication changed. Update RestClient.");
+            log.info("Authentication changed. Update {}.", this.getClass().getSimpleName());
             createNewRestClient();
         });
         try {
@@ -53,10 +57,23 @@ public class RECOMRestClientProvider {
         }
 
         hostPropertiesReactiveObserver = ReactiveObserver.reactWith((__, ___) -> {
-            log.info("HostProperties changed. Update RestClient.");
+            log.info("HostProperties changed. Update {}.", this.getClass().getSimpleName());
             createNewRestClient();
         });
         hostPropertiesReactiveObserver.observe(hostProperties.getSubject());
+    }
+
+    @NonNull
+    private RestClient createNewRestClient() {
+        final SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+        requestFactory.setConnectTimeout(restClientProperties.getConnectTimeout().toMillisPart());
+        requestFactory.setReadTimeout(restClientProperties.getReadTimeout().toMillisPart());
+
+        return RestClient.builder()
+                .requestFactory(requestFactory)
+                .baseUrl(hostProperties.getHostBasePath())
+                .defaultHeader(HttpHeaders.AUTHORIZATION, authenticationServiceProvider.getIfAvailable().provideBearerToken())
+                .build();
     }
 
     @NonNull
@@ -68,17 +85,13 @@ public class RECOMRestClientProvider {
         return restClient;
     }
 
-    @NonNull
-    private RestClient createNewRestClient() {
-        final SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
-        factory.setConnectTimeout(restClientProperties.getConnectTimeout().toMillisPart());
-        factory.setReadTimeout(restClientProperties.getReadTimeout().toMillisPart());
-
-        return RestClient.builder()
-                .requestFactory(factory)
-                .baseUrl(hostProperties.getHostBasePath())
-                .defaultHeader(HttpHeaders.AUTHORIZATION, authenticationServiceProvider.getIfAvailable().provideBearerToken())
-                .build();
+    @Override
+    public void takeNotice(
+            @NonNull final Subjective<HostProperties> subject,
+            @NonNull final Notification<HostProperties> notification
+    ) {
+        log.info("HostProperties changed. Creating new UnauthenticatedRestClient.");
+        restClient = createNewRestClient();
     }
 
 }

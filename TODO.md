@@ -1,10 +1,8 @@
 # TODO LIST
 
 # 0
-* AUTHENTICATION
-* (test Duration Logger)
-* 
-* basic property editor
+* fix MapTopology call (image/png result cannot be encoded)
+* basic property editor / UI
 * 
 * synchronize renderer (max frames?)
   * in relation to ring buffer size
@@ -13,6 +11,8 @@
     * javafx
 
 ------------------------------------------------------------
+
+# 0 use userfolder in backend also for key storage (as default)?
 
 # 1
 * add metadata to openstransaction!

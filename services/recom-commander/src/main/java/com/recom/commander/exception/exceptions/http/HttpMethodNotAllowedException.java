@@ -7,9 +7,9 @@ public class HttpMethodNotAllowedException extends HttpErrorException {
 
     public HttpMethodNotAllowedException(
             @NonNull final String message,
-            @Nullable final String responseBody
+            @Nullable final String nullableResponseBody
     ) {
-        super(message,responseBody);
+        super(message, nullableResponseBody);
     }
 
 }
