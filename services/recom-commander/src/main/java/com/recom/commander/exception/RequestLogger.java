@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.lang.Nullable;
@@ -19,6 +20,8 @@ public class RequestLogger {
 
     @NonNull
     private final ObjectMapper objectMapper;
+    @NonNull
+    private final AsyncTaskExecutor asyncTaskExecutor;
 
 
     public void logRequestInErrorCase(
@@ -27,9 +30,11 @@ public class RequestLogger {
             @Nullable final Object nullableRequestBody,
             @Nullable final Object nullableResponseBody
     ) {
-        final String message = prepareLogMessage(request, response, nullableRequestBody, nullableResponseBody);
-        log.error(message + "\n");
-        throw HttpStatusCodeToExceptionMapper.mapStatusCodeToException(response);
+        asyncTaskExecutor.submit(() -> {
+            final String message = prepareLogMessage(request, response, nullableRequestBody, nullableResponseBody);
+            log.error(message + "\n");
+            throw HttpStatusCodeToExceptionMapper.mapStatusCodeToException(response);
+        });
     }
 
     @NonNull
@@ -90,7 +95,7 @@ public class RequestLogger {
                          \\
                           +---> Body:
                         %s
-                        
+                                                
                         +---- -------- -------- -------[ RESPONSE LOGGER ]------- -------- -------- ----
                         |
                         *=====> [RESPONSE]: %s -> %s
@@ -121,8 +126,9 @@ public class RequestLogger {
             @NonNull final Object nullableResponseBody,
             @NonNull final Instant start
     ) {
-        log.debug(prepareLogMessage(request, response, nullableRequestBody, nullableResponseBody) + prepareDurationInfo(start));
+        asyncTaskExecutor.submit(() -> log.debug(prepareLogMessage(request, response, nullableRequestBody, nullableResponseBody) + prepareDurationInfo(start)));
     }
+
 
     @NonNull
     private String prepareDurationInfo(Instant start) {

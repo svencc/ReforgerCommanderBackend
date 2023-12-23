@@ -1,7 +1,6 @@
 # TODO LIST
 
 # 0
-* REQUEST Logger -> run in different thread than main ui thread (serialization = UI stuttering)
 * basic property editor / UI
 * 
 * synchronize renderer (max frames?)
