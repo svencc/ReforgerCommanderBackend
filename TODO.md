@@ -1,20 +1,19 @@
 # TODO LIST
 
 # 0
-* basic property editor / UI
-* 
 * synchronize renderer (max frames?)
   * in relation to ring buffer size
   * fps output
     * renderer
     * javafx
 
+* basic property editor / UI
 ------------------------------------------------------------
 
 # 0 use userfolder in backend also for key storage (as default)?
 
 # 1
-* add metadata to openstransaction!
+* add metadata to open-transaction!
   * size, width, height
   * @Embeddable for rotation
   * ocean_base_height
