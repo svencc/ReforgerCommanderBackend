@@ -24,14 +24,14 @@ public class InitializeStageEvent extends ApplicationEvent {
             @NonNull final Logger log,
             @NonNull final Class<T> clazz
     ) {
-        log.info("| +-  InitializingStageEvent: {}", clazz.getSimpleName());
+        log.info("| +- InitializingStageEvent: {}", clazz.getSimpleName());
     }
 
     public <T> void logStageInitializationError(
             @NonNull final Logger log,
             @NonNull final Class<T> clazz
     ) {
-        log.error("| +-  InitializingStageEvent: {}", clazz.getSimpleName());
+        log.error("| +- InitializingStageEvent: {}", clazz.getSimpleName());
     }
 
     public <T> void logStageInitializationWithMessage(
@@ -39,7 +39,7 @@ public class InitializeStageEvent extends ApplicationEvent {
             @NonNull final Class<T> clazz,
             @NonNull final String message
     ) {
-        log.info("| +-  InitializingStageEvent: {} > {}", clazz.getSimpleName(), message);
+        log.info("| +- InitializingStageEvent: {} > {}", clazz.getSimpleName(), message);
     }
 
     public <T> void logStageInitializationErrorWithMessage(
@@ -47,7 +47,7 @@ public class InitializeStageEvent extends ApplicationEvent {
             @NonNull final Class<T> clazz,
             @NonNull final String message
     ) {
-        log.error("| +-  InitializingStageEvent: {} > {}", clazz.getSimpleName(), message);
+        log.error("| +- InitializingStageEvent: {} > {}", clazz.getSimpleName(), message);
     }
 
 

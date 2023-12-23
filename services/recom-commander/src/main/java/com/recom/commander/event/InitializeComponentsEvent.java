@@ -14,7 +14,7 @@ public class InitializeComponentsEvent extends ApplicationEvent {
             @NonNull final Logger log,
             @NonNull final Class<T> clazz
     ) {
-        log.info("| +-  InitializeComponentsEvent {}", clazz.getSimpleName());
+        log.info("| +- InitializeComponentsEvent {}", clazz.getSimpleName());
     }
 
 }
