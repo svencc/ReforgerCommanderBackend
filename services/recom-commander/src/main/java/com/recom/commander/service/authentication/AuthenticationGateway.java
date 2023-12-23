@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 @Component
-public class AuthenticationGateway extends Gateway<AuthenticationRequestDto, AuthenticationResponseDto> {
+class AuthenticationGateway extends Gateway<AuthenticationRequestDto, AuthenticationResponseDto> {
 
     @NonNull
     private final AuthenticationGatewayProperties authenticationGatewayProperties;

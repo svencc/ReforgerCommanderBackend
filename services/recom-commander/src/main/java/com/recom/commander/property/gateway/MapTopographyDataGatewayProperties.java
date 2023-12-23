@@ -10,8 +10,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ConfigurationProperties("gateway.map-topography")
-public class MapTopographyGatewayProperties {
+@ConfigurationProperties("gateway.map-topography-data")
+public class MapTopographyDataGatewayProperties {
 
     private String endpoint;
 

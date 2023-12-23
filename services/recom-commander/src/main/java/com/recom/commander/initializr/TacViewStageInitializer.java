@@ -4,7 +4,8 @@ import com.recom.commander.event.InitializeStageEvent;
 import com.recom.commander.event.ShutdownEvent;
 import com.recom.commander.property.SpringApplicationProperties;
 import com.recom.commander.property.user.HostProperties;
-import com.recom.commander.service.maptopography.MapTopographyGateway;
+import com.recom.commander.service.maptopography.MapTopographyDataService;
+import com.recom.dto.map.topography.MapTopographyRequestDto;
 import com.recom.tacview.engine.GameTemplate;
 import com.recom.tacview.engine.TacViewer;
 import com.recom.tacview.engine.graphics.ScreenComposer;
@@ -48,7 +49,7 @@ public class TacViewStageInitializer {
     private final GameTemplate game;
 
     @NonNull
-    private final MapTopographyGateway mapTopographyGateway;
+    private final MapTopographyDataService mapTopographyDataService;
     @NonNull
     private final HostProperties hostProperties;
 
@@ -83,7 +84,10 @@ public class TacViewStageInitializer {
         tacViewer.start();
 
         tacViewer.setOnMouseClicked(event -> {
-            mapTopographyGateway.provideMapTopographyData();
+            final MapTopographyRequestDto mapTopographyRequest = MapTopographyRequestDto.builder()
+                    .mapName("$RECOMClient:worlds/Everon_CTI/RefCom_CTI_Campaign_Eden.ent")
+                    .build();
+            mapTopographyDataService.reloadMapTopographyData(mapTopographyRequest);
         });
         /*
         tacViewer.setOnMouseClicked(event -> {
