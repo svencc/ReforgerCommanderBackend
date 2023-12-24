@@ -1,9 +1,9 @@
-package com.recom.tacview.game.defaultexample;
+package com.recom.commander.enginemodule;
 
-import com.recom.tacview.engine.GameTemplate;
+import com.recom.dynamicproperties.RenderProvider;
+import com.recom.tacview.engine.EngineModuleTemplate;
 import com.recom.tacview.engine.components.mergeable.ScanableNoiseMergeable;
 import com.recom.tacview.engine.graphics.ScreenComposer;
-import com.recom.dynamicproperties.RenderProvider;
 import com.recom.tacview.property.RendererProperties;
 import com.recom.tacview.service.RandomProvider;
 import lombok.NonNull;
@@ -11,9 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
-//@ConditionalOnMissingBean(GameTemplate.class)
 @RequiredArgsConstructor
-public class DefaultGame extends GameTemplate {
+public class TacViewerEngineModule extends EngineModuleTemplate {
 
     @NonNull
     private final RendererProperties rendererProperties;
@@ -30,7 +29,7 @@ public class DefaultGame extends GameTemplate {
         screenComposer.getLayerPipeline().add(scanableNoiseLayer);
     }
 
-    public void startGame() {
+    public void startEngineModule() {
 
     }
 

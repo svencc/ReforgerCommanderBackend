@@ -1,13 +1,6 @@
 package com.recom.commander.property;
 
-import com.recom.tacview.engine.units.PixelDimension;
-import com.recom.tacview.property.ComposerProperties;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
+/*
 @Data
 @Builder
 @NoArgsConstructor
@@ -51,3 +44,4 @@ public class RendererProperties {
     }
 
 }
+ */

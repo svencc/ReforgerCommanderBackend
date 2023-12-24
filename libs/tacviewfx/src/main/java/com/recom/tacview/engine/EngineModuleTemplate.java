@@ -1,14 +1,14 @@
 package com.recom.tacview.engine;
 
-public abstract class GameTemplate {
+public abstract class EngineModuleTemplate {
 
     public void run() {
         init();
-        startGame();
+        startEngineModule();
     }
 
     public abstract void init();
 
-    public abstract void startGame();
+    public abstract void startEngineModule();
 
 }

@@ -1,8 +1,6 @@
 package com.recom.tacview.engine;
 
 import com.recom.tacview.engine.graphics.ScreenComposer;
-import com.recom.tacview.engine.input.KeyboardInput;
-import com.recom.tacview.engine.input.MouseInput;
 import com.recom.tacview.property.RendererProperties;
 import com.recom.tacview.service.profiler.FPSCounter;
 import com.recom.tacview.service.profiler.Profiler;
@@ -10,19 +8,21 @@ import com.recom.tacview.service.profiler.ProfilerProvider;
 import com.recom.tacview.service.profiler.TPSCounter;
 import com.recom.tacview.service.tick.TickThresholdCalculator;
 import com.recom.tacview.service.tick.TickerService;
-import com.recom.tacview.strategy.SetFPSStrategy;
+import com.recom.tacview.strategy.ProfileFPSStrategy;
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.PixelBuffer;
 import javafx.scene.image.PixelFormat;
 import javafx.scene.image.WritableImage;
 import lombok.NonNull;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.nio.IntBuffer;
 
+@Slf4j
 @Component
 public class TacViewer extends Canvas implements Runnable {
 
@@ -43,7 +43,7 @@ public class TacViewer extends Canvas implements Runnable {
     @NonNull
     private final ScreenComposer screenComposer;
     @NonNull
-    private final GameTemplate game;
+    private final EngineModuleTemplate engineFlavour;
 
 
     // IMAGE RENDERING BUFFER
@@ -60,9 +60,9 @@ public class TacViewer extends Canvas implements Runnable {
     private AnimationTimer bufferToCanvasUpdaterLoop = null;
     private boolean running = false;
 
-
-//    @Nullable
-//    private SetFPSStrategy setFPSStrategy;
+    @Setter
+    @Nullable
+    private ProfileFPSStrategy profileFPSStrategy;
 
 
     public TacViewer(
@@ -71,7 +71,7 @@ public class TacViewer extends Canvas implements Runnable {
             @NonNull final TickThresholdCalculator tickThresholdCalculator,
             @NonNull final TickerService tickerService,
             @NonNull final ScreenComposer screenComposer,
-            @NonNull final GameTemplate game
+            @NonNull final EngineModuleTemplate engineFlavour
     ) {
         // CANVAS SIZE
         super(rendererProperties.getWidth(), rendererProperties.getHeight());
@@ -80,7 +80,7 @@ public class TacViewer extends Canvas implements Runnable {
         this.tickThresholdCalculator = tickThresholdCalculator;
         this.tickerService = tickerService;
         this.screenComposer = screenComposer;
-        this.game = game;
+        this.engineFlavour = engineFlavour;
 
         intBuffer = IntBuffer.allocate(rendererProperties.getWidth() * rendererProperties.getHeight());
         pixelFormat = PixelFormat.getIntArgbPreInstance();
@@ -93,29 +93,21 @@ public class TacViewer extends Canvas implements Runnable {
                 copyComposedBackBufferToCanvasFrontBuffer();
             }
         };
-
-
-//        setSize(canvasSize);
-//        setPreferredSize(canvasSize);
-//        setMinimumSize(canvasSize);
-//        setMaximumSize(canvasSize);
-//        setIgnoreRepaint(true);
-
-//        // RENDER BACKBUFFERHANDLER
-//        if (rendererProperties.getComposer().isParallelizedBackBufferHandler()) {
-//            backBufferExecutor = Executors.newFixedThreadPool(1);
-//        }
     }
 
+    private void copyComposedBackBufferToCanvasFrontBuffer() {
+        pixelBuffer.getBuffer().put(screenComposer.getBackPixelBuffer(backBufferIndex).directBufferAccess());
+        pixelBuffer.getBuffer().flip();
+        pixelBuffer.updateBuffer(__ -> null);
+        getGraphicsContext2D().drawImage(img, 0, 0);
+    }
 
     // GAMELOOP RUNNABLE METHODS
     public synchronized void start() {
-        // Create IMAGE BUFFER
-
         // Start Loop
         running = true;
         renderLoopThread = new Thread(this, THREAD_NAME);
-        game.run();
+        engineFlavour.run();
         renderLoopThread.start();
         bufferToCanvasUpdaterLoop.start();
     }
@@ -125,11 +117,9 @@ public class TacViewer extends Canvas implements Runnable {
         bufferToCanvasUpdaterLoop.stop();
         try {
             renderLoopThread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            System.exit(1);
+        } catch (final InterruptedException e) {
+            log.error("Error while stopping TacViewer", e);
         }
-        System.exit(0);
     }
 
     @Override
@@ -153,29 +143,19 @@ public class TacViewer extends Canvas implements Runnable {
 
             composeGraphics();
             fpsCounter.countFrame();
-
             loopProfiler.measureLoop();
 
-            if (fpsCounter.oneSecondPassed()) {
-                // TODO: setFPS into stage title .... generic
-//                setFPSStrategy.execute(() ->);
-//                setFPSStrategy.execute(metaProperties.getName() + " | " + tpsCounter.profileTicksPerSecond() + " | " + fpsCounter.profileFramesPerSecond() + " | " + loopProfiler.stringifyResult());
+            if (fpsCounter.oneSecondPassed() && profileFPSStrategy != null) {
+                final String profiled = String.format("%1s | %2s | %3s", tpsCounter.profileTicksPerSecond(), fpsCounter.profileFramesPerSecond(), loopProfiler.stringifyResult());
+                profileFPSStrategy.execute(profiled);
             }
         }
     }
-
 
     // CANVAS / IMAGE-BUFFER HANDLING
     private void composeGraphics() {
         // Render NEXT frame to next backBuffer
         backBufferIndex = screenComposer.compose();
-    }
-
-    private void copyComposedBackBufferToCanvasFrontBuffer() {
-        pixelBuffer.getBuffer().put(screenComposer.getBackPixelBuffer(backBufferIndex).directBufferAccess());
-        pixelBuffer.getBuffer().flip();
-        pixelBuffer.updateBuffer(__ -> null);
-        getGraphicsContext2D().drawImage(img, 0, 0);
     }
 
 }

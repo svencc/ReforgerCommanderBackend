@@ -12,9 +12,9 @@ public class Profiler {
     private long nanotimeStart;
 
     @Getter
-    private long profiledNanos;
+    private long profiledNanos = 0;
     @Getter
-    private double profiledMilliseconds;
+    private double profiledMilliseconds = 0;
 
 
     public void startNextMeasurement() {
@@ -32,7 +32,7 @@ public class Profiler {
 
     @NonNull
     public String stringifyResult() {
-        return "Run " + profilerName + " in " + profiledNanos + " ns | " + profiledMilliseconds + " ms";
+        return String.format("Run %1s in %2s ns |  %s3 ms", profilerName, profiledNanos, profiledMilliseconds);
     }
 
 }
