@@ -1,7 +1,6 @@
-package com.recom.tacview.module;
+package com.recom.tacview.engine.module;
 
 import com.recom.tacview.engine.renderer.RenderProvider;
-import com.recom.tacview.engine.EngineModuleTemplate;
 import com.recom.tacview.engine.components.mergeable.ScanableNoiseMergeable;
 import com.recom.tacview.engine.graphics.ScreenComposer;
 import com.recom.tacview.property.RendererProperties;

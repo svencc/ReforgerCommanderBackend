@@ -1,9 +1,9 @@
 package com.recom.tacview.configuration;
 
 import com.recom.tacview.engine.renderer.RenderProvider;
-import com.recom.tacview.engine.EngineModuleTemplate;
+import com.recom.tacview.engine.module.EngineModuleTemplate;
 import com.recom.tacview.engine.graphics.ScreenComposer;
-import com.recom.tacview.module.DefaultEngineModule;
+import com.recom.tacview.engine.module.DefaultEngineModule;
 import com.recom.tacview.property.RendererProperties;
 import com.recom.tacview.service.RandomProvider;
 import lombok.NonNull;

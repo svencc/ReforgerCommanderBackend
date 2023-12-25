@@ -1,4 +1,4 @@
-package com.recom.tacview.engine;
+package com.recom.tacview.engine.module;
 
 public abstract class EngineModuleTemplate {
 

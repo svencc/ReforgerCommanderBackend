@@ -3,7 +3,7 @@ package com.recom.commander.initializr;
 import com.recom.commander.event.InitializeStageEvent;
 import com.recom.commander.event.ShutdownEvent;
 import com.recom.commander.property.SpringApplicationProperties;
-import com.recom.tacview.engine.EngineModuleTemplate;
+import com.recom.tacview.engine.module.EngineModuleTemplate;
 import com.recom.tacview.engine.TacViewer;
 import com.recom.tacview.engine.graphics.ScreenComposer;
 import com.recom.tacview.property.RendererProperties;

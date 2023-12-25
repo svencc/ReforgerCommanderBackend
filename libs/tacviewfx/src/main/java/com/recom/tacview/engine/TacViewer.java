@@ -1,6 +1,7 @@
 package com.recom.tacview.engine;
 
 import com.recom.tacview.engine.graphics.ScreenComposer;
+import com.recom.tacview.engine.module.EngineModuleTemplate;
 import com.recom.tacview.property.RendererProperties;
 import com.recom.tacview.service.profiler.FPSCounter;
 import com.recom.tacview.service.profiler.Profiler;
