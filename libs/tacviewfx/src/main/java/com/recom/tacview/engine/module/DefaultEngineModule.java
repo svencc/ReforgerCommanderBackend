@@ -20,6 +20,7 @@ public class DefaultEngineModule extends EngineModuleTemplate {
     @NonNull
     private final RenderProvider renderProvider;
 
+
     public void init() {
         final ScanableNoiseMergeable scanableNoiseLayer = new ScanableNoiseMergeable(renderProvider, rendererProperties.toRendererDimension(), randomProvider);
         screenComposer.getLayerPipeline().clear();
