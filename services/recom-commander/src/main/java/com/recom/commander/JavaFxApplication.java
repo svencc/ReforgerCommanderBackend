@@ -51,6 +51,7 @@ public class JavaFxApplication extends Application {
         applicationContext.close();
         log.warn("Exit ...");
         Platform.exit();
+        System.exit(0);
     }
 
 }

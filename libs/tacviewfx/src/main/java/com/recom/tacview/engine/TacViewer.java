@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 import java.nio.IntBuffer;
 
 @Slf4j
-@Component
+//@Component
 public class TacViewer extends Canvas implements Runnable {
 
     // CONSTANTS
@@ -59,7 +59,8 @@ public class TacViewer extends Canvas implements Runnable {
     @Nullable
     private Thread renderLoopThread = null;
     private AnimationTimer bufferToCanvasUpdaterLoop = null;
-    private boolean running = false;
+    private volatile boolean running = false;
+
 
     @Setter
     @Nullable
@@ -74,7 +75,7 @@ public class TacViewer extends Canvas implements Runnable {
             @NonNull final ScreenComposer screenComposer,
             @NonNull final EngineModuleTemplate engineFlavour
     ) {
-        // CANVAS SIZE
+        // DEPENDENCIES
         super(rendererProperties.getWidth(), rendererProperties.getHeight());
         this.rendererProperties = rendererProperties;
         this.profilerProvider = profilerProvider;
@@ -83,11 +84,13 @@ public class TacViewer extends Canvas implements Runnable {
         this.screenComposer = screenComposer;
         this.engineFlavour = engineFlavour;
 
+        // CANVAS IMAGE BUFFER
         intBuffer = IntBuffer.allocate(rendererProperties.getWidth() * rendererProperties.getHeight());
         pixelFormat = PixelFormat.getIntArgbPreInstance();
         pixelBuffer = new PixelBuffer<>(rendererProperties.getWidth(), rendererProperties.getHeight(), intBuffer, pixelFormat);
         img = new WritableImage(pixelBuffer);
 
+        // JAVA FX AnimationTimer
         bufferToCanvasUpdaterLoop = new AnimationTimer() {
             @Override
             public void handle(final long now) {
@@ -106,7 +109,7 @@ public class TacViewer extends Canvas implements Runnable {
     // GAMELOOP RUNNABLE METHODS
     public synchronized void start() {
         // Start Loop
-        running = true;
+        this.running = true;
         renderLoopThread = new Thread(this, THREAD_NAME);
         engineFlavour.run();
         renderLoopThread.start();
@@ -149,6 +152,7 @@ public class TacViewer extends Canvas implements Runnable {
             if (fpsCounter.oneSecondPassed() && profileFPSStrategy != null) {
                 final String profiled = String.format("%1s | %2s | %3s", tpsCounter.profileTicksPerSecond(), fpsCounter.profileFramesPerSecond(), loopProfiler.stringifyResult());
                 profileFPSStrategy.execute(profiled);
+                log.info(profiled);
             }
         }
     }
