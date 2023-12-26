@@ -1,7 +1,6 @@
 package com.recom.dynamicproperties;
 
 import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 
 import java.lang.reflect.Field;
 import java.nio.file.Path;
@@ -24,7 +23,6 @@ public abstract class DynamicProperties {
     DynamicPropertySystem<? extends DynamicProperties> dynamicPropertySystem;
 
     final Properties properties = new Properties();
-
 
 
     @NonNull
