@@ -1,1 +1,2 @@
 com.recom.tacview.configuration.TackViewAutoConfiguration
+com.recom.tacview.configuration.DefaultEngineModuleConfiguration

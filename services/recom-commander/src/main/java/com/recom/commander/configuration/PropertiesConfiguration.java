@@ -1,11 +1,10 @@
 package com.recom.commander.configuration;
 
-import com.recom.commander.property.RendererProperties;
 import com.recom.commander.property.RestClientProperties;
 import com.recom.commander.property.SpringApplicationProperties;
 import com.recom.commander.property.gateway.AuthenticationGatewayProperties;
 import com.recom.commander.property.gateway.MapTopographyDataGatewayProperties;
-import com.recom.commander.property.gateway.RECOMHostProperties;
+import com.recom.tacview.property.RendererProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,7 +13,6 @@ import org.springframework.context.annotation.Configuration;
         SpringApplicationProperties.class,
         RendererProperties.class,
         RestClientProperties.class,
-        RECOMHostProperties.class,
         MapTopographyDataGatewayProperties.class,
         AuthenticationGatewayProperties.class
 })

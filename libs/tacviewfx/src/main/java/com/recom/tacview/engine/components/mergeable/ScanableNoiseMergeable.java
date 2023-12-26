@@ -2,7 +2,7 @@ package com.recom.tacview.engine.components.mergeable;
 
 import com.recom.tacview.engine.graphics.Bufferable;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
-import com.recom.dynamicproperties.RenderProvider;
+import com.recom.tacview.engine.renderer.RenderProvider;
 import com.recom.tacview.engine.graphics.scanable.ScanableNoise;
 import com.recom.tacview.engine.units.PixelDimension;
 import com.recom.tacview.service.RandomProvider;

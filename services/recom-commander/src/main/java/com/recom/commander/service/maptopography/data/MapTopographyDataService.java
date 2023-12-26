@@ -1,4 +1,4 @@
-package com.recom.commander.service.maptopography;
+package com.recom.commander.service.maptopography.data;
 
 import com.recom.commander.exception.exceptions.http.HttpErrorException;
 import com.recom.dto.map.topography.HeightMapDescriptorDto;
@@ -30,7 +30,8 @@ public class MapTopographyDataService implements HasBufferedSubject<HeightMapDes
             try {
                 final HeightMapDescriptorDto heightMapDescriptor = newMapTopographyDataGateway.provideMapTopographyData(mapTopographyRequest);
                 subject.notifyObserversWith(Notification.of(heightMapDescriptor));
-            } catch (final HttpErrorException __) {
+            } catch (final HttpErrorException httpE) {
+                log.error("Failed to reload map topography data", httpE);
             }
         });
     }

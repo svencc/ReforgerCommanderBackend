@@ -10,14 +10,6 @@
 * basic property editor / UI
 ------------------------------------------------------------
 
-# 0 use userfolder in backend also for key storage (as default)?
-
-# 1
-* add metadata to open-transaction!
-  * size, width, height
-  * @Embeddable for rotation
-  * ocean_base_height
-
 # 1
 * load map into tacviewer
 * panning
@@ -28,6 +20,12 @@
 
 # 1.1
 * Spring Boot Executors -> use virtual threads
+
+# 2
+* add metadata to open-transaction!
+  * size, width, height
+  * @Embeddable for rotation
+  * ocean_base_height
 
 # 2
 * scanner -> qubus

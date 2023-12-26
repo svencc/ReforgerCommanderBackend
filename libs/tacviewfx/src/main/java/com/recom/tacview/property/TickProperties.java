@@ -10,7 +10,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ConfigurationProperties("tick")
+@ConfigurationProperties("engine.tick")
 public class TickProperties {
 
     private int ticksPerSecond;

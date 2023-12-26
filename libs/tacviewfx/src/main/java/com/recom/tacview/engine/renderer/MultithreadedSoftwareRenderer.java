@@ -1,4 +1,4 @@
-package com.recom.dynamicproperties;
+package com.recom.tacview.engine.renderer;
 
 import com.recom.tacview.engine.graphics.Bufferable;
 import com.recom.tacview.engine.graphics.Scanable;

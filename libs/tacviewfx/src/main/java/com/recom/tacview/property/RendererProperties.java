@@ -1,17 +1,14 @@
 package com.recom.tacview.property;
 
 import com.recom.tacview.engine.units.PixelDimension;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ConfigurationProperties("renderer")
+@ConfigurationProperties("engine.renderer")
 public class RendererProperties {
 
     private static PixelDimension singletonPixelDimension = null;
@@ -21,6 +18,7 @@ public class RendererProperties {
     private int threadPoolSize;
     private ComposerProperties composer;
 
+    @NonNull
     public PixelDimension toRendererDimension() {
         if (singletonPixelDimension == null) {
             singletonPixelDimension = PixelDimension.builder()

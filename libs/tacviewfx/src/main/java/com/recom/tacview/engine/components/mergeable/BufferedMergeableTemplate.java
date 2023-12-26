@@ -4,7 +4,7 @@ import com.recom.tacview.engine.components.HasPixelBuffer;
 import com.recom.tacview.engine.components.Mergeable;
 import com.recom.tacview.engine.graphics.Bufferable;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
-import com.recom.dynamicproperties.RenderProvider;
+import com.recom.tacview.engine.renderer.RenderProvider;
 import com.recom.tacview.engine.units.PixelDimension;
 import lombok.Getter;
 import lombok.NonNull;
