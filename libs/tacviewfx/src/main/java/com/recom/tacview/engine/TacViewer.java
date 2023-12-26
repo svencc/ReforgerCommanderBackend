@@ -19,12 +19,10 @@ import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.Nullable;
-import org.springframework.stereotype.Component;
 
 import java.nio.IntBuffer;
 
 @Slf4j
-//@Component
 public class TacViewer extends Canvas implements Runnable {
 
     // CONSTANTS
@@ -109,7 +107,7 @@ public class TacViewer extends Canvas implements Runnable {
     // GAMELOOP RUNNABLE METHODS
     public synchronized void start() {
         // Start Loop
-        this.running = true;
+        running = true;
         renderLoopThread = new Thread(this, THREAD_NAME);
         engineFlavour.run();
         renderLoopThread.start();

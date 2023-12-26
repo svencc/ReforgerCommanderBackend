@@ -3,7 +3,7 @@ package com.recom.commander.event;
 import javafx.stage.Stage;
 import lombok.NonNull;
 
-public class StageReadyEvent extends InitializeStageEvent {
+public class StageReadyEvent extends LoggableInitializationEvent {
 
     public StageReadyEvent(
             @NonNull final Object source,
