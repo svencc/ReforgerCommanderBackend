@@ -1,14 +1,5 @@
 # TODO LIST
 
-# 0
-* synchronize renderer (max frames?)
-  * in relation to ring buffer size
-  * fps output
-    * renderer
-    * javafx
-
-* basic property editor / UI
-------------------------------------------------------------
 
 # 1
 * load map into tacviewer
@@ -17,6 +8,14 @@
 * add scale bar
 * add measurement tool
 * add menu
+
+------------------------------------------------------------
+
+# 1.1
+* synchronize renderer (max frames?)
+  * in relation to ring buffer size
+* basic property editor / UI
+* fps / ticks per second -> properties
 
 # 1.1
 * Spring Boot Executors -> use virtual threads
