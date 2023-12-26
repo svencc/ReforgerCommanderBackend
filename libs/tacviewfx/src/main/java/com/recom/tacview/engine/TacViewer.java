@@ -71,7 +71,7 @@ public class TacViewer extends Canvas implements Runnable {
             @NonNull final TickThresholdCalculator tickThresholdCalculator,
             @NonNull final TickerService tickerService,
             @NonNull final ScreenComposer screenComposer,
-            @NonNull final EngineModuleTemplate engineFlavour
+            @NonNull final EngineModuleTemplate engineModule
     ) {
         // DEPENDENCIES
         super(rendererProperties.getWidth(), rendererProperties.getHeight());
@@ -80,7 +80,7 @@ public class TacViewer extends Canvas implements Runnable {
         this.tickThresholdCalculator = tickThresholdCalculator;
         this.tickerService = tickerService;
         this.screenComposer = screenComposer;
-        this.engineFlavour = engineFlavour;
+        this.engineFlavour = engineModule;
 
         // CANVAS IMAGE BUFFER
         intBuffer = IntBuffer.allocate(rendererProperties.getWidth() * rendererProperties.getHeight());
@@ -137,6 +137,9 @@ public class TacViewer extends Canvas implements Runnable {
             loopProfiler.startNextMeasurement();
             tickThresholdRatio += tickThresholdCalculator.calculate(loopProfiler.getProfiledNanos());
 
+            // @TODO <<< rethink this concept!
+            // I think it would be better to have a the ticks completely independent from the frames in a separate thread!
+            // It relies on the fact that the ticks are dependent from rest calls, so the ticks have to be async anyway!
             while (tickThresholdRatio >= 1.0) {
                 tickerService.tick();
                 tpsCounter.countTick();
