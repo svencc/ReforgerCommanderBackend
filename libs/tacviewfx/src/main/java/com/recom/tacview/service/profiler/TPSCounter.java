@@ -1,20 +1,20 @@
 package com.recom.tacview.service.profiler;
 
 
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
 public class TPSCounter {
 
-    private static long tickCounter = 0;
+    private long tickCounter = 0;
 
-    TPSCounter() {
-
-    }
 
     public void countTick() {
         tickCounter++;
     }
 
     public String profileTicksPerSecond() {
-        final String profiledPerSecond = "TPS:" + tickCounter;
+        final String profiledPerSecond = String.format("TPS: %1s", tickCounter);
         resetTicks();
 
         return profiledPerSecond;
