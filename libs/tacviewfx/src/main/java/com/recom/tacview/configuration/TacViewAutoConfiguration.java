@@ -13,7 +13,7 @@ import org.springframework.context.annotation.ComponentScan;
 @AutoConfiguration
 @RequiredArgsConstructor
 @ComponentScan("com.recom.tacview")
-public class TackViewAutoConfiguration {
+public class TacViewAutoConfiguration {
 
     @Bean
     public RendererProperties rendererProperties(@NonNull final ComposerProperties composerProperties) {

@@ -19,10 +19,12 @@ public class TacViewerEngineModule extends EngineModuleTemplate {
 
 
     public TacViewerEngineModule(
+            @NonNull final RECOMWorld world,
             @NonNull final RendererProperties rendererProperties,
             @NonNull final ScreenComposer screenComposer,
             @NonNull final RenderProvider renderProvider
     ) {
+        super(world);
         this.rendererProperties = rendererProperties;
         this.screenComposer = screenComposer;
         this.renderProvider = renderProvider;
@@ -42,12 +44,12 @@ public class TacViewerEngineModule extends EngineModuleTemplate {
 
     @Override
     public void update() {
-
+        super.update();
     }
 
     @Override
     public void handleInput() {
-
+        super.handleInput();
     }
 
 }

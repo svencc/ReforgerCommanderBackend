@@ -1,6 +1,7 @@
 package com.recom.tacview.engine.module;
 
 import com.recom.tacview.engine.components.mergeable.ScanableNoiseMergeable;
+import com.recom.tacview.engine.entity.World;
 import com.recom.tacview.engine.graphics.ScreenComposer;
 import com.recom.tacview.engine.renderer.RenderProvider;
 import com.recom.tacview.property.RendererProperties;
@@ -22,12 +23,14 @@ public class DefaultEngineModule extends EngineModuleTemplate {
     private final RenderProvider renderProvider;
 
     public DefaultEngineModule(
+            @NonNull final World world,
             @NonNull final RendererProperties rendererProperties,
             @NonNull final TickProperties tickProperties,
             @NonNull final ScreenComposer screenComposer,
             @NonNull final RandomProvider randomProvider,
             @NonNull final RenderProvider renderProvider
     ) {
+        super(world);
         this.rendererProperties = rendererProperties;
         this.tickProperties = tickProperties;
         this.screenComposer = screenComposer;
@@ -50,12 +53,12 @@ public class DefaultEngineModule extends EngineModuleTemplate {
 
     @Override
     public void update() {
-
+        super.update();
     }
 
     @Override
     public void handleInput() {
-
+        super.handleInput();
     }
 
 }

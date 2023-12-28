@@ -1,5 +1,6 @@
 package com.recom.tacview.configuration;
 
+import com.recom.tacview.engine.entity.World;
 import com.recom.tacview.engine.graphics.ScreenComposer;
 import com.recom.tacview.engine.module.DefaultEngineModule;
 import com.recom.tacview.engine.module.EngineModuleTemplate;
@@ -15,9 +16,12 @@ import org.springframework.context.annotation.Bean;
 
 
 @RequiredArgsConstructor
-@AutoConfigureAfter(TackViewAutoConfiguration.class)
+@AutoConfigureAfter(DefaultWorldConfiguration.class)
 public class DefaultEngineModuleConfiguration {
 
+
+    @NonNull
+    private final World world;
     @NonNull
     private final RendererProperties rendererProperties;
     @NonNull
@@ -34,7 +38,7 @@ public class DefaultEngineModuleConfiguration {
     public DefaultEngineModule defaultEngineModule(
             @NonNull final RendererProperties rendererProperties
     ) {
-        return new DefaultEngineModule(rendererProperties, tickProperties, screenComposer, randomProvider, renderProvider);
+        return new DefaultEngineModule(world, rendererProperties, tickProperties, screenComposer, randomProvider, renderProvider);
     }
 
 }
