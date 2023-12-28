@@ -13,15 +13,21 @@
 * add measurement tool
 * add menu
 
+
+
+# 1.1
+* load entity to world
+* load new world
+* Composer and layers in world?
+* background entity layer?
+* Component pattern. Using that, update() would be on the entity’s components and not on Entity itself.
+
 ------------------------------------------------------------
 
-# 1.1
-* synchronize renderer (max frames?)
-  * in relation to ring buffer size
+# 1.5
 * basic property editor / UI
-* fps / ticks per second -> properties
 
-# 1.1
+# 1.5
 * Spring Boot Executors -> use virtual threads
 
 # 2

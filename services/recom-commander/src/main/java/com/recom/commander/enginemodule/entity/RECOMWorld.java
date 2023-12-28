@@ -1,4 +1,4 @@
-package com.recom.commander.enginemodule;
+package com.recom.commander.enginemodule.entity;
 
 import com.recom.tacview.engine.entity.World;
 import org.springframework.stereotype.Component;
