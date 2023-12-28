@@ -86,15 +86,14 @@ public class TacViewer extends Canvas {
             @NonNull final TickProperties tickProperties,
             @NonNull final RendererProperties rendererProperties
     ) {
-        final long currentNanoTime = System.nanoTime();
-        final long deltaTickNanoTime = currentNanoTime - profiler.lastTickNanoTime;
-        final long deltaFrameNanoTime = currentNanoTime - profiler.lastFrameNanoTime;
-
         profiler.getLoopProfiler().startNextMeasurement();
 
         // HANDLE INPUT
         engineModule.handleInput();
 
+        final long currentNanoTime = System.nanoTime();
+        final long deltaTickNanoTime = currentNanoTime - profiler.lastTickNanoTime;
+        final long deltaFrameNanoTime = currentNanoTime - profiler.lastFrameNanoTime;
         // HANDLE TICK
         if (deltaTickNanoTime >= tickProperties.getTickThresholdNanoTime()) {
             profiler.lastTickNanoTime = System.nanoTime();
