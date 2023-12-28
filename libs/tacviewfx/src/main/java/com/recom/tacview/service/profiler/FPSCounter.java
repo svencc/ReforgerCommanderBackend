@@ -31,7 +31,7 @@ public class FPSCounter {
 
     @NonNull
     public String profileFramesPerSecond() {
-        final String profiledPerSecond = String.format("FPS: %1s)", frameCounter);
+        final String profiledPerSecond = String.format("FPS: %1s", frameCounter);
         resetFrames();
 
         return profiledPerSecond;

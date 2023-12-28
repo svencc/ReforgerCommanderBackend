@@ -4,6 +4,8 @@ import com.recom.tacview.engine.units.PixelDimension;
 import lombok.*;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.time.Duration;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -16,6 +18,8 @@ public class RendererProperties {
     private int height;
     private boolean parallelizedRendering;
     private int threadPoolSize;
+    private int targetFps;
+    private long framesThresholdNanoTime = 0;
     private ComposerProperties composer;
 
     @NonNull
@@ -28,6 +32,14 @@ public class RendererProperties {
         }
 
         return singletonPixelDimension;
+    }
+
+    public long getFrameThresholdNanoTime() {
+        if (framesThresholdNanoTime == 0.0) {
+            framesThresholdNanoTime = Duration.ofSeconds(1).toNanos() / targetFps;
+        }
+
+        return framesThresholdNanoTime;
     }
 
 }

@@ -8,8 +8,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class Profiler {
 
+    @NonNull
     private final String profilerName;
-    private long nanotimeStart;
+    private long nanoTimeStart;
 
     @Getter
     private long profiledNanos = 0;
@@ -18,21 +19,17 @@ public class Profiler {
 
 
     public void startNextMeasurement() {
-        nanotimeStart = System.nanoTime();
+        nanoTimeStart = System.nanoTime();
     }
 
     public void measureLoop() {
-        profiledNanos = System.nanoTime() - nanotimeStart;
+        profiledNanos = System.nanoTime() - nanoTimeStart;
         profiledMilliseconds = profiledNanos / TimeUnits.SECOND_IN_NANOS;
-    }
-
-    public void printResult() {
-        System.out.println(stringifyResult());
     }
 
     @NonNull
     public String stringifyResult() {
-        return String.format("Run %1s in %2s ns |  %s3 ms", profilerName, profiledNanos, profiledMilliseconds);
+        return String.format("Run %1s in %2s ns / %s3 ms", profilerName, profiledNanos, profiledMilliseconds);
     }
 
 }

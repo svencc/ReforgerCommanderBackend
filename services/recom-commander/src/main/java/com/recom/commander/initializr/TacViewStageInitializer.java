@@ -3,13 +3,12 @@ package com.recom.commander.initializr;
 import com.recom.commander.event.InitializeStageEvent;
 import com.recom.commander.event.ShutdownEvent;
 import com.recom.commander.property.SpringApplicationProperties;
-import com.recom.tacview.engine.module.EngineModuleTemplate;
 import com.recom.tacview.engine.TacViewer;
 import com.recom.tacview.engine.graphics.ScreenComposer;
+import com.recom.tacview.engine.module.EngineModuleTemplate;
 import com.recom.tacview.property.RendererProperties;
+import com.recom.tacview.property.TickProperties;
 import com.recom.tacview.service.profiler.ProfilerProvider;
-import com.recom.tacview.service.tick.TickThresholdCalculator;
-import com.recom.tacview.service.tick.TickerService;
 import com.recom.tacview.strategy.ProfileFPSStrategy;
 import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
@@ -19,8 +18,6 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.stage.Window;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,13 +34,11 @@ public class TacViewStageInitializer {
     @NonNull
     private final SpringApplicationProperties springApplicationProperties;
     @NonNull
+    private final TickProperties tickProperties;
+    @NonNull
     private final RendererProperties rendererProperties;
     @NonNull
     private final ProfilerProvider profilerProvider;
-    @NonNull
-    private final TickThresholdCalculator tickThresholdCalculator;
-    @NonNull
-    private final TickerService tickerService;
     @NonNull
     private final ScreenComposer screenComposer;
     @NonNull
@@ -69,9 +64,8 @@ public class TacViewStageInitializer {
 
         tacViewer = new TacViewer(
                 rendererProperties,
+                tickProperties,
                 profilerProvider,
-                tickThresholdCalculator,
-                tickerService,
                 screenComposer,
                 game
         );

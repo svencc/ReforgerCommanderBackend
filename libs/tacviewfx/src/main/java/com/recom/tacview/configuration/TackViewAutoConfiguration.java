@@ -12,7 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 @AutoConfiguration
 @RequiredArgsConstructor
-@ComponentScan("com.recom.tacview.module")
+@ComponentScan("com.recom.tacview")
 public class TackViewAutoConfiguration {
 
     @Bean
@@ -23,6 +23,7 @@ public class TackViewAutoConfiguration {
                 .parallelizedRendering(true)
                 .threadPoolSize(8)
                 .composer(composerProperties)
+                .targetFps(60)
                 .build();
     }
 
@@ -36,7 +37,7 @@ public class TackViewAutoConfiguration {
     @Bean
     public TickProperties tickProperties() {
         return TickProperties.builder()
-                .ticksPerSecond(60)
+                .targetTps(60)
                 .build();
     }
 

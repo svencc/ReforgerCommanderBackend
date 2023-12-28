@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.time.Duration;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -13,6 +15,17 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("engine.tick")
 public class TickProperties {
 
-    private int ticksPerSecond;
+    private int targetTps;
+
+    private long tickThresholdNanoTime = 0;
+
+
+    public long getTickThresholdNanoTime() {
+        if (tickThresholdNanoTime == 0.0) {
+            tickThresholdNanoTime = Duration.ofSeconds(1).toNanos() / targetTps;
+        }
+
+        return tickThresholdNanoTime;
+    }
 
 }
