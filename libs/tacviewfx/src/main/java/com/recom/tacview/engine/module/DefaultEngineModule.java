@@ -49,7 +49,7 @@ public class DefaultEngineModule extends EngineModuleTemplate {
     }
 
     @Override
-    public void tick() {
+    public void update() {
 
     }
 

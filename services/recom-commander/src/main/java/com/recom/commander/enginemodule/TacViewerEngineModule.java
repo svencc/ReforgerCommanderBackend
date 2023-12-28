@@ -41,7 +41,7 @@ public class TacViewerEngineModule extends EngineModuleTemplate {
     }
 
     @Override
-    public void tick() {
+    public void update() {
 
     }
 

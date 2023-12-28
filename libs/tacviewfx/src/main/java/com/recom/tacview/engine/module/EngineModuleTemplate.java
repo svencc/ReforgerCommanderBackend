@@ -17,7 +17,7 @@ public abstract class EngineModuleTemplate {
     public abstract void startEngineModule();
 
 
-    public abstract void tick();
+    public abstract void update();
 
     public abstract void handleInput();
 
