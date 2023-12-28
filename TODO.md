@@ -1,8 +1,12 @@
 # TODO LIST
 
-
 # 1
 * load map into tacviewer
+  * engine module show green screen (/) 
+    * load data via rest <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    * load map data into buffer
+    * start map session
+    * load map data into buffer; align left upper corner; render part of map which fits into screen (zoom level 0 - 1:1)
 * panning
 * zooming (scaling)
 * add scale bar

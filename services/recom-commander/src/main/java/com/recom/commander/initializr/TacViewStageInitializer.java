@@ -19,6 +19,8 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.Window;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -61,7 +63,7 @@ public class TacViewStageInitializer {
         tacViewStage.show();
     }
 
-    private void populateTacViewStage(@NonNull final Stage canvasStage) {
+    private void populateTacViewStage(@NonNull final Stage stage) {
         final BorderPane root = new BorderPane();
         root.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
 
@@ -76,8 +78,12 @@ public class TacViewStageInitializer {
         root.setCenter(tacViewer);
 
         final Scene scene = new Scene(root, rendererProperties.getWidth(), rendererProperties.getHeight());
-        canvasStage.setTitle(springApplicationProperties.getName());
-        final StringProperty titleProperty = canvasStage.titleProperty();
+        stage.setTitle(springApplicationProperties.getName());
+//        final Window window = stage.getOwner();
+//        stage.initStyle(StageStyle.UNDECORATED); // BORDERLESS -> NEED to make movable on your own!
+
+
+        final StringProperty titleProperty = stage.titleProperty();
 
         final ProfileFPSStrategy profileFPSStrategy = new ProfileFPSStrategy((@NonNull final String profiled) -> {
             Platform.runLater(() -> titleProperty.setValue(profiled));
@@ -97,8 +103,8 @@ public class TacViewStageInitializer {
         __initDevTitleHandler(stringProperty);
         */// ---------------------------------------------
 
-        canvasStage.setResizable(false);
-        canvasStage.setScene(scene);
+        stage.setResizable(false);
+        stage.setScene(scene);
     }
 
     // @TODO: Remove this method; DEV ONLY

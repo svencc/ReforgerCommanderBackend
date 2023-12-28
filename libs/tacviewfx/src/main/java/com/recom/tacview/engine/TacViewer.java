@@ -36,16 +36,21 @@ public class TacViewer extends Canvas implements Runnable {
     @NonNull
     private final ProfilerProvider profilerProvider;
     @NonNull
+    private final  FPSCounter swapFrameBufferCounter;
+    @NonNull
     private final TickThresholdCalculator tickThresholdCalculator;
     @NonNull
     private final TickerService tickerService;
     @NonNull
     private final ScreenComposer screenComposer;
     @NonNull
-    private final EngineModuleTemplate engineFlavour;
+    private final EngineModuleTemplate engineModule;
 
 
-    // IMAGE RENDERING BUFFER
+
+
+
+    // IMAGE RENDERING BUFFER > Object
     private IntBuffer intBuffer = null;
     private PixelFormat<IntBuffer> pixelFormat = null;
     private PixelBuffer<IntBuffer> pixelBuffer = null;
@@ -55,8 +60,8 @@ public class TacViewer extends Canvas implements Runnable {
 
     // EXECUTION THREADS
     @Nullable
-    private Thread renderLoopThread = null;
-    private AnimationTimer bufferToCanvasUpdaterLoop = null;
+    private Thread renderLoopThread = null; // DELETE > Move to Animation Timer
+    private AnimationTimer animationTimerLoop = null;
     private volatile boolean running = false;
 
 
@@ -80,7 +85,7 @@ public class TacViewer extends Canvas implements Runnable {
         this.tickThresholdCalculator = tickThresholdCalculator;
         this.tickerService = tickerService;
         this.screenComposer = screenComposer;
-        this.engineFlavour = engineModule;
+        this.engineModule = engineModule;
 
         // CANVAS IMAGE BUFFER
         intBuffer = IntBuffer.allocate(rendererProperties.getWidth() * rendererProperties.getHeight());
@@ -89,16 +94,18 @@ public class TacViewer extends Canvas implements Runnable {
         img = new WritableImage(pixelBuffer);
 
         // JAVA FX AnimationTimer
-        bufferToCanvasUpdaterLoop = new AnimationTimer() {
+        swapFrameBufferCounter = this.profilerProvider.provideFPSCounter();
+        animationTimerLoop = new AnimationTimer() {
             @Override
             public void handle(final long now) {
                 copyComposedBackBufferToCanvasFrontBuffer();
+                swapFrameBufferCounter.countFrame();
             }
         };
     }
 
     private void copyComposedBackBufferToCanvasFrontBuffer() {
-        pixelBuffer.getBuffer().put(screenComposer.getBackPixelBuffer(backBufferIndex).directBufferAccess());
+        pixelBuffer.getBuffer().put(screenComposer.getBackPixelBuffer(backBufferIndex).directBufferAccess()); // <<<<<<<<<<<<<<< @TODO sicherstellen, dass das hier nicht zu einem memory leak führt! Der erste Buffer muss initialisiert werden und sichergestellt werden dass dieser immer vorhanden ist!
         pixelBuffer.getBuffer().flip();
         pixelBuffer.updateBuffer(__ -> null);
         getGraphicsContext2D().drawImage(img, 0, 0);
@@ -109,14 +116,14 @@ public class TacViewer extends Canvas implements Runnable {
         // Start Loop
         running = true;
         renderLoopThread = new Thread(this, THREAD_NAME);
-        engineFlavour.run();
+        engineModule.run();
         renderLoopThread.start();
-        bufferToCanvasUpdaterLoop.start();
+        animationTimerLoop.start();
     }
 
     public synchronized void stop() {
         running = false;
-        bufferToCanvasUpdaterLoop.stop();
+        animationTimerLoop.stop();
         try {
             renderLoopThread.join();
         } catch (final InterruptedException e) {
@@ -151,7 +158,7 @@ public class TacViewer extends Canvas implements Runnable {
             loopProfiler.measureLoop();
 
             if (fpsCounter.oneSecondPassed() && profileFPSStrategy != null) {
-                final String profiled = String.format("%1s | %2s | %3s", tpsCounter.profileTicksPerSecond(), fpsCounter.profileFramesPerSecond(), loopProfiler.stringifyResult());
+                final String profiled = String.format("%1s | %2s | %3s | JFX: %4s", tpsCounter.profileTicksPerSecond(), fpsCounter.profileFramesPerSecond(), loopProfiler.stringifyResult(), swapFrameBufferCounter.profileFramesPerSecond());
                 profileFPSStrategy.execute(profiled);
                 log.info(profiled);
             }
