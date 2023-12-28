@@ -93,19 +93,20 @@ public class TacViewer extends Canvas {
 
         // HANDLE TIME
         final long currentNanoTime = System.nanoTime();
-        final long deltaTickNanoTime = currentNanoTime - profiler.lastTickNanoTime;
-        final long deltaFrameNanoTime = currentNanoTime - profiler.lastFrameNanoTime;
+        final double elapsedNanoTime = (currentNanoTime - profiler.previousTickNanoTime);
+        final long deltaTickNanoTime = currentNanoTime - profiler.previousTickNanoTime;
+        final long deltaFrameNanoTime = currentNanoTime - profiler.previousFrameNanoTime;
 
         // HANDLE UPDATE
         if (deltaTickNanoTime >= tickProperties.getTickThresholdNanoTime()) {
-            profiler.lastTickNanoTime = System.nanoTime();
-            engineModule.update();
+            profiler.previousTickNanoTime = System.nanoTime();
+            engineModule.update(elapsedNanoTime);
             profiler.getTpsCounter().countTick();
         }
 
         // HANDLE RENDER
         if (deltaFrameNanoTime >= rendererProperties.getFrameThresholdNanoTime()) {
-            profiler.lastFrameNanoTime = System.nanoTime();
+            profiler.previousFrameNanoTime = System.nanoTime();
             frameBuffer.backBufferIndex = screenComposer.compose();
             profiler.getFpsCounter().countFrame();
         }

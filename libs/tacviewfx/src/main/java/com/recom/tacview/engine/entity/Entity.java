@@ -9,6 +9,6 @@ public abstract class Entity {
     @Getter
     private double y = 0.0;
 
-    abstract void update();
+    abstract void update(final double elapsedNanoTime);
 
 }

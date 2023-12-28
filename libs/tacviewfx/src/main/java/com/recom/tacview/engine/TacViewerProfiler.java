@@ -22,8 +22,8 @@ public class TacViewerProfiler {
     @NonNull
     private final TPSCounter tpsCounter;
 
-    public long lastTickNanoTime = 0;
-    public long lastFrameNanoTime = 0;
+    public long previousTickNanoTime = 0;
+    public long previousFrameNanoTime = 0;
 
 
     public TacViewerProfiler(@NonNull final ProfilerProvider profilerProvider) {

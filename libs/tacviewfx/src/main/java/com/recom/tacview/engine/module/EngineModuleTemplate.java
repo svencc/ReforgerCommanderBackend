@@ -22,14 +22,14 @@ public abstract class EngineModuleTemplate {
     public abstract void startEngineModule();
 
 
-    public void update() {
+    public void update(final double elapsedNanoTime) {
         /*
             @TODO !
             When this realization percolated through the game industry, the solution that emerged was the Component pattern.
             Using that, update() would be on the entity’s components and not on Entity itself.
             That lets you avoid creating complicated class hierarchies of entities to define and reuse behavior. Instead, you just mix and match components.
          */
-        world.update();
+        world.update(elapsedNanoTime);
     }
 
 

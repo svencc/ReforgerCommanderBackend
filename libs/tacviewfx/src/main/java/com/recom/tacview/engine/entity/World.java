@@ -12,8 +12,10 @@ public abstract class World {
     @NonNull
     private List<Entity> entities = new ArrayList<>();
 
-    public void update() {
-        entities.forEach(Entity::update);
+    public void update(final double elapsedNanoTime) {
+        for (final Entity entity : entities) {
+            entity.update(elapsedNanoTime);
+        }
     }
 
 }
