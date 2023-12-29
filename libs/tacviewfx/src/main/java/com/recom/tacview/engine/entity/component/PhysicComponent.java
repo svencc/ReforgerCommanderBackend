@@ -5,25 +5,9 @@ import lombok.NonNull;
 
 public class PhysicComponent extends Component {
 
-    /*
-    --------------------
-    pan component: move to entity
-        position x
-        position y
-
-        velocityXComponent
-        velocityYComponent
-    --------------------
-
-
-
-    --------------------
-    physic component related values
-        mass
-        drag (luftwiederstand)
-        https://en.wikipedia.org/wiki/Drag_(physics)
-    --------------------
-     */
+    public ComponentSortOrder componentSortOrder() {
+        return ComponentSortOrder.PHYSICS;
+    }
 
     @Override
     public void update(

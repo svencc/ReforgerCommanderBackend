@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 
-public class RenderableComponent extends Component implements HasPixelBuffer {
+public abstract class RenderableComponent extends Component implements HasPixelBuffer {
 
     @Setter
     @Getter
@@ -16,6 +16,10 @@ public class RenderableComponent extends Component implements HasPixelBuffer {
     @Getter
     @NonNull
     private PixelBuffer pixelBuffer;
+
+    public ComponentSortOrder componentSortOrder() {
+        return ComponentSortOrder.RENDER;
+    }
 
 
     @Override
