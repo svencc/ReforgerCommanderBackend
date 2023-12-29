@@ -1,7 +1,7 @@
-package com.recom.tacview.engine.components.mergeable;
+package com.recom.tacview.engine.renderables.mergeable;
 
-import com.recom.tacview.engine.components.HasPixelBuffer;
-import com.recom.tacview.engine.components.Mergeable;
+import com.recom.tacview.engine.renderables.HasPixelBuffer;
+import com.recom.tacview.engine.renderables.Mergeable;
 import com.recom.tacview.engine.graphics.Bufferable;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
 import com.recom.tacview.engine.renderer.RenderProvider;

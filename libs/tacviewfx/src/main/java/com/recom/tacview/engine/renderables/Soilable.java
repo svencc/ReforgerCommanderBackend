@@ -1,4 +1,4 @@
-package com.recom.tacview.engine.components;
+package com.recom.tacview.engine.renderables;
 
 public interface Soilable {
 

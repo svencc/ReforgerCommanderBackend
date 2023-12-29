@@ -1,6 +1,6 @@
-package com.recom.tacview.engine.components.sprite;
+package com.recom.tacview.engine.renderables.sprite;
 
-import com.recom.tacview.engine.components.HasPixelBuffer;
+import com.recom.tacview.engine.renderables.HasPixelBuffer;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
 import com.recom.tacview.engine.units.PixelDimension;
 import lombok.Getter;

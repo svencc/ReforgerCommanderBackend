@@ -1,6 +1,6 @@
-package com.recom.tacview.engine.components.mergeable;
+package com.recom.tacview.engine.renderables.mergeable;
 
-import com.recom.tacview.engine.components.Mergeable;
+import com.recom.tacview.engine.renderables.Mergeable;
 import com.recom.tacview.engine.graphics.Scanable;
 import com.recom.tacview.engine.units.PixelDimension;
 import lombok.Getter;

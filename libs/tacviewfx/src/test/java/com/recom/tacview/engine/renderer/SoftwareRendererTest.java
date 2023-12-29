@@ -1,7 +1,6 @@
 package com.recom.tacview.engine.renderer;
 
-import com.recom.tacview.engine.components.sprite.SpriteAtlas;
-import com.recom.tacview.engine.renderer.SoftwareRenderer;
+import com.recom.tacview.engine.renderables.sprite.SpriteAtlas;
 import com.recom.tacview.engine.graphics.Scanable;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
 import com.recom.tacview.engine.units.PixelDimension;

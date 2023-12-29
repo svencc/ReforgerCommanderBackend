@@ -1,6 +1,6 @@
 package com.recom.tacview.engine.graphics;
 
-import com.recom.tacview.engine.components.Mergeable;
+import com.recom.tacview.engine.renderables.Mergeable;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
 import com.recom.tacview.property.RendererProperties;
 import lombok.Getter;

@@ -1,8 +1,8 @@
 package com.recom.commander.enginemodule;
 
-import com.recom.tacview.engine.components.HasPixelBuffer;
-import com.recom.tacview.engine.components.Mergeable;
-import com.recom.tacview.engine.components.Soilable;
+import com.recom.tacview.engine.renderables.HasPixelBuffer;
+import com.recom.tacview.engine.renderables.Mergeable;
+import com.recom.tacview.engine.renderables.Soilable;
 import com.recom.tacview.engine.graphics.Bufferable;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
 import com.recom.tacview.engine.renderer.RenderProvider;
