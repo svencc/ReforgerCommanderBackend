@@ -16,9 +16,9 @@
 
 
 # 1.1
-* load entity to world
-* load new world
-* Composer and layers in world?
+* load entity to environment
+* load new environment
+* Composer and layers in environment?
 * background entity layer?
 * Component pattern. Using that, update() would be on the entity’s components and not on Entity itself.
 

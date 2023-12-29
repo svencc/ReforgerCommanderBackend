@@ -1,6 +1,6 @@
 package com.recom.commander.enginemodule;
 
-import com.recom.commander.enginemodule.entity.RECOMWorld;
+import com.recom.commander.enginemodule.entity.RECOMEnvironment;
 import com.recom.tacview.engine.graphics.ScreenComposer;
 import com.recom.tacview.engine.module.EngineModuleTemplate;
 import com.recom.tacview.engine.renderer.RenderProvider;
@@ -20,7 +20,7 @@ public class TacViewerEngineModule extends EngineModuleTemplate {
 
 
     public TacViewerEngineModule(
-            @NonNull final RECOMWorld world,
+            @NonNull final RECOMEnvironment world,
             @NonNull final RendererProperties rendererProperties,
             @NonNull final ScreenComposer screenComposer,
             @NonNull final RenderProvider renderProvider

@@ -1,9 +1,9 @@
 package com.recom.commander.enginemodule.entity;
 
-import com.recom.tacview.engine.entity.World;
+import com.recom.tacview.engine.entity.Environment;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RECOMWorld extends World {
+public class RECOMEnvironment extends Environment {
 
 }

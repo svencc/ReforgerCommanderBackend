@@ -6,7 +6,7 @@ import lombok.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class World {
+public abstract class Environment {
 
     @Getter
     @NonNull

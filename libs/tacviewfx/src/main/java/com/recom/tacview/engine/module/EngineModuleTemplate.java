@@ -1,6 +1,6 @@
 package com.recom.tacview.engine.module;
 
-import com.recom.tacview.engine.entity.World;
+import com.recom.tacview.engine.entity.Environment;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 public abstract class EngineModuleTemplate {
 
     @NonNull
-    private final World world;
+    private final Environment environment;
 
 
     public void run() {
@@ -29,7 +29,7 @@ public abstract class EngineModuleTemplate {
             Using that, update() would be on the entity’s components and not on Entity itself.
             That lets you avoid creating complicated class hierarchies of entities to define and reuse behavior. Instead, you just mix and match components.
          */
-        world.update(elapsedNanoTime);
+        environment.update(elapsedNanoTime);
     }
 
 

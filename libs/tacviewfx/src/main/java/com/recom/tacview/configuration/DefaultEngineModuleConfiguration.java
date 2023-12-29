@@ -1,6 +1,6 @@
 package com.recom.tacview.configuration;
 
-import com.recom.tacview.engine.entity.World;
+import com.recom.tacview.engine.entity.Environment;
 import com.recom.tacview.engine.graphics.ScreenComposer;
 import com.recom.tacview.engine.module.DefaultEngineModule;
 import com.recom.tacview.engine.module.EngineModuleTemplate;
@@ -21,7 +21,7 @@ public class DefaultEngineModuleConfiguration {
 
 
     @NonNull
-    private final World world;
+    private final Environment environment;
     @NonNull
     private final RendererProperties rendererProperties;
     @NonNull
@@ -38,7 +38,7 @@ public class DefaultEngineModuleConfiguration {
     public DefaultEngineModule defaultEngineModule(
             @NonNull final RendererProperties rendererProperties
     ) {
-        return new DefaultEngineModule(world, rendererProperties, tickProperties, screenComposer, randomProvider, renderProvider);
+        return new DefaultEngineModule(environment, rendererProperties, tickProperties, screenComposer, randomProvider, renderProvider);
     }
 
 }

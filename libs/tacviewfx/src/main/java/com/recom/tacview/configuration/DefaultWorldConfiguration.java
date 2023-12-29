@@ -1,7 +1,7 @@
 package com.recom.tacview.configuration;
 
-import com.recom.tacview.engine.entity.World;
-import com.recom.tacview.engine.module.DefaultWorld;
+import com.recom.tacview.engine.entity.Environment;
+import com.recom.tacview.engine.module.DefaultEnvironment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -13,9 +13,9 @@ import org.springframework.context.annotation.Bean;
 public class DefaultWorldConfiguration {
 
     @Bean
-    @ConditionalOnMissingBean(World.class)
-    public DefaultWorld defaultEngineModule() {
-        return new DefaultWorld();
+    @ConditionalOnMissingBean(Environment.class)
+    public DefaultEnvironment defaultEngineModule() {
+        return new DefaultEnvironment();
     }
 
 }
