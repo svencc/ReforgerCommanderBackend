@@ -13,11 +13,11 @@ import java.nio.IntBuffer;
 public class FrameBuffer {
 
     @NonNull
-    final Canvas canvas;
+    private final Canvas canvas;
     @NonNull
-    final RendererProperties rendererProperties;
+    private final RendererProperties rendererProperties;
     @NonNull
-    final ScreenComposer screenComposer;
+    private final ScreenComposer screenComposer;
 
 
     private IntBuffer intBuffer = null;

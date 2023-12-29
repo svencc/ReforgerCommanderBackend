@@ -1,14 +1,61 @@
 package com.recom.tacview.engine.entity;
 
-import lombok.Getter;
+import com.recom.tacview.engine.entity.component.Component;
+import lombok.NonNull;
 
-public abstract class Entity {
+import java.util.*;
+import java.util.stream.Collectors;
 
-    @Getter
-    private double x = 0.0;
-    @Getter
-    private double y = 0.0;
+public abstract class Entity implements HasComponents {
 
-    abstract void update(final double elapsedNanoTime);
+    @NonNull
+    private final List<Component> components = new ArrayList<>();
+
+    @NonNull
+    private Map<? extends Class<? extends Component>, List<Component>> componentMap = new HashMap<>();
+
+    public void addComponent(@NonNull final Component component) {
+        components.add(component);
+        components.sort(Comparator.comparing(Component::getSortOrder));
+        indexComponents();
+    }
+
+    protected void indexComponents() {
+        componentMap = components.stream()
+                .sorted(Comparator.comparing(Component::getSortOrder))
+                .collect(Collectors.groupingBy(Component::getClass));
+    }
+
+    public void removeComponent(@NonNull final Component component) {
+        components.remove(component);
+//        components.sort(Comparator.comparing(Component::getSortIndex));
+        indexComponents();
+    }
+
+    @NonNull
+    @SuppressWarnings("unchecked")
+    public <T extends Component> Optional<T> locateComponent(@NonNull final Class<T> componentClass) {
+        if (componentMap.containsKey(componentClass)) {
+            return Optional.of((T) componentMap.get(componentClass).get(0));
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    @NonNull
+    @SuppressWarnings("unchecked")
+    public <T extends Component> List<T> locateComponents(@NonNull final Class<T> componentClass) {
+        if (componentMap.containsKey(componentClass)) {
+            return Collections.unmodifiableList((List<? extends T>) componentMap.get(componentClass));
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    void update(final double elapsedNanoTime) {
+        for (@NonNull final Component component : components) {
+            component.update(this, elapsedNanoTime);
+        }
+    }
 
 }

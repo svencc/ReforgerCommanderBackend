@@ -1,6 +1,6 @@
 package com.recom.tacview.engine.renderer;
 
-import com.recom.tacview.engine.components.Mergeable;
+import com.recom.tacview.engine.renderables.Mergeable;
 import com.recom.tacview.engine.graphics.Bufferable;
 import com.recom.tacview.engine.graphics.Renderable;
 import com.recom.tacview.engine.graphics.Scanable;

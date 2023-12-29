@@ -1,8 +1,9 @@
 package com.recom.tacview.engine.graphics;
 
+import com.recom.tacview.engine.renderables.Soilable;
 import com.recom.tacview.engine.units.PixelDimension;
 
-public interface Bufferable extends Scanable {
+public interface Bufferable extends Scanable, Soilable {
 
     PixelDimension getDimension();
 
