@@ -1,9 +1,9 @@
 package com.recom.tacview.engine.renderables.mergeable;
 
-import com.recom.tacview.engine.renderables.HasPixelBuffer;
-import com.recom.tacview.engine.renderables.Mergeable;
 import com.recom.tacview.engine.graphics.Bufferable;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
+import com.recom.tacview.engine.renderables.HasPixelBuffer;
+import com.recom.tacview.engine.renderables.Mergeable;
 import com.recom.tacview.engine.renderer.RenderProvider;
 import com.recom.tacview.engine.units.PixelDimension;
 import lombok.Getter;
@@ -28,12 +28,23 @@ public abstract class BufferedMergeableTemplate implements Mergeable, HasPixelBu
     }
 
     @Override
+    public boolean isDirty() {
+        return pixelBuffer.isDirty();
+    }
+
+    @Override
+    public void setDirty(final boolean isDirty) {
+        pixelBuffer.setDirty(isDirty);
+    }
+
+    @Override
     public void mergeBufferWith(
             @NonNull final PixelBuffer targetBuffer,
             final int offsetX,
             final int offsetY
     ) {
         renderProvider.provide().render(pixelBuffer, targetBuffer, offsetX, offsetY);
+        targetBuffer.setDirty(true);
     }
 
     @Override
@@ -43,6 +54,7 @@ public abstract class BufferedMergeableTemplate implements Mergeable, HasPixelBu
             final int offsetY
     ) {
         renderProvider.provide().render(pixelBuffer, targetBuffer, offsetX, offsetY);
+        targetBuffer.setDirty(true);
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.recom.tacview.engine.graphics.Bufferable;
 import com.recom.tacview.engine.units.PixelDimension;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 import java.util.Arrays;
 
@@ -11,6 +12,10 @@ public class PixelBuffer implements Bufferable {
 
     @Getter
     protected PixelDimension dimension;
+
+    @Getter
+    @Setter
+    private boolean dirty = false;
 
     protected int[] pixelBuffer;
 
@@ -32,6 +37,7 @@ public class PixelBuffer implements Bufferable {
             @NonNull final PixelBuffer targetPixelBuffer
     ) {
         copyWithOffset(sourcePixelBuffer, targetPixelBuffer, 0, 0);
+        targetPixelBuffer.setDirty(true);
     }
 
     public static void copyWithOffset(
@@ -51,6 +57,7 @@ public class PixelBuffer implements Bufferable {
                 targetPixelBuffer.pixelBuffer[copyToX + copyToY * targetPixelBuffer.dimension.getWidthX()] = sourcePixelBuffer.pixelBuffer[x + y * sourcePixelBuffer.dimension.getWidthX()];
             }
         }
+        targetPixelBuffer.setDirty(true);
     }
 
     public void resizeBuffer(@NonNull final PixelDimension newDimension) {
@@ -66,9 +73,10 @@ public class PixelBuffer implements Bufferable {
 
         pixelBuffer = newPixelBuffer;
         dimension = newDimension;
+        dirty = true;
     }
 
-    public static void copy(
+    private static void copy(
             @NonNull final PixelDimension sourceDimension,
             final int[] sourceBuffer,
             @NonNull final PixelDimension targetDimension,
@@ -101,6 +109,7 @@ public class PixelBuffer implements Bufferable {
             final int newPixelValue
     ) {
         pixelBuffer[x + y * dimension.getWidthX()] = newPixelValue;
+        dirty = true;
     }
 
     @Override
@@ -109,14 +118,17 @@ public class PixelBuffer implements Bufferable {
             final int newPixelValue
     ) {
         pixelBuffer[index] = newPixelValue;
+        dirty = true;
     }
 
     public void clearBuffer() {
         Arrays.fill(pixelBuffer, 0xff000000);
+        dirty = true;
     }
 
     public void fillBuffer(final int value) {
         Arrays.fill(pixelBuffer, value);
+        dirty = true;
     }
 
     @Override

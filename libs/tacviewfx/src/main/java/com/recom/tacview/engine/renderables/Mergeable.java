@@ -4,7 +4,12 @@ import com.recom.tacview.engine.graphics.Bufferable;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
 import lombok.NonNull;
 
-public interface Mergeable {
+public interface Mergeable extends Soilable {
+
+    boolean isDirty();
+    
+    void setDirty(final boolean isDirty);
+
 
     void mergeBufferWith(
             @NonNull final PixelBuffer targetBuffer,
@@ -21,5 +26,5 @@ public interface Mergeable {
     void prepareBuffer();
 
     void disposeBuffer();
-    
+
 }

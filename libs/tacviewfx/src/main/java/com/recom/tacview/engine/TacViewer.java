@@ -29,7 +29,7 @@ public class TacViewer extends Canvas {
 
 
     @NonNull
-    final FrameBuffer frameBuffer;
+    private final FrameBuffer frameBuffer;
     @NonNull
     private final AnimationTimer animationTimerLoop;
 

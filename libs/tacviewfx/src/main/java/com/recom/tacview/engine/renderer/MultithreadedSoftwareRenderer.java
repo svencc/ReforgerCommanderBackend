@@ -23,7 +23,8 @@ class MultithreadedSoftwareRenderer extends RendererTemplate {
             @NonNull final ARGBCalculatorProvider argbCalculatorProvider
     ) {
         super(rendererProperties, argbCalculatorProvider);
-        multithreadedExecutorService = Executors.newFixedThreadPool(rendererProperties.getThreadPoolSize());
+//        multithreadedExecutorService = Executors.newFixedThreadPool(rendererProperties.getThreadPoolSize());
+        multithreadedExecutorService = Executors.newVirtualThreadPerTaskExecutor();
     }
 
     @Override

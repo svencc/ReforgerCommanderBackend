@@ -5,10 +5,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ComponentSortOrder {
 
-    PHYSIC_CORE(0),
-    PHYSICS(1000),
-    INPUT(2000),
-    RENDER(9000);
+    PHYSIC_CORE(1000),
+    PHYSICS(2000),
+    INPUT(3000),
+    CAMERA(9000),
+    RENDER(9100);
 
     private final int sortOrder;
 
