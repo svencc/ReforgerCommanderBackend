@@ -86,11 +86,8 @@ public class ScreenComposer implements Composable {
         } else {
             nextBufferSegment();
             currentPixelBuffer().clearBuffer();
-            // Todo parallelize rendering of layers. (/)
-            // merge Buffers from top layer to last layer! (/)
             renderLayerBuffersInParallel(); // prepare buffers in parallel
             layerPipeline.forEach(layer -> {
-                // layer.prepareBuffer(); // do not prepare buffers sequentially
                 layer.mergeBufferWith(ringPixelBuffer[currentPixelBuffer], 0, 0);
                 layer.disposeBuffer();
             });
