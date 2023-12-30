@@ -3,22 +3,24 @@ package com.recom.tacview.engine.graphics;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
 import com.recom.tacview.engine.renderables.Mergeable;
 import com.recom.tacview.property.RendererProperties;
+import com.recom.tacview.service.RendererExecutorProvider;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
+@Slf4j
 @Component
 public class ScreenComposer implements Composable {
 
     @NonNull
     private final RendererProperties rendererProperties;
     @NonNull
-    private final ExecutorService multithreadedExecutorService;
+    private final ExecutorService executorService;
     @NonNull
     private final PixelBuffer[] ringPixelBuffer;
     @Getter
@@ -28,15 +30,16 @@ public class ScreenComposer implements Composable {
     private int currentPixelBuffer = 0;
     private boolean isBackBufferEmpty = true;
 
-    public ScreenComposer(@NonNull final RendererProperties rendererProperties) {
+    public ScreenComposer(
+            @NonNull final RendererProperties rendererProperties,
+            @NonNull final RendererExecutorProvider rendererExecutorProvider
+    ) {
         this.rendererProperties = rendererProperties;
+        this.executorService = rendererExecutorProvider.provideNewExecutor();
         ringPixelBuffer = new PixelBuffer[rendererProperties.getComposer().getBackBufferSize()];
         for (int i = 0; i < ringPixelBuffer.length; i++) {
             ringPixelBuffer[i] = new PixelBuffer(rendererProperties.toRendererDimension());
         }
-
-//        multithreadedExecutorService = Executors.newFixedThreadPool(rendererProperties.getThreadPoolSize());
-        multithreadedExecutorService = Executors.newVirtualThreadPerTaskExecutor();
 
         prefillBackBuffer();
     }
@@ -99,19 +102,17 @@ public class ScreenComposer implements Composable {
     private void renderLayerBuffersInParallel() {
         final CountDownLatch latch = new CountDownLatch(layerPipeline.size());
         for (final Mergeable layer : layerPipeline) {
-            multithreadedExecutorService.execute(() -> {
-                try {
-                    layer.prepareBuffer();
-                } finally {
-                    latch.countDown();
-                }
-            });
+            try (executorService) {
+                executorService.execute(layer::prepareBuffer);
+            } finally {
+                latch.countDown();
+            }
         }
 
         try {
             latch.await();
         } catch (final InterruptedException e) {
-            e.printStackTrace();
+            log.error("{}: {}\n{}", getClass().getName(), e.getMessage(), e.getStackTrace());
         }
     }
 

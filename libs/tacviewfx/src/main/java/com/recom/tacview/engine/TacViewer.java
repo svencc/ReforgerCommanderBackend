@@ -93,7 +93,7 @@ public class TacViewer extends Canvas {
 
         // HANDLE TIME
         final long currentNanoTime = System.nanoTime();
-        final double elapsedNanoTime = (currentNanoTime - profiler.previousTickNanoTime);
+        final long elapsedNanoTime = (currentNanoTime - profiler.previousTickNanoTime);
         final long deltaTickNanoTime = currentNanoTime - profiler.previousTickNanoTime;
         final long deltaFrameNanoTime = currentNanoTime - profiler.previousFrameNanoTime;
 

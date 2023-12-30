@@ -25,7 +25,7 @@ public abstract class RenderableComponent extends Component implements HasPixelB
     @Override
     public void update(
             @NonNull final Entity entity,
-            final double elapsedNanoTime
+            final long elapsedNanoTime
     ) {
         // render the component
         // needs to talk with physics component (position, velocity)

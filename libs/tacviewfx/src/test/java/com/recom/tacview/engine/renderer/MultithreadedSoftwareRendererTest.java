@@ -1,10 +1,11 @@
 package com.recom.tacview.engine.renderer;
 
-import com.recom.tacview.engine.renderables.sprite.SpriteAtlas;
 import com.recom.tacview.engine.graphics.Scanable;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
+import com.recom.tacview.engine.renderables.sprite.SpriteAtlas;
 import com.recom.tacview.engine.units.PixelDimension;
 import com.recom.tacview.property.RendererProperties;
+import com.recom.tacview.service.RendererExecutorProvider;
 import com.recom.tacview.service.argb.ARGBCalculatorProvider;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class MultithreadedSoftwareRendererTest {
 
     private RendererProperties rendererProperties;
+    private RendererExecutorProvider rendererExecutorProvider;
     private ARGBCalculatorProvider argbCalculatorProvider;
     private MultithreadedSoftwareRenderer rendererToTest;
     private PixelBuffer targetBuffer;
@@ -29,8 +31,9 @@ class MultithreadedSoftwareRendererTest {
     @BeforeEach
     void beforeEach() {
         rendererProperties = RendererProperties.builder().parallelizedRendering(true).threadPoolSize(2).build();
+        rendererExecutorProvider = new RendererExecutorProvider(rendererProperties);
         argbCalculatorProvider = new ARGBCalculatorProvider();
-        rendererToTest = new MultithreadedSoftwareRenderer(rendererProperties, argbCalculatorProvider);
+        rendererToTest = new MultithreadedSoftwareRenderer(rendererExecutorProvider, argbCalculatorProvider);
     }
 
     @Test

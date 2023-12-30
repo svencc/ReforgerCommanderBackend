@@ -1,11 +1,10 @@
 package com.recom.tacview.engine.renderer;
 
-import com.recom.tacview.engine.renderables.Mergeable;
 import com.recom.tacview.engine.graphics.Bufferable;
 import com.recom.tacview.engine.graphics.Renderable;
 import com.recom.tacview.engine.graphics.Scanable;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
-import com.recom.tacview.property.RendererProperties;
+import com.recom.tacview.engine.renderables.Mergeable;
 import com.recom.tacview.service.argb.ARGBCalculatorProvider;
 import lombok.NonNull;
 import org.springframework.stereotype.Component;
@@ -15,16 +14,9 @@ abstract class RendererTemplate implements Renderable {
 
     @NonNull
     protected final ARGBCalculatorProvider argbCalculatorProvider;
-    @NonNull
-    private final RendererProperties rendererProperties;
 
-    public RendererTemplate(
-            @NonNull final RendererProperties rendererProperties,
-            @NonNull final ARGBCalculatorProvider argbCalculatorProvider
-    ) {
-        this.rendererProperties = rendererProperties;
+    public RendererTemplate(@NonNull final ARGBCalculatorProvider argbCalculatorProvider) {
         this.argbCalculatorProvider = argbCalculatorProvider;
-
     }
 
     public void render(

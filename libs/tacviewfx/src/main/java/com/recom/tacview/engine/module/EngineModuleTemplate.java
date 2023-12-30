@@ -22,7 +22,7 @@ public abstract class EngineModuleTemplate {
     public abstract void startEngineModule();
 
 
-    public void update(final double elapsedNanoTime) {
+    public void update(final long elapsedNanoTime) {
         /*
             @TODO !
             When this realization percolated through the game industry, the solution that emerged was the Component pattern.

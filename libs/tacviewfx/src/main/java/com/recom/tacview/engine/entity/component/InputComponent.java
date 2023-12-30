@@ -12,7 +12,7 @@ public class InputComponent extends Component {
     @Override
     public void update(
             @NonNull final Entity entity,
-            final double elapsedNanoTime
+            final long elapsedNanoTime
     ) {
         entity.locateComponent(PhysicCoreComponent.class).ifPresent(physicCoreComponent -> {
             physicCoreComponent.setVelocityXComponent(physicCoreComponent.getVelocityXComponent() + 1.0);

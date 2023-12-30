@@ -12,7 +12,7 @@ public abstract class Environment {
     @NonNull
     private List<Entity> entities = new ArrayList<>();
 
-    public void update(final double elapsedNanoTime) {
+    public void update(final long elapsedNanoTime) {
         for (final Entity entity : entities) {
             entity.update(elapsedNanoTime);
         }

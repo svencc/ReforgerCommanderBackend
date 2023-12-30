@@ -30,7 +30,7 @@ public abstract class CameraComponent extends Component implements HasPixelBuffe
     @Override
     public void update(
             @NonNull final Entity entity,
-            final double elapsedNanoTime
+            final long elapsedNanoTime
     ) {
         // render the component
         // needs to talk with physics component (position, velocity)

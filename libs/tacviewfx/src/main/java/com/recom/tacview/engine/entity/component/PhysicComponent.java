@@ -12,7 +12,7 @@ public class PhysicComponent extends Component {
     @Override
     public void update(
             @NonNull final Entity entity,
-            final double elapsedNanoTime
+            final long elapsedNanoTime
     ) {
         // move the component -> using physics engine ...
     }

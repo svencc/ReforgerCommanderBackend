@@ -52,7 +52,7 @@ public abstract class Entity implements HasComponents {
         }
     }
 
-    void update(final double elapsedNanoTime) {
+    void update(final long elapsedNanoTime) {
         for (@NonNull final Component component : components) {
             component.update(this, elapsedNanoTime);
         }

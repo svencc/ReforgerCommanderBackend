@@ -45,7 +45,7 @@ public class TacViewerEngineModule extends EngineModuleTemplate {
     }
 
     @Override
-    public void update(final double elapsedNanoTime) {
+    public void update(final long elapsedNanoTime) {
         super.update(elapsedNanoTime);
     }
 

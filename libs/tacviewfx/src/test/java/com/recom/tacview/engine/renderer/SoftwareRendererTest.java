@@ -1,10 +1,9 @@
 package com.recom.tacview.engine.renderer;
 
-import com.recom.tacview.engine.renderables.sprite.SpriteAtlas;
 import com.recom.tacview.engine.graphics.Scanable;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
+import com.recom.tacview.engine.renderables.sprite.SpriteAtlas;
 import com.recom.tacview.engine.units.PixelDimension;
-import com.recom.tacview.property.RendererProperties;
 import com.recom.tacview.service.argb.ARGBCalculatorProvider;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -21,16 +20,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @RequiredArgsConstructor
 class SoftwareRendererTest {
 
-    private RendererProperties rendererProperties;
     private ARGBCalculatorProvider argbCalculatorProvider;
     private SoftwareRenderer rendererToTest;
     private PixelBuffer targetBuffer;
 
     @BeforeEach
     void beforeEach() {
-        rendererProperties = RendererProperties.builder().build();
         argbCalculatorProvider = new ARGBCalculatorProvider();
-        rendererToTest = new SoftwareRenderer(rendererProperties, argbCalculatorProvider);
+        rendererToTest = new SoftwareRenderer(argbCalculatorProvider);
     }
 
     @Test

@@ -13,7 +13,7 @@ public abstract class Component {
 
     public abstract void update(
             @NonNull final Entity entity,
-            final double elapsedNanoTime
+            final long elapsedNanoTime
     );
 
 }
