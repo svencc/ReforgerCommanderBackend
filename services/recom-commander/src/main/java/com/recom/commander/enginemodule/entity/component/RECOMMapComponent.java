@@ -1,6 +1,6 @@
 package com.recom.commander.enginemodule.entity.component;
 
-import com.recom.commander.service.Scheduler;
+import com.recom.commander.event.InitialAuthenticationEvent;
 import com.recom.commander.service.map.overview.data.MapsOverviewService;
 import com.recom.commander.service.map.topography.data.MapTopographyDataService;
 import com.recom.dto.map.MapOverviewDto;
@@ -15,6 +15,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -26,8 +27,6 @@ public class RECOMMapComponent extends MapComponent implements AutoCloseable {
     private final MapsOverviewService mapsOverviewService;
     @NonNull
     private final MapTopographyDataService mapTopographyDataService;
-    @NonNull
-    private final Scheduler scheduler;
 
     private ReactiveObserver<MapOverviewDto> mapOverviewReactiveObserver;
     private ReactiveObserver<HeightMapDescriptorDto> mapTopographyDataReactiveObserver;
@@ -53,15 +52,17 @@ public class RECOMMapComponent extends MapComponent implements AutoCloseable {
         // do something with the topography data
         mapTopographyDataReactiveObserver = ReactiveObserver.reactWith((subject, notification) -> {
             final HeightMapDescriptorDto heightMapDescriptor = notification.getPayload();
-            log.info("Received map topography data <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+            log.debug("Received map topography data");
         });
         mapTopographyDataReactiveObserver.observe(mapTopographyDataService.getBufferedSubject());
 
+    }
+
+    @EventListener(InitialAuthenticationEvent.class)
+    public void onInitialAuthentication(@NonNull final InitialAuthenticationEvent event) {
         // start chain reaction; begin with map overview
-        scheduler.schedule(mapsOverviewService::reloadMapOverview, 1500); // @TODO <<<<<<<<<<<< this has to be done after the initial authentication is done!!!!!!!!!!!!!!
-        // NEW EVENT needs to be created for this
-        // and needs to be thrown after the authentication is done!
-        // @TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+        log.debug("Initial authentication done. Start loading map overview.");
+        mapsOverviewService.reloadMapOverview();
     }
 
 

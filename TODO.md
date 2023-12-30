@@ -4,9 +4,9 @@
 * load map into tacviewer
   * engine module show green screen (/) 
     * load data via rest (/)
-    * Throw initial IsAuthenticatedEvent on startup -> trigger chain of events to load map data (/) <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     * 
     * load map data into buffer <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    * 
     * ViewportEntity renders map data
       * add viewportComponent to entity/environment; ScreenComposer renders in viewport position
       * add InputComponent to ViewportEntity; InputProcessor handles input events and updates viewport position
