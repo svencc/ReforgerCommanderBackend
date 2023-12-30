@@ -8,6 +8,8 @@
     * add event listener to mapComponent to load map data (/)
     * 
     * load map data into buffer <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+      * take response and put heightmap into buffer
+      * derive pixel color map from heightmap
     * 
     * ViewportEntity renders map data
       * add viewportComponent to entity/environment; ScreenComposer renders in viewport position
