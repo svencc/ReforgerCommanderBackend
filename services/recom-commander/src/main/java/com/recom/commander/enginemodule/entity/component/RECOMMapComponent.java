@@ -74,6 +74,9 @@ public class RECOMMapComponent extends MapComponent implements AutoCloseable {
 
     @Override
     public void close() {
+        if (mapOverviewReactiveObserver != null) {
+            mapOverviewReactiveObserver.close();
+        }
         if (mapTopographyDataReactiveObserver != null) {
             mapTopographyDataReactiveObserver.close();
         }

@@ -16,7 +16,7 @@ import java.util.Objects;
 
 @Slf4j
 @Service
-public class AuthenticationService extends ObserverTemplate<AuthenticationResponseDto> implements HasBufferedSubject<AuthenticationResponseDto> {
+public class AuthenticationService extends ObserverTemplate<AuthenticationResponseDto> implements HasBufferedSubject<AuthenticationResponseDto>, AutoCloseable {
 
     @NonNull
     private final Scheduler scheduler;
@@ -90,6 +90,14 @@ public class AuthenticationService extends ObserverTemplate<AuthenticationRespon
         final Duration expiresIn = Duration.ofSeconds(notification.getPayload().getExpiresInSeconds());
         final Duration delayToReauthenticate = expiresIn.minus(authenticationProperties.getReAuthenticateInAdvance());
         scheduler.schedule(this::authenticate, delayToReauthenticate);
+    }
+
+    @Override
+    public void close() {
+        super.close();
+        if (authenticationPropertiesReactiveObserver != null) {
+            authenticationPropertiesReactiveObserver.close();
+        }
     }
 
 }
