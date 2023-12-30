@@ -3,8 +3,8 @@
 # 1
 * load map into tacviewer
   * engine module show green screen (/) 
-    * load data via rest <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-    * load map data into buffer
+    * load data via rest (/)
+    * load map data into buffer <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     * ViewportEntity renders map data
       * add viewportComponent to entity/environment; ScreenComposer renders in viewport position
       * add InputComponent to ViewportEntity; InputProcessor handles input events and updates viewport position

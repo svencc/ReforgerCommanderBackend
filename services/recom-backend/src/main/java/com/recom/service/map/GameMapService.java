@@ -1,5 +1,6 @@
 package com.recom.service.map;
 
+import com.recom.dto.map.MapOverviewDto;
 import com.recom.dto.map.meta.MapMetaDto;
 import com.recom.entity.map.GameMap;
 import com.recom.persistence.map.GameMapPersistenceLayer;
@@ -76,8 +77,10 @@ public class GameMapService {
 
     @NonNull
     @Cacheable(cacheNames = "MapMetaDataService.provideAllMapNames")
-    public List<String> provideAllGameMapNames() {
-        return gameMapPersistenceLayer.findAllMapNames();
+    public MapOverviewDto provideAllGameMapNames() {
+        return MapOverviewDto.builder()
+                .maps(gameMapPersistenceLayer.findAllMapNames())
+                .build();
     }
 
     //    @Cacheable(cacheNames = "MapMetaDataService.mapExists") // @TODO does not reset when data are added!

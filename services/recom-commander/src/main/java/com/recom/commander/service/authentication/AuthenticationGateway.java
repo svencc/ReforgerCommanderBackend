@@ -30,9 +30,8 @@ class AuthenticationGateway extends Gateway<AuthenticationRequestDto, Authentica
         this.authenticationGatewayProperties = authenticationGatewayProperties;
     }
 
-    @NonNull
     @Override
-    protected RestClient.RequestBodySpec specifyRequest(
+    protected RestClient.RequestHeadersSpec<?> specifyRequest(
             @NonNull final RestClient restClient,
             @NonNull final AuthenticationRequestDto authenticationRequest
     ) {

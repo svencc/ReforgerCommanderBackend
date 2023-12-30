@@ -1,4 +1,4 @@
-package com.recom.commander.service.maptopography.data;
+package com.recom.commander.service.map.topography.data;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.recom.commander.exception.RequestLogger;
@@ -13,24 +13,22 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 @Component
-class NewMapTopographyDataGateway extends Gateway<MapTopographyRequestDto, HeightMapDescriptorDto> {
+class MapTopographyDataGateway extends Gateway<MapTopographyRequestDto, HeightMapDescriptorDto> {
 
     @NonNull
     private final MapTopographyDataGatewayProperties mapTopographyDataGatewayProperties;
 
 
-    public NewMapTopographyDataGateway(
+    public MapTopographyDataGateway(
             @NonNull final RequestLogger requestLogger,
             @NonNull final RECOMRestClientProvider restClientProvider,
             @NonNull final MapTopographyDataGatewayProperties mapTopographyDataGatewayProperties,
             @NonNull final ObjectMapper objectMapper
-
     ) {
         super(requestLogger, restClientProvider, HeightMapDescriptorDto.class, objectMapper);
         this.mapTopographyDataGatewayProperties = mapTopographyDataGatewayProperties;
     }
 
-    @NonNull
     @Override
     protected RestClient.RequestBodySpec specifyRequest(
             @NonNull final RestClient restClient,
@@ -45,7 +43,7 @@ class NewMapTopographyDataGateway extends Gateway<MapTopographyRequestDto, Heigh
     }
 
     @NonNull
-    public HeightMapDescriptorDto provideMapTopographyData(@NonNull final MapTopographyRequestDto mapTopographyRequest) {
+    HeightMapDescriptorDto provideMapTopographyData(@NonNull final MapTopographyRequestDto mapTopographyRequest) {
         return super.sendWithResponse(mapTopographyRequest);
     }
 

@@ -19,7 +19,7 @@ public abstract class RenderableComponent extends Component implements HasPixelB
 
     @NonNull
     public ComponentType componentType() {
-        return ComponentType.RENDER;
+        return ComponentType.RENDER_FOREGROUND;
     }
 
 

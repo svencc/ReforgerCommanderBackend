@@ -11,7 +11,7 @@ public enum ComponentType {
     ENVIRONMENT(4000),
     CAMERA(9000),
     RENDER_BACKGROUND(9000),
-    RENDER(9100);
+    RENDER_FOREGROUND(9100);
 
     private final int sortOrder;
 
