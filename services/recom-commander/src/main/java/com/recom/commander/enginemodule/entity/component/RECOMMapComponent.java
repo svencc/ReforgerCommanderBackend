@@ -58,7 +58,10 @@ public class RECOMMapComponent extends MapComponent implements AutoCloseable {
         mapTopographyDataReactiveObserver.observe(mapTopographyDataService.getBufferedSubject());
 
         // start chain reaction; begin with map overview
-        scheduler.schedule(mapsOverviewService::reloadMapOverview, 1500);
+        scheduler.schedule(mapsOverviewService::reloadMapOverview, 1500); // @TODO <<<<<<<<<<<< this has to be done after the initial authentication is done!!!!!!!!!!!!!!
+        // NEW EVENT needs to be created for this
+        // and needs to be thrown after the authentication is done!
+        // @TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     }
 
 
