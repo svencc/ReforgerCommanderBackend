@@ -5,8 +5,9 @@ import lombok.NonNull;
 
 public class InputComponent extends Component {
 
-    public ComponentSortOrder componentSortOrder() {
-        return ComponentSortOrder.INPUT;
+    @NonNull
+    public ComponentType componentType() {
+        return ComponentType.INPUT;
     }
 
     @Override

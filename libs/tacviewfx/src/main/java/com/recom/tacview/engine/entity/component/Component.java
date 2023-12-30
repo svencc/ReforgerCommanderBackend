@@ -5,10 +5,11 @@ import lombok.NonNull;
 
 public abstract class Component {
 
-    public abstract ComponentSortOrder componentSortOrder();
+    @NonNull
+    public abstract ComponentType componentType();
 
     public int getSortOrder() {
-        return componentSortOrder().sortOrder();
+        return componentType().sortOrder();
     }
 
     public abstract void update(

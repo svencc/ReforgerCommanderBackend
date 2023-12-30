@@ -20,6 +20,12 @@ public abstract class Entity implements HasComponents {
         indexComponents();
     }
 
+    public void addComponents(@NonNull final List<Component> components) {
+        this.components.addAll(components.stream().filter(Objects::nonNull).toList());
+        this.components.sort(Comparator.comparing(Component::getSortOrder));
+        indexComponents();
+    }
+
     protected void indexComponents() {
         componentMap = components.stream()
                 .sorted(Comparator.comparing(Component::getSortOrder))
@@ -50,6 +56,11 @@ public abstract class Entity implements HasComponents {
         } else {
             return Collections.emptyList();
         }
+    }
+
+    @NonNull
+    public List<Component> hasComponents() {
+        return Collections.unmodifiableList(components);
     }
 
     void update(final long elapsedNanoTime) {

@@ -26,7 +26,8 @@ public class FrameBuffer {
     private WritableImage img = null;
 
 
-    public int backBufferIndex = 0;
+    public int currentBackBufferIndex = 0;
+    public int lastBackBufferIndex = -1;
 
 
     public FrameBuffer(
@@ -45,10 +46,17 @@ public class FrameBuffer {
     }
 
     void swap() {
-        pixelBuffer.getBuffer().put(screenComposer.getBackPixelBuffer(backBufferIndex).directBufferAccess());
-        pixelBuffer.getBuffer().flip();
-        pixelBuffer.updateBuffer(__ -> null);
-        canvas.getGraphicsContext2D().drawImage(img, 0, 0);
+        // swap the back buffer, and the front buffer
+        if (currentBackBufferIndex == lastBackBufferIndex) {
+            // if the buffers are the same, do nothing
+        } else {
+            // else swap the buffers
+            lastBackBufferIndex = currentBackBufferIndex;
+            pixelBuffer.getBuffer().put(screenComposer.getBackPixelBuffer(currentBackBufferIndex).directBufferAccess());
+            pixelBuffer.getBuffer().flip();
+            pixelBuffer.updateBuffer(__ -> null);
+            canvas.getGraphicsContext2D().drawImage(img, 0, 0);
+        }
     }
 
 }

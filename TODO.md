@@ -5,9 +5,14 @@
   * engine module show green screen (/) 
     * load data via rest <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     * load map data into buffer
-    * add camercomponent to entity/environment; ScreenComposer renders camera view 
+    * ViewportEntity renders map data
+      * add viewportComponent to entity/environment; ScreenComposer renders in viewport position
+      * add InputComponent to ViewportEntity; InputProcessor handles input events and updates viewport position
     * start map session
+      * ask server for available maps
+      * select map
     * load map data into buffer; align left upper corner; render part of map which fits into screen (zoom level 0 - 1:1)
+    * add viewport-zooming
 * panning
 * zooming (scaling)
 * add scale bar

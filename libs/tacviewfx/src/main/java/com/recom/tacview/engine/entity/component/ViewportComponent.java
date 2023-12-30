@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 
-public abstract class CameraComponent extends Component implements HasPixelBuffer {
+public abstract class ViewportComponent extends Component implements HasPixelBuffer {
 
     @Getter
     @Setter
@@ -17,13 +17,9 @@ public abstract class CameraComponent extends Component implements HasPixelBuffe
     @Setter
     private int positionY = 0;
 
-    @Getter
     @NonNull
-    private PixelBuffer pixelBuffer;
-
-
-    public ComponentSortOrder componentSortOrder() {
-        return ComponentSortOrder.CAMERA;
+    public ComponentType componentType() {
+        return ComponentType.CAMERA;
     }
 
 

@@ -21,9 +21,9 @@ public class PhysicCoreComponent extends Component {
 
     private double dragInNewton = 1.0;
 
-
-    public ComponentSortOrder componentSortOrder() {
-        return ComponentSortOrder.PHYSIC_CORE;
+    @NonNull
+    public ComponentType componentType() {
+        return ComponentType.PHYSIC_CORE;
     }
 
     @Override

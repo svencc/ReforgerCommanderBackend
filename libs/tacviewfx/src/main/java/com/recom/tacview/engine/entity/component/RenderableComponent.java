@@ -17,8 +17,9 @@ public abstract class RenderableComponent extends Component implements HasPixelB
     @NonNull
     private PixelBuffer pixelBuffer;
 
-    public ComponentSortOrder componentSortOrder() {
-        return ComponentSortOrder.RENDER;
+    @NonNull
+    public ComponentType componentType() {
+        return ComponentType.RENDER;
     }
 
 
