@@ -4,6 +4,8 @@
 * load map into tacviewer
   * engine module show green screen (/) 
     * load data via rest (/)
+    * throw event on initial authentication (/)
+    * add event listener to mapComponent to load map data (/)
     * 
     * load map data into buffer <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     * 
