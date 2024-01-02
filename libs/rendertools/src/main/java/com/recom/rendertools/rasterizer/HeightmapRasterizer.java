@@ -35,7 +35,6 @@ public class HeightmapRasterizer {
         return outputStream;
     }
 
-    @NonNull
     public int[] rasterizeHeightMapRGB(@NonNull final HeightMapDescriptor command) {
         final int width = command.getHeightMap().length;
         final int height = command.getHeightMap()[0].length;
@@ -68,6 +67,17 @@ public class HeightmapRasterizer {
         }
 
         return imageBuffer;
+    }
+
+    public int[] rasterizeHeightMapARGB(@NonNull final HeightMapDescriptor command) {
+        final int[] rgbPixels = rasterizeHeightMapRGB(command);
+
+        // add solid alpha channel xff000000 value to each pixel
+        for (int i = 0; i < rgbPixels.length; i++) {
+            rgbPixels[i] = 0xff000000 | rgbPixels[i];
+        }
+
+        return rgbPixels;
     }
 
 }
