@@ -1,11 +1,12 @@
-package com.recom.rendertools;
+package com.recom.rendertools.calculator;
 
+import com.recom.rendertools.calculator.ARGBCalculator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class ARGBCalculatorTest {
+class ARGBCalculaltorTest {
 
     //    private ARGBCalculatorProvider provider;
     private ARGBCalculator calculatorToTest;

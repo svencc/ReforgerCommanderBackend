@@ -1,4 +1,4 @@
-package com.recom.rendertools;
+package com.recom.rendertools.calculator;
 
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;

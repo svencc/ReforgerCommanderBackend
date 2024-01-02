@@ -1,13 +1,13 @@
-package com.recom.rendertools.util;
+package com.recom.rendertools.calculator;
 
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import lombok.experimental.UtilityClass;
 
-@UtilityClass
+@NoArgsConstructor
 public class ColorCalculator {
 
     @NonNull
-    public Long RGB(
+    public static Long RGB(
             final int r,
             final int g,
             final int b
@@ -16,7 +16,7 @@ public class ColorCalculator {
     }
 
     @NonNull
-    public Long ARGB(
+    public static Long ARGB(
             final int a,
             final int r,
             final int g,
