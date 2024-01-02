@@ -1,12 +1,13 @@
-package com.recom.tacview.engine.entity;
+package com.recom.tacview.engine.entity.environment;
 
+import com.recom.tacview.engine.entity.Entity;
 import lombok.Getter;
 import lombok.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Environment {
+public abstract class EnvironmentBase implements Environmental {
 
     @Getter
     @NonNull

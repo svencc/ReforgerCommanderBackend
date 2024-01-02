@@ -1,15 +1,9 @@
 package com.recom.tacview.engine.entity.component;
 
 import com.recom.tacview.engine.entity.Entity;
-import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 
-public abstract class MapComponent extends Component {
-
-    @Setter
-    @Getter
-    private int layer = 0;
+public abstract class MapComponent extends RenderableComponent {
 
     @NonNull
     public ComponentType componentType() {

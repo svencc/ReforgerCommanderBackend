@@ -1,6 +1,6 @@
 package com.recom.tacview.engine.module;
 
-import com.recom.tacview.engine.entity.Environment;
+import com.recom.tacview.engine.entity.environment.EnvironmentBase;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 public abstract class EngineModuleTemplate {
 
     @NonNull
-    private final Environment environment;
+    private final EnvironmentBase environment;
 
 
     public void run() {

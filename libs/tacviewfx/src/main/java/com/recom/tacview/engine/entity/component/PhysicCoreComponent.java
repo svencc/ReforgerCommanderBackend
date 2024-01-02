@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class PhysicCoreComponent extends Component {
+public class PhysicCoreComponent extends ComponentBase {
 
     private double positionX = 0.0;
 

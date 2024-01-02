@@ -3,7 +3,7 @@ package com.recom.tacview.engine.entity.component;
 import com.recom.tacview.engine.entity.Entity;
 import lombok.NonNull;
 
-public class InputComponent extends Component {
+public class InputComponent extends ComponentBase {
 
     @NonNull
     public ComponentType componentType() {

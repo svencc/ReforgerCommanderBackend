@@ -1,25 +1,30 @@
 package com.recom.commander.enginemodule.entity;
 
 import com.recom.commander.enginemodule.entity.component.RECOMMapComponent;
-import com.recom.tacview.engine.entity.Environment;
-import jakarta.annotation.PostConstruct;
+import com.recom.tacview.engine.entity.environment.EnvironmentBase;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
-public class RECOMEnvironment extends Environment {
+public class RECOMEnvironment extends EnvironmentBase {
 
     @NonNull
-    private final RECOMEntity recomEntity;
-    @NonNull
-    private final RECOMMapComponent mapComponent;
+    private final RECOMEntity recomMapEntity;
+//    @NonNull
+//    private final RECOMMapComponent mapComponent;
 
-    @PostConstruct
-    public void init() {
-        recomEntity.addComponent(mapComponent);
-        getEntities().add(recomEntity);
+    RECOMEnvironment(
+            @NonNull final RECOMMapComponent mapComponent
+    ) {
+        this.recomMapEntity = new RECOMEntity();
+        this.recomMapEntity.addComponent(mapComponent);
+
+        getEntities().add(recomMapEntity);
     }
+
+//    @PostConstruct
+//    public void init() {
+//        getEntities().add(recomMapEntity);
+//    }
 
 }

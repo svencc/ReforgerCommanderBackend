@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 
-public abstract class RenderableComponent extends Component implements HasPixelBuffer {
+public abstract class RenderableComponent extends ComponentBase implements HasPixelBuffer {
 
     @Setter
     @Getter

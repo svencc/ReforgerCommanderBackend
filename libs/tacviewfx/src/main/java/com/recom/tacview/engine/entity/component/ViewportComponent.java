@@ -1,13 +1,12 @@
 package com.recom.tacview.engine.entity.component;
 
 import com.recom.tacview.engine.entity.Entity;
-import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
 import com.recom.tacview.engine.renderables.HasPixelBuffer;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 
-public abstract class ViewportComponent extends Component implements HasPixelBuffer {
+public abstract class ViewportComponent extends ComponentBase implements HasPixelBuffer {
 
     @Getter
     @Setter
@@ -19,7 +18,7 @@ public abstract class ViewportComponent extends Component implements HasPixelBuf
 
     @NonNull
     public ComponentType componentType() {
-        return ComponentType.CAMERA;
+        return ComponentType.VIEWPORT;
     }
 
 

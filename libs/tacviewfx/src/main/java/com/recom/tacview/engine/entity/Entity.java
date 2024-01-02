@@ -1,38 +1,38 @@
 package com.recom.tacview.engine.entity;
 
-import com.recom.tacview.engine.entity.component.Component;
+import com.recom.tacview.engine.entity.component.ComponentBase;
 import lombok.NonNull;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public abstract class Entity implements HasComponents {
+public class Entity implements Componentable, Updatable {
 
     @NonNull
-    private final List<Component> components = new ArrayList<>();
+    private final List<ComponentBase> components = new ArrayList<>();
 
     @NonNull
-    private Map<? extends Class<? extends Component>, List<Component>> componentMap = new HashMap<>();
+    private Map<? extends Class<? extends ComponentBase>, List<ComponentBase>> componentMap = new HashMap<>();
 
-    public void addComponent(@NonNull final Component component) {
+    public void addComponent(@NonNull final ComponentBase component) {
         components.add(component);
-        components.sort(Comparator.comparing(Component::getSortOrder));
+        components.sort(Comparator.comparing(ComponentBase::getSortOrder));
         indexComponents();
     }
 
-    public void addComponents(@NonNull final List<Component> components) {
+    public void addComponents(@NonNull final List<ComponentBase> components) {
         this.components.addAll(components.stream().filter(Objects::nonNull).toList());
-        this.components.sort(Comparator.comparing(Component::getSortOrder));
+        this.components.sort(Comparator.comparing(ComponentBase::getSortOrder));
         indexComponents();
     }
 
     protected void indexComponents() {
         componentMap = components.stream()
-                .sorted(Comparator.comparing(Component::getSortOrder))
-                .collect(Collectors.groupingBy(Component::getClass));
+                .sorted(Comparator.comparing(ComponentBase::getSortOrder))
+                .collect(Collectors.groupingBy(ComponentBase::getClass));
     }
 
-    public void removeComponent(@NonNull final Component component) {
+    public void removeComponent(@NonNull final ComponentBase component) {
         components.remove(component);
 //        components.sort(Comparator.comparing(Component::getSortIndex));
         indexComponents();
@@ -40,7 +40,7 @@ public abstract class Entity implements HasComponents {
 
     @NonNull
     @SuppressWarnings("unchecked")
-    public <T extends Component> Optional<T> locateComponent(@NonNull final Class<T> componentClass) {
+    public <T extends ComponentBase> Optional<T> locateComponent(@NonNull final Class<T> componentClass) {
         if (componentMap.containsKey(componentClass)) {
             return Optional.of((T) componentMap.get(componentClass).get(0));
         } else {
@@ -50,7 +50,7 @@ public abstract class Entity implements HasComponents {
 
     @NonNull
     @SuppressWarnings("unchecked")
-    public <T extends Component> List<T> locateComponents(@NonNull final Class<T> componentClass) {
+    public <T extends ComponentBase> List<T> locateComponents(@NonNull final Class<T> componentClass) {
         if (componentMap.containsKey(componentClass)) {
             return Collections.unmodifiableList((List<? extends T>) componentMap.get(componentClass));
         } else {
@@ -59,12 +59,12 @@ public abstract class Entity implements HasComponents {
     }
 
     @NonNull
-    public List<Component> hasComponents() {
+    public List<ComponentBase> getComponents() {
         return Collections.unmodifiableList(components);
     }
 
-    void update(final long elapsedNanoTime) {
-        for (@NonNull final Component component : components) {
+    public void update(final long elapsedNanoTime) {
+        for (@NonNull final ComponentBase component : components) {
             component.update(this, elapsedNanoTime);
         }
     }
