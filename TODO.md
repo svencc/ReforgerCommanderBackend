@@ -14,6 +14,12 @@
     * ViewportEntity renders map data
       * add viewportComponent to entity/environment; ScreenComposer renders in viewport position
       * add InputComponent to ViewportEntity; InputProcessor handles input events and updates viewport position
+  * 
+  * how to render: 
+    * the composer supports multiple layers which can be rendered in a specific order and in parallel
+    * sort the entities by category/layer and render them in order (z-index) on the layers
+      * this way we can render the map data in the background and the entities in the foreground (in parallel, as with all other layers)
+  * 
     * start map session
       * ask server for available maps
       * select map

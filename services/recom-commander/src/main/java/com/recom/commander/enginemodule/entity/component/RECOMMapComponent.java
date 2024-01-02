@@ -6,9 +6,13 @@ import com.recom.commander.service.map.topography.data.MapTopographyDataService;
 import com.recom.dto.map.MapOverviewDto;
 import com.recom.dto.map.topography.HeightMapDescriptorDto;
 import com.recom.dto.map.topography.MapTopographyRequestDto;
+import com.recom.observer.Notification;
 import com.recom.observer.ReactiveObserver;
+import com.recom.observer.Subjective;
+import com.recom.observer.TakeNoticeRunnable;
 import com.recom.tacview.engine.entity.Entity;
 import com.recom.tacview.engine.entity.component.MapComponent;
+import jakarta.annotation.Nullable;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.NonNull;
@@ -28,7 +32,9 @@ public class RECOMMapComponent extends MapComponent implements AutoCloseable {
     @NonNull
     private final MapTopographyDataService mapTopographyDataService;
 
+    @Nullable
     private ReactiveObserver<MapOverviewDto> mapOverviewReactiveObserver;
+    @Nullable
     private ReactiveObserver<HeightMapDescriptorDto> mapTopographyDataReactiveObserver;
 
     @Setter
@@ -37,25 +43,39 @@ public class RECOMMapComponent extends MapComponent implements AutoCloseable {
 
     @PostConstruct
     public void init() {
-        // fetch map topography data when map overview is available
-        mapOverviewReactiveObserver = ReactiveObserver.reactWith((subject, notification) -> {
+        mapOverviewReactiveObserver = ReactiveObserver.reactWith(onReloadMapOverviewReaction());
+        mapOverviewReactiveObserver.observe(mapsOverviewService.getBufferedSubject());
+
+        mapTopographyDataReactiveObserver = ReactiveObserver.reactWith(onReloadMapTopographyDataReaction());
+        mapTopographyDataReactiveObserver.observe(mapTopographyDataService.getBufferedSubject());
+    }
+
+    @NonNull
+    private TakeNoticeRunnable<HeightMapDescriptorDto> onReloadMapTopographyDataReaction() {
+        return (
+                @NonNull final Subjective<HeightMapDescriptorDto> subject,
+                @NonNull final Notification<HeightMapDescriptorDto> notification
+        ) -> {
+            final HeightMapDescriptorDto heightMapDescriptor = notification.getPayload();
+            log.debug("Received map topography data");
+        };
+    }
+
+    @NonNull
+    private TakeNoticeRunnable<MapOverviewDto> onReloadMapOverviewReaction() {
+        return (
+                @NonNull final Subjective<MapOverviewDto> subject,
+                @NonNull final Notification<MapOverviewDto> notification
+        ) -> {
             final MapOverviewDto mapOverview = notification.getPayload();
             if (!mapOverview.getMaps().isEmpty()) {
                 final MapTopographyRequestDto mapTopographyRequest = MapTopographyRequestDto.builder()
                         .mapName(mapOverview.getMaps().getFirst())
                         .build();
+
                 mapTopographyDataService.reloadMapTopographyData(mapTopographyRequest);
             }
-        });
-        mapOverviewReactiveObserver.observe(mapsOverviewService.getBufferedSubject());
-
-        // do something with the topography data
-        mapTopographyDataReactiveObserver = ReactiveObserver.reactWith((subject, notification) -> {
-            final HeightMapDescriptorDto heightMapDescriptor = notification.getPayload();
-            log.debug("Received map topography data");
-        });
-        mapTopographyDataReactiveObserver.observe(mapTopographyDataService.getBufferedSubject());
-
+        };
     }
 
     @EventListener(InitialAuthenticationEvent.class)
@@ -64,7 +84,6 @@ public class RECOMMapComponent extends MapComponent implements AutoCloseable {
         log.debug("Initial authentication done. Start loading map overview.");
         mapsOverviewService.reloadMapOverview();
     }
-
 
     @Override
     public void update(
@@ -85,4 +104,5 @@ public class RECOMMapComponent extends MapComponent implements AutoCloseable {
             mapTopographyDataReactiveObserver.close();
         }
     }
+
 }

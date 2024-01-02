@@ -32,19 +32,19 @@ public class TopographyMapDataService {
 
 
     @Transactional(readOnly = true)
-    public byte[] provideTopographyMap(@NonNull final GameMap gameMap) {
+    public byte[] provideTopographyPNG(@NonNull final GameMap gameMap) {
         return mapTopographyPersistenceLayer.findByGameMap(gameMap)
-                .map(mapTopography -> provideTopographyMap(mapTopography))
+                .map(this::provideTopographyPNG)
                 .orElseThrow(() -> new HttpNotFoundException("No topography com.recom.dto.map found for com.recom.dto.map with id " + gameMap.getId() + "!"));
     }
 
     @Transactional(readOnly = true)
-    public byte[] provideTopographyMap(@NonNull final MapTopography mapTopography) {
+    public byte[] provideTopographyPNG(@NonNull final MapTopography mapTopography) {
         try {
             final ByteArrayOutputStream outputStream = heightmapGeneratorService.generateHeightmap(mapTopography);
             final byte[] byteArray = outputStream.toByteArray();
 
-            serializationService.writeBytesToFile(Path.of("cached-heightmap.png"), byteArray);
+            serializationService.writeBytesToFile(Path.of("cached-heightmap.png"), byteArray); // TODO: Remove OR make configurable!
 
             return byteArray;
         } catch (IOException e) {

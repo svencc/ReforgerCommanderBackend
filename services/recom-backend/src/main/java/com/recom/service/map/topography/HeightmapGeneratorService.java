@@ -98,13 +98,13 @@ public class HeightmapGeneratorService {
                 Color color;
 
                 if (heightValue >= command.getSeaLevel()) {
-                    // com.recom.dto.map height to color
+                    // map height to color
                     final float dynamicHeightValue = (heightValue - command.getSeaLevel()) / heightRange;
                     int grayValue = (int) (255 * dynamicHeightValue); // normalize to 0..255
                     grayValue = Math.min(Math.max(grayValue, 0), 255); // ensure that the value is in the valid range
                     color = new Color(grayValue, grayValue, grayValue);
                 } else {
-                    // com.recom.dto.map depth to water color
+                    // map depth to water color
                     final float dynamicDepthValue = (heightValue - command.getSeaLevel()) / depthRange;
                     int blueValue = (int) (255 * (dynamicDepthValue)); //  // normalize to 0..255
                     blueValue = Math.min(Math.max(blueValue, 0), 255);

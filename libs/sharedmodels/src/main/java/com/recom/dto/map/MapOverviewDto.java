@@ -3,12 +3,11 @@ package com.recom.dto.map;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -20,7 +19,10 @@ import java.util.List;
 public class MapOverviewDto implements Serializable {
 
     @Schema
+    @NotNull
+    @NonNull
     @JsonProperty()
-    private List<String> maps;
+    @Builder.Default
+    private List<String> maps = new ArrayList<>();
 
 }
