@@ -9,7 +9,7 @@ import com.recom.tacview.property.TickProperties;
 import com.recom.tacview.service.RandomProvider;
 import lombok.NonNull;
 
-public class DefaultEngineModule extends EngineModuleTemplate {
+public class DefaultEngineModule extends EngineModule {
 
     @NonNull
     private final RendererProperties rendererProperties;

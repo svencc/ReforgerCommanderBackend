@@ -3,7 +3,7 @@ package com.recom.tacview.configuration;
 import com.recom.tacview.engine.entity.environment.EnvironmentBase;
 import com.recom.tacview.engine.graphics.ScreenComposer;
 import com.recom.tacview.engine.module.DefaultEngineModule;
-import com.recom.tacview.engine.module.EngineModuleTemplate;
+import com.recom.tacview.engine.module.EngineModule;
 import com.recom.tacview.engine.renderer.RenderProvider;
 import com.recom.tacview.property.RendererProperties;
 import com.recom.tacview.property.TickProperties;
@@ -34,7 +34,7 @@ public class DefaultEngineModuleConfiguration {
     private final RenderProvider renderProvider;
 
     @Bean
-    @ConditionalOnMissingBean(EngineModuleTemplate.class)
+    @ConditionalOnMissingBean(EngineModule.class)
     public DefaultEngineModule defaultEngineModule(
             @NonNull final RendererProperties rendererProperties
     ) {

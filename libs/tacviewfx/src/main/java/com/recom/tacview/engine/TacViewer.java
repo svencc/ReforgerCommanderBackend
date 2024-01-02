@@ -1,7 +1,7 @@
 package com.recom.tacview.engine;
 
 import com.recom.tacview.engine.graphics.ScreenComposer;
-import com.recom.tacview.engine.module.EngineModuleTemplate;
+import com.recom.tacview.engine.module.EngineModule;
 import com.recom.tacview.property.RendererProperties;
 import com.recom.tacview.property.TickProperties;
 import com.recom.tacview.service.profiler.ProfilerProvider;
@@ -25,7 +25,7 @@ public class TacViewer extends Canvas {
     @NonNull
     private final ScreenComposer screenComposer;
     @NonNull
-    private final EngineModuleTemplate engineModule;
+    private final EngineModule engineModule;
 
 
     @NonNull
@@ -44,7 +44,7 @@ public class TacViewer extends Canvas {
             @NonNull final TickProperties tickProperties,
             @NonNull final ProfilerProvider profilerProvider,
             @NonNull final ScreenComposer screenComposer,
-            @NonNull final EngineModuleTemplate engineModule
+            @NonNull final EngineModule engineModule
     ) {
         super(rendererProperties.getWidth(), rendererProperties.getHeight());
         this.rendererProperties = rendererProperties;

@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
-@Deprecated
 @Data
 @Schema
 @Builder

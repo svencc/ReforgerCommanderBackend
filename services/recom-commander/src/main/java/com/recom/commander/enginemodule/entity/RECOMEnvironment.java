@@ -10,21 +10,12 @@ public class RECOMEnvironment extends EnvironmentBase {
 
     @NonNull
     private final RECOMEntity recomMapEntity;
-//    @NonNull
-//    private final RECOMMapComponent mapComponent;
 
-    RECOMEnvironment(
-            @NonNull final RECOMMapComponent mapComponent
-    ) {
-        this.recomMapEntity = new RECOMEntity();
-        this.recomMapEntity.addComponent(mapComponent);
+    RECOMEnvironment(@NonNull final RECOMMapComponent mapComponent) {
+        recomMapEntity = new RECOMEntity();
+        recomMapEntity.addComponent(mapComponent);
 
         getEntities().add(recomMapEntity);
     }
-
-//    @PostConstruct
-//    public void init() {
-//        getEntities().add(recomMapEntity);
-//    }
 
 }

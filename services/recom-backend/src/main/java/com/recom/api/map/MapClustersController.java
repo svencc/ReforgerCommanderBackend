@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 
-@Deprecated
 @Slf4j
 @RestController
 @RequiredArgsConstructor

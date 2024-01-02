@@ -2,7 +2,7 @@ package com.recom.commander.enginemodule;
 
 import com.recom.commander.enginemodule.entity.RECOMEnvironment;
 import com.recom.tacview.engine.graphics.ScreenComposer;
-import com.recom.tacview.engine.module.EngineModuleTemplate;
+import com.recom.tacview.engine.module.EngineModule;
 import com.recom.tacview.engine.renderables.mergeable.SolidScreenMergeable;
 import com.recom.tacview.engine.renderer.RenderProvider;
 import com.recom.tacview.property.RendererProperties;
@@ -10,7 +10,7 @@ import lombok.NonNull;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TacViewerEngineModule extends EngineModuleTemplate {
+public class TacViewerEngineModule extends EngineModule {
 
     @NonNull
     private final RendererProperties rendererProperties;

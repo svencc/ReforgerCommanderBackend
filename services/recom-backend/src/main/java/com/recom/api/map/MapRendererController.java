@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 
+@Deprecated
 @Slf4j
 @Validated
 @RestController
@@ -45,8 +46,8 @@ public class MapRendererController {
 
 
     @Operation(
-            summary = "Generates com.recom.dto.map render commands",
-            description = "Calculates com.recom.dto.map render commands based on the given com.recom.dto.map.",
+            summary = "Generates map render commands",
+            description = "Calculates map render commands based on the given map.",
             security = @SecurityRequirement(name = HttpCommons.BEARER_AUTHENTICATION_REQUIREMENT)
     )
     @ApiResponses(value = {
@@ -58,14 +59,14 @@ public class MapRendererController {
             @RequestParam(required = true)
             @NonNull final Map<String, String> payload
     ) {
-        log.debug("Requested POST /api/v1/com.recom.dto.map/renderer/form (FORM)");
+        log.debug("Requested POST /api/v1/map/renderer/form (FORM)");
 
         return generateMapRenderingsJSON(payloadParser.parseValidated(payload, MapRendererRequestDto.class));
     }
 
     @Operation(
-            summary = "Generates com.recom.dto.map render commands",
-            description = "Calculates com.recom.dto.map render commands based on the given com.recom.dto.map.",
+            summary = "Generates map render commands",
+            description = "Calculates map render commands based on the given map.",
             security = @SecurityRequirement(name = HttpCommons.BEARER_AUTHENTICATION_REQUIREMENT)
     )
     @ApiResponses(value = {
@@ -77,7 +78,7 @@ public class MapRendererController {
             @RequestBody(required = true)
             @NonNull @Valid final MapRendererRequestDto mapRendererRequestDto
     ) {
-        log.debug("Requested POST /api/v1/com.recom.dto.map/renderer (JSON)");
+        log.debug("Requested POST /api/v1/map/renderer (JSON)");
 
         final GameMap gameMap = assertionService.provideMap(mapRendererRequestDto.getMapName());
 

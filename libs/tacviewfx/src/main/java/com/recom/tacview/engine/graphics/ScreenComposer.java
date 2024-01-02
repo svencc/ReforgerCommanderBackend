@@ -30,6 +30,7 @@ public class ScreenComposer implements Composable {
     private int currentPixelBuffer = 0;
     private boolean isBackBufferEmpty = true;
 
+
     public ScreenComposer(
             @NonNull final RendererProperties rendererProperties,
             @NonNull final RendererExecutorProvider rendererExecutorProvider

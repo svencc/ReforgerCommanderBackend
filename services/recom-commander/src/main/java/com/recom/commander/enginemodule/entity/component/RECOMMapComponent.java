@@ -1,6 +1,7 @@
 package com.recom.commander.enginemodule.entity.component;
 
 import com.recom.commander.event.InitialAuthenticationEvent;
+import com.recom.commander.mapper.HeightMapDescriptorMapper;
 import com.recom.commander.service.map.overview.data.MapsOverviewService;
 import com.recom.commander.service.map.topography.data.MapTopographyDataService;
 import com.recom.dto.map.MapOverviewDto;
@@ -10,6 +11,8 @@ import com.recom.observer.Notification;
 import com.recom.observer.ReactiveObserver;
 import com.recom.observer.Subjective;
 import com.recom.observer.TakeNoticeRunnable;
+import com.recom.rendertools.rasterizer.HeightMapDescriptor;
+import com.recom.rendertools.rasterizer.HeightmapRasterizer;
 import com.recom.tacview.engine.entity.Entity;
 import com.recom.tacview.engine.entity.component.MapComponent;
 import jakarta.annotation.Nullable;
@@ -22,6 +25,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -31,6 +37,9 @@ public class RECOMMapComponent extends MapComponent implements AutoCloseable {
     private final MapsOverviewService mapsOverviewService;
     @NonNull
     private final MapTopographyDataService mapTopographyDataService;
+    @NonNull
+    private final HeightmapRasterizer heightmapRasterizer = new HeightmapRasterizer();
+
 
     @Nullable
     private ReactiveObserver<MapOverviewDto> mapOverviewReactiveObserver;
@@ -56,8 +65,15 @@ public class RECOMMapComponent extends MapComponent implements AutoCloseable {
                 @NonNull final Subjective<HeightMapDescriptorDto> subject,
                 @NonNull final Notification<HeightMapDescriptorDto> notification
         ) -> {
-            final HeightMapDescriptorDto heightMapDescriptor = notification.getPayload();
             log.debug("Received map topography data");
+            final HeightMapDescriptorDto heightMapDescriptorDto = notification.getPayload();
+            final HeightMapDescriptor heightMapDescriptor = HeightMapDescriptorMapper.INSTANCE.toModel(heightMapDescriptorDto);
+            try {
+                final ByteArrayOutputStream byteArrayOutputStream = heightmapRasterizer.rasterizeHeightMapPNG(heightMapDescriptor);
+                byteArrayOutputStream.close();
+            } catch (IOException e) {
+                log.error("Error while rasterizing height map", e);
+            }
         };
     }
 
@@ -80,7 +96,7 @@ public class RECOMMapComponent extends MapComponent implements AutoCloseable {
 
     @EventListener(InitialAuthenticationEvent.class)
     public void onInitialAuthentication(@NonNull final InitialAuthenticationEvent event) {
-        // start chain reaction; begin with map overview
+        // start chain reaction; begin with loading map overview
         log.debug("Initial authentication done. Start loading map overview.");
         mapsOverviewService.reloadMapOverview();
     }
