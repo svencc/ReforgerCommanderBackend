@@ -4,7 +4,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 @NoArgsConstructor
-public class ColorCalculator {
+public class ARGBColor {
 
     @NonNull
     public static Long RGB(

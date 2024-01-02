@@ -1,8 +1,9 @@
 package com.recom.service.map.topography;
 
 import com.recom.entity.map.MapTopography;
-import com.recom.rendertools.rasterizer.HeightMapDescriptor;
 import com.recom.model.map.TopographyData;
+import com.recom.rendertools.rasterizer.HeightMapDescriptor;
+import com.recom.rendertools.rasterizer.HeightmapRasterizer;
 import com.recom.service.SerializationService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +21,12 @@ public class HeightmapGeneratorService {
     @NonNull
     private final SerializationService serializationService;
     @NonNull
-    private final HeightmapRasterizerProvider heightmapRasterizerProvider;
+    private final HeightmapRasterizer heightmapRasterizer;
 
 
     @NonNull
     public ByteArrayOutputStream generateHeightmapPNG(@NonNull final MapTopography mapTopography) throws IOException {
-        return heightmapRasterizerProvider.provide().rasterizeHeightMapPNG(provideHeightmapData(mapTopography));
+        return heightmapRasterizer.rasterizeHeightMapPNG(provideHeightmapData(mapTopography));
     }
 
     @NonNull
