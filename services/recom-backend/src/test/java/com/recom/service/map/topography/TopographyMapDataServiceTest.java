@@ -44,7 +44,7 @@ class TopographyMapDataServiceTest {
         final ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
         final byte[] bytes = {1, 2, 3};
         byteOutputStream.write(bytes);
-        when(heightmapGeneratorService.generateHeightmap(eq(mapTopography))).thenReturn(byteOutputStream);
+        when(heightmapGeneratorService.generateHeightmapPNG(eq(mapTopography))).thenReturn(byteOutputStream);
 
         // Act
         final byte[] bytesToTest = serviceUnderTest.provideTopographyPNG(gameMap);
@@ -63,7 +63,7 @@ class TopographyMapDataServiceTest {
         final ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
         final byte[] bytes = {1, 2, 3};
         byteOutputStream.write(bytes);
-        when(heightmapGeneratorService.generateHeightmap(eq(mapTopography))).thenReturn(byteOutputStream);
+        when(heightmapGeneratorService.generateHeightmapPNG(eq(mapTopography))).thenReturn(byteOutputStream);
 
         // Act
         final byte[] bytesToTest = serviceUnderTest.provideTopographyPNG(mapTopography);

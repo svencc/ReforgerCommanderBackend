@@ -58,7 +58,7 @@ class HeightmapGeneratorServiceTest {
         when(serializationService.deserializeObject(any())).thenReturn(Optional.of(topographyData));
 
         // Act
-        final ByteArrayOutputStream resultToTest = serviceUnderTest.generateHeightmap(mapTopography);
+        final ByteArrayOutputStream resultToTest = serviceUnderTest.generateHeightmapPNG(mapTopography);
 
         // Assert
         assertNotNull(resultToTest);

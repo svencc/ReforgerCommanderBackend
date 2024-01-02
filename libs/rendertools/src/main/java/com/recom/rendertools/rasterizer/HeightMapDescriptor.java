@@ -1,4 +1,4 @@
-package com.recom.model;
+package com.recom.rendertools.rasterizer;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
