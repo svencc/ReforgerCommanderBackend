@@ -73,7 +73,7 @@ public class RECOMMapComponent extends MapComponent implements AutoCloseable, Ha
             final PixelDimension dimension = PixelDimension.of(heightMapDescriptor.getHeightMap().length, heightMapDescriptor.getHeightMap()[0].length);
 
             final PixelBuffer pixelBuffer = new PixelBuffer(dimension, pixelBufferArray);
-            pixelBuffer.setDirty(true);
+            this.pixelBuffer = pixelBuffer;
             log.debug("Set pixel buffer in {}", getClass().getSimpleName());
         };
     }

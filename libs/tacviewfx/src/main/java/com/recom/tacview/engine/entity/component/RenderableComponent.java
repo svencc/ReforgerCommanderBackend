@@ -16,7 +16,7 @@ public abstract class RenderableComponent extends ComponentBase implements HasPi
 
     @Getter
     @NonNull
-    private PixelBuffer pixelBuffer = new PixelBuffer(PixelDimension.of(0, 0));
+    protected PixelBuffer pixelBuffer = new PixelBuffer(PixelDimension.of(0, 0));
 
     @NonNull
     public ComponentType componentType() {
