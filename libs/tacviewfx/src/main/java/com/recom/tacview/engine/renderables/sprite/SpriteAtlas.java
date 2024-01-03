@@ -1,7 +1,7 @@
 package com.recom.tacview.engine.renderables.sprite;
 
-import com.recom.tacview.engine.renderables.HasPixelBuffer;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
+import com.recom.tacview.engine.renderables.HasPixelBuffer;
 import com.recom.tacview.engine.units.PixelDimension;
 import lombok.Getter;
 import lombok.NonNull;
@@ -18,7 +18,7 @@ public class SpriteAtlas implements HasPixelBuffer {
 
     public SpriteAtlas(@NonNull final String path) throws IOException {
         final BufferedImage image = ImageIO.read(SpriteAtlas.class.getResource(path));
-        final PixelDimension dimension = PixelDimension.builder().widthX(image.getWidth()).heightY(image.getHeight()).build();
+        final PixelDimension dimension = PixelDimension.of(image.getWidth(), image.getHeight());
 
         int[] preparedBuffer = new int[dimension.getWidthX() * dimension.getHeightY()];
         image.getRGB(0, 0, dimension.getWidthX(), dimension.getHeightY(), preparedBuffer, 0, dimension.getWidthX());
@@ -31,7 +31,7 @@ public class SpriteAtlas implements HasPixelBuffer {
             final int atlasOffsetX,
             final int atlasOffsetY
     ) {
-        final PixelDimension dimension = PixelDimension.builder().widthX(pixelDimension.getWidthX()).heightY(pixelDimension.getHeightY()).build();
+        final PixelDimension dimension = PixelDimension.of(pixelDimension.getWidthX(), pixelDimension.getHeightY());
         return new Sprite(dimension, this, atlasOffsetX, atlasOffsetY);
     }
 
@@ -42,7 +42,7 @@ public class SpriteAtlas implements HasPixelBuffer {
             final boolean invertX,
             final boolean invertY
     ) {
-        final PixelDimension dimension = PixelDimension.builder().widthX(pixelDimension.getWidthX()).heightY(pixelDimension.getHeightY()).build();
+        final PixelDimension dimension = PixelDimension.of(pixelDimension.getWidthX(), pixelDimension.getHeightY());
         return new Sprite(dimension, this, atlasOffsetX, atlasOffsetY, invertX, invertY);
     }
 

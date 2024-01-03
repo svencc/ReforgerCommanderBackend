@@ -15,6 +15,9 @@ import com.recom.rendertools.rasterizer.HeightMapDescriptor;
 import com.recom.rendertools.rasterizer.HeightmapRasterizer;
 import com.recom.tacview.engine.entity.Entity;
 import com.recom.tacview.engine.entity.component.MapComponent;
+import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
+import com.recom.tacview.engine.renderables.HasPixelBuffer;
+import com.recom.tacview.engine.units.PixelDimension;
 import jakarta.annotation.Nullable;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
@@ -25,13 +28,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class RECOMMapComponent extends MapComponent implements AutoCloseable {
+public class RECOMMapComponent extends MapComponent implements AutoCloseable, HasPixelBuffer {
 
     @NonNull
     private final MapsOverviewService mapsOverviewService;
@@ -66,14 +66,15 @@ public class RECOMMapComponent extends MapComponent implements AutoCloseable {
                 @NonNull final Notification<HeightMapDescriptorDto> notification
         ) -> {
             log.debug("Received map topography data");
-            final HeightMapDescriptorDto heightMapDescriptorDto = notification.getPayload();
-            final HeightMapDescriptor heightMapDescriptor = HeightMapDescriptorMapper.INSTANCE.toModel(heightMapDescriptorDto);
-            try {
-                final ByteArrayOutputStream byteArrayOutputStream = heightmapRasterizer.rasterizeHeightMapPNG(heightMapDescriptor);
-                byteArrayOutputStream.close();
-            } catch (IOException e) {
-                log.error("Error while rasterizing height map", e);
-            }
+            final HeightMapDescriptorDto heightMapDescriptorModel = notification.getPayload();
+            final HeightMapDescriptor heightMapDescriptor = HeightMapDescriptorMapper.INSTANCE.toModel(heightMapDescriptorModel);
+
+            final int[] pixelBufferArray = heightmapRasterizer.rasterizeHeightMapRGB(heightMapDescriptor);
+            final PixelDimension dimension = PixelDimension.of(heightMapDescriptor.getHeightMap().length, heightMapDescriptor.getHeightMap()[0].length);
+
+            final PixelBuffer pixelBuffer = new PixelBuffer(dimension, pixelBufferArray);
+            pixelBuffer.setDirty(true);
+            log.debug("Set pixel buffer in {}", getClass().getSimpleName());
         };
     }
 

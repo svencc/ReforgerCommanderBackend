@@ -25,10 +25,7 @@ public class RendererProperties {
     @NonNull
     public PixelDimension toRendererDimension() {
         if (singletonPixelDimension == null) {
-            singletonPixelDimension = PixelDimension.builder()
-                    .widthX(getWidth())
-                    .heightY(getHeight())
-                    .build();
+            singletonPixelDimension = PixelDimension.of(getWidth(), getHeight());
         }
 
         return singletonPixelDimension;

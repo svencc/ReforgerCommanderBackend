@@ -30,6 +30,7 @@ public class PixelBuffer implements Bufferable {
     ) {
         this.dimension = dimension;
         pixelBuffer = useBuffer;
+        dirty = true;
     }
 
     public static void copy(
