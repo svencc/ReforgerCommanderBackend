@@ -66,8 +66,8 @@ public class RECOMMapComponent extends MapComponent implements AutoCloseable, Ha
                 @NonNull final Notification<HeightMapDescriptorDto> notification
         ) -> {
             log.debug("Received map topography data");
-            final HeightMapDescriptorDto heightMapDescriptorModel = notification.getPayload();
-            final HeightMapDescriptor heightMapDescriptor = HeightMapDescriptorMapper.INSTANCE.toModel(heightMapDescriptorModel);
+            final HeightMapDescriptorDto heightMapDescriptorDto = notification.getPayload();
+            final HeightMapDescriptor heightMapDescriptor = HeightMapDescriptorMapper.INSTANCE.toModel(heightMapDescriptorDto);
 
             final int[] pixelBufferArray = heightmapRasterizer.rasterizeHeightMapRGB(heightMapDescriptor);
             final PixelDimension dimension = PixelDimension.of(heightMapDescriptor.getHeightMap().length, heightMapDescriptor.getHeightMap()[0].length);

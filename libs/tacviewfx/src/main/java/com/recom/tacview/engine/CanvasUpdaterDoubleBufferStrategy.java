@@ -10,12 +10,10 @@ import lombok.NonNull;
 
 import java.nio.IntBuffer;
 
-public class FrameBuffer {
+public class CanvasUpdaterDoubleBufferStrategy {
 
     @NonNull
     private final Canvas canvas;
-    @NonNull
-    private final RendererProperties rendererProperties;
     @NonNull
     private final ScreenComposer screenComposer;
 
@@ -30,13 +28,12 @@ public class FrameBuffer {
     public int lastBackBufferIndex = -1;
 
 
-    public FrameBuffer(
+    public CanvasUpdaterDoubleBufferStrategy(
             @NonNull final Canvas canvas,
             @NonNull final RendererProperties rendererProperties,
             @NonNull final ScreenComposer screenComposer
     ) {
         this.canvas = canvas;
-        this.rendererProperties = rendererProperties;
         this.screenComposer = screenComposer;
 
         intBuffer = IntBuffer.allocate(rendererProperties.getWidth() * rendererProperties.getHeight());
@@ -52,7 +49,7 @@ public class FrameBuffer {
         } else {
             // else swap the buffers
             lastBackBufferIndex = currentBackBufferIndex;
-            pixelBuffer.getBuffer().put(screenComposer.getBackPixelBuffer(currentBackBufferIndex).directBufferAccess());
+            pixelBuffer.getBuffer().put(screenComposer.getPixelBuffer().directBufferAccess());
             pixelBuffer.getBuffer().flip();
             pixelBuffer.updateBuffer(__ -> null);
             canvas.getGraphicsContext2D().drawImage(img, 0, 0);

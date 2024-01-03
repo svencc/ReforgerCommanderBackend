@@ -39,8 +39,8 @@ class MultithreadedSoftwareRendererTest {
     @Test
     void renderBufferToBuffer() {
         // PREPARE
-        targetBuffer = new PixelBuffer(PixelDimension.builder().widthX(1).heightY(1).build());
-        final PixelBuffer sourceBuffer = new PixelBuffer(PixelDimension.builder().widthX(1).heightY(1).build());
+        targetBuffer = new PixelBuffer(PixelDimension.of(1, 1));
+        final PixelBuffer sourceBuffer = new PixelBuffer(PixelDimension.of(1, 1));
         int sourceBufferContent = 0xFFffffff;
         sourceBuffer.fillBuffer(sourceBufferContent);
 
@@ -55,8 +55,8 @@ class MultithreadedSoftwareRendererTest {
     @Test
     void renderScanableToBuffer() {
         // PREPARE
-        targetBuffer = new PixelBuffer(PixelDimension.builder().widthX(2).heightY(2).build());
-        final PixelBuffer sourceBuffer = new PixelBuffer(PixelDimension.builder().widthX(1).heightY(1).build());
+        targetBuffer = new PixelBuffer(PixelDimension.of(2, 2));
+        final PixelBuffer sourceBuffer = new PixelBuffer(PixelDimension.of(1, 1));
         int sourceBufferContent = 0xFFffffff;
         sourceBuffer.fillBuffer(sourceBufferContent);
 
@@ -73,8 +73,8 @@ class MultithreadedSoftwareRendererTest {
     @Test
     void renderScanableToBufferWithOffset() {
         // PREPARE
-        targetBuffer = new PixelBuffer(PixelDimension.builder().widthX(2).heightY(2).build());
-        final PixelBuffer sourceBuffer = new PixelBuffer(PixelDimension.builder().widthX(2).heightY(2).build());
+        targetBuffer = new PixelBuffer(PixelDimension.of(2, 2));
+        final PixelBuffer sourceBuffer = new PixelBuffer(PixelDimension.of(2, 2));
         int sourceBufferContent = 0xFFffffff;
         sourceBuffer.fillBuffer(sourceBufferContent);
 
@@ -91,8 +91,8 @@ class MultithreadedSoftwareRendererTest {
     @Test
     void renderScanableToBufferWithNegativeOffset() {
         // PREPARE
-        targetBuffer = new PixelBuffer(PixelDimension.builder().widthX(2).heightY(2).build());
-        final PixelBuffer sourceBuffer = new PixelBuffer(PixelDimension.builder().widthX(2).heightY(2).build());
+        targetBuffer = new PixelBuffer(PixelDimension.of(2, 2));
+        final PixelBuffer sourceBuffer = new PixelBuffer(PixelDimension.of(2, 2));
         int sourceBufferContent = 0xFFffffff;
         sourceBuffer.fillBuffer(sourceBufferContent);
 
@@ -109,7 +109,7 @@ class MultithreadedSoftwareRendererTest {
     @Test
     void setPixelAt() {
         // PREPARE
-        targetBuffer = new PixelBuffer(PixelDimension.builder().widthX(2).heightY(2).build());
+        targetBuffer = new PixelBuffer(PixelDimension.of(2, 2));
         int newPixelContent = 0xffffff;
 
         // EXECUTE
@@ -125,7 +125,7 @@ class MultithreadedSoftwareRendererTest {
     @Test
     void setPixelAtOutOfBounds() {
         // PREPARE
-        targetBuffer = new PixelBuffer(PixelDimension.builder().widthX(2).heightY(2).build());
+        targetBuffer = new PixelBuffer(PixelDimension.of(2, 2));
         int newPixelContent = 0xffffff;
 
         // EXECUTE
@@ -144,7 +144,7 @@ class MultithreadedSoftwareRendererTest {
         final PixelBuffer bufferWithTestImage = getPixelBufferFromFile("/assets/testHex62x32.png");
         final PixelBuffer bufferWithExpectedImage = getPixelBufferFromFile("/assets/expectedHex62x32.png");
 
-        final PixelBuffer pixelBufferToRenderIn = new PixelBuffer(PixelDimension.builder().widthX(bufferWithTestImage.getDimension().getWidthX()).heightY(bufferWithTestImage.getDimension().getHeightY()).build());
+        final PixelBuffer pixelBufferToRenderIn = new PixelBuffer(PixelDimension.of(bufferWithTestImage.getDimension().getWidthX(), bufferWithTestImage.getDimension().getHeightY()));
         int black = -16777216;
         pixelBufferToRenderIn.fillBuffer(black);
 
@@ -166,7 +166,7 @@ class MultithreadedSoftwareRendererTest {
         image.getRGB(0, 0, image.getWidth(), image.getHeight(), imageBufferArray, 0, image.getWidth());
 
         // create PixelBuffer from image int[]
-        return new PixelBuffer(PixelDimension.builder().widthX(image.getWidth()).heightY(image.getHeight()).build(), imageBufferArray);
+        return new PixelBuffer(PixelDimension.of(image.getWidth(), image.getHeight()), imageBufferArray);
     }
 
     @Test

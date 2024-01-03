@@ -1,13 +1,9 @@
 package com.recom.tacview.engine.graphics;
 
-import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
-import lombok.NonNull;
+import com.recom.tacview.engine.renderables.HasPixelBuffer;
 
-public interface Composable {
+public interface Composable extends HasPixelBuffer {
 
     int compose();
-
-    @NonNull
-    PixelBuffer getBackPixelBuffer(final int index);
 
 }

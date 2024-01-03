@@ -29,7 +29,7 @@ public class TacViewer extends Canvas {
 
 
     @NonNull
-    private final FrameBuffer frameBuffer;
+    private final CanvasUpdaterDoubleBufferStrategy canvasUpdaterDoubleBufferStrategy;
     @NonNull
     private final AnimationTimer animationTimerLoop;
 
@@ -52,7 +52,7 @@ public class TacViewer extends Canvas {
         this.screenComposer = screenComposer;
         this.engineModule = engineModule;
 
-        this.frameBuffer = new FrameBuffer(this, rendererProperties, screenComposer);
+        this.canvasUpdaterDoubleBufferStrategy = new CanvasUpdaterDoubleBufferStrategy(this, rendererProperties, screenComposer);
         this.profiler = new TacViewerProfiler(profilerProvider);
         this.profiler.startProfiling();
 
@@ -67,7 +67,7 @@ public class TacViewer extends Canvas {
             @Override
             public void handle(final long now) {
                 engineLoop(tickProperties, rendererProperties);
-                frameBuffer.swap();
+                canvasUpdaterDoubleBufferStrategy.swap();
                 profiler.getJavaFxCounter().countFrame();
             }
         };
@@ -107,7 +107,7 @@ public class TacViewer extends Canvas {
         // HANDLE RENDER
         if (deltaFrameNanoTime >= rendererProperties.getFrameThresholdNanoTime()) {
             profiler.previousFrameNanoTime = System.nanoTime();
-            frameBuffer.currentBackBufferIndex = screenComposer.compose();
+            canvasUpdaterDoubleBufferStrategy.currentBackBufferIndex = screenComposer.compose();
             profiler.getFpsCounter().countFrame();
         }
 

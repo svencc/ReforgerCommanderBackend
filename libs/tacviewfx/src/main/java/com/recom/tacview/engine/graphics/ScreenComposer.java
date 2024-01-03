@@ -1,6 +1,7 @@
 package com.recom.tacview.engine.graphics;
 
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
+import com.recom.tacview.engine.graphics.buffer.PixelRingBuffer;
 import com.recom.tacview.engine.renderables.Mergeable;
 import com.recom.tacview.property.RendererProperties;
 import com.recom.tacview.service.RendererExecutorProvider;
@@ -22,12 +23,10 @@ public class ScreenComposer implements Composable {
     @NonNull
     private final ExecutorService executorService;
     @NonNull
-    private final PixelBuffer[] ringPixelBuffer;
+    private final PixelRingBuffer pixelRingBuffer;
     @Getter
     @NonNull
     private final LinkedList<Mergeable> layerPipeline = new LinkedList<>();
-    @Getter
-    private int currentPixelBuffer = 0;
     private boolean isBackBufferEmpty = true;
 
 
@@ -37,43 +36,31 @@ public class ScreenComposer implements Composable {
     ) {
         this.rendererProperties = rendererProperties;
         this.executorService = rendererExecutorProvider.provideNewExecutor();
-        ringPixelBuffer = new PixelBuffer[rendererProperties.getComposer().getBackBufferSize()];
-        for (int i = 0; i < ringPixelBuffer.length; i++) {
-            ringPixelBuffer[i] = new PixelBuffer(rendererProperties.toRendererDimension());
-        }
+        this.pixelRingBuffer = new PixelRingBuffer(rendererProperties.toRendererDimension(), rendererProperties.getComposer().getBackBufferSize());
 
         prefillBackBuffer();
     }
 
     private void prefillBackBuffer() {
         if (isBackBufferEmpty) {
-            // pre-fill backBuffer -1
+            // pre-fill backBuffer
             int renderIterations = rendererProperties.getComposer().getBackBufferSize() - 1;
             for (int i = 0; i < renderIterations; i++) {
-                currentPixelBuffer().clearBuffer();
+                pixelRingBuffer.getPixelBuffer().clearBuffer();
 
                 layerPipeline.forEach(layer -> {
                     layer.prepareBuffer();
-                    layer.mergeBufferWith(ringPixelBuffer[currentPixelBuffer], 0, 0);
+                    layer.mergeBufferWith(pixelRingBuffer.getPixelBuffer(), 0, 0);
                     layer.disposeBuffer();
                 });
 
                 // int the last iteration we do not move pointer!
-                if (i < renderIterations - 1) {
-                    nextBufferSegment();
+                if (i < (renderIterations - 1)) {
+                    pixelRingBuffer.swap();
                 }
             }
             isBackBufferEmpty = false;
         }
-    }
-
-    @NonNull
-    private PixelBuffer currentPixelBuffer() {
-        return ringPixelBuffer[currentPixelBuffer];
-    }
-
-    private void nextBufferSegment() {
-        currentPixelBuffer = (currentPixelBuffer + 1) % rendererProperties.getComposer().getBackBufferSize();
     }
 
     @Override
@@ -83,25 +70,27 @@ public class ScreenComposer implements Composable {
                 .reduce(true, (first, second) -> first && second);
 
         if (!isPipelineDirty) {
-            return currentPixelBuffer;
+            return pixelRingBuffer.getCurrentBufferIndex();
         } else {
-            nextBufferSegment();
-            currentPixelBuffer().clearBuffer();
+            pixelRingBuffer.swap();
+            pixelRingBuffer.getPixelBuffer().clearBuffer();
             renderLayerBuffersInParallel(); // prepare buffers in parallel
             layerPipeline.forEach(layer -> {
-                layer.mergeBufferWith(ringPixelBuffer[currentPixelBuffer], 0, 0);
+                layer.mergeBufferWith(pixelRingBuffer.getPixelBuffer(), 0, 0);
                 layer.disposeBuffer();
             });
 
-            return currentPixelBuffer;
+            return pixelRingBuffer.getCurrentBufferIndex();
         }
     }
 
     private void renderLayerBuffersInParallel() {
         final CountDownLatch latch = new CountDownLatch(layerPipeline.size());
         for (final Mergeable layer : layerPipeline) {
-            try (executorService) {
+            try {
                 executorService.execute(layer::prepareBuffer);
+            } catch (final Exception e) {
+                log.error("{}: {}\n{}", getClass().getName(), e.getMessage(), e.getStackTrace());
             } finally {
                 latch.countDown();
             }
@@ -114,10 +103,9 @@ public class ScreenComposer implements Composable {
         }
     }
 
-    @NonNull
     @Override
-    public PixelBuffer getBackPixelBuffer(final int index) {
-        return ringPixelBuffer[index];
+    public PixelBuffer getPixelBuffer() {
+        return pixelRingBuffer.getPixelBuffer();
     }
 
 }

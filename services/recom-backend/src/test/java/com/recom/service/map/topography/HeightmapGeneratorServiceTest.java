@@ -6,7 +6,6 @@ import com.recom.model.map.TopographyData;
 import com.recom.rendertools.rasterizer.HeightmapRasterizer;
 import com.recom.service.SerializationService;
 import com.recom.testhelper.SerializeObjectHelper;
-import lombok.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -33,14 +32,16 @@ class HeightmapGeneratorServiceTest {
     @Mock
     private SerializationService serializationService;
     @Mock
-    @NonNull
-    private HeightmapRasterizerProvider heightmapRasterizerProvider;
+    private HeightmapRasterizer heightmapRasterizer;
     @InjectMocks
     private HeightmapGeneratorService serviceUnderTest;
 
     @Test
     void generateHeightmap() throws IOException {
         // Arrange
+        when(heightmapRasterizer.rasterizeHeightMapPNG(any())).thenCallRealMethod();
+        when(heightmapRasterizer.rasterizeHeightMapRGB(any())).thenCallRealMethod();
+
         final GameMap gameMap = GameMap.builder()
                 .name("test")
                 .build();
@@ -61,7 +62,6 @@ class HeightmapGeneratorServiceTest {
                 .build();
 
         when(serializationService.deserializeObject(any())).thenReturn(Optional.of(topographyData));
-        when(heightmapRasterizerProvider.provide()).thenReturn(new HeightmapRasterizer());
 
         // Act
         final ByteArrayOutputStream resultToTest = serviceUnderTest.generateHeightmapPNG(mapTopography);

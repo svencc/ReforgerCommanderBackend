@@ -22,7 +22,7 @@ class PixelBufferTest {
     @Test
     void getBufferSize() {
         // PREPARE
-        final PixelBuffer pixelBufferToTest = new PixelBuffer(PixelDimension.builder().heightY(10).widthX(10).build());
+        final PixelBuffer pixelBufferToTest = new PixelBuffer(PixelDimension.of(10, 10));
         // EXECUTE & ASSERT
         assertEquals(100, pixelBufferToTest.getBufferSize());
     }
@@ -30,7 +30,7 @@ class PixelBufferTest {
     @Test
     void sizeAndFillTest() {
         // PREPARE
-        final PixelBuffer pixelBufferToTest = new PixelBuffer(PixelDimension.builder().heightY(10).widthX(10).build());
+        final PixelBuffer pixelBufferToTest = new PixelBuffer(PixelDimension.of(10, 10));
 
         // EXECUTE
         pixelBufferToTest.fillBuffer(0x080808);
@@ -44,7 +44,7 @@ class PixelBufferTest {
     @Test
     void clearBuffer() {
         // PREPARE
-        final PixelBuffer pixelBufferToTest = new PixelBuffer(PixelDimension.builder().heightY(10).widthX(10).build());
+        final PixelBuffer pixelBufferToTest = new PixelBuffer(PixelDimension.of(10, 10));
         pixelBufferToTest.fillBuffer(0x080808);
 
         // EXECUTE
@@ -59,13 +59,13 @@ class PixelBufferTest {
     @Test
     void resizeBufferToBigger() {
         // PREPARE
-        final PixelDimension oldPixelDimension = PixelDimension.builder().heightY(2).widthX(2).build();
+        final PixelDimension oldPixelDimension = PixelDimension.of(2, 2);
         final PixelBuffer bufferToTest = new PixelBuffer(oldPixelDimension);
         int oldBufferContent = 0x080808;
         bufferToTest.fillBuffer(oldBufferContent);
 
         // EXECUTE
-        final PixelDimension newPixelDimension = PixelDimension.builder().widthX(3).heightY(3).build();
+        final PixelDimension newPixelDimension = PixelDimension.of(3, 3);
         bufferToTest.resizeBuffer(newPixelDimension);
 
         // ASSERT
@@ -85,13 +85,13 @@ class PixelBufferTest {
     @Test
     void resizeBufferToSmaller() {
         // PREPARE
-        final PixelDimension oldPixelDimension = PixelDimension.builder().heightY(3).widthX(3).build();
+        final PixelDimension oldPixelDimension = PixelDimension.of(3, 3);
         final PixelBuffer bufferToTest = new PixelBuffer(oldPixelDimension);
         int oldBufferContent = 0x080808;
         bufferToTest.fillBuffer(oldBufferContent);
 
         // EXECUTE
-        final PixelDimension newPixelDimension = PixelDimension.builder().widthX(2).heightY(2).build();
+        final PixelDimension newPixelDimension = PixelDimension.of(2, 2);
         bufferToTest.resizeBuffer(newPixelDimension);
 
         // ASSERT
@@ -105,11 +105,11 @@ class PixelBufferTest {
     @Test
     void copyToBiggerTarget() {
         // PREPARE
-        final PixelBuffer sourceBuffer = new PixelBuffer(PixelDimension.builder().heightY(2).widthX(2).build());
+        final PixelBuffer sourceBuffer = new PixelBuffer(PixelDimension.of(2, 2));
         int sourceBufferContent = 0x080808;
         sourceBuffer.fillBuffer(sourceBufferContent);
 
-        PixelDimension targetDimension = PixelDimension.builder().widthX(3).heightY(3).build();
+        PixelDimension targetDimension = PixelDimension.of(3, 3);
         final PixelBuffer targetBuffer = new PixelBuffer(targetDimension);
         int targetBufferContent = 0xffffff;
         targetBuffer.fillBuffer(targetBufferContent);
@@ -134,11 +134,11 @@ class PixelBufferTest {
     @Test
     void copyToSmallerTarget() {
         // PREPARE
-        final PixelBuffer sourceBuffer = new PixelBuffer(PixelDimension.builder().heightY(3).widthX(3).build());
+        final PixelBuffer sourceBuffer = new PixelBuffer(PixelDimension.of(3, 3));
         int sourceBufferContent = 0x080808;
         sourceBuffer.fillBuffer(sourceBufferContent);
 
-        PixelDimension targetDimension = PixelDimension.builder().widthX(2).heightY(2).build();
+        PixelDimension targetDimension = PixelDimension.of(2, 2);
         final PixelBuffer targetBuffer = new PixelBuffer(targetDimension);
         int targetBufferContent = 0xffffff;
         targetBuffer.fillBuffer(targetBufferContent);
@@ -157,11 +157,11 @@ class PixelBufferTest {
     @Test
     void copyToDifferentSizedTarget() {
         // PREPARE
-        final PixelBuffer sourceBuffer = new PixelBuffer(PixelDimension.builder().heightY(3).widthX(3).build());
+        final PixelBuffer sourceBuffer = new PixelBuffer(PixelDimension.of(3, 3));
         int sourceBufferContent = 0x080808;
         sourceBuffer.fillBuffer(sourceBufferContent);
 
-        final PixelDimension targetBufferDimension = PixelDimension.builder().widthX(2).heightY(4).build();
+        final PixelDimension targetBufferDimension = PixelDimension.of(2, 4);
         final PixelBuffer targetBuffer = new PixelBuffer(targetBufferDimension);
         int targetBufferContent = 0xffffff;
         targetBuffer.fillBuffer(targetBufferContent);
@@ -185,11 +185,11 @@ class PixelBufferTest {
     @Test
     void copyWithOffsetToBiggerBuffer() {
         // PREPARE
-        final PixelBuffer sourceBuffer = new PixelBuffer(PixelDimension.builder().heightY(2).widthX(2).build());
+        final PixelBuffer sourceBuffer = new PixelBuffer(PixelDimension.of(2, 2));
         int sourceBufferContent = 0x080808;
         sourceBuffer.fillBuffer(sourceBufferContent);
 
-        final PixelDimension targetBufferDimension = PixelDimension.builder().widthX(3).heightY(3).build();
+        final PixelDimension targetBufferDimension = PixelDimension.of(3, 3);
         final PixelBuffer targetBuffer = new PixelBuffer(targetBufferDimension);
         int targetBufferContent = 0xffffff;
         targetBuffer.fillBuffer(targetBufferContent);
@@ -215,11 +215,11 @@ class PixelBufferTest {
     @Test
     void copyWithOffsetToSmallerBuffer() {
         // PREPARE
-        final PixelBuffer sourceBuffer = new PixelBuffer(PixelDimension.builder().heightY(2).widthX(2).build());
+        final PixelBuffer sourceBuffer = new PixelBuffer(PixelDimension.of(2, 2));
         int sourceBufferContent = 0x080808;
         sourceBuffer.fillBuffer(sourceBufferContent);
 
-        final PixelDimension targetBufferDimension = PixelDimension.builder().widthX(3).heightY(3).build();
+        final PixelDimension targetBufferDimension = PixelDimension.of(3, 3);
         final PixelBuffer targetBuffer = new PixelBuffer(targetBufferDimension);
         int targetBufferContent = 0xffffff;
         targetBuffer.fillBuffer(targetBufferContent);
@@ -245,11 +245,11 @@ class PixelBufferTest {
     @Test
     void copyWithNegativeOffsetToSmallerBuffer() {
         // PREPARE
-        final PixelBuffer sourceBuffer = new PixelBuffer(PixelDimension.builder().heightY(2).widthX(2).build());
+        final PixelBuffer sourceBuffer = new PixelBuffer(PixelDimension.of(2, 2));
         int sourceBufferContent = 0x080808;
         sourceBuffer.fillBuffer(sourceBufferContent);
 
-        final PixelDimension targetBufferDimension = PixelDimension.builder().widthX(3).heightY(3).build();
+        final PixelDimension targetBufferDimension = PixelDimension.of(3, 3);
         final PixelBuffer targetBuffer = new PixelBuffer(targetBufferDimension);
         int targetBufferContent = 0xffffff;
         targetBuffer.fillBuffer(targetBufferContent);
