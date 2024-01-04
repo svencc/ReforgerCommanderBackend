@@ -4,11 +4,11 @@ import com.recom.tacview.engine.renderer.RenderProvider;
 import com.recom.tacview.property.RendererProperties;
 import lombok.NonNull;
 
-public class SolidScreenMergeable extends BufferedMergeableTemplate {
+public class SolidColorMergeable extends BufferedMergeableTemplate {
 
     private final int backgroundColor;
 
-    public SolidScreenMergeable(
+    public SolidColorMergeable(
             @NonNull final RendererProperties rendererProperties,
             @NonNull final RenderProvider renderProvider,
             final int backgroundColor

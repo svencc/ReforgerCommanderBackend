@@ -4,7 +4,7 @@ import com.recom.commander.enginemodule.entity.RECOMEnvironment;
 import com.recom.tacview.engine.graphics.ScreenComposer;
 import com.recom.tacview.engine.module.EngineModule;
 import com.recom.tacview.engine.renderables.mergeable.ScanableNoiseMergeable;
-import com.recom.tacview.engine.renderables.mergeable.SolidScreenMergeable;
+import com.recom.tacview.engine.renderables.mergeable.SolidColorMergeable;
 import com.recom.tacview.engine.renderer.RenderProvider;
 import com.recom.tacview.property.RendererProperties;
 import com.recom.tacview.service.RandomProvider;
@@ -28,8 +28,8 @@ public class TacViewerEngineModule extends EngineModule {
             @NonNull final RECOMEnvironment world,
             @NonNull final RendererProperties rendererProperties,
             @NonNull final ScreenComposer screenComposer,
-            @NonNull final RenderProvider renderProvider,
-            @NonNull final RandomProvider randomProvider
+            @NonNull final RenderProvider renderProvider
+//            ,@NonNull final RandomProvider randomProvider
     ) {
         super(world);
         this.rendererProperties = rendererProperties;
@@ -41,7 +41,7 @@ public class TacViewerEngineModule extends EngineModule {
 
     @Override
     public void init() {
-        final SolidScreenMergeable greenScreenMergeable = new SolidScreenMergeable(rendererProperties, renderProvider, 0xFF54B262);
+        final SolidColorMergeable greenScreenMergeable = new SolidColorMergeable(rendererProperties, renderProvider, 0xFF54B262);
 //        final ScanableNoiseMergeable greenScreenMergeable = new ScanableNoiseMergeable(renderProvider, rendererProperties.toRendererDimension(), randomProvider);
         screenComposer.getLayerPipeline().clear();
         screenComposer.getLayerPipeline().add(greenScreenMergeable);
