@@ -33,7 +33,7 @@ public class PixelRingBuffer implements HasPixelBuffer {
         currentBufferIndex = 0;
     }
 
-    public void swap() {
+    public void next() {
         currentBufferIndex = (currentBufferIndex + 1) % pixelBufferRing.length;
         getPixelBuffer().setDirty(true);
     }

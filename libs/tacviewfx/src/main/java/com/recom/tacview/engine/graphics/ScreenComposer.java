@@ -19,50 +19,25 @@ import java.util.concurrent.ExecutorService;
 public class ScreenComposer implements Composable {
 
     @NonNull
-    private final RendererProperties rendererProperties;
-    @NonNull
     private final ExecutorService executorService;
     @NonNull
     private final PixelRingBuffer pixelRingBuffer;
     @Getter
     @NonNull
     private final LinkedList<Mergeable> layerPipeline = new LinkedList<>();
-    private boolean isBackBufferEmpty = true;
 
 
     public ScreenComposer(
             @NonNull final RendererProperties rendererProperties,
             @NonNull final RendererExecutorProvider rendererExecutorProvider
     ) {
-        this.rendererProperties = rendererProperties;
         this.executorService = rendererExecutorProvider.provideNewExecutor();
         this.pixelRingBuffer = new PixelRingBuffer(rendererProperties.toRendererDimension(), rendererProperties.getComposer().getBackBufferSize());
-
-        prefillBackBuffer();
     }
 
-    private void prefillBackBuffer() {
-        if (isBackBufferEmpty) {
-            // pre-fill backBuffer
-            int renderIterations = rendererProperties.getComposer().getBackBufferSize() - 1;
-            for (int i = 0; i < renderIterations; i++) {
-                pixelRingBuffer.getPixelBuffer().clearBuffer();
-
-                layerPipeline.forEach(layer -> {
-                    layer.prepareBuffer();
-                    layer.mergeBufferWith(pixelRingBuffer.getPixelBuffer(), 0, 0);
-                    layer.disposeBuffer();
-                });
-
-                // int the last iteration we do not move pointer!
-                if (i < (renderIterations - 1)) {
-                    pixelRingBuffer.swap();
-                }
-            }
-            isBackBufferEmpty = false;
-        }
-    }
-
+    // layer sind mergeables
+    // ein layer/mergeables muss durch die entities/renderables laufen und den layer fertigrendern
+    // ich brauche ein template für mergeables ->  ein layer der sich die entsprechenden entities/components filtert
     @Override
     public int compose() {
         final boolean isPipelineDirty = layerPipeline.stream()
@@ -72,12 +47,12 @@ public class ScreenComposer implements Composable {
         if (!isPipelineDirty) {
             return pixelRingBuffer.getCurrentBufferIndex();
         } else {
-            pixelRingBuffer.swap();
+            pixelRingBuffer.next();
             pixelRingBuffer.getPixelBuffer().clearBuffer();
             renderLayerBuffersInParallel(); // prepare buffers in parallel
             layerPipeline.forEach(layer -> {
                 layer.mergeBufferWith(pixelRingBuffer.getPixelBuffer(), 0, 0);
-                layer.disposeBuffer();
+                layer.dispose();
             });
 
             return pixelRingBuffer.getCurrentBufferIndex();

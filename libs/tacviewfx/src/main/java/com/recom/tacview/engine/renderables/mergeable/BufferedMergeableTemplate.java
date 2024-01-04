@@ -63,7 +63,7 @@ public abstract class BufferedMergeableTemplate implements Mergeable, HasPixelBu
     }
 
     @Override
-    public void disposeBuffer() {
+    public void dispose() {
 
     }
 

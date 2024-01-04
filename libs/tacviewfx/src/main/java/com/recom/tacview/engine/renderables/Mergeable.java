@@ -25,6 +25,6 @@ public interface Mergeable extends Soilable {
 
     void prepareBuffer();
 
-    void disposeBuffer();
+    void dispose();
 
 }
