@@ -23,8 +23,6 @@ public class DefaultEngineModuleConfiguration {
     @NonNull
     private final EnvironmentBase environment;
     @NonNull
-    private final TickProperties tickProperties;
-    @NonNull
     private final ScreenComposer screenComposer;
     @NonNull
     private final RandomProvider randomProvider;
@@ -34,7 +32,7 @@ public class DefaultEngineModuleConfiguration {
     @Bean
     @ConditionalOnMissingBean(EngineModule.class)
     public DefaultEngineModule defaultEngineModule(@NonNull final RendererProperties rendererProperties) {
-        return new DefaultEngineModule(environment, rendererProperties, tickProperties, screenComposer, randomProvider, renderProvider);
+        return new DefaultEngineModule(environment, rendererProperties, screenComposer, randomProvider, renderProvider);
     }
 
 }

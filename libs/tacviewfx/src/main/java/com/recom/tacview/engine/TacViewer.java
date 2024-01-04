@@ -105,7 +105,7 @@ public class TacViewer extends Canvas {
         // HANDLE RENDER
         if (deltaFrameNanoTime >= rendererProperties.getFrameThresholdNanoTime()) {
             profiler.previousFrameNanoTime = System.nanoTime();
-            canvasBuffer.currentBackBufferIndex = screenComposer.compose();
+            canvasBuffer.currentBackBufferIndex = screenComposer.compose(engineModule.getEnvironment());
             profiler.getFpsCounter().countFrame();
         }
 

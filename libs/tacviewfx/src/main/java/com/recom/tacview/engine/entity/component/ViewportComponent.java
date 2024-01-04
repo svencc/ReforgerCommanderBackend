@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 
+@Deprecated
 public abstract class ViewportComponent extends ComponentBase implements HasPixelBuffer {
 
     @Getter

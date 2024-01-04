@@ -1,9 +1,9 @@
 package com.recom.tacview.engine.entity.component;
 
 import com.recom.tacview.engine.entity.Entity;
+import com.recom.tacview.engine.graphics.buffer.NullPixelBuffer;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
 import com.recom.tacview.engine.renderables.HasPixelBuffer;
-import com.recom.tacview.engine.units.PixelDimension;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -12,11 +12,11 @@ public abstract class RenderableComponent extends ComponentBase implements HasPi
 
     @Setter
     @Getter
-    private int layer = 0;
+    private int zIndex = 0;
 
     @Getter
     @NonNull
-    protected PixelBuffer pixelBuffer = new PixelBuffer(PixelDimension.of(0, 0));
+    protected PixelBuffer pixelBuffer = NullPixelBuffer.CREATE();
 
     @NonNull
     public ComponentType componentType() {

@@ -1,13 +1,13 @@
 package com.recom.commander.enginemodule;
 
+import com.recom.commander.enginemodule.entity.RECOMEntity;
 import com.recom.commander.enginemodule.entity.RECOMEnvironment;
+import com.recom.tacview.engine.entity.component.MergeableLayerComponent;
 import com.recom.tacview.engine.graphics.ScreenComposer;
 import com.recom.tacview.engine.module.EngineModule;
-import com.recom.tacview.engine.renderables.mergeable.ScanableNoiseMergeable;
 import com.recom.tacview.engine.renderables.mergeable.SolidColorMergeable;
 import com.recom.tacview.engine.renderer.RenderProvider;
 import com.recom.tacview.property.RendererProperties;
-import com.recom.tacview.service.RandomProvider;
 import lombok.NonNull;
 import org.springframework.stereotype.Component;
 
@@ -20,8 +20,6 @@ public class TacViewerEngineModule extends EngineModule {
     private final ScreenComposer screenComposer;
     @NonNull
     private final RenderProvider renderProvider;
-//    @NonNull
-//    private final RandomProvider randomProvider;
 
 
     public TacViewerEngineModule(
@@ -29,22 +27,23 @@ public class TacViewerEngineModule extends EngineModule {
             @NonNull final RendererProperties rendererProperties,
             @NonNull final ScreenComposer screenComposer,
             @NonNull final RenderProvider renderProvider
-//            ,@NonNull final RandomProvider randomProvider
     ) {
         super(world);
         this.rendererProperties = rendererProperties;
         this.screenComposer = screenComposer;
         this.renderProvider = renderProvider;
-
-//        this.randomProvider = randomProvider;
     }
 
     @Override
     public void init() {
+        // init world ...
+        final RECOMEntity recomMapEntity = new RECOMEntity();
+
         final SolidColorMergeable greenScreenMergeable = new SolidColorMergeable(rendererProperties, renderProvider, 0xFF54B262);
-//        final ScanableNoiseMergeable greenScreenMergeable = new ScanableNoiseMergeable(renderProvider, rendererProperties.toRendererDimension(), randomProvider);
-        screenComposer.getLayerPipeline().clear();
-        screenComposer.getLayerPipeline().add(greenScreenMergeable);
+        final MergeableLayerComponent mergeableLayerComponent = new MergeableLayerComponent(greenScreenMergeable);
+
+        recomMapEntity.addComponent(mergeableLayerComponent);
+        getEnvironment().getEntities().add(recomMapEntity);
     }
 
     @Override

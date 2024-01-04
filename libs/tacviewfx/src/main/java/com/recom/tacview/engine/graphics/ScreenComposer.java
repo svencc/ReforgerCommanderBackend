@@ -1,16 +1,17 @@
 package com.recom.tacview.engine.graphics;
 
+import com.recom.tacview.engine.entity.component.MergeableLayerComponent;
+import com.recom.tacview.engine.entity.environment.EnvironmentBase;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
 import com.recom.tacview.engine.graphics.buffer.PixelRingBuffer;
 import com.recom.tacview.engine.renderables.Mergeable;
 import com.recom.tacview.property.RendererProperties;
 import com.recom.tacview.service.RendererExecutorProvider;
-import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 
@@ -22,9 +23,6 @@ public class ScreenComposer implements Composable {
     private final ExecutorService executorService;
     @NonNull
     private final PixelRingBuffer pixelRingBuffer;
-    @Getter
-    @NonNull
-    private final LinkedList<Mergeable> layerPipeline = new LinkedList<>();
 
 
     public ScreenComposer(
@@ -35,12 +33,14 @@ public class ScreenComposer implements Composable {
         this.pixelRingBuffer = new PixelRingBuffer(rendererProperties.toRendererDimension(), rendererProperties.getComposer().getBackBufferSize());
     }
 
-    // layer sind mergeables
-    // ein layer/mergeables muss durch die entities/renderables laufen und den layer fertigrendern
-    // ich brauche ein template für mergeables ->  ein layer der sich die entsprechenden entities/components filtert
     @Override
-    public int compose() {
+    public int compose(@NonNull final EnvironmentBase environment) {
+        final List<MergeableLayerComponent> layerPipeline = environment.getEntities().stream()
+                .flatMap(entity -> entity.locateComponents(MergeableLayerComponent.class).stream())
+                .toList();
+
         final boolean isPipelineDirty = layerPipeline.stream()
+                .map(MergeableLayerComponent::getMergeable)
                 .map(Mergeable::isDirty)
                 .reduce(true, (first, second) -> first && second);
 
@@ -49,21 +49,22 @@ public class ScreenComposer implements Composable {
         } else {
             pixelRingBuffer.next();
             pixelRingBuffer.getPixelBuffer().clearBuffer();
-            renderLayerBuffersInParallel(); // prepare buffers in parallel
+            renderLayerPipelineInParallel(layerPipeline);
             layerPipeline.forEach(layer -> {
-                layer.mergeBufferWith(pixelRingBuffer.getPixelBuffer(), 0, 0);
-                layer.dispose();
+                layer.getMergeable().mergeBufferWith(pixelRingBuffer.getPixelBuffer(), 0, 0);
+                layer.getMergeable().dispose();
             });
 
             return pixelRingBuffer.getCurrentBufferIndex();
         }
     }
 
-    private void renderLayerBuffersInParallel() {
+    private void renderLayerPipelineInParallel(@NonNull final List<MergeableLayerComponent> layerPipeline) {
         final CountDownLatch latch = new CountDownLatch(layerPipeline.size());
-        for (final Mergeable layer : layerPipeline) {
+        for (final MergeableLayerComponent layerComponent : layerPipeline) {
             try {
-                executorService.execute(layer::prepareBuffer);
+                final Mergeable mergeableLayer = layerComponent.getMergeable();
+                executorService.execute(mergeableLayer::prepareBuffer);
             } catch (final Exception e) {
                 log.error("{}: {}\n{}", getClass().getName(), e.getMessage(), e.getStackTrace());
             } finally {
