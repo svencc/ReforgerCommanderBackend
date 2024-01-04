@@ -6,6 +6,7 @@ import com.recom.tacview.engine.renderables.Mergeable;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @RequiredArgsConstructor
 public class MergeableLayerComponent extends ComponentBase implements HasMergeable {
@@ -14,10 +15,13 @@ public class MergeableLayerComponent extends ComponentBase implements HasMergeab
     @NonNull
     private final Mergeable mergeable;
 
+    @Setter
+    private ComponentType componentType = ComponentType.BASE_LAYER;
+
 
     @Override
     public @NonNull ComponentType componentType() {
-        return ComponentType.LAYER;
+        return componentType;
     }
 
     @Override

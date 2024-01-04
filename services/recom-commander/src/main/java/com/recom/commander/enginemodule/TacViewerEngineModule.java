@@ -3,14 +3,13 @@ package com.recom.commander.enginemodule;
 import com.recom.commander.enginemodule.entity.RECOMEnvironment;
 import com.recom.commander.enginemodule.entity.component.RECOMMapComponent;
 import com.recom.tacview.engine.entity.Entity;
+import com.recom.tacview.engine.entity.component.ComponentType;
 import com.recom.tacview.engine.entity.component.MergeableLayerComponent;
-import com.recom.tacview.engine.graphics.ScreenComposer;
 import com.recom.tacview.engine.module.EngineModule;
-import com.recom.tacview.engine.renderables.mergeable.SolidColorMergeable;
+import com.recom.tacview.engine.renderables.mergeable.BufferedMergeableWrapper;
 import com.recom.tacview.engine.renderer.RenderProvider;
 import com.recom.tacview.property.RendererProperties;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -42,11 +41,11 @@ public class TacViewerEngineModule extends EngineModule {
     @Override
     public void init() {
         final Entity mapEntity = new Entity();
-        final SolidColorMergeable greenScreenMergeable = new SolidColorMergeable(rendererProperties, renderProvider, 0xFF54B262);
-        final MergeableLayerComponent mergeableLayerComponent = new MergeableLayerComponent(greenScreenMergeable);
-        mapEntity.addComponent(mergeableLayerComponent);
 
-//        mapEntity.addComponent(mapComponent);
+        final BufferedMergeableWrapper bufferedMergeableWrapper = new BufferedMergeableWrapper(mapComponent, renderProvider);
+        final MergeableLayerComponent mergeableMapLayerComponent = new MergeableLayerComponent(bufferedMergeableWrapper);
+        mergeableMapLayerComponent.setComponentType(ComponentType.MAP_LAYER);
+        mapEntity.addComponent(mergeableMapLayerComponent);
 
         getEnvironment().getEntities().add(mapEntity);
     }

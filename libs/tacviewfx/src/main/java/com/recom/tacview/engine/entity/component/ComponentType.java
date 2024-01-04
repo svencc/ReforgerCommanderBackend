@@ -14,8 +14,8 @@ public enum ComponentType {
     PHYSICS(3000),
 
     // RENDERING Components
-    LAYER(4000),
-    ENVIRONMENT(5000),
+    BASE_LAYER(4000),
+    MAP_LAYER(5000),
     RENDER_BACKGROUND(8000),
     RENDER_FOREGROUND(9000),
 

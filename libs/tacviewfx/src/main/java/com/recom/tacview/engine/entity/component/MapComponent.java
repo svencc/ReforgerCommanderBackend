@@ -7,7 +7,7 @@ public abstract class MapComponent extends RenderableComponent {
 
     @NonNull
     public ComponentType componentType() {
-        return ComponentType.ENVIRONMENT;
+        return ComponentType.MAP_LAYER;
     }
 
 
