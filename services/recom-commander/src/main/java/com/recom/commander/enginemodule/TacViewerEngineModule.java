@@ -1,7 +1,7 @@
 package com.recom.commander.enginemodule;
 
-import com.recom.commander.enginemodule.entity.RECOMEntity;
 import com.recom.commander.enginemodule.entity.RECOMEnvironment;
+import com.recom.tacview.engine.entity.Entity;
 import com.recom.tacview.engine.entity.component.MergeableLayerComponent;
 import com.recom.tacview.engine.graphics.ScreenComposer;
 import com.recom.tacview.engine.module.EngineModule;
@@ -37,13 +37,12 @@ public class TacViewerEngineModule extends EngineModule {
     @Override
     public void init() {
         // init world ...
-        final RECOMEntity recomMapEntity = new RECOMEntity();
-
+        final Entity mapEntity = new Entity();
         final SolidColorMergeable greenScreenMergeable = new SolidColorMergeable(rendererProperties, renderProvider, 0xFF54B262);
         final MergeableLayerComponent mergeableLayerComponent = new MergeableLayerComponent(greenScreenMergeable);
+        mapEntity.addComponent(mergeableLayerComponent);
 
-        recomMapEntity.addComponent(mergeableLayerComponent);
-        getEnvironment().getEntities().add(recomMapEntity);
+        getEnvironment().getEntities().add(mapEntity);
     }
 
     @Override
