@@ -11,16 +11,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class RECOMEnvironment extends EnvironmentBase {
 
-//    @NonNull
-//    private final RECOMEntity recomMapEntity;
-
-    RECOMEnvironment(@NonNull final RECOMMapComponent mapComponent) {
-//        this.recomMapEntity = new RECOMEntity();
-
-
-//        recomMapEntity.addComponent(mapComponent);
-
-//        getEntities().add(recomMapEntity);
+    RECOMEnvironment() {
+        super();
     }
 
 }

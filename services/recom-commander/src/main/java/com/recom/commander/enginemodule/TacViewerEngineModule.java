@@ -36,7 +36,6 @@ public class TacViewerEngineModule extends EngineModule {
 
     @Override
     public void init() {
-        // init world ...
         final Entity mapEntity = new Entity();
         final SolidColorMergeable greenScreenMergeable = new SolidColorMergeable(rendererProperties, renderProvider, 0xFF54B262);
         final MergeableLayerComponent mergeableLayerComponent = new MergeableLayerComponent(greenScreenMergeable);
