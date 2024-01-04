@@ -3,20 +3,21 @@ package com.recom.tacview.engine.entity.component;
 import com.recom.tacview.engine.entity.Entity;
 import com.recom.tacview.engine.renderables.HasMergeable;
 import com.recom.tacview.engine.renderables.Mergeable;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
-//public abstract class MergeableComponent extends ComponentBase implements Mergeable {
 @RequiredArgsConstructor
 public class MergeableLayerComponent extends ComponentBase implements HasMergeable {
 
+    @Getter
     @NonNull
     private final Mergeable mergeable;
 
 
     @Override
     public @NonNull ComponentType componentType() {
-        return null;
+        return ComponentType.LAYER;
     }
 
     @Override
@@ -27,8 +28,4 @@ public class MergeableLayerComponent extends ComponentBase implements HasMergeab
         // nothing to update
     }
 
-    @Override
-    public Mergeable getMergeable() {
-        return mergeable;
-    }
 }

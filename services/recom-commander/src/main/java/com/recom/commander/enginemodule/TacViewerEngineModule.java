@@ -1,6 +1,7 @@
 package com.recom.commander.enginemodule;
 
 import com.recom.commander.enginemodule.entity.RECOMEnvironment;
+import com.recom.commander.enginemodule.entity.component.RECOMMapComponent;
 import com.recom.tacview.engine.entity.Entity;
 import com.recom.tacview.engine.entity.component.MergeableLayerComponent;
 import com.recom.tacview.engine.graphics.ScreenComposer;
@@ -9,6 +10,7 @@ import com.recom.tacview.engine.renderables.mergeable.SolidColorMergeable;
 import com.recom.tacview.engine.renderer.RenderProvider;
 import com.recom.tacview.property.RendererProperties;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -17,21 +19,24 @@ public class TacViewerEngineModule extends EngineModule {
     @NonNull
     private final RendererProperties rendererProperties;
     @NonNull
-    private final ScreenComposer screenComposer;
-    @NonNull
     private final RenderProvider renderProvider;
+
+    @NonNull
+    private final RECOMMapComponent mapComponent;
 
 
     public TacViewerEngineModule(
             @NonNull final RECOMEnvironment world,
             @NonNull final RendererProperties rendererProperties,
-            @NonNull final ScreenComposer screenComposer,
-            @NonNull final RenderProvider renderProvider
+            @NonNull final RenderProvider renderProvider,
+
+            @NonNull final RECOMMapComponent mapComponent
     ) {
         super(world);
         this.rendererProperties = rendererProperties;
-        this.screenComposer = screenComposer;
         this.renderProvider = renderProvider;
+
+        this.mapComponent = mapComponent;
     }
 
     @Override
@@ -40,6 +45,8 @@ public class TacViewerEngineModule extends EngineModule {
         final SolidColorMergeable greenScreenMergeable = new SolidColorMergeable(rendererProperties, renderProvider, 0xFF54B262);
         final MergeableLayerComponent mergeableLayerComponent = new MergeableLayerComponent(greenScreenMergeable);
         mapEntity.addComponent(mergeableLayerComponent);
+
+//        mapEntity.addComponent(mapComponent);
 
         getEnvironment().getEntities().add(mapEntity);
     }

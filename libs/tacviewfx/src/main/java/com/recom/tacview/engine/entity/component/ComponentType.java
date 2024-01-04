@@ -15,9 +15,12 @@ public enum ComponentType {
 
     // RENDERING Components
     LAYER(4000),
-    ENVIRONMENT(4100),
-    RENDER_BACKGROUND(9000),
-    RENDER_FOREGROUND(9100);
+    ENVIRONMENT(5000),
+    RENDER_BACKGROUND(8000),
+    RENDER_FOREGROUND(9000),
+
+    // UI Components
+    UI_LAYER(10000);
 
 
     private final int sortOrder;
