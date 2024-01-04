@@ -10,7 +10,7 @@ import lombok.NonNull;
 
 import java.nio.IntBuffer;
 
-public class CanvasUpdaterDoubleBufferStrategy {
+public class CanvasBufferSwapCommand {
 
     @NonNull
     private final Canvas canvas;
@@ -28,7 +28,7 @@ public class CanvasUpdaterDoubleBufferStrategy {
     public int lastBackBufferIndex = -1;
 
 
-    public CanvasUpdaterDoubleBufferStrategy(
+    public CanvasBufferSwapCommand(
             @NonNull final Canvas canvas,
             @NonNull final RendererProperties rendererProperties,
             @NonNull final ScreenComposer screenComposer

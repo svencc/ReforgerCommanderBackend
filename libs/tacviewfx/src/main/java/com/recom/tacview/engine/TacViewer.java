@@ -29,7 +29,7 @@ public class TacViewer extends Canvas {
 
 
     @NonNull
-    private final CanvasUpdaterDoubleBufferStrategy canvasUpdaterDoubleBufferStrategy;
+    private final CanvasBufferSwapCommand canvasBuffer;
     @NonNull
     private final AnimationTimer animationTimerLoop;
 
@@ -52,7 +52,7 @@ public class TacViewer extends Canvas {
         this.screenComposer = screenComposer;
         this.engineModule = engineModule;
 
-        this.canvasUpdaterDoubleBufferStrategy = new CanvasUpdaterDoubleBufferStrategy(this, rendererProperties, screenComposer);
+        this.canvasBuffer = new CanvasBufferSwapCommand(this, rendererProperties, screenComposer);
         this.profiler = new TacViewerProfiler(profilerProvider);
         this.profiler.startProfiling();
 
@@ -67,8 +67,8 @@ public class TacViewer extends Canvas {
             @Override
             public void handle(final long now) {
                 engineLoop(tickProperties, rendererProperties);
-                canvasUpdaterDoubleBufferStrategy.swap();
-                profiler.getJavaFxCounter().countFrame();
+                canvasBuffer.swap();
+                profiler.getLoopCounter().countLoop();
             }
         };
     }
@@ -86,8 +86,6 @@ public class TacViewer extends Canvas {
             @NonNull final TickProperties tickProperties,
             @NonNull final RendererProperties rendererProperties
     ) {
-        profiler.getLoopProfiler().startNextMeasurement();
-
         // HANDLE INPUT
         engineModule.handleInput();
 
@@ -107,14 +105,13 @@ public class TacViewer extends Canvas {
         // HANDLE RENDER
         if (deltaFrameNanoTime >= rendererProperties.getFrameThresholdNanoTime()) {
             profiler.previousFrameNanoTime = System.nanoTime();
-            canvasUpdaterDoubleBufferStrategy.currentBackBufferIndex = screenComposer.compose();
+            canvasBuffer.currentBackBufferIndex = screenComposer.compose();
             profiler.getFpsCounter().countFrame();
         }
 
         // HANDLE PROFILING
-        profiler.getLoopProfiler().measureLoop();
-        if (profileFPSStrategy != null && profiler.getFpsCounter().oneSecondPassed()) {
-            profileFPSStrategy.execute(profiler.profileLoop());
+        if (profileFPSStrategy != null && profiler.getLoopCounter().isOneSecondPassed()) {
+            profileFPSStrategy.execute(profiler.writeProfile());
         }
     }
 
