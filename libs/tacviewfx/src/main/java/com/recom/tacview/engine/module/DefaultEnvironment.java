@@ -1,7 +1,7 @@
 package com.recom.tacview.engine.module;
 
-import com.recom.tacview.engine.entity.environment.EnvironmentBase;
+import com.recom.tacview.engine.entity.Environment;
 
-public class DefaultEnvironment extends EnvironmentBase {
+public class DefaultEnvironment extends Environment {
 
 }

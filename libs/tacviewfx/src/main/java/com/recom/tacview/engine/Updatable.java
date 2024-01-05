@@ -1,4 +1,4 @@
-package com.recom.tacview.engine.entity;
+package com.recom.tacview.engine;
 
 public interface Updatable {
 

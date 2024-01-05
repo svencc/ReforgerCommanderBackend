@@ -1,9 +1,8 @@
 package com.recom.tacview.engine.module;
 
 import com.recom.tacview.engine.entity.Entity;
-import com.recom.tacview.engine.entity.component.MergeableLayerComponent;
-import com.recom.tacview.engine.entity.environment.EnvironmentBase;
-import com.recom.tacview.engine.graphics.ScreenComposer;
+import com.recom.tacview.engine.entity.component.refactor.MergeableLayerComponent;
+import com.recom.tacview.engine.entity.Environment;
 import com.recom.tacview.engine.renderables.mergeable.ScanableNoiseMergeable;
 import com.recom.tacview.engine.renderer.RenderProvider;
 import com.recom.tacview.property.RendererProperties;
@@ -15,22 +14,18 @@ public class DefaultEngineModule extends EngineModule {
     @NonNull
     private final RendererProperties rendererProperties;
     @NonNull
-    private final ScreenComposer screenComposer;
-    @NonNull
     private final RandomProvider randomProvider;
     @NonNull
     private final RenderProvider renderProvider;
 
     public DefaultEngineModule(
-            @NonNull final EnvironmentBase environment,
+            @NonNull final Environment environment,
             @NonNull final RendererProperties rendererProperties,
-            @NonNull final ScreenComposer screenComposer,
             @NonNull final RandomProvider randomProvider,
             @NonNull final RenderProvider renderProvider
     ) {
         super(environment);
         this.rendererProperties = rendererProperties;
-        this.screenComposer = screenComposer;
         this.randomProvider = randomProvider;
         this.renderProvider = renderProvider;
     }

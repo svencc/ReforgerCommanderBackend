@@ -1,46 +1,52 @@
 package com.recom.tacview.engine.entity;
 
-import com.recom.tacview.engine.entity.component.ComponentBase;
+import com.recom.tacview.engine.Updatable;
+import com.recom.tacview.engine.entity.interfaces.IsComponent;
+import com.recom.tacview.engine.entity.interfaces.IsEntity;
 import lombok.NonNull;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Entity implements Componentable, Updatable {
+public class Entity implements IsEntity {
 
     @NonNull
-    private final List<ComponentBase> components = new ArrayList<>();
+    private final List<IsComponent> components = new ArrayList<>();
 
     @NonNull
-    private Map<? extends Class<? extends ComponentBase>, List<ComponentBase>> componentMap = new HashMap<>();
+    private Map<? extends Class<? extends IsComponent>, List<IsComponent>> componentMap = new HashMap<>();
 
-    public void addComponent(@NonNull final ComponentBase component) {
+    @Override
+    public void addComponent(@NonNull final IsComponent component) {
         components.add(component);
-        components.sort(Comparator.comparing(ComponentBase::getSortOrder));
-        indexComponents();
+        components.sort(Comparator.comparing((compnt) -> compnt.getComponentType().getSortOrder()));
+        reIndexComponents();
     }
 
-    public void addComponents(@NonNull final List<ComponentBase> components) {
+    @Override
+    public void addComponents(@NonNull final List<IsComponent> components) {
         this.components.addAll(components.stream().filter(Objects::nonNull).toList());
-        this.components.sort(Comparator.comparing(ComponentBase::getSortOrder));
-        indexComponents();
+        this.components.sort(Comparator.comparing(component -> component.getComponentType().getSortOrder()));
+        reIndexComponents();
     }
 
-    protected void indexComponents() {
+    @Override
+    public void reIndexComponents() {
         componentMap = components.stream()
-                .sorted(Comparator.comparing(ComponentBase::getSortOrder))
-                .collect(Collectors.groupingBy(ComponentBase::getClass));
+                .sorted(Comparator.comparing(component -> component.getComponentType().getSortOrder()))
+                .collect(Collectors.groupingBy(IsComponent::getClass));
     }
 
-    public void removeComponent(@NonNull final ComponentBase component) {
+    @Override
+    public void removeComponent(@NonNull final IsComponent component) {
         components.remove(component);
-//        components.sort(Comparator.comparing(Component::getSortIndex));
-        indexComponents();
+        reIndexComponents();
     }
 
     @NonNull
+    @Override
     @SuppressWarnings("unchecked")
-    public <T extends ComponentBase> Optional<T> locateComponent(@NonNull final Class<T> componentClass) {
+    public <T extends IsComponent> Optional<T> locateComponent(@NonNull final Class<T> componentClass) {
         if (componentMap.containsKey(componentClass)) {
             return Optional.of((T) componentMap.get(componentClass).get(0));
         } else {
@@ -49,8 +55,9 @@ public class Entity implements Componentable, Updatable {
     }
 
     @NonNull
+    @Override
     @SuppressWarnings("unchecked")
-    public <T extends ComponentBase> List<T> locateComponents(@NonNull final Class<T> componentClass) {
+    public <T extends IsComponent> List<T> locateComponents(@NonNull final Class<T> componentClass) {
         if (componentMap.containsKey(componentClass)) {
             return Collections.unmodifiableList((List<? extends T>) componentMap.get(componentClass));
         } else {
@@ -59,13 +66,15 @@ public class Entity implements Componentable, Updatable {
     }
 
     @NonNull
-    public List<ComponentBase> getComponents() {
+    @Override
+    public List<IsComponent> getComponents() {
         return Collections.unmodifiableList(components);
     }
 
+    @Override
     public void update(final long elapsedNanoTime) {
-        for (@NonNull final ComponentBase component : components) {
-            component.update(this, elapsedNanoTime);
+        for (@NonNull final Updatable component : components) {
+            component.update(elapsedNanoTime);
         }
     }
 

@@ -10,7 +10,7 @@ public class PixelRingBuffer implements HasPixelBuffer {
     @NonNull
     protected PixelDimension dimension;
     @NonNull
-    protected PixelBuffer[] pixelBufferRing;
+    protected final PixelBuffer[] pixelBufferRing;
     @Getter
     private int currentBufferIndex;
 
@@ -38,6 +38,7 @@ public class PixelRingBuffer implements HasPixelBuffer {
         getPixelBuffer().setDirty(true);
     }
 
+    @NonNull
     @Override
     public PixelBuffer getPixelBuffer() {
         return pixelBufferRing[currentBufferIndex];

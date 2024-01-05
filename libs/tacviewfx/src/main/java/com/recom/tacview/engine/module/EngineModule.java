@@ -1,17 +1,18 @@
 package com.recom.tacview.engine.module;
 
-import com.recom.tacview.engine.entity.environment.EnvironmentBase;
+import com.recom.tacview.engine.Updatable;
+import com.recom.tacview.engine.entity.Environment;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
-public abstract class EngineModule {
+public abstract class EngineModule implements Updatable {
 
     @Getter
     @NonNull
-    private final EnvironmentBase environment;
+    private final Environment environment;
 
 
     public void run() {

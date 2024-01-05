@@ -13,42 +13,42 @@ import com.recom.observer.Subjective;
 import com.recom.observer.TakeNoticeRunnable;
 import com.recom.rendertools.rasterizer.HeightMapDescriptor;
 import com.recom.rendertools.rasterizer.HeightmapRasterizer;
-import com.recom.tacview.engine.entity.Entity;
-import com.recom.tacview.engine.entity.component.MapComponent;
+import com.recom.tacview.engine.entity.component.GenericMapComponent;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
-import com.recom.tacview.engine.renderables.HasPixelBuffer;
 import com.recom.tacview.engine.units.PixelDimension;
 import jakarta.annotation.Nullable;
 import jakarta.annotation.PostConstruct;
-import lombok.Getter;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Component;
 
 @Slf4j
-@Component
-@RequiredArgsConstructor
-public class RECOMMapComponent extends MapComponent implements AutoCloseable, HasPixelBuffer {
+public class RECOMMapComponent extends GenericMapComponent implements AutoCloseable {
 
     @NonNull
     private final MapsOverviewService mapsOverviewService;
     @NonNull
     private final MapTopographyDataService mapTopographyDataService;
     @NonNull
-    private final HeightmapRasterizer heightmapRasterizer = new HeightmapRasterizer();
-
+    private final HeightmapRasterizer heightmapRasterizer;
 
     @Nullable
     private ReactiveObserver<MapOverviewDto> mapOverviewReactiveObserver;
     @Nullable
     private ReactiveObserver<HeightMapDescriptorDto> mapTopographyDataReactiveObserver;
 
-    @Setter
-    @Getter
-    private int layer = 0;
+
+    public RECOMMapComponent(
+            @NonNull final MapsOverviewService mapsOverviewService,
+            @NonNull final MapTopographyDataService mapTopographyDataService,
+            @NonNull final HeightmapRasterizer heightmapRasterizer
+    ) {
+        super();
+        this.mapsOverviewService = mapsOverviewService;
+        this.mapTopographyDataService = mapTopographyDataService;
+        this.heightmapRasterizer = heightmapRasterizer;
+    }
+
 
     @PostConstruct
     public void init() {
@@ -100,16 +100,6 @@ public class RECOMMapComponent extends MapComponent implements AutoCloseable, Ha
         // start chain reaction; begin with loading map overview
         log.debug("Initial authentication done. Start loading map overview.");
         mapsOverviewService.reloadMapOverview();
-    }
-
-    @Override
-    public void update(
-            @NonNull final Entity entity,
-            final long elapsedNanoTime
-    ) {
-        super.update(entity, elapsedNanoTime);
-        // render the component
-        // needs to talk with physics component (position, velocity)
     }
 
     @Override

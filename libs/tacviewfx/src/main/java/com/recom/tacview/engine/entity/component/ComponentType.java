@@ -1,5 +1,6 @@
 package com.recom.tacview.engine.entity.component;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -22,14 +23,8 @@ public enum ComponentType {
     // UI Components
     UI_LAYER(10000);
 
-
+    
+    @Getter
     private final int sortOrder;
-
-    /**
-     * @return the order of execution of the component (from lower to higher)
-     */
-    public int sortOrder() {
-        return sortOrder;
-    }
 
 }

@@ -1,7 +1,7 @@
 package com.recom.tacview.engine.graphics;
 
-import com.recom.tacview.engine.entity.component.MergeableLayerComponent;
-import com.recom.tacview.engine.entity.environment.EnvironmentBase;
+import com.recom.tacview.engine.entity.Environment;
+import com.recom.tacview.engine.entity.component.refactor.MergeableLayerComponent;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
 import com.recom.tacview.engine.graphics.buffer.PixelRingBuffer;
 import com.recom.tacview.engine.renderables.Mergeable;
@@ -34,15 +34,16 @@ public class ScreenComposer implements Composable {
     }
 
     @Override
-    public int compose(@NonNull final EnvironmentBase environment) {
+    public int compose(@NonNull final Environment environment) {
+        // @TODO: refactor this to use the new component system
+        // @TODO: refactor this to make use of dynamic mergeable layers (from components)
+        // @TODO: refactor this to use cached entity/component lists (cached by environment -> implement component locator)
+
         final List<MergeableLayerComponent> layerPipeline = environment.getEntities().stream()
                 .flatMap(entity -> entity.locateComponents(MergeableLayerComponent.class).stream())
                 .toList();
 
-        final boolean isPipelineDirty = layerPipeline.stream()
-                .map(MergeableLayerComponent::getMergeable)
-                .map(Mergeable::isDirty)
-                .reduce(true, (first, second) -> first && second);
+        final boolean isPipelineDirty = isPipelineDirty(layerPipeline);
 
         if (!isPipelineDirty) {
             return pixelRingBuffer.getCurrentBufferIndex();
@@ -57,6 +58,13 @@ public class ScreenComposer implements Composable {
 
             return pixelRingBuffer.getCurrentBufferIndex();
         }
+    }
+
+    private boolean isPipelineDirty(@NonNull final List<MergeableLayerComponent> layerPipeline) {
+        return layerPipeline.stream()
+                .map(MergeableLayerComponent::getMergeable)
+                .map(Mergeable::isDirty)
+                .reduce(true, (first, second) -> first && second);
     }
 
     private void renderLayerPipelineInParallel(@NonNull final List<MergeableLayerComponent> layerPipeline) {
@@ -79,6 +87,7 @@ public class ScreenComposer implements Composable {
         }
     }
 
+    @NonNull
     @Override
     public PixelBuffer getPixelBuffer() {
         return pixelRingBuffer.getPixelBuffer();

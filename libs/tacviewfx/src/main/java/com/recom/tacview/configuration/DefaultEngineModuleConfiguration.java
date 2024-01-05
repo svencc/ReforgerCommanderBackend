@@ -1,12 +1,10 @@
 package com.recom.tacview.configuration;
 
-import com.recom.tacview.engine.entity.environment.EnvironmentBase;
-import com.recom.tacview.engine.graphics.ScreenComposer;
+import com.recom.tacview.engine.entity.Environment;
 import com.recom.tacview.engine.module.DefaultEngineModule;
 import com.recom.tacview.engine.module.EngineModule;
 import com.recom.tacview.engine.renderer.RenderProvider;
 import com.recom.tacview.property.RendererProperties;
-import com.recom.tacview.property.TickProperties;
 import com.recom.tacview.service.RandomProvider;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +19,7 @@ public class DefaultEngineModuleConfiguration {
 
 
     @NonNull
-    private final EnvironmentBase environment;
-    @NonNull
-    private final ScreenComposer screenComposer;
+    private final Environment environment;
     @NonNull
     private final RandomProvider randomProvider;
     @NonNull
@@ -32,7 +28,7 @@ public class DefaultEngineModuleConfiguration {
     @Bean
     @ConditionalOnMissingBean(EngineModule.class)
     public DefaultEngineModule defaultEngineModule(@NonNull final RendererProperties rendererProperties) {
-        return new DefaultEngineModule(environment, rendererProperties, screenComposer, randomProvider, renderProvider);
+        return new DefaultEngineModule(environment, rendererProperties, randomProvider, renderProvider);
     }
 
 }
