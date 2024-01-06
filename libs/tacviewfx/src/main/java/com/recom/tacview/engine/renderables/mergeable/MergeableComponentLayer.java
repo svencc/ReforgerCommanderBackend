@@ -1,6 +1,6 @@
 package com.recom.tacview.engine.renderables.mergeable;
 
-import com.recom.tacview.engine.entity.component.RenderableComponent;
+import com.recom.tacview.engine.entitycomponentsystem.component.RenderableComponent;
 import com.recom.tacview.engine.renderer.RenderProvider;
 import com.recom.tacview.property.RendererProperties;
 import lombok.Getter;

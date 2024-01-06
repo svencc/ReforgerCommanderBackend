@@ -1,9 +1,10 @@
-package com.recom.tacview.engine.entity.interfaces;
+package com.recom.tacview.engine.entitycomponentsystem.component;
 
+import com.recom.tacview.engine.entitycomponentsystem.entity.IsEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-public interface MaybeHasEntity {
+public interface MaybeBelongsToEntity {
 
     @Nullable
     IsEntity getEntity();

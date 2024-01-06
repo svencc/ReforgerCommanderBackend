@@ -1,6 +1,7 @@
-package com.recom.tacview.engine.entity.interfaces;
+package com.recom.tacview.engine.entitycomponentsystem.entity;
 
-import com.recom.tacview.engine.entity.component.ComponentType;
+import com.recom.tacview.engine.entitycomponentsystem.component.ComponentType;
+import com.recom.tacview.engine.entitycomponentsystem.component.IsComponent;
 import lombok.NonNull;
 
 import java.util.List;

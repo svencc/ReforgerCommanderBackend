@@ -1,7 +1,7 @@
 package com.recom.tacview.engine.module;
 
 import com.recom.tacview.engine.Updatable;
-import com.recom.tacview.engine.entity.Environment;
+import com.recom.tacview.engine.entitycomponentsystem.environment.Environment;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

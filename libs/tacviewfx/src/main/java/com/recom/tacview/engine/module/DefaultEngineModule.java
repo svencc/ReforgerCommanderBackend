@@ -1,7 +1,7 @@
 package com.recom.tacview.engine.module;
 
-import com.recom.tacview.engine.entity.Entity;
-import com.recom.tacview.engine.entity.Environment;
+import com.recom.tacview.engine.entitycomponentsystem.entity.Entity;
+import com.recom.tacview.engine.entitycomponentsystem.environment.Environment;
 import com.recom.tacview.engine.renderer.RenderProvider;
 import com.recom.tacview.property.RendererProperties;
 import com.recom.tacview.service.RandomProvider;

@@ -1,4 +1,4 @@
-package com.recom.tacview.engine.entity.component;
+package com.recom.tacview.engine.entitycomponentsystem.component;
 
 import com.recom.tacview.engine.graphics.buffer.NullPixelBuffer;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;

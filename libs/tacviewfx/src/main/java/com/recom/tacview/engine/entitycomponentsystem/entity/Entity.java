@@ -1,9 +1,8 @@
-package com.recom.tacview.engine.entity;
+package com.recom.tacview.engine.entitycomponentsystem.entity;
 
 import com.recom.tacview.engine.Updatable;
-import com.recom.tacview.engine.entity.component.ComponentType;
-import com.recom.tacview.engine.entity.interfaces.IsComponent;
-import com.recom.tacview.engine.entity.interfaces.IsEntity;
+import com.recom.tacview.engine.entitycomponentsystem.component.ComponentType;
+import com.recom.tacview.engine.entitycomponentsystem.component.IsComponent;
 import lombok.NonNull;
 
 import java.util.*;

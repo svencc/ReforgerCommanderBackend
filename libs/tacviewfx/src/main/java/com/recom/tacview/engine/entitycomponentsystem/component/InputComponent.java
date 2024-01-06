@@ -1,4 +1,4 @@
-package com.recom.tacview.engine.entity.component;
+package com.recom.tacview.engine.entitycomponentsystem.component;
 
 public abstract class InputComponent extends ComponentTemplate {
 

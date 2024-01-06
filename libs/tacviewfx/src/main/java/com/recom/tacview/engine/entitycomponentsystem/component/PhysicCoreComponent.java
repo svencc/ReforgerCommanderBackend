@@ -1,4 +1,4 @@
-package com.recom.tacview.engine.entity.component;
+package com.recom.tacview.engine.entitycomponentsystem.component;
 
 import lombok.Getter;
 import lombok.Setter;

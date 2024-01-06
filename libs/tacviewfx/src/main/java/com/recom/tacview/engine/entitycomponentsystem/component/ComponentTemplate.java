@@ -1,8 +1,7 @@
-package com.recom.tacview.engine.entity.component;
+package com.recom.tacview.engine.entitycomponentsystem.component;
 
-import com.recom.tacview.engine.entity.NullEntity;
-import com.recom.tacview.engine.entity.interfaces.IsComponent;
-import com.recom.tacview.engine.entity.interfaces.IsEntity;
+import com.recom.tacview.engine.entitycomponentsystem.entity.NullEntity;
+import com.recom.tacview.engine.entitycomponentsystem.entity.IsEntity;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

@@ -1,10 +1,9 @@
 package com.recom.tacview.engine.graphics;
 
-import com.recom.tacview.engine.entity.Environment;
+import com.recom.tacview.engine.entitycomponentsystem.environment.Environment;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
 import com.recom.tacview.engine.graphics.buffer.PixelRingBuffer;
 import com.recom.tacview.engine.renderables.mergeable.MergeableComponentLayer;
-import com.recom.tacview.engine.renderer.RenderProvider;
 import com.recom.tacview.property.RendererProperties;
 import com.recom.tacview.service.RendererExecutorProvider;
 import lombok.NonNull;
@@ -19,10 +18,6 @@ import java.util.concurrent.ExecutorService;
 public class ScreenComposer implements Composable {
 
     @NonNull
-    private final RendererProperties rendererProperties;
-    @NonNull
-    private final RenderProvider renderProvider;
-    @NonNull
     private final ExecutorService executorService;
     @NonNull
     private final PixelRingBuffer pixelRingBuffer;
@@ -30,26 +25,21 @@ public class ScreenComposer implements Composable {
 
     public ScreenComposer(
             @NonNull final RendererProperties rendererProperties,
-            @NonNull final RenderProvider renderProvider,
             @NonNull final RendererExecutorProvider rendererExecutorProvider
     ) {
-        this.rendererProperties = rendererProperties;
-        this.renderProvider = renderProvider;
         this.executorService = rendererExecutorProvider.provideNewExecutor();
         this.pixelRingBuffer = new PixelRingBuffer(rendererProperties.toRendererDimension(), rendererProperties.getComposer().getBackBufferSize());
     }
 
     @Override
     public int compose(@NonNull final Environment environment) {
-        final RenderPipeline renderPipeline = environment.getRenderPipeline(rendererProperties, renderProvider);
-
-        if (!renderPipeline.isDirty()) {
+        if (!environment.getRenderPipeline().isDirty()) {
             return pixelRingBuffer.getCurrentBufferIndex();
         } else {
             pixelRingBuffer.next();
             pixelRingBuffer.getPixelBuffer().clearBuffer();
-            renderLayerPipelineInParallel(renderPipeline);
-            renderPipeline.getLayers().forEach(layer -> {
+            renderLayerPipelineInParallel(environment.getRenderPipeline());
+            environment.getRenderPipeline().getLayers().forEach(layer -> {
                 layer.mergeBufferWith(pixelRingBuffer.getPixelBuffer(), 0, 0);
                 layer.dispose();
             });

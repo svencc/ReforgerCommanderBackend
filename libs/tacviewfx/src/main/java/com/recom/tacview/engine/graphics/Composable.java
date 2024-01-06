@@ -1,6 +1,6 @@
 package com.recom.tacview.engine.graphics;
 
-import com.recom.tacview.engine.entity.Environment;
+import com.recom.tacview.engine.entitycomponentsystem.environment.Environment;
 import com.recom.tacview.engine.renderables.HasPixelBuffer;
 import lombok.NonNull;
 

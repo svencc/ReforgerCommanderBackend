@@ -13,7 +13,7 @@ import com.recom.observer.Subjective;
 import com.recom.observer.TakeNoticeRunnable;
 import com.recom.rendertools.rasterizer.HeightMapDescriptor;
 import com.recom.rendertools.rasterizer.HeightmapRasterizer;
-import com.recom.tacview.engine.entity.component.RenderableComponent;
+import com.recom.tacview.engine.entitycomponentsystem.component.RenderableComponent;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
 import com.recom.tacview.engine.units.PixelDimension;
 import jakarta.annotation.Nullable;
