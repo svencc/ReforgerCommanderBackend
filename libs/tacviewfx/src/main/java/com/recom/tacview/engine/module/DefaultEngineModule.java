@@ -3,28 +3,18 @@ package com.recom.tacview.engine.module;
 import com.recom.tacview.engine.entitycomponentsystem.entity.Entity;
 import com.recom.tacview.engine.entitycomponentsystem.environment.Environment;
 import com.recom.tacview.engine.renderer.RenderProvider;
-import com.recom.tacview.property.RendererProperties;
-import com.recom.tacview.service.RandomProvider;
 import lombok.NonNull;
 
 public class DefaultEngineModule extends EngineModule {
 
     @NonNull
-    private final RendererProperties rendererProperties;
-    @NonNull
-    private final RandomProvider randomProvider;
-    @NonNull
     private final RenderProvider renderProvider;
 
     public DefaultEngineModule(
             @NonNull final Environment environment,
-            @NonNull final RendererProperties rendererProperties,
-            @NonNull final RandomProvider randomProvider,
             @NonNull final RenderProvider renderProvider
     ) {
         super(environment);
-        this.rendererProperties = rendererProperties;
-        this.randomProvider = randomProvider;
         this.renderProvider = renderProvider;
     }
 

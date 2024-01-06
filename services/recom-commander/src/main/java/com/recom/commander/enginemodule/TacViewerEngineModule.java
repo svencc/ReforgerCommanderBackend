@@ -6,7 +6,7 @@ import com.recom.tacview.engine.module.EngineModule;
 import lombok.NonNull;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class TacViewerEngineModule extends EngineModule {
 
     @NonNull

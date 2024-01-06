@@ -14,21 +14,18 @@ import org.springframework.context.annotation.Bean;
 
 
 @RequiredArgsConstructor
-@AutoConfigureAfter(DefaultWorldConfiguration.class)
+@AutoConfigureAfter(DefaultEnvironmentConfiguration.class)
 public class DefaultEngineModuleConfiguration {
-
 
     @NonNull
     private final Environment environment;
-    @NonNull
-    private final RandomProvider randomProvider;
     @NonNull
     private final RenderProvider renderProvider;
 
     @Bean
     @ConditionalOnMissingBean(EngineModule.class)
     public DefaultEngineModule defaultEngineModule(@NonNull final RendererProperties rendererProperties) {
-        return new DefaultEngineModule(environment, rendererProperties, randomProvider, renderProvider);
+        return new DefaultEngineModule(environment, renderProvider);
     }
 
 }

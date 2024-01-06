@@ -13,11 +13,11 @@ import org.springframework.context.annotation.Bean;
 
 @RequiredArgsConstructor
 @AutoConfigureAfter(TacViewAutoConfiguration.class)
-public class DefaultWorldConfiguration {
+public class DefaultEnvironmentConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(Environment.class)
-    public DefaultEnvironment defaultEngineModule(
+    public DefaultEnvironment defaultEnvironment(
             @NonNull final RendererProperties rendererProperties,
             @NonNull final RenderProvider renderProvider
     ) {
