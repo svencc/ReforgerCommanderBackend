@@ -4,8 +4,6 @@ import com.recom.tacview.engine.entitycomponentsystem.component.ComponentType;
 import com.recom.tacview.engine.entitycomponentsystem.component.RenderableComponent;
 import com.recom.tacview.engine.entitycomponentsystem.environment.IsEnvironment;
 import com.recom.tacview.engine.renderables.mergeable.MergeableComponentLayer;
-import com.recom.tacview.engine.renderer.RenderProvider;
-import com.recom.tacview.property.RendererProperties;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -36,15 +34,12 @@ public class RenderPipeline implements IsRenderPipeline {
 
 
     public void updateLayers() {
-        layers.addAll(createMergeableComponentLayers(environment.getRendererProperties(), environment.getRenderProvider()));
+        layers.addAll(createMergeableComponentLayers());
         setDirty(true);
     }
 
     @NonNull
-    private List<MergeableComponentLayer> createMergeableComponentLayers(
-            @NonNull final RendererProperties rendererProperties,
-            @NonNull final RenderProvider renderProvider
-    ) {
+    private List<MergeableComponentLayer> createMergeableComponentLayers() {
         return getRenderableComponentsFromEnvironment().entrySet().stream()
                 .map(entrySet -> new MergeableComponentLayer(environment, entrySet.getKey(), entrySet.getValue()))
                 .toList();
