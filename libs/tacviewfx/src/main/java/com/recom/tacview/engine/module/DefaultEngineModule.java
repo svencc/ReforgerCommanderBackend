@@ -73,7 +73,22 @@ public class DefaultEngineModule extends EngineModule {
         @Override
         public void prepareBuffer() {
             super.prepareBuffer();
+            pixelBuffer.clearBuffer();
             renderProvider.provide().renderMergeable(scanableNoiseMergeable, pixelBuffer, 0, 0);
+        }
+
+        @Override
+        public void propagateCleanStateToChildren() {
+            // ScanableNoise is always dirty, as it is a random noise.
+            pixelBuffer.setDirty(true);
+            getMergeableComponentLayer().propagateDirtyStateToParent();
+        }
+
+        @Override
+        public void propagateDirtyStateToParent() {
+            // ScanableNoise is always dirty, as it is a random noise.
+            pixelBuffer.setDirty(true);
+            getMergeableComponentLayer().propagateDirtyStateToParent();
         }
 
     }

@@ -60,8 +60,8 @@ public class RenderPipeline implements IsRenderPipeline {
 
     @Override
     public void propagateCleanStateToChildren() {
-        layers.forEach(MergeableComponentLayer::propagateCleanStateToChildren);
         setDirty(false);
+        layers.forEach(MergeableComponentLayer::propagateCleanStateToChildren);
     }
 
     @Override

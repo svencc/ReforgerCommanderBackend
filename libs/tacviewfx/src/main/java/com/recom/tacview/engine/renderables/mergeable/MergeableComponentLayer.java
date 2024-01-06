@@ -49,9 +49,6 @@ public class MergeableComponentLayer extends BufferedMergeableTemplate implement
             int offsetX = 0;
             int offsetY = 0;
             environment.getRenderProvider().provide().render(component.getPixelBuffer(), this.getPixelBuffer(), offsetX, offsetY);
-//            mergeBufferWith(component.getPixelBuffer(), offsetX, offsetY);
-//            component.getPixelBuffer().cop
-
         }
 
         // @TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -89,8 +86,8 @@ public class MergeableComponentLayer extends BufferedMergeableTemplate implement
 
     @Override
     public void propagateCleanStateToChildren() {
-        components.forEach(RenderableComponent::propagateCleanStateToChildren);
         setDirty(false);
+        components.forEach(RenderableComponent::propagateCleanStateToChildren);
     }
 
     @Override

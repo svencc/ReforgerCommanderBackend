@@ -22,6 +22,7 @@ public class PixelBuffer implements Bufferable {
     public PixelBuffer(@NonNull final PixelDimension dimension) {
         this.dimension = dimension;
         pixelBuffer = new int[dimension.getWidthX() * dimension.getHeightY()];
+        dirty = true;
     }
 
     public PixelBuffer(
