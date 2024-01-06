@@ -19,22 +19,22 @@ public class Entity implements IsEntity {
     @Override
     public void addComponent(@NonNull final IsComponent component) {
         components.add(component);
-        components.sort(Comparator.comparing((compnt) -> compnt.getComponentType().getSortOrder()));
+        components.sort(Comparator.comparing(IsComponent::getComponentProcessingOrder));
         reIndexComponents();
     }
 
     @Override
     public void addComponents(@NonNull final List<IsComponent> components) {
         this.components.addAll(components.stream().filter(Objects::nonNull).toList());
-        this.components.sort(Comparator.comparing(component -> component.getComponentType().getSortOrder()));
+        this.components.sort(Comparator.comparing(IsComponent::getComponentProcessingOrder));
         reIndexComponents();
     }
 
     @Override
     public void reIndexComponents() {
         componentMap = components.stream()
-                .sorted(Comparator.comparing(component -> component.getComponentType().getSortOrder()))
-                .collect(Collectors.groupingBy(IsComponent::getClass));
+                .sorted(Comparator.comparing(IsComponent::getComponentProcessingOrder))
+                .collect(Collectors.groupingBy(IsComponent::getComponentClass));
     }
 
     @Override

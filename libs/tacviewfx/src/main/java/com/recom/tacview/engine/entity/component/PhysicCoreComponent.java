@@ -1,8 +1,6 @@
 package com.recom.tacview.engine.entity.component;
 
-import com.recom.tacview.engine.entity.interfaces.IsEntity;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 
 @Setter
@@ -21,8 +19,13 @@ public class PhysicCoreComponent extends ComponentTemplate {
 
     private double dragInNewton = 1.0;
 
+    @Override
+    public ComponentType componentType() {
+        return ComponentType.PHYSIC_CORE;
+    }
+
     public PhysicCoreComponent() {
-        super(ComponentType.PHYSIC_CORE);
+        super(ComponentType.PhysicCoreComponent);
     }
 
 }

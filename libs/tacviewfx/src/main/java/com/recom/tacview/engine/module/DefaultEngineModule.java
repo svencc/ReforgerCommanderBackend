@@ -1,9 +1,7 @@
 package com.recom.tacview.engine.module;
 
 import com.recom.tacview.engine.entity.Entity;
-import com.recom.tacview.engine.entity.component.refactor.MergeableLayerComponent;
 import com.recom.tacview.engine.entity.Environment;
-import com.recom.tacview.engine.renderables.mergeable.ScanableNoiseMergeable;
 import com.recom.tacview.engine.renderer.RenderProvider;
 import com.recom.tacview.property.RendererProperties;
 import com.recom.tacview.service.RandomProvider;
@@ -34,9 +32,10 @@ public class DefaultEngineModule extends EngineModule {
     @Override
     public void init() {
         final Entity scanableNoiseLayerEntity = new Entity();
-        final MergeableLayerComponent mergeableLayerComponent = new MergeableLayerComponent(new ScanableNoiseMergeable(renderProvider, rendererProperties.toRendererDimension(), randomProvider));
-        scanableNoiseLayerEntity.addComponent(mergeableLayerComponent);
-        getEnvironment().getEntities().add(scanableNoiseLayerEntity);
+        // @TODO refactor this ...
+//        final MergeableLayerComponent mergeableLayerComponent = new MergeableLayerComponent(new ScanableNoiseMergeable(renderProvider, rendererProperties.toRendererDimension(), randomProvider));
+//        scanableNoiseLayerEntity.addComponent(mergeableLayerComponent);
+//        getEnvironment().getEntities().add(scanableNoiseLayerEntity);
     }
 
     @Override

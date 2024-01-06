@@ -13,7 +13,7 @@ import com.recom.observer.Subjective;
 import com.recom.observer.TakeNoticeRunnable;
 import com.recom.rendertools.rasterizer.HeightMapDescriptor;
 import com.recom.rendertools.rasterizer.HeightmapRasterizer;
-import com.recom.tacview.engine.entity.component.GenericMapComponent;
+import com.recom.tacview.engine.entity.component.RenderableComponent;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
 import com.recom.tacview.engine.units.PixelDimension;
 import jakarta.annotation.Nullable;
@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 
 @Slf4j
-public class RECOMMapComponent extends GenericMapComponent implements AutoCloseable {
+public class RECOMMapComponent extends RenderableComponent implements AutoCloseable {
 
     @NonNull
     private final MapsOverviewService mapsOverviewService;
@@ -47,6 +47,7 @@ public class RECOMMapComponent extends GenericMapComponent implements AutoClosea
         this.mapsOverviewService = mapsOverviewService;
         this.mapTopographyDataService = mapTopographyDataService;
         this.heightmapRasterizer = heightmapRasterizer;
+        this.setZIndex(0);
     }
 
 

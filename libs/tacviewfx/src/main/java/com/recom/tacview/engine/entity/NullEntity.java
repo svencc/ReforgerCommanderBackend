@@ -1,6 +1,6 @@
 package com.recom.tacview.engine.entity;
 
-import com.recom.tacview.engine.entity.component.ComponentTemplate;
+import com.recom.tacview.engine.entity.component.ComponentType;
 import com.recom.tacview.engine.entity.interfaces.IsComponent;
 import lombok.NonNull;
 
