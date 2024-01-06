@@ -7,6 +7,7 @@ import lombok.NonNull;
 import org.springframework.stereotype.Component;
 
 //@Component
+
 public class TacViewerEngineModule extends EngineModule {
 
     @NonNull

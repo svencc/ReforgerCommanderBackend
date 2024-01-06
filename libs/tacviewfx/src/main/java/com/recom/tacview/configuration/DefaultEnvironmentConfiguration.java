@@ -15,12 +15,14 @@ import org.springframework.context.annotation.Bean;
 @AutoConfigureAfter(TacViewAutoConfiguration.class)
 public class DefaultEnvironmentConfiguration {
 
+    @NonNull
+    final RendererProperties rendererProperties;
+    @NonNull
+    final RenderProvider renderProvider;
+
     @Bean
     @ConditionalOnMissingBean(Environment.class)
-    public DefaultEnvironment defaultEnvironment(
-            @NonNull final RendererProperties rendererProperties,
-            @NonNull final RenderProvider renderProvider
-    ) {
+    public DefaultEnvironment defaultEnvironment() {
         return new DefaultEnvironment(rendererProperties, renderProvider);
     }
 

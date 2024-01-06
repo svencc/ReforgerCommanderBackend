@@ -7,6 +7,7 @@ import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
 import com.recom.tacview.engine.renderables.HasPixelBuffer;
 import com.recom.tacview.engine.renderables.mergeable.IsMergeableComponentLayer;
 import com.recom.tacview.engine.renderables.mergeable.NullMergeableComponentLayer;
+import com.recom.tacview.engine.units.PixelDimension;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -35,6 +36,11 @@ public abstract class RenderableComponent extends ComponentTemplate implements H
         this.pixelBuffer = pixelBuffer;
     }
 
+    public RenderableComponent(@NonNull final PixelDimension dimension) {
+        super(ComponentType.RenderableComponent);
+        this.pixelBuffer = new PixelBuffer(dimension);
+    }
+
     public void propagateCleanStateToChildren() {
         pixelBuffer.setDirty(false);
     }
@@ -44,4 +50,7 @@ public abstract class RenderableComponent extends ComponentTemplate implements H
         getMergeableComponentLayer().propagateDirtyStateToParent();
     }
 
+    public void prepareBuffer() {
+
+    }
 }

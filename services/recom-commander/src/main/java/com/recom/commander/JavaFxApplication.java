@@ -24,8 +24,7 @@ public class JavaFxApplication extends Application {
     public void init() {
         // Start Spring Boot Application
         applicationContext = new SpringApplicationBuilder(RecomCommanderApplication.class).run();
-        final GlobalExceptionHandler globalExceptionHandler = (GlobalExceptionHandler) applicationContext.getBean("globalExceptionHandler");
-        Thread.setDefaultUncaughtExceptionHandler(globalExceptionHandler);
+        setGlobalExceptionHandler();
 
         // SPRING Context is ready; publish InitEvent
         log.info("* Spring Context initialized > Initializing Application ...");
@@ -35,6 +34,9 @@ public class JavaFxApplication extends Application {
 
     @Override
     public void start(@NonNull final Stage stage) {
+        // Set JavaFX Exception Handler
+        setGlobalExceptionHandler();
+
         log.info("* Initializing Stage ...");
         applicationContext.publishEvent(new InitializeStageEvent(this, stage));
         log.info("+--- Stage initialized.");
@@ -42,6 +44,12 @@ public class JavaFxApplication extends Application {
         log.info("* Finalizing Stage ...");
         applicationContext.publishEvent(new StageReadyEvent(this, stage));
         log.info("+--- Stage finalized.");
+    }
+
+    private void setGlobalExceptionHandler() {
+        final GlobalExceptionHandler globalExceptionHandler = (GlobalExceptionHandler) applicationContext.getBean("globalExceptionHandler");
+        Thread.currentThread().setUncaughtExceptionHandler(globalExceptionHandler);
+        Thread.setDefaultUncaughtExceptionHandler(globalExceptionHandler);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.recom.commander.initializr;
 
 import com.recom.commander.event.InitializeStageEvent;
 import com.recom.commander.event.ShutdownEvent;
+import com.recom.commander.exception.GlobalExceptionHandler;
 import com.recom.commander.property.SpringApplicationProperties;
 import com.recom.tacview.engine.TacViewer;
 import com.recom.tacview.engine.graphics.ScreenComposer;
@@ -32,6 +33,8 @@ import org.springframework.stereotype.Component;
 public class TacViewStageInitializer {
 
     @NonNull
+    private final GlobalExceptionHandler globalExceptionHandler;
+    @NonNull
     private final SpringApplicationProperties springApplicationProperties;
     @NonNull
     private final TickProperties tickProperties;
@@ -50,10 +53,14 @@ public class TacViewStageInitializer {
 
     @EventListener(classes = InitializeStageEvent.class)
     public void onApplicationEvent(@NonNull final InitializeStageEvent event) {
-        event.logStageInitializationWithMessage(log, TacViewStageInitializer.class, "Starting TacView");
-        final Stage tacViewStage = event.getStage();
-        populateTacViewStage(tacViewStage);
-        tacViewStage.show();
+        try {
+            event.logStageInitializationWithMessage(log, TacViewStageInitializer.class, "Starting TacView");
+            final Stage tacViewStage = event.getStage();
+            populateTacViewStage(tacViewStage);
+            tacViewStage.show();
+        } catch (final Throwable t) {
+            globalExceptionHandler.uncaughtException(Thread.currentThread(), t);
+        }
     }
 
     private void populateTacViewStage(@NonNull final Stage stage) {

@@ -36,6 +36,7 @@ public class MergeableComponentLayer extends BufferedMergeableTemplate implement
     @Override
     public void prepareBuffer() {
         super.prepareBuffer();
+        components.forEach(RenderableComponent::prepareBuffer);
     }
 
     @Override
