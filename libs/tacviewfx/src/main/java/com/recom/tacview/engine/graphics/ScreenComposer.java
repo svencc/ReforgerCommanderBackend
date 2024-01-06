@@ -19,7 +19,7 @@ import java.util.concurrent.ExecutorService;
 public class ScreenComposer implements Composable {
 
     @NonNull
-    private final ExecutorService executorService;
+    private final ExecutorService renderExecutorService;
     @NonNull
     private final PixelRingBuffer pixelRingBuffer;
 
@@ -28,7 +28,7 @@ public class ScreenComposer implements Composable {
             @NonNull final RendererProperties rendererProperties,
             @NonNull final RendererExecutorProvider rendererExecutorProvider
     ) {
-        this.executorService = rendererExecutorProvider.provideNewExecutor();
+        this.renderExecutorService = rendererExecutorProvider.provideNewExecutor();
         this.pixelRingBuffer = new PixelRingBuffer(rendererProperties.toRendererDimension(), rendererProperties.getComposer().getBackBufferSize());
     }
 
@@ -54,15 +54,17 @@ public class ScreenComposer implements Composable {
     private void renderLayerPipelineInParallel(@NonNull final IsRenderPipeline renderPipeline) {
         final CountDownLatch latch = new CountDownLatch(renderPipeline.getLayers().size());
         for (final MergeableComponentLayer mergeableLayer : renderPipeline.getLayers()) {
-            try {
-                if (mergeableLayer.isDirty()) {
-                    executorService.execute(mergeableLayer::prepareBuffer);
+            renderExecutorService.execute(() -> {
+                try {
+                    if (mergeableLayer.isDirty()) {
+                        mergeableLayer.prepareBuffer();
+                    }
+                } catch (final Exception e) {
+                    log.error("{}: {}\n{}", getClass().getName(), e.getMessage(), e.getStackTrace());
+                } finally {
+                    latch.countDown();
                 }
-            } catch (final Exception e) {
-                log.error("{}: {}\n{}", getClass().getName(), e.getMessage(), e.getStackTrace());
-            } finally {
-                latch.countDown();
-            }
+            });
         }
 
         try {

@@ -4,18 +4,24 @@ import com.recom.tacview.engine.entitycomponentsystem.component.RenderableCompon
 import com.recom.tacview.engine.entitycomponentsystem.environment.IsEnvironment;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
 
+@Slf4j
 public class MergeableComponentLayer extends BufferedMergeableTemplate implements IsMergeableComponentLayer {
 
+    @NonNull
+    private final IsEnvironment environment;
     @Getter
     @NonNull
     private final Integer renderLayer;
     @NonNull
     private final List<RenderableComponent> components;
     @NonNull
-    private final IsEnvironment environment;
+    private final ExecutorService renderExecutorService; // @TODO <<<--- das nochmal überdenken; muss das sein?
 
 
     public MergeableComponentLayer(
@@ -27,6 +33,7 @@ public class MergeableComponentLayer extends BufferedMergeableTemplate implement
         this.environment = environment;
         this.renderLayer = renderLayer;
         this.components = components;
+        this.renderExecutorService = environment.getRendererExecutorProvider().provideNewExecutor();
 
         for (final RenderableComponent renderableComponent : components) {
             renderableComponent.setMergeableComponentLayer(this);
@@ -36,7 +43,43 @@ public class MergeableComponentLayer extends BufferedMergeableTemplate implement
     @Override
     public void prepareBuffer() {
         super.prepareBuffer();
-        components.forEach(RenderableComponent::prepareBuffer);
+
+        prepareComponentBufferInParallel(components);
+        for (final RenderableComponent component : components) {
+            int offsetX = 0;
+            int offsetY = 0;
+            environment.getRenderProvider().provide().render(component.getPixelBuffer(), this.getPixelBuffer(), offsetX, offsetY);
+//            mergeBufferWith(component.getPixelBuffer(), offsetX, offsetY);
+//            component.getPixelBuffer().cop
+
+        }
+
+        // @TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+        // @TODO da müssen jetzt camera position und entity/physic_component_core position mit rein
+        // @TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    }
+
+    private void prepareComponentBufferInParallel(@NonNull final List<RenderableComponent> renderableComponents) {
+        final CountDownLatch latch = new CountDownLatch(renderableComponents.size());
+        for (final RenderableComponent renderableComponent : renderableComponents) {
+            renderExecutorService.execute(() -> {
+                try {
+                    if (renderableComponent.getPixelBuffer().isDirty()) {
+                        renderableComponent.prepareBuffer();
+                    }
+                } catch (final Exception e) {
+                    log.error("{}: {}\n{}", getClass().getName(), e.getMessage(), e.getStackTrace());
+                } finally {
+                    latch.countDown();
+                }
+            });
+        }
+
+        try {
+            latch.await();
+        } catch (final InterruptedException e) {
+            log.error("{}: {}\n{}", getClass().getName(), e.getMessage(), e.getStackTrace());
+        }
     }
 
     @Override
@@ -48,7 +91,6 @@ public class MergeableComponentLayer extends BufferedMergeableTemplate implement
     public void propagateCleanStateToChildren() {
         components.forEach(RenderableComponent::propagateCleanStateToChildren);
         setDirty(false);
-
     }
 
     @Override

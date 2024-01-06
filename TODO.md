@@ -15,7 +15,7 @@
       * add viewportComponent to entity/environment; ScreenComposer renders in viewport position
       * add InputComponent to ViewportEntity; InputProcessor handles input events and updates viewport position
   * 
-  * 
+  * NULLImplementations -> Optionals ...
   * dynamic changeable render properties!
   * 
   * 

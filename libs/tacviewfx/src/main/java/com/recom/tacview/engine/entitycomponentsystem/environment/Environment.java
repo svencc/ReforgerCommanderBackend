@@ -6,6 +6,7 @@ import com.recom.tacview.engine.graphics.renderpipeline.IsRenderPipeline;
 import com.recom.tacview.engine.graphics.renderpipeline.RenderPipeline;
 import com.recom.tacview.engine.renderer.RenderProvider;
 import com.recom.tacview.property.RendererProperties;
+import com.recom.tacview.service.RendererExecutorProvider;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -18,15 +19,21 @@ import java.util.List;
 public abstract class Environment implements IsEnvironment {
 
     @Getter
+    @NonNull
     private final RendererProperties rendererProperties;
     @Getter
-    private final RenderProvider renderProvider;
-
     @NonNull
-    private final List<Entity> entities = new ArrayList<>();
+    private final RenderProvider renderProvider;
+    @Getter
+    @NonNull
+    private final RendererExecutorProvider rendererExecutorProvider;
     @Getter
     @NonNull
     private final IsRenderPipeline renderPipeline = new RenderPipeline(this);
+
+
+    @NonNull
+    private final List<Entity> entities = new ArrayList<>();
 
 
     @NonNull
@@ -37,11 +44,12 @@ public abstract class Environment implements IsEnvironment {
 
     @Override
     public void registerNewEntity(@NonNull final Entity entity) {
-        final boolean hasRenderableComponents = entity.locateComponents(ComponentType.RenderableComponent).isEmpty();
         entity.setEnvironment(this);
         entities.add(entity);
 
+        final boolean hasRenderableComponents = !entity.locateComponents(ComponentType.RenderableComponent).isEmpty();
         if (hasRenderableComponents) {
+            renderPipeline.updateLayers();
             renderPipeline.setDirty(true);
         }
     }
@@ -49,12 +57,13 @@ public abstract class Environment implements IsEnvironment {
     @Override
     public void registerNewEntities(@NonNull final List<Entity> entitiesToAdd) {
         final boolean hasRenderableComponents = entitiesToAdd.stream()
-                .map(entity -> entity.locateComponents(ComponentType.RenderableComponent).isEmpty())
+                .map(entity -> !entity.locateComponents(ComponentType.RenderableComponent).isEmpty())
                 .reduce(false, (first, second) -> first || second);
 
         entities.addAll(entitiesToAdd);
 
         if (hasRenderableComponents) {
+            renderPipeline.updateLayers();
             renderPipeline.setDirty(true);
         }
     }

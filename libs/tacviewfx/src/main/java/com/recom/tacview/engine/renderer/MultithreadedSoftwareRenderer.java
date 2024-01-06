@@ -16,7 +16,7 @@ import java.util.concurrent.ExecutorService;
 class MultithreadedSoftwareRenderer extends RendererTemplate {
 
     @NonNull
-    private final ExecutorService executorService;
+    private final ExecutorService rendererExecutorService;
 
 
     MultithreadedSoftwareRenderer(
@@ -24,7 +24,7 @@ class MultithreadedSoftwareRenderer extends RendererTemplate {
             @NonNull final ARGBCalculatorProvider argbCalculatorProvider
     ) {
         super(argbCalculatorProvider);
-        this.executorService = rendererExecutorProvider.provideNewExecutor();
+        this.rendererExecutorService = rendererExecutorProvider.provideNewExecutor();
     }
 
     @Override
@@ -43,25 +43,27 @@ class MultithreadedSoftwareRenderer extends RendererTemplate {
             }
 
             final int yFinal = y;
-            try {
-                for (int x = 0; x < source.getDimension().getWidthX(); x++) {
-                    final int copyToX = x + xOffset;
-                    if (copyToX < 0 || copyToX >= target.getDimension().getWidthX()) continue;
+            rendererExecutorService.execute(() -> {
+                try {
+                    for (int x = 0; x < source.getDimension().getWidthX(); x++) {
+                        final int copyToX = x + xOffset;
+                        if (copyToX < 0 || copyToX >= target.getDimension().getWidthX()) continue;
 
-                    final int colorValue = source.scanPixelAt(x, yFinal);
-                    if (colorValue == 0xFFff00ff) continue;
-                    final int alphaComponent = argbCalculatorProvider.provide().getAlphaComponent(colorValue);
-                    if (alphaComponent < 0xFF) {
-                        // set color blending (alpha channel)
-                        target.bufferPixelAt(copyToX, copyToY, argbCalculatorProvider.provide().blend(colorValue, target.scanPixelAt(copyToX, copyToY)));
-                    } else {
-                        // set color without blending
-                        target.bufferPixelAt(copyToX, copyToY, colorValue);
+                        final int colorValue = source.scanPixelAt(x, yFinal);
+                        if (colorValue == 0xFFff00ff) continue;
+                        final int alphaComponent = argbCalculatorProvider.provide().getAlphaComponent(colorValue);
+                        if (alphaComponent < 0xFF) {
+                            // set color blending (alpha channel)
+                            target.bufferPixelAt(copyToX, copyToY, argbCalculatorProvider.provide().blend(colorValue, target.scanPixelAt(copyToX, copyToY)));
+                        } else {
+                            // set color without blending
+                            target.bufferPixelAt(copyToX, copyToY, colorValue);
+                        }
                     }
+                } finally {
+                    latch.countDown();
                 }
-            } finally {
-                latch.countDown();
-            }
+            });
         }
 
         try {

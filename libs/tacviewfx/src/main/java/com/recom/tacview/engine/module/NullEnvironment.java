@@ -4,9 +4,9 @@ import com.recom.tacview.engine.entitycomponentsystem.entity.Entity;
 import com.recom.tacview.engine.entitycomponentsystem.environment.IsEnvironment;
 import com.recom.tacview.engine.graphics.renderpipeline.IsRenderPipeline;
 import com.recom.tacview.engine.graphics.renderpipeline.NullRenderPipeline;
-import com.recom.tacview.engine.graphics.renderpipeline.RenderPipeline;
 import com.recom.tacview.engine.renderer.RenderProvider;
 import com.recom.tacview.property.RendererProperties;
+import com.recom.tacview.service.RendererExecutorProvider;
 import lombok.NonNull;
 
 import java.util.Collections;
@@ -56,6 +56,11 @@ public class NullEnvironment implements IsEnvironment {
     @Override
     public IsRenderPipeline getRenderPipeline() {
         return NullRenderPipeline.INSTANCE;
+    }
+
+    @NonNull
+    public RendererExecutorProvider getRendererExecutorProvider() {
+        return null; // @TODO da muss ein null rein? ... oder Optionals gegen die NullVarianten ...
     }
 
 }
