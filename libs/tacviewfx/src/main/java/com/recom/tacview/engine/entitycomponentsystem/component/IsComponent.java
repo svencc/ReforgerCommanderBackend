@@ -3,7 +3,7 @@ package com.recom.tacview.engine.entitycomponentsystem.component;
 import com.recom.tacview.engine.Updatable;
 import lombok.NonNull;
 
-public interface IsComponent extends MaybeBelongsToEntity, HasComponentType, Updatable {
+public interface IsComponent extends BelongsToEntity, HasComponentType, Updatable {
 
     @NonNull
     ComponentType componentType();

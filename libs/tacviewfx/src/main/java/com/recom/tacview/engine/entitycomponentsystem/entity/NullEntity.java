@@ -10,9 +10,8 @@ import java.util.Optional;
 
 public class NullEntity extends Entity {
 
-    public static NullEntity INSTANCE() {
-        return new NullEntity();
-    }
+    @NonNull
+    public static final NullEntity INSTANCE = new NullEntity();
 
 
     private NullEntity() {

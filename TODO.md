@@ -15,6 +15,10 @@
       * add viewportComponent to entity/environment; ScreenComposer renders in viewport position
       * add InputComponent to ViewportEntity; InputProcessor handles input events and updates viewport position
   * 
+  * 
+  * dynamic changeable render properties!
+  * 
+  * 
   * how to render: 
     * the composer supports multiple layers which can be rendered in a specific order and in parallel
     * sort the entities by category/layer and render them in order (z-index) on the layers

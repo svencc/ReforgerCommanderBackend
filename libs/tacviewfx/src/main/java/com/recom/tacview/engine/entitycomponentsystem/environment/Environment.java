@@ -1,8 +1,9 @@
 package com.recom.tacview.engine.entitycomponentsystem.environment;
 
-import com.recom.tacview.engine.entitycomponentsystem.entity.Entity;
 import com.recom.tacview.engine.entitycomponentsystem.component.ComponentType;
-import com.recom.tacview.engine.graphics.RenderPipeline;
+import com.recom.tacview.engine.entitycomponentsystem.entity.Entity;
+import com.recom.tacview.engine.graphics.renderpipeline.IsRenderPipeline;
+import com.recom.tacview.engine.graphics.renderpipeline.RenderPipeline;
 import com.recom.tacview.engine.renderer.RenderProvider;
 import com.recom.tacview.property.RendererProperties;
 import lombok.Getter;
@@ -22,10 +23,11 @@ public abstract class Environment implements IsEnvironment {
     private final RenderProvider renderProvider;
 
     @NonNull
-    private List<Entity> entities = new ArrayList<>();
+    private final List<Entity> entities = new ArrayList<>();
     @Getter
     @NonNull
-    private final RenderPipeline renderPipeline = new RenderPipeline(this);
+    private final IsRenderPipeline renderPipeline = new RenderPipeline(this);
+
 
     @NonNull
     @Override
@@ -36,6 +38,7 @@ public abstract class Environment implements IsEnvironment {
     @Override
     public void registerNewEntity(@NonNull final Entity entity) {
         final boolean hasRenderableComponents = entity.locateComponents(ComponentType.RenderableComponent).isEmpty();
+        entity.setEnvironment(this);
         entities.add(entity);
 
         if (hasRenderableComponents) {

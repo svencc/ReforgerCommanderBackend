@@ -13,7 +13,7 @@ public abstract class ComponentTemplate implements IsComponent {
 
     @Setter
     @NonNull
-    private IsEntity entity = NullEntity.INSTANCE();
+    private IsEntity entity = NullEntity.INSTANCE;
 
     @NonNull
     private final ComponentType componentType;
@@ -35,11 +35,6 @@ public abstract class ComponentTemplate implements IsComponent {
 
     public final int getComponentProcessingOrder() {
         return componentType().getProcessingOrder() + processingOrderOffset;
-    }
-
-    @Override
-    public boolean hasNullEntity() {
-        return entity.equals(NullEntity.INSTANCE());
     }
 
     public void update(final long elapsedNanoTime) {

@@ -1,10 +1,8 @@
-package com.recom.tacview.engine.graphics;
+package com.recom.tacview.engine.graphics.renderpipeline;
 
-import com.recom.tacview.engine.entitycomponentsystem.environment.Environment;
 import com.recom.tacview.engine.entitycomponentsystem.component.ComponentType;
 import com.recom.tacview.engine.entitycomponentsystem.component.RenderableComponent;
-import com.recom.tacview.engine.renderables.Mergeable;
-import com.recom.tacview.engine.renderables.Soilable;
+import com.recom.tacview.engine.entitycomponentsystem.environment.IsEnvironment;
 import com.recom.tacview.engine.renderables.mergeable.MergeableComponentLayer;
 import com.recom.tacview.engine.renderer.RenderProvider;
 import com.recom.tacview.property.RendererProperties;
@@ -20,10 +18,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-public class RenderPipeline implements Soilable {
+public class RenderPipeline implements IsRenderPipeline {
 
     @NonNull
-    private final Environment environment;
+    private final IsEnvironment environment;
 
     @NonNull
     final Map<Integer, List<RenderableComponent>> renderableComponentList = new HashMap<>();
@@ -37,14 +35,21 @@ public class RenderPipeline implements Soilable {
     private boolean dirty = true;
 
 
-    private boolean updateDirtyState() {
-        return layers.stream()
-                .map(Mergeable::isDirty)
-                .reduce(false, (first, second) -> first || second);
+    public void updateLayers() {
+        layers.addAll(createMergeableComponentLayers(environment.getRendererProperties(), environment.getRenderProvider()));
+        setDirty(true);
     }
 
-    // @TODO: needs to be extended ....
-// Refactor to generic dirty cache!
+    @NonNull
+    private List<MergeableComponentLayer> createMergeableComponentLayers(
+            @NonNull final RendererProperties rendererProperties,
+            @NonNull final RenderProvider renderProvider
+    ) {
+        return getRenderableComponentsFromEnvironment().entrySet().stream()
+                .map(entrySet -> new MergeableComponentLayer(environment, entrySet.getKey(), entrySet.getValue()))
+                .toList();
+    }
+
     @NonNull
     private Map<Integer, List<RenderableComponent>> getRenderableComponentsFromEnvironment() {
         if (isDirty()) {
@@ -58,22 +63,16 @@ public class RenderPipeline implements Soilable {
         return renderableComponentList;
     }
 
-    @NonNull
-    private List<MergeableComponentLayer> getMergeableComponentLayer(
-            @NonNull final RendererProperties rendererProperties,
-            @NonNull final RenderProvider renderProvider
-    ) {
-        return getRenderableComponentsFromEnvironment().entrySet().stream()
-                .map(entrySet -> new MergeableComponentLayer(rendererProperties, renderProvider, entrySet.getKey(), entrySet.getValue()))
-                .toList();
+    @Override
+    public void propagateCleanStateToChildren() {
+        layers.forEach(MergeableComponentLayer::propagateCleanStateToChildren);
+        setDirty(false);
     }
 
-    public void updateRenderPipeline() {
-        if (isDirty()) {
-            layers.clear();
-            layers.addAll(getMergeableComponentLayer(environment.getRendererProperties(), environment.getRenderProvider()));
-            setDirty(true);
-        }
+    @Override
+    public void propagateDirtyStateToParent() {
+        // this is root node, propagation ends here
+        setDirty(true);
     }
 
 }

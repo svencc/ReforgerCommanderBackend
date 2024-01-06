@@ -3,6 +3,7 @@ package com.recom.tacview.engine.graphics;
 import com.recom.tacview.engine.entitycomponentsystem.environment.Environment;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
 import com.recom.tacview.engine.graphics.buffer.PixelRingBuffer;
+import com.recom.tacview.engine.graphics.renderpipeline.IsRenderPipeline;
 import com.recom.tacview.engine.renderables.mergeable.MergeableComponentLayer;
 import com.recom.tacview.property.RendererProperties;
 import com.recom.tacview.service.RendererExecutorProvider;
@@ -44,15 +45,19 @@ public class ScreenComposer implements Composable {
                 layer.dispose();
             });
 
+            environment.getRenderPipeline().propagateCleanStateToChildren();
+
             return pixelRingBuffer.getCurrentBufferIndex();
         }
     }
 
-    private void renderLayerPipelineInParallel(@NonNull final RenderPipeline renderPipeline) {
+    private void renderLayerPipelineInParallel(@NonNull final IsRenderPipeline renderPipeline) {
         final CountDownLatch latch = new CountDownLatch(renderPipeline.getLayers().size());
         for (final MergeableComponentLayer mergeableLayer : renderPipeline.getLayers()) {
             try {
-                executorService.execute(mergeableLayer::prepareBuffer);
+                if (mergeableLayer.isDirty()) {
+                    executorService.execute(mergeableLayer::prepareBuffer);
+                }
             } catch (final Exception e) {
                 log.error("{}: {}\n{}", getClass().getName(), e.getMessage(), e.getStackTrace());
             } finally {
