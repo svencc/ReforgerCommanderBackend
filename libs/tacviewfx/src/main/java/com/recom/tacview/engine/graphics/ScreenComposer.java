@@ -43,7 +43,7 @@ public class ScreenComposer implements Composable {
     public int compose(@NonNull final Environment environment) {
         final RenderPipeline renderPipeline = environment.getRenderPipeline(rendererProperties, renderProvider);
 
-        if (!renderPipeline.isPipelineDirty()) {
+        if (!renderPipeline.isDirty()) {
             return pixelRingBuffer.getCurrentBufferIndex();
         } else {
             pixelRingBuffer.next();

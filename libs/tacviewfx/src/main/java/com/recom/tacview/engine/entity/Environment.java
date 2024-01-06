@@ -78,7 +78,7 @@ public abstract class Environment implements IsEnvironment {
             @NonNull final RendererProperties rendererProperties,
             @NonNull final RenderProvider renderProvider
     ) {
-        if (renderPipeline.isPipelineDirty()) {
+        if (renderPipeline.isDirty()) {
             renderPipeline.setDirty(false);
             renderPipeline.getLayers().clear();
             renderPipeline.getLayers().addAll(getMergeableComponentLayer(rendererProperties, renderProvider));

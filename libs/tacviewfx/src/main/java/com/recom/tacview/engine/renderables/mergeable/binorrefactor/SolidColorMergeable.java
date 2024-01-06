@@ -1,4 +1,4 @@
-package com.recom.tacview.engine.renderables.mergeable.bin;
+package com.recom.tacview.engine.renderables.mergeable.binorrefactor;
 
 import com.recom.tacview.engine.renderables.mergeable.BufferedMergeableTemplate;
 import com.recom.tacview.engine.renderer.RenderProvider;
