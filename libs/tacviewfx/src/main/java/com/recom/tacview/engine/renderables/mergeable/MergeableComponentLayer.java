@@ -1,7 +1,6 @@
 package com.recom.tacview.engine.renderables.mergeable;
 
 import com.recom.tacview.engine.entity.component.RenderableComponent;
-import com.recom.tacview.engine.renderables.mergeable.template.BufferedMergeableTemplate;
 import com.recom.tacview.engine.renderer.RenderProvider;
 import com.recom.tacview.property.RendererProperties;
 import lombok.Getter;
@@ -17,6 +16,7 @@ public class MergeableComponentLayer extends BufferedMergeableTemplate {
     @NonNull
     private final List<RenderableComponent> components;
 
+
     public MergeableComponentLayer(
             @NonNull final RendererProperties rendererProperties,
             @NonNull final RenderProvider renderProvider,
@@ -30,12 +30,12 @@ public class MergeableComponentLayer extends BufferedMergeableTemplate {
 
     @Override
     public void prepareBuffer() {
-
+        super.prepareBuffer();
     }
 
     @Override
     public void dispose() {
-
+        super.dispose();
     }
 
 }

@@ -14,6 +14,7 @@ public class NullEntity extends Entity {
         return new NullEntity();
     }
 
+
     private NullEntity() {
     }
 
@@ -38,13 +39,13 @@ public class NullEntity extends Entity {
 
     @NonNull
     @Override
-    public <T extends IsComponent> Optional<T> locateComponent(@NonNull final Class<T> componentClass) {
+    public <T extends IsComponent> Optional<T> locateComponent(@NonNull final ComponentType componentType) {
         return Optional.empty();
     }
 
     @NonNull
     @Override
-    public <T extends IsComponent> List<T> locateComponents(@NonNull final Class<T> componentClass) {
+    public <T extends IsComponent> List<T> locateComponents(@NonNull final ComponentType componentType) {
         return Collections.emptyList();
     }
 

@@ -1,6 +1,6 @@
-package com.recom.tacview.engine.renderables.mergeable;
+package com.recom.tacview.engine.renderables.mergeable.bin;
 
-import com.recom.tacview.engine.renderables.mergeable.template.BufferedMergeableTemplate;
+import com.recom.tacview.engine.renderables.mergeable.BufferedMergeableTemplate;
 import com.recom.tacview.engine.renderer.RenderProvider;
 import com.recom.tacview.property.RendererProperties;
 import lombok.NonNull;

@@ -16,11 +16,6 @@ public abstract class RenderableComponent extends ComponentTemplate implements H
     @NonNull
     protected PixelBuffer pixelBuffer;
 
-    @Override
-    public ComponentType componentType() {
-        return ComponentType.RENDERABLE;
-    }
-
     public RenderableComponent() {
         super(ComponentType.RenderableComponent);
         this.pixelBuffer = NullPixelBuffer.CREATE();

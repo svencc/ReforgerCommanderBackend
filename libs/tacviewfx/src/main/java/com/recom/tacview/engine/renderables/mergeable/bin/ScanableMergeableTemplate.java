@@ -1,4 +1,4 @@
-package com.recom.tacview.engine.renderables.mergeable.template;
+package com.recom.tacview.engine.renderables.mergeable.bin;
 
 import com.recom.tacview.engine.graphics.Scanable;
 import com.recom.tacview.engine.renderables.Mergeable;

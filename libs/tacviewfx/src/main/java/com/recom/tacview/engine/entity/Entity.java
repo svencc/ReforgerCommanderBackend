@@ -1,6 +1,7 @@
 package com.recom.tacview.engine.entity;
 
 import com.recom.tacview.engine.Updatable;
+import com.recom.tacview.engine.entity.component.ComponentType;
 import com.recom.tacview.engine.entity.interfaces.IsComponent;
 import com.recom.tacview.engine.entity.interfaces.IsEntity;
 import lombok.NonNull;
@@ -15,6 +16,7 @@ public class Entity implements IsEntity {
 
     @NonNull
     private Map<? extends Class<? extends IsComponent>, List<IsComponent>> componentMap = new HashMap<>();
+
 
     @Override
     public void addComponent(@NonNull final IsComponent component) {
@@ -34,7 +36,7 @@ public class Entity implements IsEntity {
     public void reIndexComponents() {
         componentMap = components.stream()
                 .sorted(Comparator.comparing(IsComponent::getComponentProcessingOrder))
-                .collect(Collectors.groupingBy(IsComponent::getComponentClass));
+                .collect(Collectors.groupingBy(IsComponent::componentClass));
     }
 
     @Override
@@ -46,9 +48,9 @@ public class Entity implements IsEntity {
     @NonNull
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends IsComponent> Optional<T> locateComponent(@NonNull final Class<T> componentClass) {
-        if (componentMap.containsKey(componentClass)) {
-            return Optional.of((T) componentMap.get(componentClass).get(0));
+    public <T extends IsComponent> Optional<T> locateComponent(@NonNull final ComponentType componentType) {
+        if (componentMap.containsKey(componentType.getComponentClass())) {
+            return Optional.of((T) componentMap.get(componentType.getComponentClass()).getFirst());
         } else {
             return Optional.empty();
         }
@@ -57,9 +59,9 @@ public class Entity implements IsEntity {
     @NonNull
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends IsComponent> List<T> locateComponents(@NonNull final Class<T> componentClass) {
-        if (componentMap.containsKey(componentClass)) {
-            return Collections.unmodifiableList((List<? extends T>) componentMap.get(componentClass));
+    public <T extends IsComponent> List<T> locateComponents(@NonNull final ComponentType componentType) {
+        if (componentMap.containsKey(componentType.getComponentClass())) {
+            return Collections.unmodifiableList((List<? extends T>) componentMap.get(componentType.getComponentClass()));
         } else {
             return Collections.emptyList();
         }

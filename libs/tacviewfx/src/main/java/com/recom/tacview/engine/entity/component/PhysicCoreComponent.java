@@ -19,13 +19,9 @@ public class PhysicCoreComponent extends ComponentTemplate {
 
     private double dragInNewton = 1.0;
 
-    @Override
-    public ComponentType componentType() {
-        return ComponentType.PHYSIC_CORE;
-    }
 
     public PhysicCoreComponent() {
-        super(ComponentType.PhysicCoreComponent);
+        super(ComponentType.PhysicsCoreComponent);
     }
 
 }

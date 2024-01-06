@@ -8,22 +8,28 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+@Getter
 @RequiredArgsConstructor
 public abstract class ComponentTemplate implements IsComponent {
 
     @Setter
-    @Getter
     @NonNull
     private IsEntity entity = NullEntity.INSTANCE();
 
-    @Getter
     @NonNull
-    private final Class<? extends ComponentTemplate> componentClass;
+    private final ComponentType componentType;
+
+
+    @NonNull
+    public Class<? extends ComponentTemplate> componentClass() {
+        return componentType.getComponentClass();
+    }
 
     @Override
-    public abstract ComponentType componentType();
+    public ComponentType componentType() {
+        return componentType;
+    }
 
-    @Getter
     @Setter
     protected int processingOrderOffset = 0;
 
@@ -33,8 +39,8 @@ public abstract class ComponentTemplate implements IsComponent {
     }
 
     @Override
-    public boolean hasRealEntity() {
-        return !entity.equals(NullEntity.INSTANCE());
+    public boolean hasNullEntity() {
+        return entity.equals(NullEntity.INSTANCE());
     }
 
     public void update(final long elapsedNanoTime) {

@@ -1,5 +1,6 @@
 package com.recom.tacview.engine.entity.interfaces;
 
+import com.recom.tacview.engine.entity.component.ComponentType;
 import lombok.NonNull;
 
 import java.util.List;
@@ -14,10 +15,10 @@ public interface HasLocatableComponents extends HasComponents {
     void removeComponent(@NonNull final IsComponent component);
 
     @NonNull
-    <T extends IsComponent> Optional<T> locateComponent(@NonNull final Class<T> componentClass);
+    <T extends IsComponent> Optional<T> locateComponent(@NonNull final ComponentType componentType);
 
     @NonNull
-    <T extends IsComponent> List<T> locateComponents(@NonNull final Class<T> componentClass);
+    <T extends IsComponent> List<T> locateComponents(@NonNull final ComponentType componentType);
 
     void reIndexComponents();
 

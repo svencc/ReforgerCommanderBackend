@@ -10,6 +10,6 @@ public interface MaybeHasEntity {
 
     void setEntity(@NonNull final IsEntity entity);
 
-    boolean hasRealEntity();
+    boolean hasNullEntity();
 
 }

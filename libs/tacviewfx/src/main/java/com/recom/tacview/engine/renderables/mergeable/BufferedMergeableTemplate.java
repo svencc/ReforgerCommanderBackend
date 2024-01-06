@@ -1,4 +1,4 @@
-package com.recom.tacview.engine.renderables.mergeable.template;
+package com.recom.tacview.engine.renderables.mergeable;
 
 import com.recom.tacview.engine.graphics.Bufferable;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
@@ -25,6 +25,8 @@ public abstract class BufferedMergeableTemplate implements Mergeable, HasPixelBu
     ) {
         this.pixelBuffer = new PixelBuffer(dimension);
         this.renderProvider = renderProvider;
+
+        this.pixelBuffer.setDirty(true);
     }
 
     public BufferedMergeableTemplate(
