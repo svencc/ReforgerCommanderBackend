@@ -69,14 +69,19 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${mapstruct.version}</version>
+        </dependency>
         <!-- COMPILER UTILS  -->
 
         <!-- JAVA FX -->
-<!--        <dependency>-->
-<!--            <groupId>org.controlsfx</groupId>-->
-<!--            <artifactId>controlsfx</artifactId>-->
-<!--            <version>11.2.0</version>-->
-<!--        </dependency>-->
+        <!-- <dependency> -->
+        <!--    <groupId>org.controlsfx</groupId> -->
+        <!--    <artifactId>controlsfx</artifactId> -->
+        <!--    <version>11.2.0</version> -->
+        <!-- </dependency>-->
         <!-- JAVA FX -->
 
     </dependencies>
@@ -87,6 +92,7 @@
                 <groupId>org.graalvm.buildtools</groupId>
                 <artifactId>native-maven-plugin</artifactId>
             </plugin>
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -99,6 +105,29 @@
                     </excludes>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 

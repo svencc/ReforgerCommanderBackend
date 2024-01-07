@@ -106,7 +106,7 @@ public class MapTopographyEntityScannerTransactionEventListener extends Transact
                     .data(serializationService.serializeObject(topograpyModel).toByteArray())
                     .build();
 
-            topographyMapDataService.provideTopographyMap(mapTopography);
+            topographyMapDataService.provideTopographyPNG(mapTopography);
             gameMap.setMapTopography(mapTopography);
 
             return mapTopography;

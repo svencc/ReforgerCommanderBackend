@@ -10,6 +10,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public abstract class ScanableMergeableTemplate implements Scanable, Mergeable {
 
+    @Getter
+    @NonNull
+    protected final PixelDimension Dimension;
+
+
     @Override
     public boolean isDirty() {
         return true;
@@ -19,9 +24,5 @@ public abstract class ScanableMergeableTemplate implements Scanable, Mergeable {
     public void setDirty(boolean isDirty) {
         // nothing to do here, as the scanable noise is always dirty
     }
-
-    @Getter
-    @NonNull
-    protected final PixelDimension Dimension;
 
 }

@@ -1,0 +1,27 @@
+package com.recom.tacview.engine.entitycomponentsystem.component;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
+public class PhysicCoreComponent extends ComponentTemplate {
+
+    private double positionX = 0.0;
+
+    private double positionY = 0.0;
+
+    private double velocityXComponent = 0.0;
+
+    private double velocityYComponent = 0.0;
+
+    private double massInKg = 1.0;
+
+    private double dragInNewton = 1.0;
+
+
+    public PhysicCoreComponent() {
+        super(ComponentType.PhysicsCoreComponent);
+    }
+
+}

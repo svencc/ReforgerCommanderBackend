@@ -1,7 +1,7 @@
 package com.recom.tacview.engine;
 
 import com.recom.tacview.service.profiler.FPSCounter;
-import com.recom.tacview.service.profiler.Profiler;
+import com.recom.tacview.service.profiler.LoopCounter;
 import com.recom.tacview.service.profiler.ProfilerProvider;
 import com.recom.tacview.service.profiler.TPSCounter;
 import lombok.Getter;
@@ -11,10 +11,7 @@ import lombok.NonNull;
 public class TacViewerProfiler {
 
     @NonNull
-    private final Profiler loopProfiler;
-
-    @NonNull
-    private final FPSCounter javaFxCounter;
+    private final LoopCounter loopCounter;
 
     @NonNull
     private final FPSCounter fpsCounter;
@@ -27,20 +24,23 @@ public class TacViewerProfiler {
 
 
     public TacViewerProfiler(@NonNull final ProfilerProvider profilerProvider) {
-        this.loopProfiler = profilerProvider.provide("TacViewerLoop");
-        this.javaFxCounter = profilerProvider.provideFPSCounter();
+        this.loopCounter = profilerProvider.provideLoopCounter();
         this.fpsCounter = profilerProvider.provideFPSCounter();
         this.tpsCounter = profilerProvider.provideTPSCounter();
     }
 
     @NonNull
-    public String profileLoop() {
-        return String.format("%1s | %2s | %3s | JFX: %4s", tpsCounter.profileTicksPerSecond(), fpsCounter.profileFramesPerSecond(), loopProfiler.stringifyResult(), javaFxCounter.profileFramesPerSecond());
+    public String writeProfile() {
+        final String loopsPerSecond = loopCounter.profileLoopsPerSecond();
+        final String tps = tpsCounter.profileTicksPerSecond();
+        final String fps = fpsCounter.profileFramesPerSecond();
+
+        return String.format("%1s | %2s | JFX: %4s", tps, fps, loopsPerSecond);
     }
 
     public void startProfiling() {
-        javaFxCounter.startProfiling();
-        fpsCounter.startProfiling();
+        loopCounter.startProfiling();
+        fpsCounter.resetTicks();
         tpsCounter.resetTicks();
     }
 

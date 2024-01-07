@@ -2,10 +2,11 @@ package com.recom.commander.initializr;
 
 import com.recom.commander.event.InitializeStageEvent;
 import com.recom.commander.event.ShutdownEvent;
+import com.recom.commander.exception.GlobalExceptionHandler;
 import com.recom.commander.property.SpringApplicationProperties;
 import com.recom.tacview.engine.TacViewer;
 import com.recom.tacview.engine.graphics.ScreenComposer;
-import com.recom.tacview.engine.module.EngineModuleTemplate;
+import com.recom.tacview.engine.module.EngineModule;
 import com.recom.tacview.property.RendererProperties;
 import com.recom.tacview.property.TickProperties;
 import com.recom.tacview.service.profiler.ProfilerProvider;
@@ -32,6 +33,8 @@ import org.springframework.stereotype.Component;
 public class TacViewStageInitializer {
 
     @NonNull
+    private final GlobalExceptionHandler globalExceptionHandler;
+    @NonNull
     private final SpringApplicationProperties springApplicationProperties;
     @NonNull
     private final TickProperties tickProperties;
@@ -42,9 +45,7 @@ public class TacViewStageInitializer {
     @NonNull
     private final ScreenComposer screenComposer;
     @NonNull
-    private final EngineModuleTemplate game;
-    //@NonNull
-    //private final MapTopographyDataService mapTopographyDataService;
+    private final EngineModule engineModule;
 
     @Nullable
     private TacViewer tacViewer = null;
@@ -52,10 +53,14 @@ public class TacViewStageInitializer {
 
     @EventListener(classes = InitializeStageEvent.class)
     public void onApplicationEvent(@NonNull final InitializeStageEvent event) {
-        event.logStageInitializationWithMessage(log, TacViewStageInitializer.class, "Starting TacView");
-        final Stage tacViewStage = event.getStage();
-        populateTacViewStage(tacViewStage);
-        tacViewStage.show();
+        try {
+            event.logStageInitializationWithMessage(log, TacViewStageInitializer.class, "Starting TacView");
+            final Stage tacViewStage = event.getStage();
+            populateTacViewStage(tacViewStage);
+            tacViewStage.show();
+        } catch (final Throwable t) {
+            globalExceptionHandler.uncaughtException(Thread.currentThread(), t);
+        }
     }
 
     private void populateTacViewStage(@NonNull final Stage stage) {
@@ -67,12 +72,13 @@ public class TacViewStageInitializer {
                 tickProperties,
                 profilerProvider,
                 screenComposer,
-                game
+                engineModule
         );
         root.setCenter(tacViewer);
 
         final Scene scene = new Scene(root, rendererProperties.getWidth(), rendererProperties.getHeight());
         stage.setTitle(springApplicationProperties.getName());
+
 //        final Window window = stage.getOwner();
 //        stage.initStyle(StageStyle.UNDECORATED); // BORDERLESS -> NEED to make movable on your own!
 
@@ -85,40 +91,17 @@ public class TacViewStageInitializer {
         tacViewer.setProfileFPSStrategy(profileFPSStrategy);
         tacViewer.start();
 
-        /*
-        // @TODO: Remove this method call; DEV ONLY
-        // __initDevMouseHandler();
-        final StringProperty stringProperty = canvasStage.titleProperty();
-        stringProperty.addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                canvasStage.setTitle(newValue);
-            }
-        });
-        __initDevTitleHandler(stringProperty);
-        */// ---------------------------------------------
+        //__exampleHandler("test");
 
         stage.setResizable(false);
         stage.setScene(scene);
     }
 
-    // @TODO: Remove this method; DEV ONLY
-    private void __initDevTitleHandler(@NonNull final StringProperty stringProperty) {
+    private void __exampleHandler(@NonNull final StringProperty stringProperty) {
         tacViewer.setOnMouseClicked(event -> {
             stringProperty.setValue(String.valueOf(Math.random()));
         });
     }
-
-    // @TODO: Remove this method; DEV ONLY
-    /*
-    private void __initDevMouseHandler() {
-        tacViewer.setOnMouseClicked(event -> {
-            final MapTopographyRequestDto mapTopographyRequest = MapTopographyRequestDto.builder()
-                    .mapName("$RECOMClient:worlds/Everon_CTI/RefCom_CTI_Campaign_Eden.ent")
-                    .build();
-            mapTopographyDataService.reloadMapTopographyData(mapTopographyRequest);
-        });
-    }
-     */
 
     @EventListener(classes = ShutdownEvent.class)
     public void shutdown() {

@@ -1,52 +1,34 @@
 package com.recom.commander.enginemodule;
 
-import com.recom.commander.enginemodule.entity.RECOMEnvironment;
-import com.recom.tacview.engine.graphics.ScreenComposer;
-import com.recom.tacview.engine.module.EngineModuleTemplate;
-import com.recom.tacview.engine.renderables.mergeable.SolidScreenMergeable;
-import com.recom.tacview.engine.renderer.RenderProvider;
-import com.recom.tacview.property.RendererProperties;
+import com.recom.commander.enginemodule.entity.RECOMMapEntity;
+import com.recom.tacview.engine.entitycomponentsystem.environment.Environment;
+import com.recom.tacview.engine.module.EngineModule;
 import lombok.NonNull;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TacViewerEngineModule extends EngineModuleTemplate {
+public class TacViewerEngineModule extends EngineModule {
 
     @NonNull
-    private final RendererProperties rendererProperties;
-    @NonNull
-    private final ScreenComposer screenComposer;
-    @NonNull
-    private final RenderProvider renderProvider;
+    private final RECOMMapEntity mapEntity;
 
 
     public TacViewerEngineModule(
-            @NonNull final RECOMEnvironment world,
-            @NonNull final RendererProperties rendererProperties,
-            @NonNull final ScreenComposer screenComposer,
-            @NonNull final RenderProvider renderProvider
+            @NonNull final Environment environment,
+            @NonNull final RECOMMapEntity mapEntity
     ) {
-        super(world);
-        this.rendererProperties = rendererProperties;
-        this.screenComposer = screenComposer;
-        this.renderProvider = renderProvider;
+        super(environment);
+        this.mapEntity = mapEntity;
     }
 
     @Override
     public void init() {
-        final SolidScreenMergeable greenScreenMergeable = new SolidScreenMergeable(rendererProperties, renderProvider, 0xFF54B262);
-        screenComposer.getLayerPipeline().clear();
-        screenComposer.getLayerPipeline().add(greenScreenMergeable);
+        getEnvironment().registerNewEntity(mapEntity);
     }
 
     @Override
     public void startEngineModule() {
 
-    }
-
-    @Override
-    public void update(final double elapsedNanoTime) {
-        super.update(elapsedNanoTime);
     }
 
     @Override

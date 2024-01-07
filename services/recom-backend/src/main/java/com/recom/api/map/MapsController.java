@@ -1,6 +1,7 @@
 package com.recom.api.map;
 
 import com.recom.api.commons.HttpCommons;
+import com.recom.dto.map.MapOverviewDto;
 import com.recom.security.account.RECOMAccount;
 import com.recom.security.account.RECOMAuthorities;
 import com.recom.service.map.GameMapService;
@@ -47,7 +48,7 @@ public class MapsController {
     })
     @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
     @Secured({RECOMAuthorities.EVERYBODY})
-    public ResponseEntity<List<String>> listMapNames(
+    public ResponseEntity<MapOverviewDto> listMapNames(
             @AuthenticationPrincipal RECOMAccount recomAccount
     ) {
         log.debug("Requested GET /api/v1/maps");

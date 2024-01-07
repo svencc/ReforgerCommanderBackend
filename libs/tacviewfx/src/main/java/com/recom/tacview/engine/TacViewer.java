@@ -1,7 +1,7 @@
 package com.recom.tacview.engine;
 
 import com.recom.tacview.engine.graphics.ScreenComposer;
-import com.recom.tacview.engine.module.EngineModuleTemplate;
+import com.recom.tacview.engine.module.EngineModule;
 import com.recom.tacview.property.RendererProperties;
 import com.recom.tacview.property.TickProperties;
 import com.recom.tacview.service.profiler.ProfilerProvider;
@@ -25,11 +25,11 @@ public class TacViewer extends Canvas {
     @NonNull
     private final ScreenComposer screenComposer;
     @NonNull
-    private final EngineModuleTemplate engineModule;
+    private final EngineModule engineModule;
 
 
     @NonNull
-    private final FrameBuffer frameBuffer;
+    private final CanvasBufferSwapCommand canvasBuffer;
     @NonNull
     private final AnimationTimer animationTimerLoop;
 
@@ -44,7 +44,7 @@ public class TacViewer extends Canvas {
             @NonNull final TickProperties tickProperties,
             @NonNull final ProfilerProvider profilerProvider,
             @NonNull final ScreenComposer screenComposer,
-            @NonNull final EngineModuleTemplate engineModule
+            @NonNull final EngineModule engineModule
     ) {
         super(rendererProperties.getWidth(), rendererProperties.getHeight());
         this.rendererProperties = rendererProperties;
@@ -52,7 +52,7 @@ public class TacViewer extends Canvas {
         this.screenComposer = screenComposer;
         this.engineModule = engineModule;
 
-        this.frameBuffer = new FrameBuffer(this, rendererProperties, screenComposer);
+        this.canvasBuffer = new CanvasBufferSwapCommand(this, rendererProperties, screenComposer);
         this.profiler = new TacViewerProfiler(profilerProvider);
         this.profiler.startProfiling();
 
@@ -67,8 +67,8 @@ public class TacViewer extends Canvas {
             @Override
             public void handle(final long now) {
                 engineLoop(tickProperties, rendererProperties);
-                frameBuffer.swap();
-                profiler.getJavaFxCounter().countFrame();
+                canvasBuffer.swap();
+                profiler.getLoopCounter().countLoop();
             }
         };
     }
@@ -86,14 +86,12 @@ public class TacViewer extends Canvas {
             @NonNull final TickProperties tickProperties,
             @NonNull final RendererProperties rendererProperties
     ) {
-        profiler.getLoopProfiler().startNextMeasurement();
-
         // HANDLE INPUT
         engineModule.handleInput();
 
         // HANDLE TIME
         final long currentNanoTime = System.nanoTime();
-        final double elapsedNanoTime = (currentNanoTime - profiler.previousTickNanoTime);
+        final long elapsedNanoTime = (currentNanoTime - profiler.previousTickNanoTime);
         final long deltaTickNanoTime = currentNanoTime - profiler.previousTickNanoTime;
         final long deltaFrameNanoTime = currentNanoTime - profiler.previousFrameNanoTime;
 
@@ -107,14 +105,13 @@ public class TacViewer extends Canvas {
         // HANDLE RENDER
         if (deltaFrameNanoTime >= rendererProperties.getFrameThresholdNanoTime()) {
             profiler.previousFrameNanoTime = System.nanoTime();
-            frameBuffer.backBufferIndex = screenComposer.compose();
+            canvasBuffer.currentBackBufferIndex = screenComposer.compose(engineModule.getEnvironment());
             profiler.getFpsCounter().countFrame();
         }
 
         // HANDLE PROFILING
-        profiler.getLoopProfiler().measureLoop();
-        if (profileFPSStrategy != null && profiler.getFpsCounter().oneSecondPassed()) {
-            profileFPSStrategy.execute(profiler.profileLoop());
+        if (profileFPSStrategy != null && profiler.getLoopCounter().isOneSecondPassed()) {
+            profileFPSStrategy.execute(profiler.writeProfile());
         }
     }
 

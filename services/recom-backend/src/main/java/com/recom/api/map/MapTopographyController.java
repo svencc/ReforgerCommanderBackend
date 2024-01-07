@@ -6,7 +6,7 @@ import com.recom.dto.map.topography.MapTopographyRequestDto;
 import com.recom.entity.map.GameMap;
 import com.recom.exception.HttpNotFoundException;
 import com.recom.mapper.HeightMapDescriptorMapper;
-import com.recom.model.HeightMapDescriptor;
+import com.recom.rendertools.rasterizer.HeightMapDescriptor;
 import com.recom.security.account.RECOMAccount;
 import com.recom.security.account.RECOMAuthorities;
 import com.recom.service.AssertionService;
@@ -27,8 +27,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
 
 @Slf4j
 @RestController
@@ -57,14 +55,14 @@ public class MapTopographyController {
     public ResponseEntity<byte[]> generateTopographyMap(
             @AuthenticationPrincipal RECOMAccount recomAccount,
             @RequestBody final MapTopographyRequestDto mapTopographyRequestDto
-    ) throws IOException {
+    ) {
         log.debug("Requested GET /api/v1/com.recom.dto.map/topography");
 
         try {
             final GameMap gameMap = assertionService.provideMap(mapTopographyRequestDto.getMapName());
             return ResponseEntity.status(HttpStatus.OK)
                     .cacheControl(CacheControl.noCache())
-                    .body(topographyMapDataService.provideTopographyMap(gameMap));
+                    .body(topographyMapDataService.provideTopographyPNG(gameMap));
         } catch (final HttpNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .cacheControl(CacheControl.noCache())

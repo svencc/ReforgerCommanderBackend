@@ -12,6 +12,11 @@ public final class ProfilerProvider {
     }
 
     @NonNull
+    public LoopCounter provideLoopCounter() {
+        return new LoopCounter();
+    }
+
+    @NonNull
     public FPSCounter provideFPSCounter() {
         return new FPSCounter();
     }

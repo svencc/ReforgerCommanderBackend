@@ -3,11 +3,33 @@
 # 1
 * load map into tacviewer
   * engine module show green screen (/) 
-    * load data via rest <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-    * load map data into buffer
-    * add camercomponent to entity/environment; ScreenComposer renders camera view 
+    * load data via rest (/)
+    * throw event on initial authentication (/)
+    * add event listener to mapComponent to load map data (/)
+    * 
+    * load map data into buffer (/)
+      * take response and put heightmap into buffer (/)
+      * derive pixel color map from heightmap (/)
+    * 
+    * ViewportEntity renders map data
+      * add viewportComponent to entity/environment; ScreenComposer renders in viewport position
+      * add InputComponent to ViewportEntity; InputProcessor handles input events and updates viewport position
+  * 
+  * NULLImplementations -> Optionals ...
+  * dynamic changeable render properties!
+  * optimize Layers so that they must not be reinstantiated every time on update. Reuse layers and remove/extend entities on update
+  * 
+  * 
+  * how to render: 
+    * the composer supports multiple layers which can be rendered in a specific order and in parallel
+    * sort the entities by category/layer and render them in order (z-index) on the layers
+      * this way we can render the map data in the background and the entities in the foreground (in parallel, as with all other layers)
+  * 
     * start map session
+      * ask server for available maps
+      * select map
     * load map data into buffer; align left upper corner; render part of map which fits into screen (zoom level 0 - 1:1)
+    * add viewport-zooming
 * panning
 * zooming (scaling)
 * add scale bar

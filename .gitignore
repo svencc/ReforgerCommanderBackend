@@ -5,6 +5,7 @@
 /docs/.obsidian/
 /cached-heightmap.png
 
+/libs/sharedlogic/target/
 /libs/sharedmodels/target/
 /libs/javafxdependencies/target/
 /libs/goapcom/target/

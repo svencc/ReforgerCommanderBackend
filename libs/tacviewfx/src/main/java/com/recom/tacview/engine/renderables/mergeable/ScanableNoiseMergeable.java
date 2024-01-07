@@ -51,7 +51,7 @@ public class ScanableNoiseMergeable extends ScanableMergeableTemplate {
     }
 
     @Override
-    public void disposeBuffer() {
+    public void dispose() {
         // nothing to dispose here, as we have no buffer and the scanned pixel is generated randomly while scanning it.
     }
 

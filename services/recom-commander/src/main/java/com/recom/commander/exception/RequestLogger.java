@@ -122,8 +122,8 @@ public class RequestLogger {
     public void profileRequest(
             @NonNull final HttpRequest request,
             @NonNull final ClientHttpResponse response,
-            @NonNull final Object nullableRequestBody,
-            @NonNull final Object nullableResponseBody,
+            @Nullable final Object nullableRequestBody,
+            @Nullable final Object nullableResponseBody,
             @NonNull final Instant start
     ) {
         asyncTaskExecutor.submit(() -> log.debug(prepareLogMessage(request, response, nullableRequestBody, nullableResponseBody) + prepareDurationInfo(start)));

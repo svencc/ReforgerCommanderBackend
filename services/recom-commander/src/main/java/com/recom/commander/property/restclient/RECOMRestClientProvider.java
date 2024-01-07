@@ -26,7 +26,7 @@ import org.springframework.web.client.RestClient;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class RECOMRestClientProvider extends ObserverTemplate<HostProperties> implements Provideable<RestClient> {
+public class RECOMRestClientProvider extends ObserverTemplate<HostProperties> implements Provideable<RestClient>, AutoCloseable {
 
     @NonNull
     private final RestClientProperties restClientProperties;
@@ -92,6 +92,17 @@ public class RECOMRestClientProvider extends ObserverTemplate<HostProperties> im
     ) {
         log.info("HostProperties changed. Creating new UnauthenticatedRestClient.");
         restClient = createNewRestClient();
+    }
+
+    @Override
+    public void close() {
+        super.close();
+        if (hostPropertiesReactiveObserver != null) {
+            hostPropertiesReactiveObserver.close();
+        }
+        if (authenticationReactiveObserver != null) {
+            authenticationReactiveObserver.close();
+        }
     }
 
 }

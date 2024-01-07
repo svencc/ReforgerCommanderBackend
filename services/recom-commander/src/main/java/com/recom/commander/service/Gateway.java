@@ -35,16 +35,20 @@ public abstract class Gateway<REQUEST, RESPONSE> {
     }
 
     @NonNull
-    protected ResponseEntity<RESPONSE> sendWithResponseEntity(@NonNull final REQUEST nullableRequestBody) {
-        return retrieve(nullableRequestBody);
+    protected ResponseEntity<RESPONSE> sendWithResponseEntity() {
+        return exchange(null);
     }
 
     @NonNull
-    protected ResponseEntity<RESPONSE> retrieve(@Nullable final REQUEST nullableRequestBody) throws HttpErrorException {
+    protected ResponseEntity<RESPONSE> sendWithResponseEntity(@NonNull final REQUEST requestBody) {
+        return exchange(requestBody);
+    }
+
+    @NonNull
+    protected ResponseEntity<RESPONSE> exchange(@Nullable final REQUEST nullableRequestBody) throws HttpErrorException {
         try {
             final Instant started = Instant.now();
             final ResponseEntity<RESPONSE> entity = specifyRequest(restClientProvideable.provide(), nullableRequestBody)
-//                    .retrieve()
                     .exchange((request, response) -> {
                         if (response.getStatusCode().isSameCodeAs(HttpStatusCode.valueOf(200))) {
                             if (response.getBody() != null) {
@@ -63,9 +67,6 @@ public abstract class Gateway<REQUEST, RESPONSE> {
                             return ResponseEntity.ok(null);
                         }
                     });
-            //.onStatus(httpStatus -> !httpStatus.is2xxSuccessful(), (request, response) -> requestLogger.logRequestInErrorCase(request, response, nullableRequestBody))
-            //.onStatus(HttpStatusCode::is2xxSuccessful, (request, response) -> requestLogger.profileRequest(request, response, started))
-            //.<RESPONSE>toEntity(responseClazz);
             return entity;
         } catch (final ResourceAccessException e) {
             throw new HttpNoConnectionException(getClass(), e);
@@ -73,49 +74,26 @@ public abstract class Gateway<REQUEST, RESPONSE> {
     }
 
     @NonNull
-    protected abstract RestClient.RequestBodySpec specifyRequest(
+    protected abstract RestClient.RequestHeadersSpec<?> specifyRequest(
             @NonNull final RestClient restClient,
             @Nullable final REQUEST genericRequest
     );
 
     @NonNull
-    protected RESPONSE sendWithResponse(
-            @NonNull final REQUEST nullableRequestBody
-    ) {
-        final ResponseEntity<RESPONSE> retrieve = retrieve(nullableRequestBody);
+    protected RESPONSE sendWithResponse() {
+        final ResponseEntity<RESPONSE> retrieve = exchange(null);
         return retrieve.getBody();
     }
 
     @NonNull
-    protected void send(@NonNull final REQUEST nullableRequestBody) {
-        retrieve(nullableRequestBody).getBody();
+    protected RESPONSE sendWithResponse(@NonNull final REQUEST nullableRequestBody) {
+        final ResponseEntity<RESPONSE> retrieve = exchange(nullableRequestBody);
+        return retrieve.getBody();
     }
 
-    /*
-    @NonNull
-    protected Optional<RESPONSE> sendWithMaybeResponse(@NonNull final REQUEST nullableRequestBody) {
-        return Optional.ofNullable(retrieve(nullableRequestBody).getBody());
-    }
-
-    @NonNull
-    protected void send() {
-        retrieve(null);
-    }
-
-    @NonNull
-    protected Optional<RESPONSE> sendWithMaybeResponse() {
-        return Optional.ofNullable(retrieve(null).getBody());
-    }
-
-    @NonNull
-    protected RESPONSE sendWithResponse() {
-        return retrieve(null).getBody();
-    }
-
-    @NonNull
-    protected ResponseEntity<RESPONSE> sendWithResponseEntity() {
-        return retrieve(null);
-    }
-     */
+//    @NonNull
+//    protected void send(@NonNull final REQUEST nullableRequestBody) {
+//        exchange(nullableRequestBody).getBody();
+//    }
 
 }

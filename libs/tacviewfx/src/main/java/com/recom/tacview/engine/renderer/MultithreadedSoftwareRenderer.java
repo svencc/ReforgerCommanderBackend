@@ -2,29 +2,29 @@ package com.recom.tacview.engine.renderer;
 
 import com.recom.tacview.engine.graphics.Bufferable;
 import com.recom.tacview.engine.graphics.Scanable;
-import com.recom.tacview.property.RendererProperties;
+import com.recom.tacview.service.RendererExecutorProvider;
 import com.recom.tacview.service.argb.ARGBCalculatorProvider;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
+@Slf4j
 @Component
 class MultithreadedSoftwareRenderer extends RendererTemplate {
 
     @NonNull
-    private final ExecutorService multithreadedExecutorService;
+    private final ExecutorService rendererExecutorService;
 
 
     MultithreadedSoftwareRenderer(
-            @NonNull final RendererProperties rendererProperties,
+            @NonNull final RendererExecutorProvider rendererExecutorProvider,
             @NonNull final ARGBCalculatorProvider argbCalculatorProvider
     ) {
-        super(rendererProperties, argbCalculatorProvider);
-//        multithreadedExecutorService = Executors.newFixedThreadPool(rendererProperties.getThreadPoolSize());
-        multithreadedExecutorService = Executors.newVirtualThreadPerTaskExecutor();
+        super(argbCalculatorProvider);
+        this.rendererExecutorService = rendererExecutorProvider.provideNewExecutor();
     }
 
     @Override
@@ -43,7 +43,7 @@ class MultithreadedSoftwareRenderer extends RendererTemplate {
             }
 
             final int yFinal = y;
-            multithreadedExecutorService.execute(() -> {
+            rendererExecutorService.execute(() -> {
                 try {
                     for (int x = 0; x < source.getDimension().getWidthX(); x++) {
                         final int copyToX = x + xOffset;
@@ -69,8 +69,7 @@ class MultithreadedSoftwareRenderer extends RendererTemplate {
         try {
             latch.await();
         } catch (final InterruptedException e) {
-            e.printStackTrace();
-//            System.exit(999);
+            log.error("{}: {}\n{}", getClass().getName(), e.getMessage(), e.getStackTrace());
         }
     }
 
