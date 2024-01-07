@@ -29,7 +29,7 @@ public class AuthenticationInitializer {
             event.logStageInitializationWithMessage(log, AuthenticationInitializer.class, "Authentication successful");
             applicationContext.publishEvent(new InitialAuthenticationEvent(this)); // maybe move to authentication service -> then call it on first successful authentication ever
         } catch (final Throwable t) {
-            event.logStageInitializationWithMessage(log, AuthenticationInitializer.class, String.format("Authentication failed: %1s", t.getMessage()));
+            event.logStageInitializationErrorWithMessage(log, AuthenticationInitializer.class, String.format("Authentication failed: %1s", t.getMessage()));
         }
     }
 

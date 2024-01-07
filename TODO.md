@@ -7,9 +7,9 @@
     * throw event on initial authentication (/)
     * add event listener to mapComponent to load map data (/)
     * 
-    * load map data into buffer <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-      * take response and put heightmap into buffer
-      * derive pixel color map from heightmap
+    * load map data into buffer (/)
+      * take response and put heightmap into buffer (/)
+      * derive pixel color map from heightmap (/)
     * 
     * ViewportEntity renders map data
       * add viewportComponent to entity/environment; ScreenComposer renders in viewport position
@@ -17,6 +17,7 @@
   * 
   * NULLImplementations -> Optionals ...
   * dynamic changeable render properties!
+  * optimize Layers so that they must not be reinstantiated every time on update. Reuse layers and remove/extend entities on update
   * 
   * 
   * how to render: 
