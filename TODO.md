@@ -11,9 +11,9 @@
       * take response and put heightmap into buffer (/)
       * derive pixel color map from heightmap (/)
     * 
-    * ViewportEntity renders map data
-      * add viewportComponent to entity/environment; ScreenComposer renders in viewport position
-      * add InputComponent to ViewportEntity; InputProcessor handles input events and updates viewport position
+    * new InputComponent interacting with MapComponent (<-)
+      * panning
+      * zooming
   * 
   * NULLImplementations -> Optionals ...
   * dynamic changeable render properties!
