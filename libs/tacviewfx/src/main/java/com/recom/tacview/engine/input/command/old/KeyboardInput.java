@@ -1,4 +1,4 @@
-package com.recom.tacview.engine.input;
+package com.recom.tacview.engine.input.command.old;
 
 import com.recom.tacview.service.InputChannelService;
 import lombok.NonNull;

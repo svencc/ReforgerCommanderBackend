@@ -1,6 +1,7 @@
 package com.recom.tacview.engine;
 
 import com.recom.tacview.engine.graphics.ScreenComposer;
+import com.recom.tacview.engine.input.InputManager;
 import com.recom.tacview.engine.module.EngineModule;
 import com.recom.tacview.property.RendererProperties;
 import com.recom.tacview.property.TickProperties;
@@ -26,6 +27,8 @@ public class TacViewer extends Canvas {
     private final ScreenComposer screenComposer;
     @NonNull
     private final EngineModule engineModule;
+    @NonNull
+    private final InputManager inputManager;
 
 
     @NonNull
@@ -44,13 +47,15 @@ public class TacViewer extends Canvas {
             @NonNull final TickProperties tickProperties,
             @NonNull final ProfilerProvider profilerProvider,
             @NonNull final ScreenComposer screenComposer,
-            @NonNull final EngineModule engineModule
+            @NonNull final EngineModule engineModule,
+            @NonNull final InputManager inputManager
     ) {
         super(rendererProperties.getWidth(), rendererProperties.getHeight());
         this.rendererProperties = rendererProperties;
         this.tickProperties = tickProperties;
         this.screenComposer = screenComposer;
         this.engineModule = engineModule;
+        this.inputManager = inputManager;
 
         this.canvasBuffer = new CanvasBufferSwapCommand(this, rendererProperties, screenComposer);
         this.profiler = new TacViewerProfiler(profilerProvider);
@@ -87,7 +92,9 @@ public class TacViewer extends Canvas {
             @NonNull final RendererProperties rendererProperties
     ) {
         // HANDLE INPUT
-        engineModule.handleInput();
+        inputManager.trackInput();
+        engineModule.handleInput(inputManager.getInputCommandQueue());
+        inputManager.clearInputQueue();
 
         // HANDLE TIME
         final long currentNanoTime = System.nanoTime();

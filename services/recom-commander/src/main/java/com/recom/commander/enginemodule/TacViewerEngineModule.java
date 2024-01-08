@@ -31,9 +31,4 @@ public class TacViewerEngineModule extends EngineModule {
 
     }
 
-    @Override
-    public void handleInput() {
-        super.handleInput();
-    }
-
 }

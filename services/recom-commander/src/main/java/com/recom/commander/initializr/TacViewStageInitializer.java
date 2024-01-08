@@ -6,6 +6,7 @@ import com.recom.commander.exception.GlobalExceptionHandler;
 import com.recom.commander.property.SpringApplicationProperties;
 import com.recom.tacview.engine.TacViewer;
 import com.recom.tacview.engine.graphics.ScreenComposer;
+import com.recom.tacview.engine.input.InputManager;
 import com.recom.tacview.engine.module.EngineModule;
 import com.recom.tacview.property.RendererProperties;
 import com.recom.tacview.property.TickProperties;
@@ -46,6 +47,8 @@ public class TacViewStageInitializer {
     private final ScreenComposer screenComposer;
     @NonNull
     private final EngineModule engineModule;
+    @NonNull
+    private final InputManager inputManager;
 
     @Nullable
     private TacViewer tacViewer = null;
@@ -72,7 +75,8 @@ public class TacViewStageInitializer {
                 tickProperties,
                 profilerProvider,
                 screenComposer,
-                engineModule
+                engineModule,
+                inputManager
         );
         root.setCenter(tacViewer);
 

@@ -1,15 +1,18 @@
 # TODO LIST
 
 # 1
-* new InputComponent interacting with MapComponent (<-)
+* new InputComponent interacting with MapComponent
   * panning
   * zooming
   * 
-  * Command-Queue
-    * add commands to queue
-    * execute commands in update by InputComponents
-    * after execution, remove command from queue (after Input has been processed; clear queue)
-    * Commands:
+  * Command-Queue (->) 
+    * add commands to queue (/)
+    * A Command is a class with a type and can check by itself if its condition is met or not. (/)
+    * Commands are Singletons or at least reusable (/)
+    * Commands have to be registered/activated in the central InputManager (/)
+    * execute commands in update by InputComponents (/) 
+    * after execution, remove command from queue (after Input has been processed; clear queue) (/)
+    * Commands: (<-)
       * Mouse Click
         * Left ( Pixel position )
         * Right ( Pixel position )
