@@ -16,6 +16,14 @@
         * Drag Left ( Pixel position, Drag vector )
         * Drag Right ( Pixel position, Drag vector )
         * Mouse Wheel ( Pixel position, Wheel delta )
+    * PhysicsCore holds position in TransformComponent or Object
+      * Transform is modified when moved!
+
+    * RenderPipeline Renders a SceneGraph ... our MergeableLayer is kind of a SceneGraph
+    * a RenderableComponent could be a node in the SceneGraph
+    * so other RenderableComponents could be added to the RenderableComponent Node
+    * this way we could implement a "graphical" scene graph
+      * the both interfaces: ParentPropagatableDirtyState + ChildPropagatableDirtyState will be put into the graph-node concept!
 * 
 * 
 * NULLImplementations -> Optionals ...
