@@ -2,6 +2,9 @@ package com.recom.tacview.engine;
 
 import com.recom.tacview.engine.graphics.ScreenComposer;
 import com.recom.tacview.engine.input.InputManager;
+import com.recom.tacview.engine.input.inputhandler.KeyInputListener;
+import com.recom.tacview.engine.input.inputhandler.MouseInputListener;
+import com.recom.tacview.engine.input.inputhandler.ScrollInputListener;
 import com.recom.tacview.engine.module.EngineModule;
 import com.recom.tacview.property.RendererProperties;
 import com.recom.tacview.property.TickProperties;
@@ -9,6 +12,9 @@ import com.recom.tacview.service.profiler.ProfilerProvider;
 import com.recom.tacview.strategy.ProfileFPSStrategy;
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -63,7 +69,20 @@ public class TacViewer extends Canvas {
 
         this.animationTimerLoop = provideAnimationTimer();
 
-        requestFocus();
+
+        final MouseInputListener mouseInputListener = new MouseInputListener();
+        setEventHandler(MouseEvent.MOUSE_CLICKED, mouseInputListener);
+        setEventHandler(MouseEvent.MOUSE_PRESSED, mouseInputListener);
+        setEventHandler(MouseEvent.MOUSE_RELEASED, mouseInputListener);
+//        setEventHandler(MouseEvent.MOUSE_MOVED, mouseInputListener);
+        setEventHandler(MouseEvent.MOUSE_DRAGGED, mouseInputListener);
+        setEventHandler(ScrollEvent.SCROLL, new ScrollInputListener());
+
+        setEventHandler(KeyEvent.ANY, new KeyInputListener());
+//        setEventHandler(DragEvent.ANY, new DragInputListener());
+
+        this.setFocusTraversable(true);
+        this.requestFocus();
     }
 
     @NonNull
