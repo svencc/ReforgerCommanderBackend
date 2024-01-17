@@ -81,6 +81,11 @@ public class TacViewer extends Canvas {
         setEventHandler(KeyEvent.ANY, new KeyInputListener());
 //        setEventHandler(DragEvent.ANY, new DragInputListener());
 
+        // >>> der Event Handler schreibt in eine ThreadSafeQueue die Ereignisse
+        // >>> der InputManager liest die Queue aus und schreibt in eine Queue die InputCommands
+
+        // >>>>>>>>>> inputManager.getInputEventQueue().enqueueEvent();
+
         this.setFocusTraversable(true);
         this.requestFocus();
     }
@@ -110,21 +115,23 @@ public class TacViewer extends Canvas {
             @NonNull final TickProperties tickProperties,
             @NonNull final RendererProperties rendererProperties
     ) {
-        // HANDLE INPUT
-        inputManager.trackInput();
-        engineModule.handleInput(inputManager.getInputCommandQueue());
-        inputManager.clearInputQueue();
-
         // HANDLE TIME
         final long currentNanoTime = System.nanoTime();
-        final long elapsedNanoTime = (currentNanoTime - profiler.previousTickNanoTime);
+        final long elapsedEngineNanoTime = (currentNanoTime - profiler.previousTickNanoTime);
         final long deltaTickNanoTime = currentNanoTime - profiler.previousTickNanoTime;
         final long deltaFrameNanoTime = currentNanoTime - profiler.previousFrameNanoTime;
+
+        // HANDLE INPUT
+        final long inputHandlingStart = System.nanoTime();
+        inputManager.mapInputEventsToCommands();
+        engineModule.handleInputCommands(inputManager.getTriggeredInputCommands());
+        inputManager.clearInputCommandQueue();
+        profiler.inputHandlingNanoTime = System.nanoTime() - inputHandlingStart;
 
         // HANDLE UPDATE
         if (deltaTickNanoTime >= tickProperties.getTickThresholdNanoTime()) {
             profiler.previousTickNanoTime = System.nanoTime();
-            engineModule.update(elapsedNanoTime);
+            engineModule.update(elapsedEngineNanoTime);
             profiler.getTpsCounter().countTick();
         }
 

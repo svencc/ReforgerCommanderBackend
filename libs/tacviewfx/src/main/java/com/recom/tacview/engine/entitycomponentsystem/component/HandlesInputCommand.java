@@ -3,8 +3,8 @@ package com.recom.tacview.engine.entitycomponentsystem.component;
 import com.recom.tacview.engine.input.command.IsInputCommand;
 import lombok.NonNull;
 
-public interface HandlesInput {
+public interface HandlesInputCommand {
 
-    void handleInput(@NonNull final IsInputCommand inputCommand);
+    void handleInputCommand(@NonNull final IsInputCommand inputCommand);
 
 }

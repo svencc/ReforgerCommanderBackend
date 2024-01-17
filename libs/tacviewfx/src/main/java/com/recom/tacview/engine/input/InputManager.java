@@ -14,33 +14,38 @@ public class InputManager {
 
     @Getter
     @NonNull
-    private final InputCommandQueue inputCommandQueue;
+    private final InputEventQueue inputEventQueue;
 
     @NonNull
     private final List<IsInputCommand> registeredInputCommands;
 
+    @Getter
+    @NonNull
+    private final List<IsInputCommand> triggeredInputCommands;
 
-    public void trackInput() {
+
+    public void mapInputEventsToCommands() {
         for (final IsInputCommand inputCommand : registeredInputCommands) {
             if (inputCommand.isTriggered()) {
-                inputCommandQueue.enqueueCommand(inputCommand);
+                triggeredInputCommands.add(inputCommand);
             }
         }
+        inputEventQueue.clearEvents();
     }
 
-    public void clearInputQueue() {
-        inputCommandQueue.clearCommands();
+    public void clearInputCommandQueue() {
+        inputEventQueue.clearEvents();
     }
 
-    public void registerInputEvents(@NonNull final IsInputCommand inputEvent) {
-        registeredInputCommands.add(inputEvent);
+    public void registerInputCommand(@NonNull final IsInputCommand inputCommand) {
+        registeredInputCommands.add(inputCommand);
     }
 
-    public void unregisterInputEvent(@NonNull final IsInputCommand inputEvent) {
-        registeredInputCommands.remove(inputEvent);
+    public void unregisterInputCommand(@NonNull final IsInputCommand inputCommand) {
+        registeredInputCommands.remove(inputCommand);
     }
 
-    public void clearRegisteredInputEvents() {
+    public void clearRegisteredInputCommands() {
         registeredInputCommands.clear();
     }
 

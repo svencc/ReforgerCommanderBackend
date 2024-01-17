@@ -4,7 +4,7 @@ import com.recom.tacview.engine.Updatable;
 import com.recom.tacview.engine.entitycomponentsystem.component.ComponentType;
 import com.recom.tacview.engine.entitycomponentsystem.component.InputComponent;
 import com.recom.tacview.engine.entitycomponentsystem.environment.Environment;
-import com.recom.tacview.engine.input.InputCommandQueue;
+import com.recom.tacview.engine.input.command.IsInputCommand;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -33,14 +33,14 @@ public abstract class EngineModule implements Updatable {
         environment.update(elapsedNanoTime);
     }
 
-    public void handleInput(@NonNull final InputCommandQueue inputCommandQueue) {
+    public void handleInputCommands(@NonNull final List<IsInputCommand> inputEventQueue) {
         final List<InputComponent> inputComponents = environment.getEntities().stream()
                 .flatMap(entity -> entity.<InputComponent>locateComponents(ComponentType.InputComponent).stream())
                 .toList();
 
-        while (inputCommandQueue.hasCommand()) {
+        for (final IsInputCommand inputCommand : inputEventQueue) {
             for (final InputComponent inputComponent : inputComponents) {
-                inputComponent.handleInput(inputCommandQueue.dequeueCommand());
+                inputComponent.handleInputCommand(inputCommand);
             }
         }
     }
