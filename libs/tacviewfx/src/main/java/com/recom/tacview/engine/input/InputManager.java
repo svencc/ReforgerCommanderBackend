@@ -4,10 +4,12 @@ import com.recom.tacview.engine.input.command.IsInputCommand;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class InputManager {
@@ -30,10 +32,10 @@ public class InputManager {
                 triggeredInputCommands.add(inputCommand);
             }
         }
-        inputEventQueue.clearEvents();
     }
 
     public void clearInputCommandQueue() {
+        log.info("Clear input command queue {}", inputEventQueue.queueSize());
         inputEventQueue.clearEvents();
     }
 

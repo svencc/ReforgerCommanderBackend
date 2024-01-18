@@ -3,11 +3,12 @@ package com.recom.tacview.engine.input;
 import javafx.scene.input.InputEvent;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
-import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class InputEventQueue {
@@ -29,16 +30,16 @@ public class InputEventQueue {
         inputQueue.add(inputEvent);
     }
 
-    public void addEvent(@NonNull final List<InputEvent> inputEvent) {
-        this.inputQueue.addAll(inputEvent);
-    }
-
     public void clearEvents() {
         inputQueue.clear();
     }
 
     public boolean hasEvents() {
         return !inputQueue.isEmpty();
+    }
+
+    public long queueSize() {
+        return inputQueue.size();
     }
 
 }
