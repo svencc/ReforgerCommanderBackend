@@ -2,6 +2,7 @@ package com.recom.tacview.engine;
 
 import com.recom.tacview.engine.graphics.ScreenComposer;
 import com.recom.tacview.engine.input.InputManager;
+import com.recom.tacview.engine.input.command.MouseClickCommand;
 import com.recom.tacview.engine.input.inputhandler.GenericInputEventListener;
 import com.recom.tacview.engine.module.EngineModule;
 import com.recom.tacview.property.RendererProperties;
@@ -72,6 +73,8 @@ public class TacViewer extends Canvas {
         this.setFocusTraversable(true);
         this.requestFocus();
         this.setEventHandler(InputEvent.ANY, this.genericInputEventListener);
+
+        this.inputManager.registerInputCommand(new MouseClickCommand());
     }
 
     @NonNull

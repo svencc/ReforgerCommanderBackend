@@ -30,7 +30,7 @@ public class InputManager {
 
     public void mapInputEventsToCommands() {
         for (final IsInputCommand inputCommand : registeredInputCommands) {
-            if (inputCommand.isTriggered()) {
+            if (inputCommand.isTriggered(inputEventQueue.stream())) {
                 triggeredInputCommands.add(inputCommand);
             }
         }
