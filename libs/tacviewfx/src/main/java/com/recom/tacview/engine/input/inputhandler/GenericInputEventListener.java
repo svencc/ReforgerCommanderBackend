@@ -18,7 +18,7 @@ public class GenericInputEventListener implements EventHandler<InputEvent> {
 
     @Override
     public void handle(@NonNull final InputEvent event) {
-        inputManager.getInputEventQueue().enqueueEvent(event);
+        inputManager.getInputEventQueue().add(event);
     }
 
 }

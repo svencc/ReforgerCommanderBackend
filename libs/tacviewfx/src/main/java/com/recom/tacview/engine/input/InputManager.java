@@ -1,12 +1,14 @@
 package com.recom.tacview.engine.input;
 
 import com.recom.tacview.engine.input.command.IsInputCommand;
+import javafx.scene.input.InputEvent;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Slf4j
@@ -16,14 +18,14 @@ public class InputManager {
 
     @Getter
     @NonNull
-    private final InputEventQueue inputEventQueue;
+    private final List<InputEvent> inputEventQueue = new LinkedList<>();
 
     @NonNull
-    private final List<IsInputCommand> registeredInputCommands;
+    private final List<IsInputCommand> registeredInputCommands = new LinkedList<>();
 
     @Getter
     @NonNull
-    private final List<IsInputCommand> triggeredInputCommands;
+    private final List<IsInputCommand> triggeredInputCommands = new LinkedList<>();
 
 
     public void mapInputEventsToCommands() {
@@ -35,8 +37,7 @@ public class InputManager {
     }
 
     public void clearInputCommandQueue() {
-        log.info("Clear input command queue {}", inputEventQueue.queueSize());
-        inputEventQueue.clearEvents();
+        inputEventQueue.clear();
     }
 
     public void registerInputCommand(@NonNull final IsInputCommand inputCommand) {
