@@ -5,59 +5,14 @@
   * panning
   * zooming
   * 
-  * Command-Queue (->) 
-    * add commands to queue (/)
-    * A Command is a class with a type and can check by itself if its condition is met or not. (/)
-    * Commands are Singletons or at least reusable (/)
-    * Commands have to be registered/activated in the central InputManager (/)
-    * execute commands in update by InputComponents (/) 
-    * after execution, remove command from queue (after Input has been processed; clear queue) (/)
-    * Commands: (<-)
-    * 
-    * 
-      * There are two types of commands: Instant and Continuous
-        * Instant/Sequential Commands (e.g. MouseClick)
-          * Sequence (amount of repetitions, delay between repetitions is counted by the command ITSELF -> stored in central event-queue and popped by the command itself after update delta time)
-          * Instant Commands are executed immediately after they are added to the queue
-          * Instant Commands are removed from the queue after they are executed
-          * Mouse Commands:
-            * Left ( Pixel position )
-            * Right ( Pixel position )
-            * Center ( Pixel position )
-            * Double Click ( Pixel position )
-            * Mouse Wheel ( Pixel position, Wheel delta )
-          * Keyboard Commands:
-            * Key Press ( Key )
-              * Keys can be pressed multiple times
-               * Key is pressed after key-release  
-        * Continuous Commands (e.g. MouseDrag)
-          * Continuous Commands are executed every update cycle as long as they are in the queue
-          * Continuous Commands are removed from the queue after they are released
-          * Mouse Commands:
-            * Drag Left ( Pixel position, Drag vector )
-            * Drag Right ( Pixel position, Drag vector )
-            * Drag Center ( Pixel position, Drag vector )
-            * Hold Left ( Pixel position, Drag vector )
-            * Hold Right ( Pixel position, Drag vector )
-            * Hold Center ( Pixel position, Drag vector )
-      * Mouse Click
-        * Left ( Pixel position )
-        * Right ( Pixel position )
-        * Drag Left ( Pixel position, Drag vector )
-        * Drag Right ( Pixel position, Drag vector )
-        * Mouse Wheel ( Pixel position, Wheel delta )
-  * 
-  * 
-  * 
+  * InputCommands (<-)
+    * MouseClick (/)
+    * MouseDrag (<-)
+    * MouseWheel
+    * Keyboard
     * PhysicsCore holds position in TransformComponent or Object
       * Transform is modified when moved!
 
-    * RenderPipeline Renders a SceneGraph ... our MergeableLayer is kind of a SceneGraph
-    * a RenderableComponent could be a node in the SceneGraph
-    * so other RenderableComponents could be added to the RenderableComponent Node
-    * this way we could implement a "graphical" scene graph
-      * the both interfaces: ParentPropagatableDirtyState + ChildPropagatableDirtyState will be put into the graph-node concept!
-* 
 * 
 * NULLImplementations -> Optionals ...
 * dynamic changeable render properties!
