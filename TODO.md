@@ -1,40 +1,75 @@
 # TODO LIST
 
 # 1
-* load map into tacviewer
-  * engine module show green screen (/) 
-    * load data via rest (/)
-    * throw event on initial authentication (/)
-    * add event listener to mapComponent to load map data (/)
+* new InputComponent interacting with MapComponent
+  * panning
+  * zooming
+  * 
+  * Command-Queue (->) 
+    * add commands to queue (/)
+    * A Command is a class with a type and can check by itself if its condition is met or not. (/)
+    * Commands are Singletons or at least reusable (/)
+    * Commands have to be registered/activated in the central InputManager (/)
+    * execute commands in update by InputComponents (/) 
+    * after execution, remove command from queue (after Input has been processed; clear queue) (/)
+    * Commands: (<-)
     * 
-    * load map data into buffer (/)
-      * take response and put heightmap into buffer (/)
-      * derive pixel color map from heightmap (/)
     * 
-    * new InputComponent interacting with MapComponent (<-)
-      * panning
-      * zooming
+      * There are two types of commands: Instant and Continuous
+        * Instant/Sequential Commands (e.g. MouseClick)
+          * Sequence (amount of repetitions, delay between repetitions is counted by the command ITSELF -> stored in central event-queue and popped by the command itself after update delta time)
+          * Instant Commands are executed immediately after they are added to the queue
+          * Instant Commands are removed from the queue after they are executed
+          * Mouse Commands:
+            * Left ( Pixel position )
+            * Right ( Pixel position )
+            * Center ( Pixel position )
+            * Double Click ( Pixel position )
+            * Mouse Wheel ( Pixel position, Wheel delta )
+          * Keyboard Commands:
+            * Key Press ( Key )
+              * Keys can be pressed multiple times
+               * Key is pressed after key-release  
+        * Continuous Commands (e.g. MouseDrag)
+          * Continuous Commands are executed every update cycle as long as they are in the queue
+          * Continuous Commands are removed from the queue after they are released
+          * Mouse Commands:
+            * Drag Left ( Pixel position, Drag vector )
+            * Drag Right ( Pixel position, Drag vector )
+            * Drag Center ( Pixel position, Drag vector )
+            * Hold Left ( Pixel position, Drag vector )
+            * Hold Right ( Pixel position, Drag vector )
+            * Hold Center ( Pixel position, Drag vector )
+      * Mouse Click
+        * Left ( Pixel position )
+        * Right ( Pixel position )
+        * Drag Left ( Pixel position, Drag vector )
+        * Drag Right ( Pixel position, Drag vector )
+        * Mouse Wheel ( Pixel position, Wheel delta )
   * 
-  * NULLImplementations -> Optionals ...
-  * dynamic changeable render properties!
-  * optimize Layers so that they must not be reinstantiated every time on update. Reuse layers and remove/extend entities on update
   * 
   * 
-  * how to render: 
-    * the composer supports multiple layers which can be rendered in a specific order and in parallel
-    * sort the entities by category/layer and render them in order (z-index) on the layers
-      * this way we can render the map data in the background and the entities in the foreground (in parallel, as with all other layers)
-  * 
-    * start map session
-      * ask server for available maps
-      * select map
-    * load map data into buffer; align left upper corner; render part of map which fits into screen (zoom level 0 - 1:1)
-    * add viewport-zooming
-* panning
-* zooming (scaling)
-* add scale bar
-* add measurement tool
-* add menu
+    * PhysicsCore holds position in TransformComponent or Object
+      * Transform is modified when moved!
+
+    * RenderPipeline Renders a SceneGraph ... our MergeableLayer is kind of a SceneGraph
+    * a RenderableComponent could be a node in the SceneGraph
+    * so other RenderableComponents could be added to the RenderableComponent Node
+    * this way we could implement a "graphical" scene graph
+      * the both interfaces: ParentPropagatableDirtyState + ChildPropagatableDirtyState will be put into the graph-node concept!
+* 
+* 
+* NULLImplementations -> Optionals ...
+* dynamic changeable render properties!
+* optimize Layers so that they must not be reinstantiated every time on update. Reuse layers and remove/extend entities on update
+* 
+* 
+* UI/MAP:
+  * panning
+  * zooming (scaling)
+  * add scale bar
+  * add measurement tool
+  * add menu
 
 
 

@@ -1,6 +1,9 @@
 package com.recom.tacview.engine;
 
 import com.recom.tacview.engine.graphics.ScreenComposer;
+import com.recom.tacview.engine.input.GenericInputEventListener;
+import com.recom.tacview.engine.input.InputManager;
+import com.recom.tacview.engine.input.command.mapper.MouseClickCommandMapper;
 import com.recom.tacview.engine.module.EngineModule;
 import com.recom.tacview.property.RendererProperties;
 import com.recom.tacview.property.TickProperties;
@@ -8,6 +11,7 @@ import com.recom.tacview.service.profiler.ProfilerProvider;
 import com.recom.tacview.strategy.ProfileFPSStrategy;
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.input.InputEvent;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +30,10 @@ public class TacViewer extends Canvas {
     private final ScreenComposer screenComposer;
     @NonNull
     private final EngineModule engineModule;
+    @NonNull
+    private final GenericInputEventListener genericInputEventListener;
+    @NonNull
+    private final InputManager inputManager;
 
 
     @NonNull
@@ -44,13 +52,17 @@ public class TacViewer extends Canvas {
             @NonNull final TickProperties tickProperties,
             @NonNull final ProfilerProvider profilerProvider,
             @NonNull final ScreenComposer screenComposer,
-            @NonNull final EngineModule engineModule
+            @NonNull final EngineModule engineModule,
+            @NonNull final GenericInputEventListener genericInputEventListener,
+            @NonNull final InputManager inputManager
     ) {
         super(rendererProperties.getWidth(), rendererProperties.getHeight());
         this.rendererProperties = rendererProperties;
         this.tickProperties = tickProperties;
         this.screenComposer = screenComposer;
         this.engineModule = engineModule;
+        this.genericInputEventListener = genericInputEventListener;
+        this.inputManager = inputManager;
 
         this.canvasBuffer = new CanvasBufferSwapCommand(this, rendererProperties, screenComposer);
         this.profiler = new TacViewerProfiler(profilerProvider);
@@ -58,7 +70,11 @@ public class TacViewer extends Canvas {
 
         this.animationTimerLoop = provideAnimationTimer();
 
-        requestFocus();
+        this.setFocusTraversable(true);
+        this.requestFocus();
+        this.setEventHandler(InputEvent.ANY, this.genericInputEventListener);
+
+        this.inputManager.registerCommandMapper(new MouseClickCommandMapper());
     }
 
     @NonNull
@@ -86,19 +102,23 @@ public class TacViewer extends Canvas {
             @NonNull final TickProperties tickProperties,
             @NonNull final RendererProperties rendererProperties
     ) {
-        // HANDLE INPUT
-        engineModule.handleInput();
-
         // HANDLE TIME
         final long currentNanoTime = System.nanoTime();
-        final long elapsedNanoTime = (currentNanoTime - profiler.previousTickNanoTime);
+        final long elapsedEngineNanoTime = (currentNanoTime - profiler.previousTickNanoTime);
         final long deltaTickNanoTime = currentNanoTime - profiler.previousTickNanoTime;
         final long deltaFrameNanoTime = currentNanoTime - profiler.previousFrameNanoTime;
+
+        // HANDLE INPUT
+        final long inputHandlingStart = System.nanoTime();
+        inputManager.mapInputEventsToCommands();
+        engineModule.handleInputCommands(inputManager.getCreatedInputCommands());
+        inputManager.clearInputQueues();
+        profiler.inputHandlingNanoTime = System.nanoTime() - inputHandlingStart;
 
         // HANDLE UPDATE
         if (deltaTickNanoTime >= tickProperties.getTickThresholdNanoTime()) {
             profiler.previousTickNanoTime = System.nanoTime();
-            engineModule.update(elapsedNanoTime);
+            engineModule.update(elapsedEngineNanoTime);
             profiler.getTpsCounter().countTick();
         }
 

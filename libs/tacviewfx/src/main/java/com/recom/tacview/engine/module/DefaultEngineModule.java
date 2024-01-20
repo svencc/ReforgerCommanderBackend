@@ -47,11 +47,6 @@ public class DefaultEngineModule extends EngineModule {
         super.update(elapsedNanoTime);
     }
 
-    @Override
-    public void handleInput() {
-        super.handleInput();
-    }
-
     @RequiredArgsConstructor
     public static class ScanableNoiseComponent extends RenderableComponent {
 

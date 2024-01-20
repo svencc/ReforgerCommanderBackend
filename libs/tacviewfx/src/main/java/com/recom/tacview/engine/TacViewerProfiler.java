@@ -21,6 +21,7 @@ public class TacViewerProfiler {
 
     public long previousTickNanoTime = 0;
     public long previousFrameNanoTime = 0;
+    public long inputHandlingNanoTime = 0;
 
 
     public TacViewerProfiler(@NonNull final ProfilerProvider profilerProvider) {
@@ -32,10 +33,11 @@ public class TacViewerProfiler {
     @NonNull
     public String writeProfile() {
         final String loopsPerSecond = loopCounter.profileLoopsPerSecond();
+        final String profiledInputNanoTime = String.format("InHandler: %1$,.3f ms", inputHandlingNanoTime / 1_000_000.0);
         final String tps = tpsCounter.profileTicksPerSecond();
         final String fps = fpsCounter.profileFramesPerSecond();
 
-        return String.format("%1s | %2s | JFX: %4s", tps, fps, loopsPerSecond);
+        return String.format("%1s | %2s | %3s | JFX: %4s", profiledInputNanoTime, tps, fps, loopsPerSecond);
     }
 
     public void startProfiling() {
