@@ -7,7 +7,7 @@ import com.recom.commander.property.SpringApplicationProperties;
 import com.recom.tacview.engine.TacViewer;
 import com.recom.tacview.engine.graphics.ScreenComposer;
 import com.recom.tacview.engine.input.InputManager;
-import com.recom.tacview.engine.input.inputhandler.GenericInputEventListener;
+import com.recom.tacview.engine.input.GenericInputEventListener;
 import com.recom.tacview.engine.module.EngineModule;
 import com.recom.tacview.property.RendererProperties;
 import com.recom.tacview.property.TickProperties;

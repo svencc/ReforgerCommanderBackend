@@ -5,6 +5,7 @@ import com.recom.tacview.engine.entitycomponentsystem.component.ComponentType;
 import com.recom.tacview.engine.entitycomponentsystem.component.InputComponent;
 import com.recom.tacview.engine.entitycomponentsystem.environment.Environment;
 import com.recom.tacview.engine.input.command.IsInputCommand;
+import com.recom.tacview.engine.input.command.mapper.IsInputCommandMapper;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

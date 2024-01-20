@@ -10,8 +10,6 @@ public abstract class InputComponent extends ComponentTemplate implements Handle
     }
 
     @Override
-    public void handleInputCommand(@NonNull final IsInputCommand inputCommand) {
-
-    }
+    public abstract void handleInputCommand(@NonNull final IsInputCommand inputCommand);
 
 }

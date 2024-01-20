@@ -1,6 +1,7 @@
 package com.recom.tacview.engine.input;
 
 import com.recom.tacview.engine.input.command.IsInputCommand;
+import com.recom.tacview.engine.input.command.mapper.IsInputCommandMapper;
 import javafx.scene.input.InputEvent;
 import lombok.Getter;
 import lombok.NonNull;
@@ -9,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
-import java.util.List;
 
 @Slf4j
 @Service
@@ -18,33 +18,34 @@ public class InputManager {
 
     @Getter
     @NonNull
-    private final List<InputEvent> inputEventQueue = new LinkedList<>();
+    private final LinkedList<NanoTimedEvent<? extends InputEvent>> inputEventQueue = new LinkedList<>();
 
     @NonNull
-    private final List<IsInputCommand> registeredInputCommands = new LinkedList<>();
+    private final LinkedList<IsInputCommandMapper> registeredInputCommands = new LinkedList<>();
 
     @Getter
     @NonNull
-    private final List<IsInputCommand> triggeredInputCommands = new LinkedList<>();
+    private final LinkedList<IsInputCommand> createdInputCommands = new LinkedList<>();
 
 
     public void mapInputEventsToCommands() {
-        for (final IsInputCommand inputCommand : registeredInputCommands) {
-            if (inputCommand.isTriggered(inputEventQueue.stream())) {
-                triggeredInputCommands.add(inputCommand);
+        for (final IsInputCommandMapper mapper : registeredInputCommands) {
+            if (mapper.mapEvents(inputEventQueue.stream())) {
+                createdInputCommands.addAll(mapper.getCreatedCommands());
             }
         }
     }
 
-    public void clearInputCommandQueue() {
+    public void clearInputQueues() {
         inputEventQueue.clear();
+        createdInputCommands.clear();
     }
 
-    public void registerInputCommand(@NonNull final IsInputCommand inputCommand) {
+    public void registerCommandMapper(@NonNull final IsInputCommandMapper inputCommand) {
         registeredInputCommands.add(inputCommand);
     }
 
-    public void unregisterInputCommand(@NonNull final IsInputCommand inputCommand) {
+    public void unregisterInputCommand(@NonNull final IsInputCommandMapper inputCommand) {
         registeredInputCommands.remove(inputCommand);
     }
 

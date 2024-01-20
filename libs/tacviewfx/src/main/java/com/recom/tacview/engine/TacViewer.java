@@ -1,9 +1,9 @@
 package com.recom.tacview.engine;
 
 import com.recom.tacview.engine.graphics.ScreenComposer;
+import com.recom.tacview.engine.input.GenericInputEventListener;
 import com.recom.tacview.engine.input.InputManager;
-import com.recom.tacview.engine.input.command.MouseClickCommand;
-import com.recom.tacview.engine.input.inputhandler.GenericInputEventListener;
+import com.recom.tacview.engine.input.command.mapper.MouseClickCommandMapper;
 import com.recom.tacview.engine.module.EngineModule;
 import com.recom.tacview.property.RendererProperties;
 import com.recom.tacview.property.TickProperties;
@@ -74,7 +74,7 @@ public class TacViewer extends Canvas {
         this.requestFocus();
         this.setEventHandler(InputEvent.ANY, this.genericInputEventListener);
 
-        this.inputManager.registerInputCommand(new MouseClickCommand());
+        this.inputManager.registerCommandMapper(new MouseClickCommandMapper());
     }
 
     @NonNull
@@ -111,8 +111,8 @@ public class TacViewer extends Canvas {
         // HANDLE INPUT
         final long inputHandlingStart = System.nanoTime();
         inputManager.mapInputEventsToCommands();
-        engineModule.handleInputCommands(inputManager.getTriggeredInputCommands());
-        inputManager.clearInputCommandQueue();
+        engineModule.handleInputCommands(inputManager.getCreatedInputCommands());
+        inputManager.clearInputQueues();
         profiler.inputHandlingNanoTime = System.nanoTime() - inputHandlingStart;
 
         // HANDLE UPDATE
