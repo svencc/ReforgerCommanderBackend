@@ -1,16 +1,16 @@
 package com.recom.tacview.engine.renderables.mergeable;
 
-import com.recom.tacview.engine.graphics.Bufferable;
+import com.recom.tacview.engine.graphics.IsBufferable;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
 import com.recom.tacview.engine.renderables.HasPixelBuffer;
-import com.recom.tacview.engine.renderables.Mergeable;
+import com.recom.tacview.engine.renderables.IsMergeable;
 import com.recom.tacview.engine.renderer.RenderProvider;
 import com.recom.tacview.engine.units.PixelDimension;
 import lombok.Getter;
 import lombok.NonNull;
 
 
-public abstract class BufferedMergeableTemplate implements Mergeable, HasPixelBuffer {
+public abstract class BufferedMergeableTemplate implements IsMergeable, HasPixelBuffer {
 
     @Getter
     @NonNull
@@ -59,7 +59,7 @@ public abstract class BufferedMergeableTemplate implements Mergeable, HasPixelBu
 
     @Override
     public void mergeBufferWith(
-            @NonNull final Bufferable targetBuffer,
+            @NonNull final IsBufferable targetBuffer,
             final int offsetX,
             final int offsetY
     ) {

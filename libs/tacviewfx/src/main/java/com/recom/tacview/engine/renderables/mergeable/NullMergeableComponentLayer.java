@@ -1,6 +1,6 @@
 package com.recom.tacview.engine.renderables.mergeable;
 
-import com.recom.tacview.engine.graphics.Bufferable;
+import com.recom.tacview.engine.graphics.IsBufferable;
 import com.recom.tacview.engine.graphics.buffer.NullPixelBuffer;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
 import lombok.NonNull;
@@ -35,7 +35,7 @@ public class NullMergeableComponentLayer implements IsMergeableComponentLayer {
     }
 
     @Override
-    public void mergeBufferWith(@NonNull Bufferable targetBuffer, int offsetX, int offsetY) {
+    public void mergeBufferWith(@NonNull IsBufferable targetBuffer, int offsetX, int offsetY) {
 
     }
 

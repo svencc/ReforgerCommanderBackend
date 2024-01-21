@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 public class ProfileFPSStrategy {
 
     @NonNull
-    private final FPSProfilable runnable;
+    private final IsFPSProfilable runnable;
 
     public void execute(@NonNull final String profiled) {
         runnable.setFPS(profiled);

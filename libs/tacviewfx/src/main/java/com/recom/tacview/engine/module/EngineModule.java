@@ -1,11 +1,10 @@
 package com.recom.tacview.engine.module;
 
-import com.recom.tacview.engine.Updatable;
+import com.recom.tacview.engine.IsUpdatable;
 import com.recom.tacview.engine.entitycomponentsystem.component.ComponentType;
 import com.recom.tacview.engine.entitycomponentsystem.component.InputComponent;
 import com.recom.tacview.engine.entitycomponentsystem.environment.Environment;
 import com.recom.tacview.engine.input.command.IsInputCommand;
-import com.recom.tacview.engine.input.command.mapper.IsInputCommandMapper;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +14,7 @@ import java.util.List;
 
 @Getter
 @RequiredArgsConstructor
-public abstract class EngineModule implements Updatable {
+public abstract class EngineModule implements IsUpdatable {
 
     @NonNull
     private final Environment environment;

@@ -16,7 +16,7 @@ import java.util.concurrent.ExecutorService;
 
 @Slf4j
 @Component
-public class ScreenComposer implements Composable {
+public class ScreenComposer implements IsComposable {
 
     @NonNull
     private final ExecutorService renderExecutorService;

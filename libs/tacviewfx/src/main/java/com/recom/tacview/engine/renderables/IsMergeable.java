@@ -1,10 +1,10 @@
 package com.recom.tacview.engine.renderables;
 
-import com.recom.tacview.engine.graphics.Bufferable;
+import com.recom.tacview.engine.graphics.IsBufferable;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
 import lombok.NonNull;
 
-public interface Mergeable extends Soilable {
+public interface IsMergeable extends IsSoilable {
 
     boolean isDirty();
     
@@ -18,7 +18,7 @@ public interface Mergeable extends Soilable {
     );
 
     void mergeBufferWith(
-            @NonNull final Bufferable targetBuffer,
+            @NonNull final IsBufferable targetBuffer,
             final int offsetX,
             final int offsetY
     );

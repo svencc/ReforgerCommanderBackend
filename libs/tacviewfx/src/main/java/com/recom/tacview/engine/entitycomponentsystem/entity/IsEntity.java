@@ -1,7 +1,7 @@
 package com.recom.tacview.engine.entitycomponentsystem.entity;
 
-import com.recom.tacview.engine.Updatable;
+import com.recom.tacview.engine.IsUpdatable;
 
-public interface IsEntity extends BelongsToEnvironment, HasLocatableComponents, Updatable {
+public interface IsEntity extends BelongsToEnvironment, HasLocatableComponents, IsUpdatable {
 
 }
