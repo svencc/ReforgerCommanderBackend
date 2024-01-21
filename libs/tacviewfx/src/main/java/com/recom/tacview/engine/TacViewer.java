@@ -1,7 +1,7 @@
 package com.recom.tacview.engine;
 
 import com.recom.tacview.engine.graphics.ScreenComposer;
-import com.recom.tacview.engine.input.GenericInputEventListener;
+import com.recom.tacview.engine.input.GenericFXInputEventListener;
 import com.recom.tacview.engine.input.InputManager;
 import com.recom.tacview.engine.input.command.mapper.mouse.MouseCommandMapper;
 import com.recom.tacview.engine.module.EngineModule;
@@ -31,7 +31,7 @@ public class TacViewer extends Canvas {
     @NonNull
     private final EngineModule engineModule;
     @NonNull
-    private final GenericInputEventListener genericInputEventListener;
+    private final GenericFXInputEventListener genericFXInputEventListener;
     @NonNull
     private final InputManager inputManager;
 
@@ -53,7 +53,7 @@ public class TacViewer extends Canvas {
             @NonNull final ProfilerProvider profilerProvider,
             @NonNull final ScreenComposer screenComposer,
             @NonNull final EngineModule engineModule,
-            @NonNull final GenericInputEventListener genericInputEventListener,
+            @NonNull final GenericFXInputEventListener genericFXInputEventListener,
             @NonNull final InputManager inputManager
     ) {
         super(rendererProperties.getWidth(), rendererProperties.getHeight());
@@ -61,7 +61,7 @@ public class TacViewer extends Canvas {
         this.tickProperties = tickProperties;
         this.screenComposer = screenComposer;
         this.engineModule = engineModule;
-        this.genericInputEventListener = genericInputEventListener;
+        this.genericFXInputEventListener = genericFXInputEventListener;
         this.inputManager = inputManager;
 
         this.canvasBuffer = new CanvasBufferSwapCommand(this, rendererProperties, screenComposer);
@@ -72,8 +72,9 @@ public class TacViewer extends Canvas {
 
         this.setFocusTraversable(true);
         this.requestFocus();
-        this.setEventHandler(InputEvent.ANY, this.genericInputEventListener);
 
+        // register input event listener
+        this.setEventHandler(InputEvent.ANY, this.genericFXInputEventListener);
         this.inputManager.registerCommandMapper(new MouseCommandMapper());
     }
 

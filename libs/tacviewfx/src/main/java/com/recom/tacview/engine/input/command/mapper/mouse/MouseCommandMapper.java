@@ -19,11 +19,11 @@ public class MouseCommandMapper implements IsInputCommandMapper {
     @NonNull
     private final LinkedList<NanoTimedEvent<? extends InputEvent>> unprocessedMouseClicks = new LinkedList<>();
     @NonNull
-    private final MouseEventMachine fsm = new MouseEventMachine(Duration.ofMillis(250));
+    private final MouseEventMachine fsm = new MouseEventMachine(Duration.ofMillis(200));
 
 
     @Override
-    public boolean mapEvents(Stream<NanoTimedEvent<? extends InputEvent>> timedMouseEventStream) {
+    public boolean mapEvents(@NonNull final Stream<NanoTimedEvent<? extends InputEvent>> timedMouseEventStream) {
         timedMouseEventStream
                 .filter(nanoTimedEvent -> nanoTimedEvent.getEvent().getEventType() == MouseEvent.MOUSE_CLICKED)
                 .forEach(unprocessedMouseClicks::add);
@@ -41,6 +41,7 @@ public class MouseCommandMapper implements IsInputCommandMapper {
         return !fsm.getBufferedCommands().isEmpty();
     }
 
+    @NonNull
     @Override
     @SuppressWarnings("unchecked")
     public LinkedList<MouseClickCommand> getCreatedCommands() {

@@ -33,14 +33,14 @@ public class MouseEventMachine {
     }
 
     public void iterate() {
-        update(null);
+        updateMachine(null);
     }
 
     public void iterate(@NonNull final NanoTimedEvent<MouseEvent> nextNanoTimedMouseEvent) {
-        update(nextNanoTimedMouseEvent);
+        updateMachine(nextNanoTimedMouseEvent);
     }
 
-    private void update(@Nullable final NanoTimedEvent<MouseEvent> nextEvent) {
+    private void updateMachine(@Nullable final NanoTimedEvent<MouseEvent> nextEvent) {
         final InputAlphabet input = determineInputAlphabet(nextEvent);
         switch (currentMachineState) {
             case IDLE -> {
@@ -67,9 +67,15 @@ public class MouseEventMachine {
                         eventCandidateBuffer = nextEvent;
                         currentMachineState = FSMStates.CLICK_CANDIDATE;
                     } else {
-                        eventCandidateBuffer = null;
-                        bufferedCommands.add(MouseClickCommand.doubleClickCommand(nextEvent));
-                        currentMachineState = FSMStates.IDLE;
+                        if (eventCandidateBuffer.getEvent().getButton().equals(nextEvent.getEvent().getButton())) {
+                            bufferedCommands.add(MouseClickCommand.doubleClickCommand(nextEvent));
+                            eventCandidateBuffer = null;
+                            currentMachineState = FSMStates.IDLE;
+                        } else {
+                            bufferedCommands.add(MouseClickCommand.singleClickCommand(eventCandidateBuffer));
+                            eventCandidateBuffer = nextEvent;
+                            currentMachineState = FSMStates.CLICK_CANDIDATE;
+                        }
                     }
                 }
             }
