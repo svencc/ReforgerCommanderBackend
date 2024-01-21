@@ -1,0 +1,36 @@
+@startuml
+
+header RECOM Tacviewer
+title Mouse Event FSM v1.0
+caption Each mouse button has its own state machine
+footer RECOM.one
+
+
+[*] --> IDLE :start
+
+IDLE --> IDLE : IDLING
+IDLE --> CLICK_CANDIDATE : MOUSE_PRESSED
+CLICK_CANDIDATE --> IDLE : CLICK_THRESHOLD_EXCEEDED\n MOUSE_PRESS\n
+CLICK_CANDIDATE --> MOUSE_DRAGGING : MOUSE_DRAG_STARTED
+CLICK_CANDIDATE --> CLICK_CANDIDATE : IDLING
+MOUSE_DRAGGING --> MOUSE_DRAGGING : MOUSE_DRAGGING
+MOUSE_DRAGGING --> IDLE : MOUSE_RELEASED
+
+IDLE --> [*] :stop
+CLICK_CANDIDATE --> [*] :stop
+MOUSE_DRAGGING --> [*] :stop
+
+
+legend left
+__**ALPHABET**__
+| **Symbol** | **Description** |
+| start | on class initialization |
+| IDLING | new engine revolution without event |
+| CLICK_THRESHOLD_EXCEEDED | new engine revolution without event |
+| MOUSE_PRESSED | Mouse Press Event |
+| MOUSE_RELEASED | Mouse Release Event |
+| MOUSE_DRAG_STARTED | when mouse is pushed and not released within mouse click threshold |
+| MOUSE_DRAGGING | when mouse is pushed and moved |
+endlegend
+
+@enduml

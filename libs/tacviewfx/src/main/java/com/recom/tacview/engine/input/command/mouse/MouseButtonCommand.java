@@ -1,41 +1,41 @@
-package com.recom.tacview.engine.input.command;
+package com.recom.tacview.engine.input.command.mouse;
 
 import com.recom.tacview.engine.input.NanoTimedEvent;
 import javafx.scene.input.MouseEvent;
 import lombok.Getter;
 import lombok.NonNull;
 
-public class MouseClickCommand implements IsInputCommand {
+public class MouseButtonCommand implements IsMouseCommand {
 
     @NonNull
     private final NanoTimedEvent<MouseEvent> nanoTimedMouseEvent;
     @Getter
-    private final boolean isDoubleClick;
+    private final boolean doubleClick;
     @Getter
     @NonNull
     private final MouseButton mouseButton;
 
 
     @NonNull
-    public static MouseClickCommand singleClickCommand(
+    public static MouseButtonCommand singleClickCommand(
             @NonNull final NanoTimedEvent<MouseEvent> nanoTimedMouseEvent
     ) {
-        return new MouseClickCommand(nanoTimedMouseEvent, false);
+        return new MouseButtonCommand(nanoTimedMouseEvent, false);
     }
 
     @NonNull
-    public static MouseClickCommand doubleClickCommand(
+    public static MouseButtonCommand doubleClickCommand(
             @NonNull final NanoTimedEvent<MouseEvent> nanoTimedMouseEvent
     ) {
-        return new MouseClickCommand(nanoTimedMouseEvent, true);
+        return new MouseButtonCommand(nanoTimedMouseEvent, true);
     }
 
-    public MouseClickCommand(
+    public MouseButtonCommand(
             @NonNull final NanoTimedEvent<MouseEvent> nanoTimedMouseEvent,
             final boolean isDoubleClick
     ) {
         this.nanoTimedMouseEvent = nanoTimedMouseEvent;
-        this.isDoubleClick = isDoubleClick;
+        this.doubleClick = isDoubleClick;
         this.mouseButton = determineMouseButton(nanoTimedMouseEvent.getEvent());
     }
 
@@ -44,7 +44,7 @@ public class MouseClickCommand implements IsInputCommand {
         return switch (event.getButton()) {
             case PRIMARY -> MouseButton.PRIMARY;
             case SECONDARY -> MouseButton.SECONDARY;
-            case MIDDLE -> MouseButton.TERNARY;
+            case MIDDLE -> MouseButton.MIDDLE;
             default -> MouseButton.OTHER;
         };
     }
@@ -64,13 +64,6 @@ public class MouseClickCommand implements IsInputCommand {
 
 
         return nanoTimedMouseEvent;
-    }
-
-    enum MouseButton {
-        PRIMARY,
-        SECONDARY,
-        TERNARY,
-        OTHER
     }
 
 }
