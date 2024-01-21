@@ -1,4 +1,4 @@
-package com.recom.tacview.engine.input.command.mapper;
+package com.recom.tacview.engine.input.command.mapper.mouse.fsm;
 
 import com.recom.tacview.engine.input.NanoTimedEvent;
 import com.recom.tacview.engine.input.command.MouseClickCommand;
@@ -12,13 +12,13 @@ import java.time.Duration;
 import java.util.LinkedList;
 
 @Slf4j
-public class MouseClickMachine {
+public class MouseEventMachine {
 
     @NonNull
     private final long doubleClickThresholdNanos;
 
     @NonNull
-    private STATE currentMachineState = STATE.IDLE;
+    private FSMStates currentMachineState = FSMStates.IDLE;
 
     @Nullable
     private NanoTimedEvent<MouseEvent> eventCandidateBuffer;
@@ -28,7 +28,7 @@ public class MouseClickMachine {
     private final LinkedList<MouseClickCommand> bufferedCommands = new LinkedList<>();
 
 
-    public MouseClickMachine(@NonNull final Duration doubleClickThreshold) {
+    public MouseEventMachine(@NonNull final Duration doubleClickThreshold) {
         this.doubleClickThresholdNanos = doubleClickThreshold.toNanos();
     }
 
@@ -41,35 +41,35 @@ public class MouseClickMachine {
     }
 
     private void update(@Nullable final NanoTimedEvent<MouseEvent> nextEvent) {
-        final INPUT_ALPHABET input = determineInputAlphabet(nextEvent);
+        final InputAlphabet input = determineInputAlphabet(nextEvent);
         switch (currentMachineState) {
             case IDLE -> {
-                if (input == INPUT_ALPHABET.NEW_CLICK_CANDIDATE) {
+                if (input == InputAlphabet.NEW_CLICK_CANDIDATE) {
                     assert nextEvent != null;
                     eventCandidateBuffer = nextEvent;
-                    currentMachineState = STATE.CLICK_CANDIDATE;
+                    currentMachineState = FSMStates.CLICK_CANDIDATE;
                 }
             }
             case CLICK_CANDIDATE -> {
-                if (input == INPUT_ALPHABET.EMPTY) {
+                if (input == InputAlphabet.EMPTY) {
                     assert nextEvent == null;
                     assert eventCandidateBuffer != null;
                     if (doubleClickThresholdExpired(eventCandidateBuffer)) {
                         bufferedCommands.add(MouseClickCommand.singleClickCommand(eventCandidateBuffer));
                         eventCandidateBuffer = null;
-                        currentMachineState = STATE.IDLE;
+                        currentMachineState = FSMStates.IDLE;
                     }
-                } else if (input == INPUT_ALPHABET.NEW_CLICK_CANDIDATE) {
+                } else if (input == InputAlphabet.NEW_CLICK_CANDIDATE) {
                     assert nextEvent != null;
                     assert eventCandidateBuffer != null;
                     if (doubleClickThresholdExpired(eventCandidateBuffer)) {
                         bufferedCommands.add(MouseClickCommand.singleClickCommand(eventCandidateBuffer));
                         eventCandidateBuffer = nextEvent;
-                        currentMachineState = STATE.CLICK_CANDIDATE;
+                        currentMachineState = FSMStates.CLICK_CANDIDATE;
                     } else {
                         eventCandidateBuffer = null;
                         bufferedCommands.add(MouseClickCommand.doubleClickCommand(nextEvent));
-                        currentMachineState = STATE.IDLE;
+                        currentMachineState = FSMStates.IDLE;
                     }
                 }
             }
@@ -84,22 +84,12 @@ public class MouseClickMachine {
     }
 
     @NonNull
-    private INPUT_ALPHABET determineInputAlphabet(@Nullable final NanoTimedEvent<MouseEvent> nextNanoTimedMouseEvent) {
+    private InputAlphabet determineInputAlphabet(@Nullable final NanoTimedEvent<MouseEvent> nextNanoTimedMouseEvent) {
         if (nextNanoTimedMouseEvent == null) {
-            return INPUT_ALPHABET.EMPTY;
+            return InputAlphabet.EMPTY;
         } else {
-            return INPUT_ALPHABET.NEW_CLICK_CANDIDATE;
+            return InputAlphabet.NEW_CLICK_CANDIDATE;
         }
-    }
-
-    enum STATE {
-        IDLE,
-        CLICK_CANDIDATE
-    }
-
-    enum INPUT_ALPHABET {
-        EMPTY,
-        NEW_CLICK_CANDIDATE
     }
 
 }
