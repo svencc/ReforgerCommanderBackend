@@ -61,11 +61,14 @@ public class JavaFxMouseCommandMapper implements IsInputCommandMapper, AutoClose
     }
 
     private boolean runMouseButtonFSM() {
-        while (!unprocessedMouseEvents.isEmpty()) {
-            final NanoTimedEvent<MouseEvent> polledMouseEvent = unprocessedMouseEvents.poll();
-            mouseButtonEventFSMs.forEach(fsm -> fsm.iterate(polledMouseEvent));
+        if (unprocessedMouseEvents.isEmpty()) {
+            mouseButtonEventFSMs.forEach(IsMouseButtonEventFSM::iterate);
+        } else {
+            while (!unprocessedMouseEvents.isEmpty()) {
+                final NanoTimedEvent<MouseEvent> polledMouseEvent = unprocessedMouseEvents.poll();
+                mouseButtonEventFSMs.forEach(fsm -> fsm.iterate(polledMouseEvent));
+            }
         }
-        mouseButtonEventFSMs.forEach(IsMouseButtonEventFSM::iterate);
 
         return mouseButtonEventFSMs.stream()
                 .map(IsMouseButtonEventFSM::hasBufferedCommands)
