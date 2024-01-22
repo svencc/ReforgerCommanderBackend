@@ -29,9 +29,9 @@ public class JavaFxMouseCommandMapper implements IsInputCommandMapper, AutoClose
 
     public JavaFxMouseCommandMapper() {
         mouseButtonEventFSMs = List.of(
-                new MouseButtonEventFSM1(Duration.ofMillis(200), Duration.ofMillis(200), MouseButton.PRIMARY),
-                new MouseButtonEventFSM1(Duration.ofMillis(200), Duration.ofMillis(200), MouseButton.SECONDARY),
-                new MouseButtonEventFSM1(Duration.ofMillis(200), Duration.ofMillis(200), MouseButton.MIDDLE)
+                new MouseButtonEventFSM1(Duration.ofMillis(150), Duration.ofMillis(150), MouseButton.PRIMARY),
+                new MouseButtonEventFSM1(Duration.ofMillis(150), Duration.ofMillis(150), MouseButton.SECONDARY),
+                new MouseButtonEventFSM1(Duration.ofMillis(150), Duration.ofMillis(150), MouseButton.MIDDLE)
         );
 
         startMachines();

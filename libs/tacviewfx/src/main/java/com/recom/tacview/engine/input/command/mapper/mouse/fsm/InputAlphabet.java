@@ -2,9 +2,9 @@ package com.recom.tacview.engine.input.command.mapper.mouse.fsm;
 
 enum InputAlphabet {
     IDLEING,
-    CLICK_THRESHOLD_EXCEEDED,
+    CLICK,
     MOUSE_PRESSED,
-    MOUSE_PRESSED_TWICE,
+    DOUBLECLICK,
     MOUSE_RELEASED,
     MOUSE_DRAG_STARTED,
     MOUSE_DRAGGING,

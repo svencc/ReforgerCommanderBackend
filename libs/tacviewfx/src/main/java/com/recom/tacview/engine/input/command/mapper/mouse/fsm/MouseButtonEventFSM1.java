@@ -15,13 +15,17 @@ import java.time.Duration;
 import java.util.LinkedList;
 import java.util.stream.Stream;
 
+import static com.recom.tacview.engine.input.command.mapper.mouse.fsm.InputAlphabet.IDLEING;
+
 @Slf4j
 public class MouseButtonEventFSM1 implements IsMouseButtonEventFSM {
 
     @NonNull
     private final long doubleClickThresholdNanos;
+
     @NonNull
     private final long dragThresholdNanos;
+
     @NonNull
     private final MouseButton responsibleForMouseButton;
 
@@ -94,31 +98,42 @@ public class MouseButtonEventFSM1 implements IsMouseButtonEventFSM {
 
                         clickCandidateBuffer = nextEvent;
                         currentMachineState = FSMStates.CLICK_CANDIDATE;
+                        log.info("MOUSE_PRESSED");
                     }
                 }
             }
             case CLICK_CANDIDATE -> {
                 assert clickCandidateBuffer != null;
                 switch (clickCandidateAlphabet(nextEvent, clickCandidateBuffer)) {
-                    case CLICK_THRESHOLD_EXCEEDED -> {
+                    case MOUSE_RELEASED -> {
+                        assert nextEvent != null;
+
+                        clickCandidateBuffer = nextEvent;
+                        log.info("MOUSE_RELEASED");
+                    }
+                    case CLICK -> {
                         bufferedCommands.add(MouseButtonCommand.singleClickCommand(clickCandidateBuffer));
                         clickCandidateBuffer = null;
                         currentMachineState = FSMStates.IDLE;
+                        log.info("CLICK");
                     }
-                    case MOUSE_PRESSED -> {
+                    case DOUBLECLICK -> {
                         assert nextEvent != null;
 
                         bufferedCommands.add(MouseButtonCommand.doubleClickCommand(nextEvent));
                         clickCandidateBuffer = null;
                         currentMachineState = FSMStates.IDLE;
+                        log.info("DOUBLECLICK");
                     }
                     case MOUSE_DRAG_STARTED -> {
+                        assert nextEvent == null;
                         assert clickCandidateBuffer != null;
                         assert clickCandidateBuffer.getEvent() instanceof MouseDragEvent;
 
                         bufferedCommands.add(MouseDragCommand.dragStartCommand(clickCandidateBuffer.cast()));
                         clickCandidateBuffer = null;
                         currentMachineState = FSMStates.MOUSE_DRAGGING;
+                        log.info("MOUSE_DRAG_STARTED");
                     }
                     case IDLEING -> {
                         // do nothing
@@ -126,7 +141,7 @@ public class MouseButtonEventFSM1 implements IsMouseButtonEventFSM {
                 }
             }
             case MOUSE_DRAGGING -> {
-                switch (clickCandidateAlphabet(nextEvent, clickCandidateBuffer)) {
+                switch (mouseDraggingAlphabet(nextEvent, clickCandidateBuffer)) {
                     case IDLEING -> {
                         // do nothing
                     }
@@ -148,6 +163,15 @@ public class MouseButtonEventFSM1 implements IsMouseButtonEventFSM {
         }
     }
 
+    @NonNull
+    private InputAlphabet mouseDraggingAlphabet(
+            @Nullable final NanoTimedEvent<MouseEvent> nextEvent,
+            @Nullable final NanoTimedEvent<MouseEvent> clickCandidateBuffer
+    ) {
+
+        return InputAlphabet.UNHANDLED;
+    }
+
     private boolean fsmIsNotResponsibleForMouseButtonRelatedEvents(@Nullable final NanoTimedEvent<MouseEvent> nextEvent) {
         return nextEvent != null && (nextEvent.getEvent().getButton() != responsibleForMouseButton);
     }
@@ -155,7 +179,7 @@ public class MouseButtonEventFSM1 implements IsMouseButtonEventFSM {
     @NonNull
     private InputAlphabet idleAlphabet(@Nullable final NanoTimedEvent<MouseEvent> nextEvent) {
         if (nextEvent == null) {
-            return InputAlphabet.IDLEING;
+            return IDLEING;
         } else if (nextEvent.getEvent().getEventType() == MouseEvent.MOUSE_PRESSED) {
             return InputAlphabet.MOUSE_PRESSED;
         } else {
@@ -169,18 +193,24 @@ public class MouseButtonEventFSM1 implements IsMouseButtonEventFSM {
             @NonNull NanoTimedEvent<MouseEvent> clickCandidateBuffer
     ) {
         if (nextEvent == null && clickThresholdExceeded(clickCandidateBuffer)) {
-            return InputAlphabet.CLICK_THRESHOLD_EXCEEDED;
-        } else if (nextEvent == null && dragThresholdExceeded(clickCandidateBuffer) && clickCandidateBuffer.getEvent() instanceof MouseDragEvent) {
+            return InputAlphabet.CLICK;
+        } else if (nextEvent == null && dragThresholdExceeded(clickCandidateBuffer) && clickCandidateBuffer.getEvent().getEventType() == MouseEvent.MOUSE_PRESSED) {
             return InputAlphabet.MOUSE_DRAG_STARTED;
         } else if (nextEvent != null && nextEvent.getEvent().getEventType() == MouseEvent.MOUSE_PRESSED) {
-            return InputAlphabet.MOUSE_PRESSED;
+            return InputAlphabet.DOUBLECLICK;
+        } else if (nextEvent != null && nextEvent.getEvent() instanceof MouseEvent && nextEvent.getEvent().getEventType() == MouseEvent.MOUSE_RELEASED) {
+            return InputAlphabet.MOUSE_RELEASED;
         } else {
-            return InputAlphabet.IDLEING;
+            return IDLEING;
         }
     }
 
-    private boolean clickThresholdExceeded(@NonNull final NanoTimedEvent<MouseEvent> event) {
-        return (System.nanoTime() - event.getNanos()) > doubleClickThresholdNanos;
+    private boolean clickThresholdExceeded(@NonNull final NanoTimedEvent<MouseEvent> clickCandidateBuffer) {
+        if (clickCandidateBuffer.getEvent().getEventType().equals(MouseEvent.MOUSE_RELEASED)) {
+            return (System.nanoTime() - clickCandidateBuffer.getNanos()) > doubleClickThresholdNanos;
+        } else {
+            return false;
+        }
     }
 
     private boolean dragThresholdExceeded(@NonNull final NanoTimedEvent<MouseEvent> event) {

@@ -24,9 +24,7 @@ public class MouseButtonCommand implements IsMouseCommand {
     }
 
     @NonNull
-    public static MouseButtonCommand doubleClickCommand(
-            @NonNull final NanoTimedEvent<MouseEvent> nanoTimedMouseEvent
-    ) {
+    public static MouseButtonCommand doubleClickCommand(@NonNull final NanoTimedEvent<MouseEvent> nanoTimedMouseEvent) {
         return new MouseButtonCommand(nanoTimedMouseEvent, true);
     }
 
