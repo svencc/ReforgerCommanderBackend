@@ -1,18 +1,18 @@
 @startuml
 
 header RECOM Tacviewer
-title Mouse Event FSM v1.0
+title Mouse Button Event FSM v1.0
 caption Each mouse button has its own state machine
 footer RECOM.one
 
 
 [*] --> IDLE :start
 
-IDLE --> IDLE : IDLING
+IDLE --> IDLE : IDLEING
 IDLE --> CLICK_CANDIDATE : MOUSE_PRESSED
-CLICK_CANDIDATE --> IDLE : CLICK_THRESHOLD_EXCEEDED\n MOUSE_PRESS\n
+CLICK_CANDIDATE --> IDLE : CLICK_THRESHOLD_EXCEEDED\n MOUSE_PRESSED_TWIECE\n
 CLICK_CANDIDATE --> MOUSE_DRAGGING : MOUSE_DRAG_STARTED
-CLICK_CANDIDATE --> CLICK_CANDIDATE : IDLING
+CLICK_CANDIDATE --> CLICK_CANDIDATE : IDLEING
 MOUSE_DRAGGING --> MOUSE_DRAGGING : MOUSE_DRAGGING
 MOUSE_DRAGGING --> IDLE : MOUSE_RELEASED
 
@@ -24,13 +24,15 @@ MOUSE_DRAGGING --> [*] :stop
 legend left
 __**ALPHABET**__
 | **Symbol** | **Description** |
-| start | on class initialization |
-| IDLING | new engine revolution without event |
+| start | on start() |
+| stop | on autoclosable close() |
+| IDLEING | new engine revolution without event |
 | CLICK_THRESHOLD_EXCEEDED | new engine revolution without event |
-| MOUSE_PRESSED | Mouse Press Event |
-| MOUSE_RELEASED | Mouse Release Event |
+| MOUSE_PRESSED | first mouse press event |
+| MOUSE_PRESSED_TWICE | second mouse press event before "click threshold exceeded" |
+| MOUSE_RELEASED | mouse button released |
 | MOUSE_DRAG_STARTED | when mouse is pushed and not released within mouse click threshold |
-| MOUSE_DRAGGING | when mouse is pushed and moved |
+| MOUSE_DRAGGING | when mouse button is pushed and moved |
 endlegend
 
 @enduml

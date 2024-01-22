@@ -2,8 +2,8 @@ package com.recom.tacview.engine.input.command.mapper.mouse;
 
 import com.recom.tacview.engine.input.NanoTimedEvent;
 import com.recom.tacview.engine.input.command.mapper.IsInputCommandMapper;
-import com.recom.tacview.engine.input.command.mapper.mouse.fsm.IsMouseEventFSM;
-import com.recom.tacview.engine.input.command.mapper.mouse.fsm.MouseEventFSM1;
+import com.recom.tacview.engine.input.command.mapper.mouse.fsm.IsMouseButtonEventFSM;
+import com.recom.tacview.engine.input.command.mapper.mouse.fsm.MouseButtonEventFSM1;
 import com.recom.tacview.engine.input.command.mouse.MouseButtonCommand;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.MouseButton;
@@ -21,9 +21,9 @@ public class JavaFxMouseCommandMapper implements IsInputCommandMapper, AutoClose
     @NonNull
     private final LinkedList<NanoTimedEvent<MouseEvent>> unprocessedMouseEvents = new LinkedList<>();
     @NonNull
-    private final IsMouseEventFSM primaryMouseButtonFSM = new MouseEventFSM1(Duration.ofMillis(200), Duration.ofMillis(200), MouseButton.PRIMARY);
+    private final IsMouseButtonEventFSM primaryMouseButtonFSM = new MouseButtonEventFSM1(Duration.ofMillis(200), Duration.ofMillis(200), MouseButton.PRIMARY);
     @NonNull
-    private final IsMouseEventFSM secondaryMouseButtonFSM = new MouseEventFSM1(Duration.ofMillis(200), Duration.ofMillis(200), MouseButton.SECONDARY);
+    private final IsMouseButtonEventFSM secondaryMouseButtonFSM = new MouseButtonEventFSM1(Duration.ofMillis(200), Duration.ofMillis(200), MouseButton.SECONDARY);
 
     public JavaFxMouseCommandMapper() {
         primaryMouseButtonFSM.start();

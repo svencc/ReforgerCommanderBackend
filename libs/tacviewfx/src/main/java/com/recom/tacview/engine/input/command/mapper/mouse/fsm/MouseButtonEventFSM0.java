@@ -14,7 +14,7 @@ import java.time.Duration;
 import java.util.LinkedList;
 
 @Slf4j
-public class MouseEventFSM0 implements IsMouseEventFSM {
+public class MouseButtonEventFSM0 implements IsMouseButtonEventFSM {
 
     @NonNull
     private final long doubleClickThresholdNanos;
@@ -32,7 +32,7 @@ public class MouseEventFSM0 implements IsMouseEventFSM {
     private final LinkedList<IsMouseCommand> bufferedCommands = new LinkedList<>();
 
 
-    public MouseEventFSM0(@NonNull final Duration doubleClickThreshold) {
+    public MouseButtonEventFSM0(@NonNull final Duration doubleClickThreshold) {
         this.doubleClickThresholdNanos = doubleClickThreshold.toNanos();
         this.dragThresholdNanos = Duration.ofMillis(200).toNanos();
     }
@@ -69,7 +69,7 @@ public class MouseEventFSM0 implements IsMouseEventFSM {
                 }
             }
             case CLICK_CANDIDATE -> {
-                if (input == InputAlphabet.IDLING) {
+                if (input == InputAlphabet.IDLEING) {
                     assert nextEvent == null;
                     assert eventCandidateBuffer != null;
                     if (clickThresholdExpired(eventCandidateBuffer)) {
@@ -130,7 +130,7 @@ public class MouseEventFSM0 implements IsMouseEventFSM {
     @NonNull
     private InputAlphabet determineInputAlphabet(@Nullable final NanoTimedEvent<MouseEvent> nextNanoTimedMouseEvent) {
         if (nextNanoTimedMouseEvent == null) {
-            return InputAlphabet.IDLING;
+            return InputAlphabet.IDLEING;
         } else {
             final EventType<? extends MouseEvent> eventType = nextNanoTimedMouseEvent.getEvent().getEventType();
 

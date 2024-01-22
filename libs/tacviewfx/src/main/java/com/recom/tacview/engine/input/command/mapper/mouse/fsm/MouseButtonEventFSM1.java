@@ -16,7 +16,7 @@ import java.time.Duration;
 import java.util.LinkedList;
 
 @Slf4j
-public class MouseEventFSM1 implements IsMouseEventFSM {
+public class MouseButtonEventFSM1 implements IsMouseButtonEventFSM {
 
     @NonNull
     private final long doubleClickThresholdNanos;
@@ -36,7 +36,7 @@ public class MouseEventFSM1 implements IsMouseEventFSM {
     private final LinkedList<IsMouseCommand> bufferedCommands = new LinkedList<>();
 
 
-    public MouseEventFSM1(
+    public MouseButtonEventFSM1(
             @NonNull final Duration doubleClickThreshold,
             @NonNull final Duration dragThreshold,
             @NonNull final MouseButton responsibleForMouseButton
@@ -72,7 +72,7 @@ public class MouseEventFSM1 implements IsMouseEventFSM {
         switch (currentMachineState) {
             case IDLE -> {
                 switch (idleAlphabet(nextEvent)) {
-                    case IDLING -> {
+                    case IDLEING -> {
                         // do nothing
                     }
                     case MOUSE_PRESSED -> {
@@ -106,14 +106,14 @@ public class MouseEventFSM1 implements IsMouseEventFSM {
                         clickCandidateBuffer = null;
                         currentMachineState = FSMStates.MOUSE_DRAGGING;
                     }
-                    case IDLING -> {
+                    case IDLEING -> {
                         // do nothing
                     }
                 }
             }
             case MOUSE_DRAGGING -> {
                 switch (clickCandidateAlphabet(nextEvent, clickCandidateBuffer)) {
-                    case IDLING -> {
+                    case IDLEING -> {
                         // do nothing
                     }
                     case MOUSE_DRAGGING -> {
@@ -141,7 +141,7 @@ public class MouseEventFSM1 implements IsMouseEventFSM {
     @NonNull
     private InputAlphabet idleAlphabet(@Nullable final NanoTimedEvent<MouseEvent> nextEvent) {
         if (nextEvent == null) {
-            return InputAlphabet.IDLING;
+            return InputAlphabet.IDLEING;
         } else if (nextEvent.getEvent().getEventType() == MouseEvent.MOUSE_PRESSED) {
             return InputAlphabet.MOUSE_PRESSED;
         } else {
@@ -161,7 +161,7 @@ public class MouseEventFSM1 implements IsMouseEventFSM {
         } else if (nextEvent != null && nextEvent.getEvent().getEventType() == MouseEvent.MOUSE_PRESSED) {
             return InputAlphabet.MOUSE_PRESSED;
         } else {
-            return InputAlphabet.IDLING;
+            return InputAlphabet.IDLEING;
         }
     }
 
