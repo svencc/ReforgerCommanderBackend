@@ -24,12 +24,6 @@ public class JavaFxMouseCommandMapper implements IsInputCommandMapper, AutoClose
 
     @NonNull
     private final LinkedList<NanoTimedEvent<MouseEvent>> unprocessedMouseEvents = new LinkedList<>();
-    //    @NonNull
-//    private final IsMouseButtonEventFSM primaryMouseButtonFSM = new MouseButtonEventFSM1(Duration.ofMillis(200), Duration.ofMillis(200), MouseButton.PRIMARY);
-//    @NonNull
-//    private final IsMouseButtonEventFSM secondaryMouseButtonFSM = new MouseButtonEventFSM1(Duration.ofMillis(200), Duration.ofMillis(200), MouseButton.SECONDARY);
-//    @NonNull
-//    private final IsMouseButtonEventFSM middleMouseButtonFSM = new MouseButtonEventFSM1(Duration.ofMillis(200), Duration.ofMillis(200), MouseButton.MIDDLE);
     @NonNull
     private final List<IsMouseButtonEventFSM> mouseButtonEventFSMs;
 
@@ -81,13 +75,13 @@ public class JavaFxMouseCommandMapper implements IsInputCommandMapper, AutoClose
     @NonNull
     @Override
     public LinkedList<IsMouseCommand> popCreatedCommands() {
-        final LinkedList<IsMouseCommand> collectCommands = mouseButtonEventFSMs.stream()
+        final LinkedList<IsMouseCommand> collectedCommands = mouseButtonEventFSMs.stream()
                 .flatMap(IsMouseButtonEventFSM::popBufferedCommands)
-                .sorted(Comparator.comparing(IsInputCommand::getNanos, Comparator.reverseOrder()))
+                .sorted(Comparator.comparing(IsInputCommand::getNanos))
                 .collect(Collectors.toCollection(LinkedList::new));
 
 
-        return collectCommands;
+            return collectedCommands;
     }
 
     @Override
