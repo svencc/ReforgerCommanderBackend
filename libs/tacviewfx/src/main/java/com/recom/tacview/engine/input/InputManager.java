@@ -21,37 +21,34 @@ public class InputManager {
     private final LinkedList<NanoTimedEvent<? extends InputEvent>> inputEventQueue = new LinkedList<>();
 
     @NonNull
-    private final LinkedList<IsInputCommandMapper> registeredInputCommands = new LinkedList<>();
+    private final LinkedList<IsInputCommandMapper> registeredCommandsMappers = new LinkedList<>();
 
-    @Getter
     @NonNull
     private final LinkedList<IsInputCommand> createdInputCommands = new LinkedList<>();
 
 
     public void mapInputEventsToCommands() {
-        for (final IsInputCommandMapper mapper : registeredInputCommands) {
+        for (final IsInputCommandMapper mapper : registeredCommandsMappers) {
             if (mapper.mapEvents(inputEventQueue.stream())) {
-                createdInputCommands.addAll(mapper.getCreatedCommands());
+                createdInputCommands.addAll(mapper.popCreatedCommands());
             }
         }
     }
 
     public void clearInputQueues() {
         inputEventQueue.clear();
+    }
+
+    @NonNull
+    public LinkedList<IsInputCommand> popInputCommands() {
+        final LinkedList<IsInputCommand> createdInputCommandsCopy = new LinkedList<>(createdInputCommands);
         createdInputCommands.clear();
+
+        return createdInputCommandsCopy;
     }
 
-    public void registerCommandMapper(@NonNull final IsInputCommandMapper inputCommand) {
-        registeredInputCommands.add(inputCommand);
+    public void registerCommandMapper(@NonNull final IsInputCommandMapper inputCommandMapper) {
+        registeredCommandsMappers.add(inputCommandMapper);
     }
-
-    public void unregisterInputCommand(@NonNull final IsInputCommandMapper inputCommand) {
-        registeredInputCommands.remove(inputCommand);
-    }
-
-    public void clearRegisteredInputCommands() {
-        registeredInputCommands.clear();
-    }
-
 
 }

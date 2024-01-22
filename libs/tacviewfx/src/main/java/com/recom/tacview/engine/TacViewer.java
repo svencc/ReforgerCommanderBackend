@@ -112,7 +112,7 @@ public class TacViewer extends Canvas {
         // HANDLE INPUT
         final long inputHandlingStart = System.nanoTime();
         inputManager.mapInputEventsToCommands();
-        engineModule.handleInputCommands(inputManager.getCreatedInputCommands());
+        engineModule.handleInputCommands(inputManager.popInputCommands());
         inputManager.clearInputQueues();
         profiler.inputHandlingNanoTime = System.nanoTime() - inputHandlingStart;
 

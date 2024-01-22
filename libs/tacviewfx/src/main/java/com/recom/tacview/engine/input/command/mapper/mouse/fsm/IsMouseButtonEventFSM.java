@@ -6,6 +6,7 @@ import javafx.scene.input.MouseEvent;
 import lombok.NonNull;
 
 import java.util.LinkedList;
+import java.util.stream.Stream;
 
 public interface IsMouseButtonEventFSM {
 
@@ -13,12 +14,16 @@ public interface IsMouseButtonEventFSM {
 
     void iterate(@NonNull final NanoTimedEvent<MouseEvent> nextNanoTimedMouseEvent);
 
-    @NonNull
-    LinkedList<IsMouseCommand> getBufferedCommands();
-
     void start();
 
     void stop();
+
+    boolean hasBufferedCommands();
+
+//    void clearBufferedCommands();
+
+    @NonNull
+    Stream<IsMouseCommand> popBufferedCommands();
 
 
 }

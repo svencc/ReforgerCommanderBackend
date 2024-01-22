@@ -5,13 +5,13 @@ import com.recom.tacview.engine.input.command.mouse.IsMouseCommand;
 import com.recom.tacview.engine.input.command.mouse.MouseButtonCommand;
 import javafx.event.EventType;
 import javafx.scene.input.MouseEvent;
-import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.Nullable;
 
 import java.time.Duration;
 import java.util.LinkedList;
+import java.util.stream.Stream;
 
 @Slf4j
 public class MouseButtonEventFSM0 implements IsMouseButtonEventFSM {
@@ -27,7 +27,6 @@ public class MouseButtonEventFSM0 implements IsMouseButtonEventFSM {
     @Nullable
     private NanoTimedEvent<MouseEvent> eventCandidateBuffer;
 
-    @Getter
     @NonNull
     private final LinkedList<IsMouseCommand> bufferedCommands = new LinkedList<>();
 
@@ -46,6 +45,25 @@ public class MouseButtonEventFSM0 implements IsMouseButtonEventFSM {
     public void stop() {
         currentMachineState = FSMStates.STOPPED;
     }
+
+    @Override
+    public boolean hasBufferedCommands() {
+        return !bufferedCommands.isEmpty();
+    }
+
+    @NonNull
+    @Override
+    public Stream<IsMouseCommand> popBufferedCommands() {
+        final LinkedList<IsMouseCommand> bufferedCommandsCopy = new LinkedList<>(bufferedCommands);
+        bufferedCommands.clear();
+
+        return bufferedCommandsCopy.stream();
+    }
+
+//    @Override
+//    public void clearBufferedCommands() {
+//        bufferedCommands.clear();
+//    }
 
     public void iterate() {
         engineRevolution(null);

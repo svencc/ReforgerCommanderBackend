@@ -49,10 +49,12 @@ public class MouseButtonCommand implements IsMouseCommand {
         };
     }
 
+    @Override
     public double getPositionX() {
         return nanoTimedMouseEvent.getEvent().getX();
     }
 
+    @Override
     public double getPositionY() {
         return nanoTimedMouseEvent.getEvent().getY();
     }
@@ -64,6 +66,11 @@ public class MouseButtonCommand implements IsMouseCommand {
 
 
         return nanoTimedMouseEvent;
+    }
+
+    @Override
+    public long getNanos() {
+        return nanoTimedMouseEvent.getNanos();
     }
 
 }

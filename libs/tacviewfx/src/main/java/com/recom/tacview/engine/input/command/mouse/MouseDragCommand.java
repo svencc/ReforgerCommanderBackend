@@ -8,6 +8,7 @@ import lombok.NonNull;
 
 public class MouseDragCommand implements IsMouseCommand {
 
+    @Getter
     @NonNull
     private final NanoTimedEvent<MouseDragEvent> nanoTimedMouseEvent;
     @Getter
@@ -58,10 +59,12 @@ public class MouseDragCommand implements IsMouseCommand {
         return !dragStart && !dragStop;
     }
 
+    @Override
     public double getPositionX() {
         return nanoTimedMouseEvent.getEvent().getX();
     }
 
+    @Override
     public double getPositionY() {
         return nanoTimedMouseEvent.getEvent().getY();
     }
@@ -73,6 +76,11 @@ public class MouseDragCommand implements IsMouseCommand {
 
 
         return nanoTimedMouseEvent;
+    }
+
+    @Override
+    public long getNanos() {
+        return nanoTimedMouseEvent.getNanos();
     }
 
 }
