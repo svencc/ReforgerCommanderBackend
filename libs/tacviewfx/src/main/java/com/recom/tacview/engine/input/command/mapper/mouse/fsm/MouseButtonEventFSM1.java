@@ -78,11 +78,6 @@ public class MouseButtonEventFSM1 implements IsMouseButtonEventFSM {
         return bufferedCommandsCopy.stream();
     }
 
-//    @Override
-//    public void clearBufferedCommands() {
-//        bufferedCommands.clear();
-//    }
-
     private void machineRevolution(@Nullable final NanoTimedEvent<MouseEvent> nextEvent) {
         if (fsmIsNotResponsibleForMouseButtonRelatedEvents(nextEvent)) {
             return;

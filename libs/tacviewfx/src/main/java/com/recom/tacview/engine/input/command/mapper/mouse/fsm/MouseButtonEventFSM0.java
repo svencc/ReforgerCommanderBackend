@@ -60,11 +60,6 @@ public class MouseButtonEventFSM0 implements IsMouseButtonEventFSM {
         return bufferedCommandsCopy.stream();
     }
 
-//    @Override
-//    public void clearBufferedCommands() {
-//        bufferedCommands.clear();
-//    }
-
     public void iterate() {
         engineRevolution(null);
     }
