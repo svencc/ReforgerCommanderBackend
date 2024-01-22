@@ -75,13 +75,10 @@ public class JavaFxMouseCommandMapper implements IsInputCommandMapper, AutoClose
     @NonNull
     @Override
     public LinkedList<IsMouseCommand> popCreatedCommands() {
-        final LinkedList<IsMouseCommand> collectedCommands = mouseButtonEventFSMs.stream()
+        return mouseButtonEventFSMs.stream()
                 .flatMap(IsMouseButtonEventFSM::popBufferedCommands)
                 .sorted(Comparator.comparing(IsInputCommand::getNanos))
                 .collect(Collectors.toCollection(LinkedList::new));
-
-
-            return collectedCommands;
     }
 
     @Override
