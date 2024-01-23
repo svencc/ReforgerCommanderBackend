@@ -1,19 +1,17 @@
-package com.recom.tacview.engine.input.command.mouse;
+package com.recom.tacview.engine.input.command.mousebutton;
 
 import com.recom.tacview.engine.input.NanoTimedEvent;
 import javafx.scene.input.MouseEvent;
 import lombok.Getter;
 import lombok.NonNull;
 
+@Getter
 public class MouseDragCommand implements IsMouseCommand<MouseEvent> {
 
-    @Getter
-    @NonNull
-    private final NanoTimedEvent<MouseEvent> nanoTimedMouseEvent;
-    @Getter
     private final boolean dragStart;
     private final boolean dragStop;
-    @Getter
+    @NonNull
+    private final NanoTimedEvent<MouseEvent> nanoTimedEvent;
     @NonNull
     private final MouseButton mouseButton;
 
@@ -39,14 +37,14 @@ public class MouseDragCommand implements IsMouseCommand<MouseEvent> {
     }
 
     public MouseDragCommand(
-            @NonNull final NanoTimedEvent<MouseEvent> nanoTimedMouseEvent,
+            @NonNull final NanoTimedEvent<MouseEvent> nanoTimedEvent,
             final boolean startMouseDrag,
             final boolean stopMouseDrag
     ) {
-        this.nanoTimedMouseEvent = nanoTimedMouseEvent;
+        this.nanoTimedEvent = nanoTimedEvent;
         this.dragStart = startMouseDrag;
         this.dragStop = stopMouseDrag;
-        this.mouseButton = determineMouseButton(nanoTimedMouseEvent.getEvent());
+        this.mouseButton = determineMouseButton(nanoTimedEvent.getEvent());
     }
 
     @NonNull
@@ -65,26 +63,17 @@ public class MouseDragCommand implements IsMouseCommand<MouseEvent> {
 
     @Override
     public double getPositionX() {
-        return nanoTimedMouseEvent.getEvent().getX();
+        return nanoTimedEvent.getEvent().getX();
     }
 
     @Override
     public double getPositionY() {
-        return nanoTimedMouseEvent.getEvent().getY();
-    }
-
-    @NonNull
-    public NanoTimedEvent<MouseEvent> getNanoTimedEvent() {
-        nanoTimedMouseEvent.getEvent().getEventType();
-        nanoTimedMouseEvent.getEvent().getButton();
-
-
-        return nanoTimedMouseEvent;
+        return nanoTimedEvent.getEvent().getY();
     }
 
     @Override
     public long getNanos() {
-        return nanoTimedMouseEvent.getNanos();
+        return nanoTimedEvent.getNanos();
     }
 
 }

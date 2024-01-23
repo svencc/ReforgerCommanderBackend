@@ -1,11 +1,11 @@
-package com.recom.tacview.engine.input.command.mapper.mouse;
+package com.recom.tacview.engine.input.mapper.mousebutton;
 
 import com.recom.tacview.engine.input.NanoTimedEvent;
-import com.recom.tacview.engine.input.command.IsInputCommand;
-import com.recom.tacview.engine.input.command.mapper.IsInputCommandMapper;
-import com.recom.tacview.engine.input.command.mapper.mouse.fsm.IsMouseButtonEventFSM;
-import com.recom.tacview.engine.input.command.mapper.mouse.fsm.MouseButtonEventFSM1;
-import com.recom.tacview.engine.input.command.mouse.IsMouseCommand;
+import com.recom.tacview.engine.input.command.IsCommand;
+import com.recom.tacview.engine.input.command.mousebutton.IsMouseCommand;
+import com.recom.tacview.engine.input.mapper.IsInputCommandMapper;
+import com.recom.tacview.engine.input.mapper.mousebutton.fsm.IsMouseButtonEventFSM;
+import com.recom.tacview.engine.input.mapper.mousebutton.fsm.MouseButtonEventFSM1;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -15,24 +15,21 @@ import lombok.extern.slf4j.Slf4j;
 import java.time.Duration;
 import java.util.Comparator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Slf4j
-public class JavaFxMouseCommandMapper implements IsInputCommandMapper, AutoCloseable {
+public class JavaFxMouseButtonCommandMapper implements IsInputCommandMapper<IsMouseCommand<MouseEvent>> {
 
     @NonNull
     private final LinkedList<NanoTimedEvent<MouseEvent>> unprocessedMouseEvents = new LinkedList<>();
     @NonNull
-    private final List<IsMouseButtonEventFSM> mouseButtonEventFSMs;
+    private final LinkedList<IsMouseButtonEventFSM> mouseButtonEventFSMs = new LinkedList<>();
 
-    public JavaFxMouseCommandMapper() {
-        mouseButtonEventFSMs = List.of(
-                new MouseButtonEventFSM1(Duration.ofMillis(150), Duration.ofMillis(150), MouseButton.PRIMARY),
-                new MouseButtonEventFSM1(Duration.ofMillis(150), Duration.ofMillis(150), MouseButton.SECONDARY),
-                new MouseButtonEventFSM1(Duration.ofMillis(150), Duration.ofMillis(150), MouseButton.MIDDLE)
-        );
+    public JavaFxMouseButtonCommandMapper() {
+        mouseButtonEventFSMs.add(new MouseButtonEventFSM1(Duration.ofMillis(150), Duration.ofMillis(150), MouseButton.PRIMARY));
+        mouseButtonEventFSMs.add(new MouseButtonEventFSM1(Duration.ofMillis(150), Duration.ofMillis(150), MouseButton.SECONDARY));
+        mouseButtonEventFSMs.add(new MouseButtonEventFSM1(Duration.ofMillis(150), Duration.ofMillis(150), MouseButton.MIDDLE));
 
         startMachines();
     }
@@ -77,16 +74,18 @@ public class JavaFxMouseCommandMapper implements IsInputCommandMapper, AutoClose
 
     @NonNull
     @Override
-    public LinkedList<IsMouseCommand> popCreatedCommands() {
+    public LinkedList<IsMouseCommand<MouseEvent>> popCreatedCommands() {
         return mouseButtonEventFSMs.stream()
                 .flatMap(IsMouseButtonEventFSM::popBufferedCommands)
-                .sorted(Comparator.comparing(IsInputCommand::getNanos))
+                .sorted(Comparator.comparing(IsCommand::getNanos))
                 .collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override
     public void close() {
         mouseButtonEventFSMs.forEach(IsMouseButtonEventFSM::stop);
+        mouseButtonEventFSMs.clear();
+        unprocessedMouseEvents.clear();
     }
 
 }

@@ -1,11 +1,10 @@
-package com.recom.tacview.engine.input.command.mapper.mouse.fsm;
+package com.recom.tacview.engine.input.mapper.mousebutton.fsm;
 
 import com.recom.tacview.engine.input.NanoTimedEvent;
-import com.recom.tacview.engine.input.command.mouse.IsMouseCommand;
+import com.recom.tacview.engine.input.command.mousebutton.IsMouseCommand;
 import javafx.scene.input.MouseEvent;
 import lombok.NonNull;
 
-import java.util.LinkedList;
 import java.util.stream.Stream;
 
 public interface IsMouseButtonEventFSM {
@@ -20,10 +19,8 @@ public interface IsMouseButtonEventFSM {
 
     boolean hasBufferedCommands();
 
-//    void clearBufferedCommands();
-
     @NonNull
-    Stream<IsMouseCommand> popBufferedCommands();
+    Stream<IsMouseCommand<MouseEvent>> popBufferedCommands();
 
 
 }

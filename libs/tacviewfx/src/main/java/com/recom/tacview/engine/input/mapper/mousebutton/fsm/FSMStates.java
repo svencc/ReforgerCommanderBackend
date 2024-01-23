@@ -1,4 +1,4 @@
-package com.recom.tacview.engine.input.command.mapper.mouse.fsm;
+package com.recom.tacview.engine.input.mapper.mousebutton.fsm;
 
 enum FSMStates {
     NEW,

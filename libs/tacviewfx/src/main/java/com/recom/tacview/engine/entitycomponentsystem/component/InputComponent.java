@@ -1,6 +1,6 @@
 package com.recom.tacview.engine.entitycomponentsystem.component;
 
-import com.recom.tacview.engine.input.command.IsInputCommand;
+import com.recom.tacview.engine.input.command.IsCommand;
 import lombok.NonNull;
 
 public abstract class InputComponent extends ComponentTemplate implements HandlesInputCommand {
@@ -10,6 +10,6 @@ public abstract class InputComponent extends ComponentTemplate implements Handle
     }
 
     @Override
-    public abstract void handleInputCommand(@NonNull final IsInputCommand inputCommand);
+    public abstract void handleInputCommand(@NonNull final IsCommand inputCommand);
 
 }

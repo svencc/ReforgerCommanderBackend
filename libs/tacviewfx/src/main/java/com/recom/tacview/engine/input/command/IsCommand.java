@@ -4,7 +4,7 @@ import com.recom.tacview.engine.input.NanoTimedEvent;
 import javafx.scene.input.InputEvent;
 import lombok.NonNull;
 
-public interface IsInputCommand<T extends InputEvent> {
+public interface IsCommand<T extends InputEvent> {
 
     long getNanos();
 

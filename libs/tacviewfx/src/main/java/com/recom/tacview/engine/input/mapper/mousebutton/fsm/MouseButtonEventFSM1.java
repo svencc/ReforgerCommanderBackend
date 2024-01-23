@@ -1,9 +1,9 @@
-package com.recom.tacview.engine.input.command.mapper.mouse.fsm;
+package com.recom.tacview.engine.input.mapper.mousebutton.fsm;
 
 import com.recom.tacview.engine.input.NanoTimedEvent;
-import com.recom.tacview.engine.input.command.mouse.IsMouseCommand;
-import com.recom.tacview.engine.input.command.mouse.MouseButtonCommand;
-import com.recom.tacview.engine.input.command.mouse.MouseDragCommand;
+import com.recom.tacview.engine.input.command.mousebutton.IsMouseCommand;
+import com.recom.tacview.engine.input.command.mousebutton.MouseButtonCommand;
+import com.recom.tacview.engine.input.command.mousebutton.MouseDragCommand;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import lombok.NonNull;
@@ -13,9 +13,6 @@ import org.springframework.lang.Nullable;
 import java.time.Duration;
 import java.util.LinkedList;
 import java.util.stream.Stream;
-
-import static com.recom.tacview.engine.input.command.mapper.mouse.fsm.InputAlphabet.IDLEING;
-import static com.recom.tacview.engine.input.command.mapper.mouse.fsm.InputAlphabet.MOUSE_DRAGGING;
 
 @Slf4j
 public class MouseButtonEventFSM1 implements IsMouseButtonEventFSM {
@@ -38,7 +35,7 @@ public class MouseButtonEventFSM1 implements IsMouseButtonEventFSM {
     private NanoTimedEvent<MouseEvent> mouseDragOriginEventBuffer;
 
     @NonNull
-    private final LinkedList<IsMouseCommand> bufferedCommands = new LinkedList<>();
+    private final LinkedList<IsMouseCommand<MouseEvent>> bufferedCommands = new LinkedList<>();
 
 
     public MouseButtonEventFSM1(
@@ -77,8 +74,8 @@ public class MouseButtonEventFSM1 implements IsMouseButtonEventFSM {
 
     @NonNull
     @Override
-    public Stream<IsMouseCommand> popBufferedCommands() {
-        final LinkedList<IsMouseCommand> bufferedCommandsCopy = new LinkedList<>(bufferedCommands);
+    public Stream<IsMouseCommand<MouseEvent>> popBufferedCommands() {
+        final LinkedList<IsMouseCommand<MouseEvent>> bufferedCommandsCopy = new LinkedList<>(bufferedCommands);
         bufferedCommands.clear();
 
         return bufferedCommandsCopy.stream();
@@ -183,11 +180,11 @@ public class MouseButtonEventFSM1 implements IsMouseButtonEventFSM {
     @NonNull
     private InputAlphabet idleAlphabet(@Nullable final NanoTimedEvent<MouseEvent> nextEvent) {
         if (nextEvent == null) {
-            return IDLEING;
+            return InputAlphabet.IDLEING;
         } else if (nextEvent.getEvent().getEventType() == MouseEvent.MOUSE_PRESSED) {
             return InputAlphabet.MOUSE_PRESSED;
         } else {
-            return IDLEING;
+            return InputAlphabet.IDLEING;
         }
     }
 
@@ -205,20 +202,20 @@ public class MouseButtonEventFSM1 implements IsMouseButtonEventFSM {
         } else if (nextEvent != null && nextEvent.getEvent() instanceof MouseEvent && nextEvent.getEvent().getEventType() == MouseEvent.MOUSE_RELEASED) {
             return InputAlphabet.MOUSE_RELEASED;
         } else {
-            return IDLEING;
+            return InputAlphabet.IDLEING;
         }
     }
 
     @NonNull
     private InputAlphabet mouseDraggingAlphabet(@Nullable final NanoTimedEvent<MouseEvent> nextEvent) {
         if (nextEvent == null) {
-            return IDLEING;
+            return InputAlphabet.IDLEING;
         } else if (nextEvent != null && nextEvent.getEvent().getEventType() == MouseEvent.MOUSE_RELEASED) {
             return InputAlphabet.MOUSE_RELEASED;
         } else if (nextEvent != null && nextEvent.getEvent() instanceof MouseEvent && nextEvent.getEvent().getEventType() == MouseEvent.MOUSE_DRAGGED) {
-            return MOUSE_DRAGGING;
+            return InputAlphabet.MOUSE_DRAGGING;
         } else {
-            return IDLEING;
+            return InputAlphabet.IDLEING;
         }
     }
 

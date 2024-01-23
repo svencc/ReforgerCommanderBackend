@@ -1,17 +1,16 @@
-package com.recom.tacview.engine.input.command.mouse;
+package com.recom.tacview.engine.input.command.mousebutton;
 
 import com.recom.tacview.engine.input.NanoTimedEvent;
 import javafx.scene.input.MouseEvent;
 import lombok.Getter;
 import lombok.NonNull;
 
+@Getter
 public class MouseButtonCommand implements IsMouseCommand<MouseEvent> {
 
     @NonNull
-    private final NanoTimedEvent<MouseEvent> nanoTimedMouseEvent;
-    @Getter
+    private final NanoTimedEvent<MouseEvent> nanoTimedEvent;
     private final boolean doubleClick;
-    @Getter
     @NonNull
     private final MouseButton mouseButton;
 
@@ -29,12 +28,12 @@ public class MouseButtonCommand implements IsMouseCommand<MouseEvent> {
     }
 
     public MouseButtonCommand(
-            @NonNull final NanoTimedEvent<MouseEvent> nanoTimedMouseEvent,
+            @NonNull final NanoTimedEvent<MouseEvent> nanoTimedEvent,
             final boolean isDoubleClick
     ) {
-        this.nanoTimedMouseEvent = nanoTimedMouseEvent;
+        this.nanoTimedEvent = nanoTimedEvent;
         this.doubleClick = isDoubleClick;
-        this.mouseButton = determineMouseButton(nanoTimedMouseEvent.getEvent());
+        this.mouseButton = determineMouseButton(nanoTimedEvent.getEvent());
     }
 
     @NonNull
@@ -49,26 +48,17 @@ public class MouseButtonCommand implements IsMouseCommand<MouseEvent> {
 
     @Override
     public double getPositionX() {
-        return nanoTimedMouseEvent.getEvent().getX();
+        return nanoTimedEvent.getEvent().getX();
     }
 
     @Override
     public double getPositionY() {
-        return nanoTimedMouseEvent.getEvent().getY();
-    }
-
-    @NonNull
-    public NanoTimedEvent<MouseEvent> getNanoTimedEvent() {
-        nanoTimedMouseEvent.getEvent().getEventType();
-        nanoTimedMouseEvent.getEvent().getButton();
-
-
-        return nanoTimedMouseEvent;
+        return nanoTimedEvent.getEvent().getY();
     }
 
     @Override
     public long getNanos() {
-        return nanoTimedMouseEvent.getNanos();
+        return nanoTimedEvent.getNanos();
     }
 
 }
