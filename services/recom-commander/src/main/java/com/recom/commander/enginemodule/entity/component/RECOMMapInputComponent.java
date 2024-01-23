@@ -16,6 +16,8 @@ public class RECOMMapInputComponent extends InputComponent {
         if (inputCommand instanceof MouseButtonCommand) {
             final MouseButtonCommand mouseButtonCommand = (MouseButtonCommand) inputCommand;
             log.info("Mouse click command received: {} is doubleClick: {}", mouseButtonCommand.getMouseButton(), mouseButtonCommand.isDoubleClick());
+        } else {
+            log.info("Input command received: {}", inputCommand);
         }
     }
 }

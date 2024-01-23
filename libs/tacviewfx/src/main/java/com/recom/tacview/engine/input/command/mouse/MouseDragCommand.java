@@ -1,7 +1,6 @@
 package com.recom.tacview.engine.input.command.mouse;
 
 import com.recom.tacview.engine.input.NanoTimedEvent;
-import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import lombok.Getter;
 import lombok.NonNull;
@@ -10,7 +9,7 @@ public class MouseDragCommand implements IsMouseCommand {
 
     @Getter
     @NonNull
-    private final NanoTimedEvent<MouseDragEvent> nanoTimedMouseEvent;
+    private final NanoTimedEvent<MouseEvent> nanoTimedMouseEvent;
     @Getter
     private final boolean dragStart;
     private final boolean dragStop;
@@ -18,24 +17,29 @@ public class MouseDragCommand implements IsMouseCommand {
     @NonNull
     private final MouseButton mouseButton;
 
+    // send event with current x,y (/)
+    // radiant 0
+    // distance from source to current position 0
+    // vector from source to current position 0 0
+
 
     @NonNull
-    public static MouseDragCommand dragStartCommand(@NonNull final NanoTimedEvent<MouseDragEvent> nanoTimedMouseEvent) {
+    public static MouseDragCommand dragStartCommand(@NonNull final NanoTimedEvent<MouseEvent> nanoTimedMouseEvent) {
         return new MouseDragCommand(nanoTimedMouseEvent, true, false);
     }
 
     @NonNull
-    public static MouseDragCommand dragStopCommand(@NonNull final NanoTimedEvent<MouseDragEvent> nanoTimedMouseEvent) {
+    public static MouseDragCommand dragStopCommand(@NonNull final NanoTimedEvent<MouseEvent> nanoTimedMouseEvent) {
         return new MouseDragCommand(nanoTimedMouseEvent, false, true);
     }
 
     @NonNull
-    public static MouseDragCommand dragginCommand(@NonNull final NanoTimedEvent<MouseDragEvent> nanoTimedMouseEvent) {
+    public static MouseDragCommand dragginCommand(@NonNull final NanoTimedEvent<MouseEvent> nanoTimedMouseEvent) {
         return new MouseDragCommand(nanoTimedMouseEvent, false, false);
     }
 
     public MouseDragCommand(
-            @NonNull final NanoTimedEvent<MouseDragEvent> nanoTimedMouseEvent,
+            @NonNull final NanoTimedEvent<MouseEvent> nanoTimedMouseEvent,
             final boolean startMouseDrag,
             final boolean stopMouseDrag
     ) {
@@ -70,7 +74,7 @@ public class MouseDragCommand implements IsMouseCommand {
     }
 
     @NonNull
-    public NanoTimedEvent<MouseDragEvent> getNanoTimedMouseEvent() {
+    public NanoTimedEvent<MouseEvent> getNanoTimedMouseEvent() {
         nanoTimedMouseEvent.getEvent().getEventType();
         nanoTimedMouseEvent.getEvent().getButton();
 
