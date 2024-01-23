@@ -15,9 +15,8 @@ import org.springframework.stereotype.Component;
 public class RECOMMapInputComponent extends InputComponent {
 
     @Override
-    public void handleInputCommand(@NonNull IsCommand inputCommand) {
-        if (inputCommand instanceof MouseButtonCommand) {
-            final MouseButtonCommand mouseButtonCommand = (MouseButtonCommand) inputCommand;
+    public void handleInputCommand(@NonNull IsCommand<?> inputCommand) {
+        if (inputCommand instanceof MouseButtonCommand mouseButtonCommand) {
             log.info("MouseClickCommand received: {} (doubleClick: {})", mouseButtonCommand.getMouseButton(), mouseButtonCommand.isDoubleClick());
         } else {
             Event event = inputCommand.getNanoTimedEvent().getEvent();

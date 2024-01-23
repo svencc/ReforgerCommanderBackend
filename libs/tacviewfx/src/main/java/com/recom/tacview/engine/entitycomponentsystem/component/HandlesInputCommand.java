@@ -5,6 +5,6 @@ import lombok.NonNull;
 
 public interface HandlesInputCommand {
 
-    void handleInputCommand(@NonNull final IsCommand inputCommand);
+    void handleInputCommand(@NonNull final IsCommand<?> inputCommand);
 
 }
