@@ -18,7 +18,7 @@ public class RECOMMapInputComponent extends InputComponent {
     public void handleInputCommand(@NonNull IsCommand inputCommand) {
         if (inputCommand instanceof MouseButtonCommand) {
             final MouseButtonCommand mouseButtonCommand = (MouseButtonCommand) inputCommand;
-            log.info("Mouse click command received: {} is doubleClick: {}", mouseButtonCommand.getMouseButton(), mouseButtonCommand.isDoubleClick());
+            log.info("MouseClickCommand received: {} (doubleClick: {})", mouseButtonCommand.getMouseButton(), mouseButtonCommand.isDoubleClick());
         } else {
             Event event = inputCommand.getNanoTimedEvent().getEvent();
             if (event instanceof MouseEvent mouseEvent) {
