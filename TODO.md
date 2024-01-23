@@ -6,9 +6,9 @@
   * zooming
   * 
   * InputCommands (<-)
-    * MouseClick (/)
-    * MouseDrag (<--------------------)
-    * MouseWheel
+    * MouseClick  (/)
+    * MouseDrag   (/)
+    * MouseWheel  (<-)
     * Keyboard
     * PhysicsCore holds position in TransformComponent or Object
       * Transform is modified when moved!
