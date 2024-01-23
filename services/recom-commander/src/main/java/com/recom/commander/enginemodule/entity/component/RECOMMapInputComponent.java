@@ -21,16 +21,13 @@ public class RECOMMapInputComponent extends InputComponent {
             log.info("Mouse click command received: {} is doubleClick: {}", mouseButtonCommand.getMouseButton(), mouseButtonCommand.isDoubleClick());
         } else {
             Event event = inputCommand.getNanoTimedEvent().getEvent();
-            if (event instanceof javafx.scene.input.MouseEvent) {
-                final MouseEvent mouseEvent = (MouseEvent) event;
+            if (event instanceof MouseEvent mouseEvent) {
                 log.info("MouseCommand received: {} ({}) -> {}", inputCommand.getClass().getSimpleName(), mouseEvent.getButton(), inputCommand.getNanoTimedEvent().getEvent().getEventType());
-            } else if (event instanceof javafx.scene.input.ScrollEvent) {
-                final javafx.scene.input.ScrollEvent scrollEvent = (javafx.scene.input.ScrollEvent) event;
-                log.info("ScrollCommand received: {} ({}) -> {}", inputCommand.getClass().getSimpleName(), mapToScrollDirection(scrollEvent), inputCommand.getNanoTimedEvent().getEvent().getEventType());
+            } else if (event instanceof ScrollEvent scrollEvent) {
+                log.info("ScrollCommand received: {} ({})", inputCommand.getClass().getSimpleName(), mapToScrollDirection(scrollEvent));
             } else {
-                log.info("GenericInputCommand received: {}  -> {}", inputCommand.getClass().getSimpleName(), inputCommand.getNanoTimedEvent().getEvent().getEventType());
+                log.info("GenericInputCommand received: {} -> {}", inputCommand.getClass().getSimpleName(), inputCommand.getNanoTimedEvent().getEvent().getEventType());
             }
-
         }
     }
 
@@ -48,4 +45,5 @@ public class RECOMMapInputComponent extends InputComponent {
             return "NONE";
         }
     }
+
 }
