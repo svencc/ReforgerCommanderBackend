@@ -1,7 +1,14 @@
 package com.recom.tacview.engine.input.command;
 
-public interface IsInputCommand {
+import com.recom.tacview.engine.input.NanoTimedEvent;
+import javafx.scene.input.InputEvent;
+import lombok.NonNull;
+
+public interface IsInputCommand<T extends InputEvent> {
 
     long getNanos();
+
+    @NonNull
+    NanoTimedEvent<T> getNanoTimedEvent();
 
 }

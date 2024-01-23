@@ -5,7 +5,7 @@ import javafx.scene.input.MouseEvent;
 import lombok.Getter;
 import lombok.NonNull;
 
-public class MouseButtonCommand implements IsMouseCommand {
+public class MouseButtonCommand implements IsMouseCommand<MouseEvent> {
 
     @NonNull
     private final NanoTimedEvent<MouseEvent> nanoTimedMouseEvent;
@@ -58,7 +58,7 @@ public class MouseButtonCommand implements IsMouseCommand {
     }
 
     @NonNull
-    public NanoTimedEvent<MouseEvent> getNanoTimedMouseEvent() {
+    public NanoTimedEvent<MouseEvent> getNanoTimedEvent() {
         nanoTimedMouseEvent.getEvent().getEventType();
         nanoTimedMouseEvent.getEvent().getButton();
 

@@ -129,7 +129,7 @@ public class MouseButtonEventFSM1 implements IsMouseButtonEventFSM {
                         assert lastMouseEventBuffer.getEvent().getEventType().equals(MouseEvent.MOUSE_PRESSED);
 
                         mouseDragOriginEventBuffer = lastMouseEventBuffer;
-                        bufferedCommands.add(MouseDragCommand.dragStartCommand(mouseDragOriginEventBuffer.cast()));
+                        bufferedCommands.add(MouseDragCommand.dragStartCommand(mouseDragOriginEventBuffer));
                         currentMachineState = FSMStates.MOUSE_DRAGGING;
                     }
                     case IDLEING -> {
@@ -145,15 +145,17 @@ public class MouseButtonEventFSM1 implements IsMouseButtonEventFSM {
                         assert mouseDragOriginEventBuffer != null;
 
                         // emit last known mouse drag command
-                        bufferedCommands.add(MouseDragCommand.dragginCommand(lastMouseEventBuffer.cast()));
+                        bufferedCommands.add(MouseDragCommand.dragginCommand(lastMouseEventBuffer));
                     }
                     case MOUSE_DRAGGING -> {
                         assert nextEvent != null;
                         assert lastMouseEventBuffer != null;
+                        assert lastMouseEventBuffer.getEvent().getEventType() == MouseEvent.MOUSE_PRESSED || lastMouseEventBuffer.getEvent().getEventType() == MouseEvent.MOUSE_DRAGGED;
                         assert mouseDragOriginEventBuffer != null;
+                        assert mouseDragOriginEventBuffer.getEvent().getEventType() == MouseEvent.MOUSE_PRESSED;
 
                         lastMouseEventBuffer = nextEvent;
-                        bufferedCommands.add(MouseDragCommand.dragginCommand(lastMouseEventBuffer.cast()));
+                        bufferedCommands.add(MouseDragCommand.dragginCommand(lastMouseEventBuffer));
                     }
                     case MOUSE_RELEASED -> {
                         assert nextEvent != null;
@@ -161,7 +163,7 @@ public class MouseButtonEventFSM1 implements IsMouseButtonEventFSM {
                         assert lastMouseEventBuffer != null;
                         assert mouseDragOriginEventBuffer != null;
 
-                        bufferedCommands.add(MouseDragCommand.dragStopCommand(nextEvent.cast()));
+                        bufferedCommands.add(MouseDragCommand.dragStopCommand(nextEvent));
                         lastMouseEventBuffer = null;
                         mouseDragOriginEventBuffer = null;
                         currentMachineState = FSMStates.IDLE;
