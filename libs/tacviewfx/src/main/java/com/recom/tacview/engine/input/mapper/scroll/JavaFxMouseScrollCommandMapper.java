@@ -1,7 +1,7 @@
 package com.recom.tacview.engine.input.mapper.scroll;
 
 import com.recom.tacview.engine.input.NanoTimedEvent;
-import com.recom.tacview.engine.input.command.ScrollCommand;
+import com.recom.tacview.engine.input.command.scroll.ScrollCommand;
 import com.recom.tacview.engine.input.mapper.IsInputCommandMapper;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.ScrollEvent;

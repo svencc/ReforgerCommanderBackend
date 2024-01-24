@@ -3,6 +3,7 @@ package com.recom.tacview.engine;
 import com.recom.tacview.engine.graphics.ScreenComposer;
 import com.recom.tacview.engine.input.GenericFXInputEventListener;
 import com.recom.tacview.engine.input.InputManager;
+import com.recom.tacview.engine.input.mapper.keyboard.JavaFxKeyboardCommandMapper;
 import com.recom.tacview.engine.input.mapper.mousebutton.JavaFxMouseButtonCommandMapper;
 import com.recom.tacview.engine.input.mapper.scroll.JavaFxMouseScrollCommandMapper;
 import com.recom.tacview.engine.module.EngineModule;
@@ -78,6 +79,7 @@ public class TacViewer extends Canvas {
         this.setEventHandler(InputEvent.ANY, this.genericFXInputEventListener);
         this.inputManager.registerCommandMapper(new JavaFxMouseButtonCommandMapper());
         this.inputManager.registerCommandMapper(new JavaFxMouseScrollCommandMapper());
+        this.inputManager.registerCommandMapper(new JavaFxKeyboardCommandMapper());
     }
 
     @NonNull

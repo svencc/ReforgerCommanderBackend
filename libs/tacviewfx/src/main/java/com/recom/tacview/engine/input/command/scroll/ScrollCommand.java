@@ -1,6 +1,7 @@
-package com.recom.tacview.engine.input.command;
+package com.recom.tacview.engine.input.command.scroll;
 
 import com.recom.tacview.engine.input.NanoTimedEvent;
+import com.recom.tacview.engine.input.command.IsCommand;
 import javafx.scene.input.ScrollEvent;
 import lombok.Getter;
 import lombok.NonNull;

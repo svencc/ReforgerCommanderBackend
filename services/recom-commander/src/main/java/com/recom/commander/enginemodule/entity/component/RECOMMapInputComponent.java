@@ -2,9 +2,10 @@ package com.recom.commander.enginemodule.entity.component;
 
 import com.recom.tacview.engine.entitycomponentsystem.component.InputComponent;
 import com.recom.tacview.engine.input.command.IsCommand;
+import com.recom.tacview.engine.input.command.keyboard.KeyboardCommand;
 import com.recom.tacview.engine.input.command.mousebutton.MouseButtonCommand;
-import javafx.event.Event;
-import javafx.scene.input.MouseEvent;
+import com.recom.tacview.engine.input.command.mousebutton.MouseDragCommand;
+import com.recom.tacview.engine.input.command.scroll.ScrollCommand;
 import javafx.scene.input.ScrollEvent;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -17,16 +18,15 @@ public class RECOMMapInputComponent extends InputComponent {
     @Override
     public void handleInputCommand(@NonNull IsCommand<?> inputCommand) {
         if (inputCommand instanceof MouseButtonCommand mouseButtonCommand) {
-            log.info("MouseClickCommand received: {} (doubleClick: {})", mouseButtonCommand.getMouseButton(), mouseButtonCommand.isDoubleClick());
+            log.info("MouseButtonCommand received: {} (doubleClick: {})", mouseButtonCommand.getMouseButton(), mouseButtonCommand.isDoubleClick());
+        } else if (inputCommand instanceof MouseDragCommand mouseDragCommand) {
+            log.info("MouseDragCommand received: {} ({})", mouseDragCommand.getMouseButton(), inputCommand.getNanoTimedEvent().getEvent().getEventType());
+        } else if (inputCommand instanceof ScrollCommand scrollCommand) {
+            log.info("ScrollCommand received: {} ({})", inputCommand.getClass().getSimpleName(), mapToScrollDirection(scrollCommand.getNanoTimedEvent().getEvent()));
+        } else if (inputCommand instanceof KeyboardCommand keyboardCommand) {
+            log.info("KeyboardCommand received: {} ({})", keyboardCommand.getNanoTimedEvent().getEvent().getEventType(), keyboardCommand.getNanoTimedEvent().getEvent().getCode());
         } else {
-            Event event = inputCommand.getNanoTimedEvent().getEvent();
-            if (event instanceof MouseEvent mouseEvent) {
-                log.info("MouseCommand received: {} ({}) -> {}", inputCommand.getClass().getSimpleName(), mouseEvent.getButton(), inputCommand.getNanoTimedEvent().getEvent().getEventType());
-            } else if (event instanceof ScrollEvent scrollEvent) {
-                log.info("ScrollCommand received: {} ({})", inputCommand.getClass().getSimpleName(), mapToScrollDirection(scrollEvent));
-            } else {
-                log.info("GenericInputCommand received: {} -> {}", inputCommand.getClass().getSimpleName(), inputCommand.getNanoTimedEvent().getEvent().getEventType());
-            }
+            log.info("GenericInputCommand received: {} -> {}", inputCommand.getClass().getSimpleName(), inputCommand.getNanoTimedEvent().getEvent().getEventType());
         }
     }
 

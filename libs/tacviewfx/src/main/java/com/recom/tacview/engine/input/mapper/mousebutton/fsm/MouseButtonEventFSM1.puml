@@ -2,7 +2,7 @@
 
 header  RECOM Tacviewer
 title   Mouse Button Event FSM v1.0
-caption Each mouse button has its own state machine
+caption (i) Each mouse button has its own state machine
 footer  RECOM.one
 
 
