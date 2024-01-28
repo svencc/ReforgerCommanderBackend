@@ -4,8 +4,14 @@
 * new InputComponent interacting with MapComponent
   * panning (/)
   * zooming (<-)
-  * 
-
+* physic engine
+  * apply force (component vectors)
+  * breaking / loosing speed
+* add sortable physics modifier components
+ * (gravity)
+ * loosing movement speed to zero
+ * ...
+ * 
 * NULLImplementations -> Optionals ...
 * 
 * dynamic changeable render properties!
