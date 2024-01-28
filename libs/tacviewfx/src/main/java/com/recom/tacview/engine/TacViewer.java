@@ -39,7 +39,7 @@ public class TacViewer extends Canvas {
 
 
     @NonNull
-    private final CanvasBufferSwapCommand canvasBuffer;
+    private final SwappableCanvasBuffer canvasBuffer;
     @NonNull
     private final AnimationTimer animationTimerLoop;
 
@@ -66,7 +66,9 @@ public class TacViewer extends Canvas {
         this.genericFXInputEventListener = genericFXInputEventListener;
         this.inputManager = inputManager;
 
-        this.canvasBuffer = new CanvasBufferSwapCommand(this, rendererProperties, screenComposer);
+//        this.setScaleX(2);
+//        this.setScaleY(2);
+        this.canvasBuffer = new SwappableCanvasBuffer(this, rendererProperties, screenComposer);
         this.profiler = new TacViewerProfiler(profilerProvider);
         this.profiler.startProfiling();
 

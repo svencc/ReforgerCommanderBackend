@@ -29,6 +29,7 @@ public class Entity implements IsEntity {
     @Override
     public void addComponent(@NonNull final IsComponent component) {
         components.add(component);
+        component.setEntity(this);
         components.sort(Comparator.comparing(IsComponent::getComponentProcessingOrder));
         reIndexComponents();
     }
@@ -50,6 +51,7 @@ public class Entity implements IsEntity {
     @Override
     public void removeComponent(@NonNull final IsComponent component) {
         components.remove(component);
+        component.setEntity(NullEntity.INSTANCE);
         reIndexComponents();
     }
 

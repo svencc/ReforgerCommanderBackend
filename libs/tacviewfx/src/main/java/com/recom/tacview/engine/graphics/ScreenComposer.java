@@ -39,7 +39,7 @@ public class ScreenComposer implements IsComposable {
         } else {
             pixelRingBuffer.next();
             pixelRingBuffer.getPixelBuffer().clearBuffer();
-            renderLayerPipelineInParallel(environment.getRenderPipeline());
+            renderLayersInParallel(environment.getRenderPipeline());
             environment.getRenderPipeline().getLayers().forEach(layer -> {
                 layer.mergeBufferWith(pixelRingBuffer.getPixelBuffer(), 0, 0);
                 layer.dispose();
@@ -51,7 +51,7 @@ public class ScreenComposer implements IsComposable {
         }
     }
 
-    private void renderLayerPipelineInParallel(@NonNull final IsRenderPipeline renderPipeline) {
+    private void renderLayersInParallel(@NonNull final IsRenderPipeline renderPipeline) {
         final CountDownLatch latch = new CountDownLatch(renderPipeline.getLayers().size());
         for (final MergeableComponentLayer mergeableLayer : renderPipeline.getLayers()) {
             renderExecutorService.execute(() -> {

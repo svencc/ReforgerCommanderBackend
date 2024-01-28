@@ -8,13 +8,13 @@
   * InputCommands (<-)
     * MouseClick  (/)
     * MouseDrag   (/)
-    * MouseWheel  (<-)
-    * Keyboard
-    * PhysicsCore holds position in TransformComponent or Object
+    * MouseWheel  (/)
+    * Keyboard    (/)
+    * PhysicsCore holds position in TransformComponent or Object (<-)
       * Transform is modified when moved!
 
-* 
 * NULLImplementations -> Optionals ...
+* 
 * dynamic changeable render properties!
 * optimize Layers so that they must not be reinstantiated every time on update. Reuse layers and remove/extend entities on update
 * 

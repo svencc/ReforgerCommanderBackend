@@ -1,5 +1,7 @@
 package com.recom.tacview.engine.renderables.mergeable;
 
+import com.recom.tacview.engine.entitycomponentsystem.component.ComponentType;
+import com.recom.tacview.engine.entitycomponentsystem.component.PhysicCoreComponent;
 import com.recom.tacview.engine.entitycomponentsystem.component.RenderableComponent;
 import com.recom.tacview.engine.entitycomponentsystem.environment.IsEnvironment;
 import lombok.Getter;
@@ -7,6 +9,7 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 
@@ -48,12 +51,19 @@ public class MergeableComponentLayer extends BufferedMergeableTemplate implement
         for (final RenderableComponent component : components) {
             int offsetX = 0;
             int offsetY = 0;
+
+            final Optional<PhysicCoreComponent> maybePhysicCoreComponent = component.getEntity().locateComponent(ComponentType.PhysicsCoreComponent);
+            if (maybePhysicCoreComponent.isPresent()) {
+                offsetX = (int) maybePhysicCoreComponent.get().getPositionX();
+                offsetY = (int) maybePhysicCoreComponent.get().getPositionY();
+            }
+
             environment.getRenderProvider().provide().render(component.getPixelBuffer(), this.getPixelBuffer(), offsetX, offsetY);
         }
 
-        // @TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+        // @TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         // @TODO da müssen jetzt camera position und entity/physic_component_core position mit rein
-        // @TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+        // @TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     }
 
     private void prepareComponentBufferInParallel(@NonNull final List<RenderableComponent> renderableComponents) {

@@ -69,7 +69,7 @@ public abstract class BufferedMergeableTemplate implements IsMergeable, HasPixel
 
     @Override
     public void prepareBuffer() {
-
+        this.pixelBuffer.clearBuffer();
     }
 
     @Override
