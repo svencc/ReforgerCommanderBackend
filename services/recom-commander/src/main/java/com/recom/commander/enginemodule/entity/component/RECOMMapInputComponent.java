@@ -25,16 +25,16 @@ public class RECOMMapInputComponent extends InputComponent {
             case KeyboardCommand keyboardCommand -> {
                 this.getEntity().<PhysicCoreComponent>locateComponent(ComponentType.PhysicsCoreComponent).ifPresent(physicsCoreComponent -> {
                     if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.LEFT)) {
-                        physicsCoreComponent.setPositionX(physicsCoreComponent.getPositionX() + 5f);
+                        physicsCoreComponent.setPositionX(physicsCoreComponent.getPositionX() + 10f);
                         this.getEntity().<RenderableComponent>locateComponent(ComponentType.RenderableComponent).ifPresent(RenderableComponent::propagateDirtyStateToParent);
                     } else if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.RIGHT)) {
-                        physicsCoreComponent.setPositionX(physicsCoreComponent.getPositionX() - 5f);
+                        physicsCoreComponent.setPositionX(physicsCoreComponent.getPositionX() - 10f);
                         this.getEntity().<RenderableComponent>locateComponent(ComponentType.RenderableComponent).ifPresent(RenderableComponent::propagateDirtyStateToParent);
                     } else if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.UP)) {
-                        physicsCoreComponent.setPositionY(physicsCoreComponent.getPositionY() + 5f);
+                        physicsCoreComponent.setPositionY(physicsCoreComponent.getPositionY() + 10f);
                         this.getEntity().<RenderableComponent>locateComponent(ComponentType.RenderableComponent).ifPresent(RenderableComponent::propagateDirtyStateToParent);
                     } else if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.DOWN)) {
-                        physicsCoreComponent.setPositionY(physicsCoreComponent.getPositionY() - 5f);
+                        physicsCoreComponent.setPositionY(physicsCoreComponent.getPositionY() - 10f);
                         this.getEntity().<RenderableComponent>locateComponent(ComponentType.RenderableComponent).ifPresent(RenderableComponent::propagateDirtyStateToParent);
                     }
                 });

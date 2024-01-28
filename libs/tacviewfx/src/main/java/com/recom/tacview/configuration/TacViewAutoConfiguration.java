@@ -22,7 +22,8 @@ public class TacViewAutoConfiguration {
                 .height(480)
                 .scale(1)
                 .parallelizedRendering(true)
-                .threadPoolSize(8)
+                .renderFragments(4)
+                .threadPoolSize(-1)
                 .composer(composerProperties)
                 .targetFps(60)
                 .build();

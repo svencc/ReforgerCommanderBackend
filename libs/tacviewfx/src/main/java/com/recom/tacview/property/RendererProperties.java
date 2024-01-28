@@ -18,6 +18,7 @@ public class RendererProperties {
     private int height;
     private int scale;
     private boolean parallelizedRendering;
+    private int renderFragments;
     private int threadPoolSize;
     private int targetFps;
     private long framesThresholdNanoTime = 0;
