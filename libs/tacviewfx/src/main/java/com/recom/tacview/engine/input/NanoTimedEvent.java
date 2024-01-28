@@ -26,4 +26,9 @@ public class NanoTimedEvent<EVENT_TYPE extends Event> {
         return new NanoTimedEvent<T>(timestamp, event);
     }
 
+    @SuppressWarnings("unchecked")
+    public <TARGET extends Event> NanoTimedEvent<TARGET> cast() {
+        return new NanoTimedEvent<>(this.getNanos(), (TARGET) this.getEvent());
+    }
+
 }

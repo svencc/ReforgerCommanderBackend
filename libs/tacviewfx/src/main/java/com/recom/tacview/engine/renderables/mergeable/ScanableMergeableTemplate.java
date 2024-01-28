@@ -1,14 +1,14 @@
 package com.recom.tacview.engine.renderables.mergeable;
 
-import com.recom.tacview.engine.graphics.Scanable;
-import com.recom.tacview.engine.renderables.Mergeable;
+import com.recom.tacview.engine.graphics.IsScanable;
+import com.recom.tacview.engine.renderables.IsMergeable;
 import com.recom.tacview.engine.units.PixelDimension;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public abstract class ScanableMergeableTemplate implements Scanable, Mergeable {
+public abstract class ScanableMergeableTemplate implements IsScanable, IsMergeable {
 
     @Getter
     @NonNull

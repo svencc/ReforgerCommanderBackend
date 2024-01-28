@@ -7,7 +7,7 @@ import com.recom.commander.property.SpringApplicationProperties;
 import com.recom.tacview.engine.TacViewer;
 import com.recom.tacview.engine.graphics.ScreenComposer;
 import com.recom.tacview.engine.input.InputManager;
-import com.recom.tacview.engine.input.GenericInputEventListener;
+import com.recom.tacview.engine.input.GenericFXInputEventListener;
 import com.recom.tacview.engine.module.EngineModule;
 import com.recom.tacview.property.RendererProperties;
 import com.recom.tacview.property.TickProperties;
@@ -49,7 +49,7 @@ public class TacViewStageInitializer {
     @NonNull
     private final EngineModule engineModule;
     @NonNull
-    private final GenericInputEventListener genericInputEventListener;
+    private final GenericFXInputEventListener genericFXInputEventListener;
     @NonNull
     private final InputManager inputManager;
 
@@ -79,7 +79,7 @@ public class TacViewStageInitializer {
                 profilerProvider,
                 screenComposer,
                 engineModule,
-                genericInputEventListener,
+                genericFXInputEventListener,
                 inputManager
         );
         root.setCenter(tacViewer);

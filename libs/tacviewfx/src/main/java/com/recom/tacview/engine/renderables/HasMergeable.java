@@ -5,6 +5,6 @@ import lombok.NonNull;
 public interface HasMergeable {
 
     @NonNull
-    Mergeable getMergeable();
+    IsMergeable getMergeable();
 
 }

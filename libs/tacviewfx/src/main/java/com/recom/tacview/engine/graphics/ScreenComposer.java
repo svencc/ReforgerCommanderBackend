@@ -16,7 +16,7 @@ import java.util.concurrent.ExecutorService;
 
 @Slf4j
 @Component
-public class ScreenComposer implements Composable {
+public class ScreenComposer implements IsComposable {
 
     @NonNull
     private final ExecutorService renderExecutorService;
@@ -39,7 +39,7 @@ public class ScreenComposer implements Composable {
         } else {
             pixelRingBuffer.next();
             pixelRingBuffer.getPixelBuffer().clearBuffer();
-            renderLayerPipelineInParallel(environment.getRenderPipeline());
+            renderLayersInParallel(environment.getRenderPipeline());
             environment.getRenderPipeline().getLayers().forEach(layer -> {
                 layer.mergeBufferWith(pixelRingBuffer.getPixelBuffer(), 0, 0);
                 layer.dispose();
@@ -51,7 +51,7 @@ public class ScreenComposer implements Composable {
         }
     }
 
-    private void renderLayerPipelineInParallel(@NonNull final IsRenderPipeline renderPipeline) {
+    private void renderLayersInParallel(@NonNull final IsRenderPipeline renderPipeline) {
         final CountDownLatch latch = new CountDownLatch(renderPipeline.getLayers().size());
         for (final MergeableComponentLayer mergeableLayer : renderPipeline.getLayers()) {
             renderExecutorService.execute(() -> {

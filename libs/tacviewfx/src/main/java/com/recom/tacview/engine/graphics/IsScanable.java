@@ -3,7 +3,7 @@ package com.recom.tacview.engine.graphics;
 
 import com.recom.tacview.engine.units.PixelDimension;
 
-public interface Scanable {
+public interface IsScanable {
 
     PixelDimension getDimension();
 

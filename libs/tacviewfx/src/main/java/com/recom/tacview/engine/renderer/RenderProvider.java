@@ -1,6 +1,6 @@
 package com.recom.tacview.engine.renderer;
 
-import com.recom.tacview.engine.graphics.Renderable;
+import com.recom.tacview.engine.graphics.IsRenderable;
 import com.recom.tacview.property.RendererProperties;
 import com.recom.tacview.service.RendererExecutorProvider;
 import com.recom.tacview.service.argb.ARGBCalculatorProvider;
@@ -20,9 +20,9 @@ public final class RenderProvider {
     @NonNull
     private final ARGBCalculatorProvider argbCalculatorProvider;
     @Nullable
-    private Renderable instance;
+    private IsRenderable instance;
 
-    public Renderable provide() {
+    public IsRenderable provide() {
         if (instance == null) {
             if (rendererProperties.isParallelizedRendering()) {
                 instance = new MultithreadedSoftwareRenderer(rendererExecutorProvider, argbCalculatorProvider);

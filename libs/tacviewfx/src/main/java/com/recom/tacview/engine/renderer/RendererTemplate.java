@@ -1,16 +1,16 @@
 package com.recom.tacview.engine.renderer;
 
-import com.recom.tacview.engine.graphics.Bufferable;
-import com.recom.tacview.engine.graphics.Renderable;
-import com.recom.tacview.engine.graphics.Scanable;
+import com.recom.tacview.engine.graphics.IsBufferable;
+import com.recom.tacview.engine.graphics.IsRenderable;
+import com.recom.tacview.engine.graphics.IsScanable;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
-import com.recom.tacview.engine.renderables.Mergeable;
+import com.recom.tacview.engine.renderables.IsMergeable;
 import com.recom.tacview.service.argb.ARGBCalculatorProvider;
 import lombok.NonNull;
 import org.springframework.stereotype.Component;
 
 @Component
-abstract class RendererTemplate implements Renderable {
+abstract class RendererTemplate implements IsRenderable {
 
     @NonNull
     protected final ARGBCalculatorProvider argbCalculatorProvider;
@@ -20,8 +20,8 @@ abstract class RendererTemplate implements Renderable {
     }
 
     public void render(
-            @NonNull final Scanable source,
-            @NonNull final Bufferable target,
+            @NonNull final IsScanable source,
+            @NonNull final IsBufferable target,
             final int xOffset,
             final int yOffset
     ) {
@@ -52,7 +52,7 @@ abstract class RendererTemplate implements Renderable {
 
     @Override
     public void renderMergeable(
-            @NonNull final Mergeable source,
+            @NonNull final IsMergeable source,
             @NonNull final PixelBuffer targetBuffer,
             final int xOffset,
             final int yOffset
@@ -62,8 +62,8 @@ abstract class RendererTemplate implements Renderable {
 
     @Override
     public void renderMergeable(
-            @NonNull final Mergeable source,
-            @NonNull final Bufferable target,
+            @NonNull final IsMergeable source,
+            @NonNull final IsBufferable target,
             final int xOffset,
             final int yOffset
     ) {
@@ -72,7 +72,7 @@ abstract class RendererTemplate implements Renderable {
 
     @Override
     public void setPixelAt(
-            @NonNull final Bufferable target,
+            @NonNull final IsBufferable target,
             final int x,
             final int y,
             final int newPixelValue

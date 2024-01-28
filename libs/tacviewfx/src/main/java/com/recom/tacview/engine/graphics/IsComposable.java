@@ -4,7 +4,7 @@ import com.recom.tacview.engine.entitycomponentsystem.environment.Environment;
 import com.recom.tacview.engine.renderables.HasPixelBuffer;
 import lombok.NonNull;
 
-public interface Composable extends HasPixelBuffer {
+public interface IsComposable extends HasPixelBuffer {
 
     int compose(@NonNull final Environment environment);
 

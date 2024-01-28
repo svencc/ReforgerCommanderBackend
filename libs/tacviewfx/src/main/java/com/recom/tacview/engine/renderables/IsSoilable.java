@@ -1,6 +1,6 @@
 package com.recom.tacview.engine.renderables;
 
-public interface Soilable {
+public interface IsSoilable {
 
     boolean isDirty();
 

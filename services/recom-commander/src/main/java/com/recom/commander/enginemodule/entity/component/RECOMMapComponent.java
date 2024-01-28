@@ -77,7 +77,6 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
 
             final PixelBuffer pixelBuffer = new PixelBuffer(dimension, pixelBufferArray);
             this.pixelBuffer = pixelBuffer;
-            log.debug("Set pixel buffer in {}", getClass().getSimpleName());
             propagateDirtyStateToParent();
         };
     }

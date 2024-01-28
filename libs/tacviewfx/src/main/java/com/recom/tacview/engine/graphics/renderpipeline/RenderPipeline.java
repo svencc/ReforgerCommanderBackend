@@ -40,18 +40,19 @@ public class RenderPipeline implements IsRenderPipeline {
 
     @NonNull
     private List<MergeableComponentLayer> createMergeableComponentLayers() {
-        return getRenderableComponentsFromEnvironment().entrySet().stream()
+        return provideRenderableComponentsFromRegisteredEntities().entrySet().stream()
                 .map(entrySet -> new MergeableComponentLayer(environment, entrySet.getKey(), entrySet.getValue()))
                 .toList();
     }
 
     @NonNull
-    private Map<Integer, List<RenderableComponent>> getRenderableComponentsFromEnvironment() {
+    private Map<Integer, List<RenderableComponent>> provideRenderableComponentsFromRegisteredEntities() {
         if (isDirty()) {
             renderableComponentList.clear();
             renderableComponentList.putAll(environment.getEntities().stream()
                     .flatMap(entity -> entity.<RenderableComponent>locateComponents(ComponentType.RenderableComponent).stream())
-                    .collect(Collectors.groupingBy(RenderableComponent::getZIndex)));
+                    .collect(Collectors.groupingBy(RenderableComponent::getZIndex))
+            );
             setDirty(true);
         }
 

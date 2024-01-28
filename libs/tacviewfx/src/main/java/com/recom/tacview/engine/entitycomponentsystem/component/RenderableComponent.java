@@ -53,4 +53,5 @@ public abstract class RenderableComponent extends ComponentTemplate implements H
     public void prepareBuffer() {
 
     }
+
 }

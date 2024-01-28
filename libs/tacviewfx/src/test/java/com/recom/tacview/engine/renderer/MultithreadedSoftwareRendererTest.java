@@ -1,6 +1,6 @@
 package com.recom.tacview.engine.renderer;
 
-import com.recom.tacview.engine.graphics.Scanable;
+import com.recom.tacview.engine.graphics.IsScanable;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
 import com.recom.tacview.engine.renderables.sprite.SpriteAtlas;
 import com.recom.tacview.engine.units.PixelDimension;
@@ -61,7 +61,7 @@ class MultithreadedSoftwareRendererTest {
         sourceBuffer.fillBuffer(sourceBufferContent);
 
         // EXECUTE
-        rendererToTest.render((Scanable) sourceBuffer, targetBuffer, 0, 0);
+        rendererToTest.render((IsScanable) sourceBuffer, targetBuffer, 0, 0);
 
         // ASSERT
         assertEquals(sourceBufferContent, targetBuffer.scanPixelAt(0, 0));
@@ -79,7 +79,7 @@ class MultithreadedSoftwareRendererTest {
         sourceBuffer.fillBuffer(sourceBufferContent);
 
         // EXECUTE
-        rendererToTest.render((Scanable) sourceBuffer, targetBuffer, 1, 1);
+        rendererToTest.render((IsScanable) sourceBuffer, targetBuffer, 1, 1);
 
         // ASSERT
         assertEquals(0, targetBuffer.scanPixelAt(0, 0));
@@ -97,7 +97,7 @@ class MultithreadedSoftwareRendererTest {
         sourceBuffer.fillBuffer(sourceBufferContent);
 
         // EXECUTE
-        rendererToTest.render((Scanable) sourceBuffer, targetBuffer, -1, -1);
+        rendererToTest.render((IsScanable) sourceBuffer, targetBuffer, -1, -1);
 
         // ASSERT
         assertEquals(sourceBufferContent, targetBuffer.scanPixelAt(0, 0));

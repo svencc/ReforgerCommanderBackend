@@ -1,6 +1,6 @@
 package com.recom.tacview.engine.entitycomponentsystem.entity;
 
-import com.recom.tacview.engine.Updatable;
+import com.recom.tacview.engine.IsUpdatable;
 import com.recom.tacview.engine.entitycomponentsystem.component.ComponentType;
 import com.recom.tacview.engine.entitycomponentsystem.component.IsComponent;
 import com.recom.tacview.engine.entitycomponentsystem.environment.IsEnvironment;
@@ -29,6 +29,7 @@ public class Entity implements IsEntity {
     @Override
     public void addComponent(@NonNull final IsComponent component) {
         components.add(component);
+        component.setEntity(this);
         components.sort(Comparator.comparing(IsComponent::getComponentProcessingOrder));
         reIndexComponents();
     }
@@ -50,6 +51,7 @@ public class Entity implements IsEntity {
     @Override
     public void removeComponent(@NonNull final IsComponent component) {
         components.remove(component);
+        component.setEntity(NullEntity.INSTANCE);
         reIndexComponents();
     }
 
@@ -83,7 +85,7 @@ public class Entity implements IsEntity {
 
     @Override
     public void update(final long elapsedNanoTime) {
-        for (@NonNull final Updatable component : components) {
+        for (@NonNull final IsUpdatable component : components) {
             component.update(elapsedNanoTime);
         }
     }

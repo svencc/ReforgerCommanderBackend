@@ -1,7 +1,7 @@
 package com.recom.tacview.engine.renderer;
 
-import com.recom.tacview.engine.graphics.Bufferable;
-import com.recom.tacview.engine.graphics.Scanable;
+import com.recom.tacview.engine.graphics.IsBufferable;
+import com.recom.tacview.engine.graphics.IsScanable;
 import com.recom.tacview.service.RendererExecutorProvider;
 import com.recom.tacview.service.argb.ARGBCalculatorProvider;
 import lombok.NonNull;
@@ -29,8 +29,8 @@ class MultithreadedSoftwareRenderer extends RendererTemplate {
 
     @Override
     public void render(
-            @NonNull final Scanable source,
-            @NonNull final Bufferable target,
+            @NonNull final IsScanable source,
+            @NonNull final IsBufferable target,
             final int xOffset,
             final int yOffset
     ) {
