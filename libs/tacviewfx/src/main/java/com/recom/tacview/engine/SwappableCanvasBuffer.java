@@ -3,6 +3,7 @@ package com.recom.tacview.engine;
 import com.recom.tacview.engine.graphics.ScreenComposer;
 import com.recom.tacview.property.RendererProperties;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.PixelBuffer;
 import javafx.scene.image.PixelFormat;
 import javafx.scene.image.WritableImage;
@@ -52,7 +53,9 @@ public class SwappableCanvasBuffer {
             pixelBuffer.getBuffer().put(screenComposer.getPixelBuffer().directBufferAccess());
             pixelBuffer.getBuffer().flip();
             pixelBuffer.updateBuffer(__ -> null);
-            canvas.getGraphicsContext2D().drawImage(img, 0, 0);
+
+            final GraphicsContext graphicsContext2D = canvas.getGraphicsContext2D();
+            graphicsContext2D.drawImage(img, 0, 0, canvas.getWidth(), canvas.getHeight());
         }
     }
 

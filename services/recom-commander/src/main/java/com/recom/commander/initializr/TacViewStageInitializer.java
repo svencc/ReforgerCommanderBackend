@@ -84,7 +84,7 @@ public class TacViewStageInitializer {
         );
         root.setCenter(tacViewer);
 
-        final Scene scene = new Scene(root, rendererProperties.getWidth(), rendererProperties.getHeight());
+        final Scene scene = new Scene(root, rendererProperties.getScaledWindowWidth(), rendererProperties.getScaledWindowHeight());
         stage.setTitle(springApplicationProperties.getName());
 
 //        final Window window = stage.getOwner();

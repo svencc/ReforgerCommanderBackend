@@ -20,6 +20,7 @@ public class TacViewAutoConfiguration {
         return RendererProperties.builder()
                 .width(640)
                 .height(480)
+                .scale(1)
                 .parallelizedRendering(true)
                 .threadPoolSize(8)
                 .composer(composerProperties)

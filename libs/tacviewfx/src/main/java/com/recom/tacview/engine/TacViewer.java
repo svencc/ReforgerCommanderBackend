@@ -58,7 +58,7 @@ public class TacViewer extends Canvas {
             @NonNull final GenericFXInputEventListener genericFXInputEventListener,
             @NonNull final InputManager inputManager
     ) {
-        super(rendererProperties.getWidth(), rendererProperties.getHeight());
+        super(rendererProperties.getScaledWindowWidth(), rendererProperties.getScaledWindowHeight());
         this.rendererProperties = rendererProperties;
         this.tickProperties = tickProperties;
         this.screenComposer = screenComposer;
@@ -66,8 +66,6 @@ public class TacViewer extends Canvas {
         this.genericFXInputEventListener = genericFXInputEventListener;
         this.inputManager = inputManager;
 
-//        this.setScaleX(2);
-//        this.setScaleY(2);
         this.canvasBuffer = new SwappableCanvasBuffer(this, rendererProperties, screenComposer);
         this.profiler = new TacViewerProfiler(profilerProvider);
         this.profiler.startProfiling();

@@ -16,6 +16,7 @@ public class RendererProperties {
     private static PixelDimension singletonPixelDimension = null;
     private int width;
     private int height;
+    private int scale;
     private boolean parallelizedRendering;
     private int threadPoolSize;
     private int targetFps;
@@ -37,6 +38,14 @@ public class RendererProperties {
         }
 
         return framesThresholdNanoTime;
+    }
+
+    public int getScaledWindowWidth() {
+        return width * scale;
+    }
+
+    public int getScaledWindowHeight() {
+        return height * scale;
     }
 
 }
