@@ -24,4 +24,12 @@ public class PhysicCoreComponent extends ComponentTemplate {
         super(ComponentType.PhysicsCoreComponent);
     }
 
+    public void addVelocityXComponent(final double velocityXComponent) {
+        this.velocityXComponent += velocityXComponent;
+    }
+
+    public void addVelocityYComponent(final double velocityYComponent) {
+        this.velocityYComponent += velocityYComponent;
+    }
+
 }

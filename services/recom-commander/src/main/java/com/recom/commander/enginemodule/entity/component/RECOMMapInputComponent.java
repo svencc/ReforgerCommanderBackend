@@ -3,7 +3,6 @@ package com.recom.commander.enginemodule.entity.component;
 import com.recom.tacview.engine.entitycomponentsystem.component.ComponentType;
 import com.recom.tacview.engine.entitycomponentsystem.component.InputComponent;
 import com.recom.tacview.engine.entitycomponentsystem.component.PhysicCoreComponent;
-import com.recom.tacview.engine.entitycomponentsystem.component.RenderableComponent;
 import com.recom.tacview.engine.input.command.IsCommand;
 import com.recom.tacview.engine.input.command.keyboard.KeyboardCommand;
 import com.recom.tacview.engine.input.command.mousebutton.MouseButtonCommand;
@@ -19,23 +18,30 @@ import org.springframework.stereotype.Component;
 @Component
 public class RECOMMapInputComponent extends InputComponent {
 
+    private static final float velocityX = 50f;
+
+
     @Override
     public void handleInputCommand(@NonNull final IsCommand<?> inputCommand) {
         switch (inputCommand) {
             case KeyboardCommand keyboardCommand -> {
                 this.getEntity().<PhysicCoreComponent>locateComponent(ComponentType.PhysicsCoreComponent).ifPresent(physicsCoreComponent -> {
                     if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.LEFT)) {
-                        physicsCoreComponent.setPositionX(physicsCoreComponent.getPositionX() + 50f);
-                        this.getEntity().<RenderableComponent>locateComponent(ComponentType.RenderableComponent).ifPresent(RenderableComponent::propagateDirtyStateToParent);
+//                        physicsCoreComponent.setPositionX(physicsCoreComponent.getPositionX() + 50f);
+//                        this.getEntity().<RenderableComponent>locateComponent(ComponentType.RenderableComponent).ifPresent(RenderableComponent::propagateDirtyStateToParent);
+                        physicsCoreComponent.addVelocityXComponent(velocityX);
                     } else if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.RIGHT)) {
-                        physicsCoreComponent.setPositionX(physicsCoreComponent.getPositionX() - 50f);
-                        this.getEntity().<RenderableComponent>locateComponent(ComponentType.RenderableComponent).ifPresent(RenderableComponent::propagateDirtyStateToParent);
+//                        physicsCoreComponent.setPositionX(physicsCoreComponent.getPositionX() - 50f);
+//                        this.getEntity().<RenderableComponent>locateComponent(ComponentType.RenderableComponent).ifPresent(RenderableComponent::propagateDirtyStateToParent);
+                        physicsCoreComponent.addVelocityXComponent(-velocityX);
                     } else if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.UP)) {
-                        physicsCoreComponent.setPositionY(physicsCoreComponent.getPositionY() + 50f);
-                        this.getEntity().<RenderableComponent>locateComponent(ComponentType.RenderableComponent).ifPresent(RenderableComponent::propagateDirtyStateToParent);
+//                        physicsCoreComponent.setPositionY(physicsCoreComponent.getPositionY() + 50f);
+//                        this.getEntity().<RenderableComponent>locateComponent(ComponentType.RenderableComponent).ifPresent(RenderableComponent::propagateDirtyStateToParent);
+                        physicsCoreComponent.addVelocityYComponent(velocityX);
                     } else if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.DOWN)) {
-                        physicsCoreComponent.setPositionY(physicsCoreComponent.getPositionY() - 50f);
-                        this.getEntity().<RenderableComponent>locateComponent(ComponentType.RenderableComponent).ifPresent(RenderableComponent::propagateDirtyStateToParent);
+//                        physicsCoreComponent.setPositionY(physicsCoreComponent.getPositionY() - 50f);
+//                        this.getEntity().<RenderableComponent>locateComponent(ComponentType.RenderableComponent).ifPresent(RenderableComponent::propagateDirtyStateToParent);
+                        physicsCoreComponent.addVelocityYComponent(-velocityX);
                     }
                 });
             }
