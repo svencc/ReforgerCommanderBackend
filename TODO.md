@@ -2,12 +2,8 @@
 
 # 1
 * new InputComponent interacting with MapComponent
-  * panning (/)
-  * physic engine (<-)
-  * apply force (component vectors)
-  * mouse panning
+  * mouse panning -> set force on MapComponent (<-)
   * (map) zooming
-  * breaking / loosing speed
 * add sortable physics modifier components
  * (gravity)
  * loosing movement speed to zero
