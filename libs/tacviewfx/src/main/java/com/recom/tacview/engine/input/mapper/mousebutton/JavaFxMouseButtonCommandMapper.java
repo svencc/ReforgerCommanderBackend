@@ -29,7 +29,7 @@ public class JavaFxMouseButtonCommandMapper implements IsInputCommandMapper<IsMo
     public JavaFxMouseButtonCommandMapper() {
         mouseButtonEventFSMs.add(new MouseButtonEventFSM1(Duration.ofMillis(150), Duration.ofMillis(150), MouseButton.PRIMARY));
         mouseButtonEventFSMs.add(new MouseButtonEventFSM1(Duration.ofMillis(150), Duration.ofMillis(150), MouseButton.SECONDARY));
-        mouseButtonEventFSMs.add(new MouseButtonEventFSM1(Duration.ofMillis(999), Duration.ofMillis(-1), MouseButton.MIDDLE));
+        mouseButtonEventFSMs.add(new MouseButtonEventFSM1(Duration.ofMillis(99999), Duration.ofMillis(-1), MouseButton.MIDDLE));
 
         startMachines();
     }
