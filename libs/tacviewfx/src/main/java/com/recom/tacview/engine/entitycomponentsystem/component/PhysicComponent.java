@@ -32,6 +32,10 @@ public class PhysicComponent extends ComponentTemplate {
         });
     }
 
+    private double elapsedSeconds(final long elapsedNanoTime) {
+        return elapsedNanoTime / 1_000_000_000.0;
+    }
+
     private double applyRestoringForce(
             final double velocity,
             final double counterForce
@@ -43,10 +47,6 @@ public class PhysicComponent extends ComponentTemplate {
         } else {
             return 0;
         }
-    }
-
-    private double elapsedSeconds(final long elapsedNanoTime) {
-        return elapsedNanoTime / 1_000_000_000.0;
     }
 
 }
