@@ -1,7 +1,6 @@
 package com.recom.tacview.engine.entitycomponentsystem.component;
 
 public class PhysicComponent extends ComponentTemplate {
-    private static float DAMPING_COEFFICIENT = 10f;
 
     public PhysicComponent() {
         super(ComponentType.PhysicsComponent);
