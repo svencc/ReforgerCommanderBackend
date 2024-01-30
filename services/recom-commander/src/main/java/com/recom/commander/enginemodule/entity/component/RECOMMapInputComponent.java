@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RECOMMapInputComponent extends InputComponent {
 
-    private static final float velocityX = 50f;
+    private static final float velocityX = 140f;
 
 
     @Override
