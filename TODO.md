@@ -2,7 +2,6 @@
 
 # 1
 * new InputComponent interacting with MapComponent
-  * mouse panning -> set force on MapComponent (<-)
   * (map) zooming
 * add sortable physics modifier components
  * (gravity)

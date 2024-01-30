@@ -5,6 +5,7 @@ import com.recom.tacview.engine.entitycomponentsystem.component.InputComponent;
 import com.recom.tacview.engine.entitycomponentsystem.component.PhysicCoreComponent;
 import com.recom.tacview.engine.input.command.IsCommand;
 import com.recom.tacview.engine.input.command.keyboard.KeyboardCommand;
+import com.recom.tacview.engine.input.command.mousebutton.MouseButton;
 import com.recom.tacview.engine.input.command.mousebutton.MouseButtonCommand;
 import com.recom.tacview.engine.input.command.mousebutton.MouseDragCommand;
 import com.recom.tacview.engine.input.command.scroll.ScrollCommand;
@@ -27,20 +28,12 @@ public class RECOMMapInputComponent extends InputComponent {
             case KeyboardCommand keyboardCommand -> {
                 this.getEntity().<PhysicCoreComponent>locateComponent(ComponentType.PhysicsCoreComponent).ifPresent(physicsCoreComponent -> {
                     if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.LEFT)) {
-//                        physicsCoreComponent.setPositionX(physicsCoreComponent.getPositionX() + 50f);
-//                        this.getEntity().<RenderableComponent>locateComponent(ComponentType.RenderableComponent).ifPresent(RenderableComponent::propagateDirtyStateToParent);
                         physicsCoreComponent.addVelocityXComponent(velocityX);
                     } else if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.RIGHT)) {
-//                        physicsCoreComponent.setPositionX(physicsCoreComponent.getPositionX() - 50f);
-//                        this.getEntity().<RenderableComponent>locateComponent(ComponentType.RenderableComponent).ifPresent(RenderableComponent::propagateDirtyStateToParent);
                         physicsCoreComponent.addVelocityXComponent(-velocityX);
                     } else if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.UP)) {
-//                        physicsCoreComponent.setPositionY(physicsCoreComponent.getPositionY() + 50f);
-//                        this.getEntity().<RenderableComponent>locateComponent(ComponentType.RenderableComponent).ifPresent(RenderableComponent::propagateDirtyStateToParent);
                         physicsCoreComponent.addVelocityYComponent(velocityX);
                     } else if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.DOWN)) {
-//                        physicsCoreComponent.setPositionY(physicsCoreComponent.getPositionY() - 50f);
-//                        this.getEntity().<RenderableComponent>locateComponent(ComponentType.RenderableComponent).ifPresent(RenderableComponent::propagateDirtyStateToParent);
                         physicsCoreComponent.addVelocityYComponent(-velocityX);
                     }
                 });
@@ -48,6 +41,22 @@ public class RECOMMapInputComponent extends InputComponent {
             case ScrollCommand scrollCommand -> {
                 // log.info("ScrollCommand received: {} ({})", inputCommand.getClass().getSimpleName(), mapToScrollDirection(scrollCommand.getNanoTimedEvent().getEvent()));
                 // code to zoom in/out
+            }
+            case MouseDragCommand mouseDragCommand -> {
+                if (mouseDragCommand.getMouseButton().equals(MouseButton.MIDDLE)) {
+                    this.getEntity().<PhysicCoreComponent>locateComponent(ComponentType.PhysicsCoreComponent).ifPresent(physicsCoreComponent -> {
+                        if (mouseDragCommand.isInOriginPosition()) {
+                            physicsCoreComponent.setVelocityXComponent(0);
+                            physicsCoreComponent.setVelocityYComponent(0);
+                        } else {
+                            int DRAG_SPEED_COEFICIENT = 4;
+                            physicsCoreComponent.setVelocityXComponent(-1 * mouseDragCommand.getDistanceX() * DRAG_SPEED_COEFICIENT);
+                            physicsCoreComponent.setVelocityYComponent(-1 * mouseDragCommand.getDistanceY() * DRAG_SPEED_COEFICIENT);
+                        }
+                    });
+                } else {
+                    log.info("MouseDragCommand received: {} ({})", inputCommand.getClass().getSimpleName(), mouseDragCommand.getMouseButton());
+                }
             }
             default -> logInputCommand(inputCommand);
         }

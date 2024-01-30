@@ -13,34 +13,64 @@ public class MouseDragCommand implements IsMouseCommand<MouseEvent> {
     @NonNull
     private final NanoTimedEvent<MouseEvent> nanoTimedEvent;
     @NonNull
+    private final NanoTimedEvent<MouseEvent> sourceNanoTimedEvent;
+    @NonNull
     private final MouseButton mouseButton;
 
-    // send event with current x,y (/)
-    // radiant 0
-    // distance from source to current position 0
-    // vector from source to current position 0 0
 
+    public boolean isInOriginPosition() {
+        if (sourceNanoTimedEvent.equals(nanoTimedEvent)) {
+            return true;
+        } else {
+            return sourceNanoTimedEvent.getEvent().getX() == nanoTimedEvent.getEvent().getX() &&
+                    sourceNanoTimedEvent.getEvent().getY() == nanoTimedEvent.getEvent().getY();
+        }
+    }
+
+    public double getDistance() {
+        return MouseEventCalculator.calculateDistanceBetweenMouseEvents(sourceNanoTimedEvent.getEvent(), nanoTimedEvent.getEvent());
+    }
+
+    public double getDistanceX() {
+        return nanoTimedEvent.getEvent().getX() - sourceNanoTimedEvent.getEvent().getX();
+    }
+
+    public double getDistanceY() {
+        return nanoTimedEvent.getEvent().getY() - sourceNanoTimedEvent.getEvent().getY();
+    }
+
+    public double getRadiant() {
+        return MouseEventCalculator.calculateRadiantBetweenMouseEvents(sourceNanoTimedEvent.getEvent(), nanoTimedEvent.getEvent());
+    }
 
     @NonNull
     public static MouseDragCommand dragStartCommand(@NonNull final NanoTimedEvent<MouseEvent> nanoTimedMouseEvent) {
-        return new MouseDragCommand(nanoTimedMouseEvent, true, false);
+        return new MouseDragCommand(nanoTimedMouseEvent, nanoTimedMouseEvent, true, false);
     }
 
     @NonNull
-    public static MouseDragCommand dragStopCommand(@NonNull final NanoTimedEvent<MouseEvent> nanoTimedMouseEvent) {
-        return new MouseDragCommand(nanoTimedMouseEvent, false, true);
+    public static MouseDragCommand dragStopCommand(
+            @NonNull final NanoTimedEvent<MouseEvent> sourceNanoTimedMouseEvent,
+            @NonNull final NanoTimedEvent<MouseEvent> nanoTimedMouseEvent
+    ) {
+        return new MouseDragCommand(sourceNanoTimedMouseEvent, nanoTimedMouseEvent, false, true);
     }
 
     @NonNull
-    public static MouseDragCommand dragginCommand(@NonNull final NanoTimedEvent<MouseEvent> nanoTimedMouseEvent) {
-        return new MouseDragCommand(nanoTimedMouseEvent, false, false);
+    public static MouseDragCommand dragginCommand(
+            @NonNull final NanoTimedEvent<MouseEvent> sourceNanoTimedMouseEvent,
+            @NonNull final NanoTimedEvent<MouseEvent> nanoTimedMouseEvent
+    ) {
+        return new MouseDragCommand(sourceNanoTimedMouseEvent, nanoTimedMouseEvent, false, false);
     }
 
     public MouseDragCommand(
+            @NonNull final NanoTimedEvent<MouseEvent> sourceNanoTimedEvent,
             @NonNull final NanoTimedEvent<MouseEvent> nanoTimedEvent,
             final boolean startMouseDrag,
             final boolean stopMouseDrag
     ) {
+        this.sourceNanoTimedEvent = sourceNanoTimedEvent;
         this.nanoTimedEvent = nanoTimedEvent;
         this.dragStart = startMouseDrag;
         this.dragStop = stopMouseDrag;
