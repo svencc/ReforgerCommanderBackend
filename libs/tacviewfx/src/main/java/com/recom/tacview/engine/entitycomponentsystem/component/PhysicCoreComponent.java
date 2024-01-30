@@ -15,9 +15,9 @@ public class PhysicCoreComponent extends ComponentTemplate {
 
     private double velocityYComponent = 0.0;
 
-    private double massInKg = 1.0;
-
     private double dragInNewton = 1.0;
+
+    private double restoringForce = 0;
 
 
     public PhysicCoreComponent() {

@@ -15,9 +15,12 @@ public class RECOMMapEntityConfiguration {
     @Bean()
     public RECOMMapEntity getRECOMMapEntity(@NonNull final RECOMMapComponent recomMapComponent) {
         final RECOMMapEntity recomMapEntity = new RECOMMapEntity();
+        final PhysicCoreComponent component = new PhysicCoreComponent();
+        component.setRestoringForce(100);
+
         recomMapEntity.addComponent(recomMapComponent);
         recomMapEntity.addComponent(new RECOMMapInputComponent());
-        recomMapEntity.addComponent(new PhysicCoreComponent());
+        recomMapEntity.addComponent(component);
         recomMapEntity.addComponent(new PhysicComponent());
 
         return recomMapEntity;
