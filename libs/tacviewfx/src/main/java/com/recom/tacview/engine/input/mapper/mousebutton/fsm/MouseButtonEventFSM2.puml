@@ -28,9 +28,8 @@ __**ALPHABET**__
 | stop | on autoclosable close() |
 | IDLEING | new engine revolution without event |
 | CLICK | "click threshold exceeded" after MOUSE_RELEASED |
-| MOUSE_PRESSED__DRAG_START | mouse button pressed event -> creates MouseDraggingCommand |
 | DOUBLECLICK | second MOUSE_PRESSED before "click threshold exceeded" |
-| MOUSE_DRAG_STARTED | when mouse is pushed and not released within mouse click threshold |
+| MOUSE_PRESSED__DRAG_START | mouse button pressed event -> creates MouseDraggingCommand |
 | MOUSE_RELEASED__DRAG_STOPPED | mouse button released |
 endlegend
 
