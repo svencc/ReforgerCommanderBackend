@@ -42,6 +42,13 @@ public class RECOMMapInputComponent extends InputComponent {
             case ScrollCommand scrollCommand -> {
                 // log.info("ScrollCommand received: {} ({})", inputCommand.getClass().getSimpleName(), mapToScrollDirection(scrollCommand.getNanoTimedEvent().getEvent()));
                 // code to zoom in/out
+                this.getEntity().<PhysicCoreComponent>locateComponent(ComponentType.PhysicsCoreComponent).ifPresent(physicsCoreComponent -> {
+                    if (scrollCommand.getNanoTimedEvent().getEvent().getDeltaY() > 0) {
+                        // todo
+                    } else if (scrollCommand.getNanoTimedEvent().getEvent().getDeltaY() < 0) {
+                        // todo
+                    }
+                });
             }
             case MouseDragCommand mouseDragCommand -> {
                 if (mouseDragCommand.getMouseButton().equals(MouseButton.SECONDARY)) {
