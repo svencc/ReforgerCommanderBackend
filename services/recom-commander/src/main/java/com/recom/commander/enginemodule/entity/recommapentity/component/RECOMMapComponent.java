@@ -1,4 +1,4 @@
-package com.recom.commander.enginemodule.entity.component;
+package com.recom.commander.enginemodule.entity.recommapentity.component;
 
 import com.recom.commander.event.InitialAuthenticationEvent;
 import com.recom.commander.mapper.HeightMapDescriptorMapper;

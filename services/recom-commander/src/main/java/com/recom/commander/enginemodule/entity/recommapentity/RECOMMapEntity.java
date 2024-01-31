@@ -1,4 +1,4 @@
-package com.recom.commander.enginemodule.entity;
+package com.recom.commander.enginemodule.entity.recommapentity;
 
 import com.recom.tacview.engine.entitycomponentsystem.entity.Entity;
 

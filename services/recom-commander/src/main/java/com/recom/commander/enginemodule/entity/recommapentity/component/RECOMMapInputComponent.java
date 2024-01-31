@@ -1,4 +1,4 @@
-package com.recom.commander.enginemodule.entity.component;
+package com.recom.commander.enginemodule.entity.recommapentity.component;
 
 import com.recom.tacview.engine.entitycomponentsystem.component.ComponentType;
 import com.recom.tacview.engine.entitycomponentsystem.component.InputComponent;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 public class RECOMMapInputComponent extends InputComponent {
 
     private static final float velocityX = 140f;
-    private static final int DRAG_SPEED_COEFICIENT = 4;
+    private static final int DRAG_SPEED_COEFFICIENT = 4;
 
 
     @Override
@@ -44,14 +44,14 @@ public class RECOMMapInputComponent extends InputComponent {
                 // code to zoom in/out
             }
             case MouseDragCommand mouseDragCommand -> {
-                if (mouseDragCommand.getMouseButton().equals(MouseButton.MIDDLE)) {
+                if (mouseDragCommand.getMouseButton().equals(MouseButton.SECONDARY)) {
                     this.getEntity().<PhysicCoreComponent>locateComponent(ComponentType.PhysicsCoreComponent).ifPresent(physicsCoreComponent -> {
                         if (mouseDragCommand.isInOriginPosition()) {
                             physicsCoreComponent.setVelocityXComponent(0);
                             physicsCoreComponent.setVelocityYComponent(0);
                         } else {
-                            physicsCoreComponent.setVelocityXComponent(-1 * mouseDragCommand.getDistanceX() * DRAG_SPEED_COEFICIENT);
-                            physicsCoreComponent.setVelocityYComponent(-1 * mouseDragCommand.getDistanceY() * DRAG_SPEED_COEFICIENT);
+                            physicsCoreComponent.setVelocityXComponent(-1 * mouseDragCommand.getDistanceX() * DRAG_SPEED_COEFFICIENT);
+                            physicsCoreComponent.setVelocityYComponent(-1 * mouseDragCommand.getDistanceY() * DRAG_SPEED_COEFFICIENT);
                         }
                     });
                 } else {

@@ -3,6 +3,7 @@
 # 1
 * new InputComponent interacting with MapComponent
   * (map) zooming
+  * add pre-click-event (preclick, click, doublecklic) events
 * add sortable physics modifier components
  * (gravity)
  * loosing movement speed to zero
