@@ -5,7 +5,7 @@ import com.recom.tacview.engine.input.command.IsCommand;
 import com.recom.tacview.engine.input.command.mousebutton.IsMouseCommand;
 import com.recom.tacview.engine.input.mapper.IsInputCommandMapper;
 import com.recom.tacview.engine.input.mapper.mousebutton.fsm.IsMouseButtonEventFSM;
-import com.recom.tacview.engine.input.mapper.mousebutton.fsm.MouseButtonEventFSM1;
+import com.recom.tacview.engine.input.mapper.mousebutton.fsm.MouseButtonEventFSM2;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -27,9 +27,9 @@ public class JavaFxMouseButtonCommandMapper implements IsInputCommandMapper<IsMo
     private final LinkedList<IsMouseButtonEventFSM> mouseButtonEventFSMs = new LinkedList<>();
 
     public JavaFxMouseButtonCommandMapper() {
-        mouseButtonEventFSMs.add(new MouseButtonEventFSM1(Duration.ofMillis(150), Duration.ofMillis(150), MouseButton.PRIMARY));
-        mouseButtonEventFSMs.add(new MouseButtonEventFSM1(Duration.ofMillis(150), Duration.ofMillis(150), MouseButton.SECONDARY));
-        mouseButtonEventFSMs.add(new MouseButtonEventFSM1(Duration.ofMillis(99999), Duration.ofMillis(-1), MouseButton.MIDDLE));
+        mouseButtonEventFSMs.add(new MouseButtonEventFSM2(Duration.ofMillis(150),Duration.ofMillis(150), MouseButton.PRIMARY));
+        mouseButtonEventFSMs.add(new MouseButtonEventFSM2(Duration.ofMillis(150),Duration.ofMillis(150), MouseButton.SECONDARY));
+        mouseButtonEventFSMs.add(new MouseButtonEventFSM2(Duration.ofMillis(150),Duration.ofMillis(150), MouseButton.MIDDLE));
 
         startMachines();
     }

@@ -1,9 +1,9 @@
-package com.recom.tacview.engine.input.command.mousebutton;
+package com.recom.tacview;
 
 import javafx.scene.input.MouseEvent;
 import lombok.NonNull;
 
-public class MouseEventCalculator {
+public class TrigonometricCalculator {
 
     public static double calculateRadiantBetweenMouseEvents(
             @NonNull final MouseEvent dragSource,

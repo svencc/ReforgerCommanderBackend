@@ -1,0 +1,37 @@
+@startuml
+
+header  RECOM Tacviewer
+title   Mouse Button Event FSM v2.0
+caption (i) Each mouse button has its own state machine
+footer  RECOM.one
+
+[*] --> IDLE :start
+IDLE --> IDLE : \nIDLEING
+IDLE -> MOUSE_DRAGGING : MOUSE_PRESSED__DRAG_START
+
+MOUSE_DRAGGING -> MOUSE_DRAGGING : MOUSE_DRAGGING
+MOUSE_DRAGGING --> CLICK_CANDIDATE : MOUSE_RELEASED__DRAG_STOPPED
+CLICK_CANDIDATE --> CLICK_CANDIDATE : IDLEING
+
+CLICK_CANDIDATE --> IDLE: CLICK\n DOUBLECLICK
+
+IDLE --> [*] :end
+CLICK_CANDIDATE --> [*] :end
+MOUSE_DRAGGING --> [*] :end
+
+
+
+legend left
+__**ALPHABET**__
+| **Symbol** | **Description** |
+| start | on start() |
+| stop | on autoclosable close() |
+| IDLEING | new engine revolution without event |
+| CLICK | "click threshold exceeded" after MOUSE_RELEASED |
+| MOUSE_PRESSED__DRAG_START | mouse button pressed event -> creates MouseDraggingCommand |
+| DOUBLECLICK | second MOUSE_PRESSED before "click threshold exceeded" |
+| MOUSE_DRAG_STARTED | when mouse is pushed and not released within mouse click threshold |
+| MOUSE_RELEASED__DRAG_STOPPED | mouse button released |
+endlegend
+
+@enduml

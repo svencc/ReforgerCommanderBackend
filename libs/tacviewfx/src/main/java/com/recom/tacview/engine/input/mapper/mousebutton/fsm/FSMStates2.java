@@ -1,6 +1,6 @@
 package com.recom.tacview.engine.input.mapper.mousebutton.fsm;
 
-enum FSMStates {
+enum FSMStates2 {
     NEW,
     IDLE,
     CLICK_CANDIDATE,

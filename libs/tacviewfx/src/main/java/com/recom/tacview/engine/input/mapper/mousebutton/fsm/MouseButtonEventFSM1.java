@@ -27,7 +27,7 @@ public class MouseButtonEventFSM1 implements IsMouseButtonEventFSM {
     private final MouseButton responsibleForMouseButton;
 
     @NonNull
-    private FSMStates currentMachineState = FSMStates.NEW;
+    private FSMStates1 currentMachineState = FSMStates1.NEW;
 
     @NonNull
     private final MouseEventBuffer mouseEventBuffer = new MouseEventBuffer();
@@ -56,12 +56,12 @@ public class MouseButtonEventFSM1 implements IsMouseButtonEventFSM {
 
     @Override
     public void start() {
-        currentMachineState = FSMStates.IDLE;
+        currentMachineState = FSMStates1.IDLE;
     }
 
     @Override
     public void stop() {
-        currentMachineState = FSMStates.STOPPED;
+        currentMachineState = FSMStates1.STOPPED;
     }
 
     @Override
@@ -97,7 +97,7 @@ public class MouseButtonEventFSM1 implements IsMouseButtonEventFSM {
                             assert nextEvent != null;
 
                             mouseEventBuffer.lastMouseEventBuffer = nextEvent;
-                            currentMachineState = FSMStates.CLICK_CANDIDATE;
+                            currentMachineState = FSMStates1.CLICK_CANDIDATE;
                             if (dragThresholdNanos < 0) {
                                 reEvaluate = true;
                             }
@@ -115,16 +115,16 @@ public class MouseButtonEventFSM1 implements IsMouseButtonEventFSM {
                         case CLICK -> {
                             assert nextEvent != null;
 
-                            bufferedCommands.add(MouseButtonCommand.singleClickCommand(mouseEventBuffer.lastMouseEventBuffer));
+                            bufferedCommands.add(MouseButtonCommand.singleClickCommand(mouseEventBuffer.lastMouseEventBuffer, 0, 0));
                             mouseEventBuffer.clearLastMouseEventBuffer();
-                            currentMachineState = FSMStates.IDLE;
+                            currentMachineState = FSMStates1.IDLE;
                         }
                         case DOUBLECLICK -> {
                             assert nextEvent != null;
 
                             bufferedCommands.add(MouseButtonCommand.doubleClickCommand(nextEvent));
                             mouseEventBuffer.clearLastMouseEventBuffer();
-                            currentMachineState = FSMStates.IDLE;
+                            currentMachineState = FSMStates1.IDLE;
                         }
                         case MOUSE_DRAG_STARTED -> {
                             assert nextEvent == null;
@@ -133,7 +133,7 @@ public class MouseButtonEventFSM1 implements IsMouseButtonEventFSM {
 
                             mouseEventBuffer.mouseDragOriginEventBuffer = mouseEventBuffer.lastMouseEventBuffer;
                             bufferedCommands.add(MouseDragCommand.dragStartCommand(mouseEventBuffer.mouseDragOriginEventBuffer));
-                            currentMachineState = FSMStates.MOUSE_DRAGGING;
+                            currentMachineState = FSMStates1.MOUSE_DRAGGING;
                         }
                         case IDLEING -> {
                             // do nothing
@@ -168,7 +168,7 @@ public class MouseButtonEventFSM1 implements IsMouseButtonEventFSM {
 
                             bufferedCommands.add(MouseDragCommand.dragStopCommand(mouseEventBuffer.mouseDragOriginEventBuffer, nextEvent));
                             mouseEventBuffer.clearAllBuffers();
-                            currentMachineState = FSMStates.IDLE;
+                            currentMachineState = FSMStates1.IDLE;
                         }
                     }
                 }
@@ -184,44 +184,44 @@ public class MouseButtonEventFSM1 implements IsMouseButtonEventFSM {
     }
 
     @NonNull
-    private InputAlphabet idleAlphabet(@Nullable final NanoTimedEvent<MouseEvent> nextEvent) {
+    private InputAlphabet1 idleAlphabet(@Nullable final NanoTimedEvent<MouseEvent> nextEvent) {
         if (nextEvent == null) {
-            return InputAlphabet.IDLEING;
+            return InputAlphabet1.IDLEING;
         } else if (nextEvent.getEvent().getEventType() == MouseEvent.MOUSE_PRESSED) {
-            return InputAlphabet.MOUSE_PRESSED;
+            return InputAlphabet1.MOUSE_PRESSED;
         } else {
-            return InputAlphabet.IDLEING;
+            return InputAlphabet1.IDLEING;
         }
     }
 
     @NonNull
-    private InputAlphabet clickCandidateAlphabet(
+    private InputAlphabet1 clickCandidateAlphabet(
             @Nullable final NanoTimedEvent<MouseEvent> nextEvent,
             @NonNull final NanoTimedEvent<MouseEvent> clickCandidateBuffer
     ) {
         if (clickThresholdExceeded(clickCandidateBuffer)) {
-            return InputAlphabet.CLICK;
+            return InputAlphabet1.CLICK;
         } else if (dragThresholdExceeded(clickCandidateBuffer) && clickCandidateBuffer.getEvent().getEventType() == MouseEvent.MOUSE_PRESSED) {
-            return InputAlphabet.MOUSE_DRAG_STARTED;
+            return InputAlphabet1.MOUSE_DRAG_STARTED;
         } else if (nextEvent != null && nextEvent.getEvent().getEventType() == MouseEvent.MOUSE_PRESSED) {
-            return InputAlphabet.DOUBLECLICK;
+            return InputAlphabet1.DOUBLECLICK;
         } else if (nextEvent != null && nextEvent.getEvent().getEventType() == MouseEvent.MOUSE_RELEASED) {
-            return InputAlphabet.MOUSE_RELEASED;
+            return InputAlphabet1.MOUSE_RELEASED;
         } else {
-            return InputAlphabet.IDLEING;
+            return InputAlphabet1.IDLEING;
         }
     }
 
     @NonNull
-    private InputAlphabet mouseDraggingAlphabet(@Nullable final NanoTimedEvent<MouseEvent> nextEvent) {
+    private InputAlphabet1 mouseDraggingAlphabet(@Nullable final NanoTimedEvent<MouseEvent> nextEvent) {
         if (nextEvent == null) {
-            return InputAlphabet.IDLEING;
+            return InputAlphabet1.IDLEING;
         } else if (nextEvent != null && nextEvent.getEvent().getEventType() == MouseEvent.MOUSE_RELEASED) {
-            return InputAlphabet.MOUSE_RELEASED;
+            return InputAlphabet1.MOUSE_RELEASED;
         } else if (nextEvent != null && nextEvent.getEvent() instanceof MouseEvent && nextEvent.getEvent().getEventType() == MouseEvent.MOUSE_DRAGGED) {
-            return InputAlphabet.MOUSE_DRAGGING;
+            return InputAlphabet1.MOUSE_DRAGGING;
         } else {
-            return InputAlphabet.IDLEING;
+            return InputAlphabet1.IDLEING;
         }
     }
 

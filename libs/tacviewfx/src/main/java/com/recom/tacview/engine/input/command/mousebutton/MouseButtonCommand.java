@@ -8,6 +8,9 @@ import lombok.NonNull;
 @Getter
 public class MouseButtonCommand implements IsMouseCommand<MouseEvent> {
 
+    private final long timeBetweenDragStartAndDragStop;
+    private final boolean probableDraggingIntention;
+
     @NonNull
     private final NanoTimedEvent<MouseEvent> nanoTimedEvent;
     private final boolean doubleClick;
@@ -17,23 +20,31 @@ public class MouseButtonCommand implements IsMouseCommand<MouseEvent> {
 
     @NonNull
     public static MouseButtonCommand singleClickCommand(
-            @NonNull final NanoTimedEvent<MouseEvent> nanoTimedMouseEvent
+            @NonNull final NanoTimedEvent<MouseEvent> nanoTimedMouseEvent,
+            long timeBetweenDragStartAndDragStop,
+            long dragToClickThresholdNanos
     ) {
-        return new MouseButtonCommand(nanoTimedMouseEvent, false);
+
+        final boolean isProbableDraggingIntention = timeBetweenDragStartAndDragStop > dragToClickThresholdNanos;
+        return new MouseButtonCommand(nanoTimedMouseEvent, false, timeBetweenDragStartAndDragStop, isProbableDraggingIntention);
     }
 
     @NonNull
     public static MouseButtonCommand doubleClickCommand(@NonNull final NanoTimedEvent<MouseEvent> nanoTimedMouseEvent) {
-        return new MouseButtonCommand(nanoTimedMouseEvent, true);
+        return new MouseButtonCommand(nanoTimedMouseEvent, true, 0, false);
     }
 
     public MouseButtonCommand(
             @NonNull final NanoTimedEvent<MouseEvent> nanoTimedEvent,
-            final boolean isDoubleClick
+            final boolean isDoubleClick,
+            final long timeBetweenDragStartAndDragStop,
+            final boolean probableDraggingIntention
     ) {
         this.nanoTimedEvent = nanoTimedEvent;
         this.doubleClick = isDoubleClick;
+        this.timeBetweenDragStartAndDragStop = timeBetweenDragStartAndDragStop;
         this.mouseButton = determineMouseButton(nanoTimedEvent.getEvent());
+        this.probableDraggingIntention = probableDraggingIntention;
     }
 
     @NonNull

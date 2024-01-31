@@ -65,7 +65,7 @@ public class RECOMMapInputComponent extends InputComponent {
     private void logInputCommand(@NonNull final IsCommand<?> inputCommand) {
         switch (inputCommand) {
             case MouseButtonCommand mouseButtonCommand ->
-                    log.info("MouseButtonCommand received: {} (doubleClick: {})", mouseButtonCommand.getMouseButton(), mouseButtonCommand.isDoubleClick());
+                    log.info("MouseButtonCommand received: {} (doubleClick: {}) - timeBetweenDragStartAndDragStop {} / probableDraggingIntention {}", mouseButtonCommand.getMouseButton(), mouseButtonCommand.isDoubleClick(), mouseButtonCommand.getTimeBetweenDragStartAndDragStop(), mouseButtonCommand.isProbableDraggingIntention());
             case MouseDragCommand mouseDragCommand ->
                     log.info("MouseDragCommand received: {} ({})", mouseDragCommand.getMouseButton(), inputCommand.getNanoTimedEvent().getEvent().getEventType());
             case ScrollCommand scrollCommand ->

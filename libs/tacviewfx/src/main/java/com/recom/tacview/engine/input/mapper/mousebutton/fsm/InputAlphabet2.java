@@ -1,12 +1,11 @@
 package com.recom.tacview.engine.input.mapper.mousebutton.fsm;
 
-enum InputAlphabet {
+enum InputAlphabet2 {
     IDLEING,
     CLICK,
-    MOUSE_PRESSED,
     DOUBLECLICK,
-    MOUSE_RELEASED,
-    MOUSE_DRAG_STARTED,
+    MOUSE_PRESSED__DRAG_START,
     MOUSE_DRAGGING,
+    MOUSE_RELEASED__DRAG_STOPPED,
     UNHANDLED,
 }
