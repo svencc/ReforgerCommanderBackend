@@ -108,19 +108,19 @@ public class MouseButtonEventFSM2 implements IsMouseButtonEventFSM {
                         if (nextEvent == null) {
                             assert nextEvent == null;
 
-                            bufferedCommands.add(MouseDragCommand.dragginCommand(mouseEventBuffer.mouseDragOriginEventBuffer, mouseEventBuffer.lastMouseEventBuffer));
+                            bufferedCommands.add(MouseDragCommand.draggingCommand(mouseEventBuffer.mouseDragOriginEventBuffer, mouseEventBuffer.lastMouseEventBuffer));
                         } else if (mouseEventBuffer.lastMouseEventBuffer.getEvent().getEventType() == MouseEvent.MOUSE_PRESSED) {
                             assert nextEvent != null;
                             assert mouseEventBuffer.lastMouseEventBuffer.getEvent().getEventType() == MouseEvent.MOUSE_PRESSED;
 
                             mouseEventBuffer.lastMouseEventBuffer = nextEvent;
-                            bufferedCommands.add(MouseDragCommand.dragginCommand(mouseEventBuffer.mouseDragOriginEventBuffer, mouseEventBuffer.lastMouseEventBuffer));
+                            bufferedCommands.add(MouseDragCommand.draggingCommand(mouseEventBuffer.mouseDragOriginEventBuffer, mouseEventBuffer.lastMouseEventBuffer));
                         } else if (mouseEventBuffer.lastMouseEventBuffer.getEvent().getEventType() == MouseEvent.MOUSE_DRAGGED) {
                             assert nextEvent != null;
                             assert mouseEventBuffer.lastMouseEventBuffer.getEvent().getEventType() == MouseEvent.MOUSE_DRAGGED;
 
                             mouseEventBuffer.lastMouseEventBuffer = nextEvent;
-                            bufferedCommands.add(MouseDragCommand.dragginCommand(mouseEventBuffer.mouseDragOriginEventBuffer, mouseEventBuffer.lastMouseEventBuffer));
+                            bufferedCommands.add(MouseDragCommand.draggingCommand(mouseEventBuffer.mouseDragOriginEventBuffer, mouseEventBuffer.lastMouseEventBuffer));
                         }
                     }
                     case MOUSE_RELEASED__DRAG_STOPPED -> {
@@ -151,6 +151,7 @@ public class MouseButtonEventFSM2 implements IsMouseButtonEventFSM {
 
                         long timeBetweenDragStartAndDragStop = mouseEventBuffer.timeBetweenDragStartAndDragStop;
                         bufferedCommands.add(MouseButtonCommand.singleClickCommand(mouseEventBuffer.lastMouseEventBuffer, timeBetweenDragStartAndDragStop, dragToClickThresholdNanos));
+                        mouseEventBuffer.timeBetweenDragStartAndDragStop = 0;
 
                         currentMachineState = FSMStates2.IDLE;
                     }
@@ -178,8 +179,6 @@ public class MouseButtonEventFSM2 implements IsMouseButtonEventFSM {
 
     @NonNull
     private InputAlphabet2 idleAlphabet(@Nullable final NanoTimedEvent<MouseEvent> nextEvent) {
-        // ich muss hier unterscheiden - für einen click muss ich auf ein mouse release warten
-        // das mouse dragging muss mit mouse_pressed arbeiten! der threshold kann dann eigentlich weg!
         if (nextEvent == null) {
             return InputAlphabet2.IDLEING;
         } else if (nextEvent.getEvent().getEventType() == MouseEvent.MOUSE_PRESSED) {
@@ -233,13 +232,6 @@ public class MouseButtonEventFSM2 implements IsMouseButtonEventFSM {
             mouseDragOriginEventBuffer = null;
         }
 
-        protected void clearLastMouseEventBuffer() {
-            lastMouseEventBuffer = null;
-        }
-
-        public void clearMouseDragOriginEventBuffer() {
-            mouseDragOriginEventBuffer = null;
-        }
     }
 
 }

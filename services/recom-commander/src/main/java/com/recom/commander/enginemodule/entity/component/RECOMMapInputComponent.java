@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 public class RECOMMapInputComponent extends InputComponent {
 
     private static final float velocityX = 140f;
+    private static final int DRAG_SPEED_COEFICIENT = 4;
 
 
     @Override
@@ -49,7 +50,6 @@ public class RECOMMapInputComponent extends InputComponent {
                             physicsCoreComponent.setVelocityXComponent(0);
                             physicsCoreComponent.setVelocityYComponent(0);
                         } else {
-                            int DRAG_SPEED_COEFICIENT = 4;
                             physicsCoreComponent.setVelocityXComponent(-1 * mouseDragCommand.getDistanceX() * DRAG_SPEED_COEFICIENT);
                             physicsCoreComponent.setVelocityYComponent(-1 * mouseDragCommand.getDistanceY() * DRAG_SPEED_COEFICIENT);
                         }

@@ -18,34 +18,6 @@ public class MouseDragCommand implements IsMouseCommand<MouseEvent> {
     @NonNull
     private final MouseButton mouseButton;
 
-    public long timeBetweenDragStartAndDragStop() {
-        return nanoTimedEvent.getNanos() - sourceNanoTimedEvent.getNanos();
-    }
-
-    public boolean isInOriginPosition() {
-        if (sourceNanoTimedEvent.equals(nanoTimedEvent)) {
-            return true;
-        } else {
-            return sourceNanoTimedEvent.getEvent().getX() == nanoTimedEvent.getEvent().getX() &&
-                    sourceNanoTimedEvent.getEvent().getY() == nanoTimedEvent.getEvent().getY();
-        }
-    }
-
-    public double getDistance() {
-        return TrigonometricCalculator.calculateDistanceBetweenMouseEvents(sourceNanoTimedEvent.getEvent(), nanoTimedEvent.getEvent());
-    }
-
-    public double getDistanceX() {
-        return nanoTimedEvent.getEvent().getX() - sourceNanoTimedEvent.getEvent().getX();
-    }
-
-    public double getDistanceY() {
-        return nanoTimedEvent.getEvent().getY() - sourceNanoTimedEvent.getEvent().getY();
-    }
-
-    public double getRadiant() {
-        return TrigonometricCalculator.calculateRadiantBetweenMouseEvents(sourceNanoTimedEvent.getEvent(), nanoTimedEvent.getEvent());
-    }
 
     @NonNull
     public static MouseDragCommand dragStartCommand(@NonNull final NanoTimedEvent<MouseEvent> nanoTimedMouseEvent) {
@@ -61,7 +33,7 @@ public class MouseDragCommand implements IsMouseCommand<MouseEvent> {
     }
 
     @NonNull
-    public static MouseDragCommand dragginCommand(
+    public static MouseDragCommand draggingCommand(
             @NonNull final NanoTimedEvent<MouseEvent> sourceNanoTimedMouseEvent,
             @NonNull final NanoTimedEvent<MouseEvent> nanoTimedMouseEvent
     ) {
@@ -108,6 +80,35 @@ public class MouseDragCommand implements IsMouseCommand<MouseEvent> {
     @Override
     public long getNanos() {
         return nanoTimedEvent.getNanos();
+    }
+
+    public long timeBetweenDragStartAndDragStop() {
+        return nanoTimedEvent.getNanos() - sourceNanoTimedEvent.getNanos();
+    }
+
+    public boolean isInOriginPosition() {
+        if (sourceNanoTimedEvent.equals(nanoTimedEvent)) {
+            return true;
+        } else {
+            return sourceNanoTimedEvent.getEvent().getX() == nanoTimedEvent.getEvent().getX() &&
+                    sourceNanoTimedEvent.getEvent().getY() == nanoTimedEvent.getEvent().getY();
+        }
+    }
+
+    public double getDistance() {
+        return TrigonometricCalculator.calculateDistanceBetweenMouseEvents(sourceNanoTimedEvent.getEvent(), nanoTimedEvent.getEvent());
+    }
+
+    public double getDistanceX() {
+        return nanoTimedEvent.getEvent().getX() - sourceNanoTimedEvent.getEvent().getX();
+    }
+
+    public double getDistanceY() {
+        return nanoTimedEvent.getEvent().getY() - sourceNanoTimedEvent.getEvent().getY();
+    }
+
+    public double getRadiant() {
+        return TrigonometricCalculator.calculateRadiantBetweenMouseEvents(sourceNanoTimedEvent.getEvent(), nanoTimedEvent.getEvent());
     }
 
 }

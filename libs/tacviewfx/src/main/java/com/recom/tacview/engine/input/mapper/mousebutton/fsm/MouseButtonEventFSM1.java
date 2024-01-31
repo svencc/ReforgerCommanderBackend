@@ -148,7 +148,7 @@ public class MouseButtonEventFSM1 implements IsMouseButtonEventFSM {
                             assert mouseEventBuffer.mouseDragOriginEventBuffer != null;
 
                             // emit last known mouse drag command
-                            bufferedCommands.add(MouseDragCommand.dragginCommand(mouseEventBuffer.mouseDragOriginEventBuffer, mouseEventBuffer.lastMouseEventBuffer));
+                            bufferedCommands.add(MouseDragCommand.draggingCommand(mouseEventBuffer.mouseDragOriginEventBuffer, mouseEventBuffer.lastMouseEventBuffer));
                         }
                         case MOUSE_DRAGGING -> {
                             assert nextEvent != null;
@@ -158,7 +158,7 @@ public class MouseButtonEventFSM1 implements IsMouseButtonEventFSM {
                             assert mouseEventBuffer.mouseDragOriginEventBuffer.getEvent().getEventType() == MouseEvent.MOUSE_PRESSED;
 
                             mouseEventBuffer.lastMouseEventBuffer = nextEvent;
-                            bufferedCommands.add(MouseDragCommand.dragginCommand(mouseEventBuffer.mouseDragOriginEventBuffer, nextEvent));
+                            bufferedCommands.add(MouseDragCommand.draggingCommand(mouseEventBuffer.mouseDragOriginEventBuffer, nextEvent));
                         }
                         case MOUSE_RELEASED -> {
                             assert nextEvent != null;
