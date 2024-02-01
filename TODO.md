@@ -3,17 +3,13 @@
 # 1
 * new InputComponent interacting with MapComponent
   * (map) zooming
-  * add pre-click-event (preclick, click, doublecklic) events
 * add sortable physics modifier components
- * (gravity)
- * loosing movement speed to zero
- * ...
- * 
 * NULLImplementations -> Optionals ...
 * 
 * dynamic changeable render properties!
 * optimize Layers so that they must not be reinstantiated every time on update. Reuse layers and remove/extend entities on update
 * 
+* add pre-click-event (preclick, click, doublecklic) events
 * 
 * UI/MAP:
   * panning

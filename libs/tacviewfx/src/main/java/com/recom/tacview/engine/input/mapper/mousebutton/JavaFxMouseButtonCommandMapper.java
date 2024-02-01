@@ -26,6 +26,7 @@ public class JavaFxMouseButtonCommandMapper implements IsInputCommandMapper<IsMo
     @NonNull
     private final LinkedList<IsMouseButtonEventFSM> mouseButtonEventFSMs = new LinkedList<>();
 
+
     public JavaFxMouseButtonCommandMapper() {
         mouseButtonEventFSMs.add(new MouseButtonEventFSM2(Duration.ofMillis(150),Duration.ofMillis(175), MouseButton.PRIMARY));
         mouseButtonEventFSMs.add(new MouseButtonEventFSM2(Duration.ofMillis(150),Duration.ofMillis(175), MouseButton.SECONDARY));
