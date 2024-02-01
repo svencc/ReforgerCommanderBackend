@@ -2,7 +2,7 @@
 
 # 1
 * new InputComponent interacting with MapComponent
-  * (map) zooming
+  * (map) zooming (<<<<<<<--------------------------------)
 * add sortable physics modifier components
 * NULLImplementations -> Optionals ...
 * 
@@ -12,8 +12,6 @@
 * add pre-click-event (preclick, click, doublecklic) events
 * 
 * UI/MAP:
-  * panning
-  * zooming (scaling)
   * add scale bar
   * add measurement tool
   * add menu

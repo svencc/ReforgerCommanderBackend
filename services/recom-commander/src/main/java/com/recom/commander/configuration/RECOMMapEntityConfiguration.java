@@ -17,7 +17,7 @@ public class RECOMMapEntityConfiguration {
         final RECOMMapEntity recomMapEntity = new RECOMMapEntity();
 
         final PhysicCoreComponent component = new PhysicCoreComponent();
-        component.setRestoringForce(100);
+        component.setFrictionForce(100);
 
         recomMapEntity.addComponent(recomMapComponent);
         recomMapEntity.addComponent(new RECOMMapInputComponent());

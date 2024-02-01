@@ -39,6 +39,8 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
     @Nullable
     private ReactiveObserver<HeightMapDescriptorDto> mapTopographyDataReactiveObserver;
 
+    private int pixelFactor = 1;
+
 
     public RECOMMapComponent(
             @NonNull final MapsOverviewService mapsOverviewService,
@@ -51,7 +53,6 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
         this.heightmapRasterizer = heightmapRasterizer;
         this.setZIndex(0);
     }
-
 
     @PostConstruct
     public void init() {
@@ -113,6 +114,28 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
         if (mapTopographyDataReactiveObserver != null) {
             mapTopographyDataReactiveObserver.close();
         }
+    }
+
+    public void zoomIn() {
+        if (pixelFactor == 1) {
+            return;
+        } else {
+            pixelFactor--;
+            swapBuffer();
+        }
+    }
+
+    public void zoomOut() {
+        pixelFactor++;
+        swapBuffer();
+    }
+
+    private void swapBuffer() {
+        // @TODO <<<<---------------------------------------------------------------------------------------------------
+        // swap buffer this.pixelBuffer = new PixelBuffer(dimension, pixelBufferArray);
+
+        // create LinkedList<PixelBuffer> pixelBufferList
+        // init first element with actual buffer!
     }
 
 }

@@ -15,58 +15,83 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Slf4j
 @Component
 public class RECOMMapInputComponent extends InputComponent {
 
-    private static final float velocityX = 140f;
+    private static final float MOVING_FORCE = 140f;
     private static final int DRAG_SPEED_COEFFICIENT = 4;
+
+    @NonNull
+    private Optional<RECOMMapComponent> maybeMapComponent = Optional.empty();
 
 
     @Override
     public void handleInputCommand(@NonNull final IsCommand<?> inputCommand) {
         switch (inputCommand) {
-            case KeyboardCommand keyboardCommand -> {
-                this.getEntity().<PhysicCoreComponent>locateComponent(ComponentType.PhysicsCoreComponent).ifPresent(physicsCoreComponent -> {
-                    if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.LEFT)) {
-                        physicsCoreComponent.addVelocityXComponent(velocityX);
-                    } else if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.RIGHT)) {
-                        physicsCoreComponent.addVelocityXComponent(-velocityX);
-                    } else if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.UP)) {
-                        physicsCoreComponent.addVelocityYComponent(velocityX);
-                    } else if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.DOWN)) {
-                        physicsCoreComponent.addVelocityYComponent(-velocityX);
-                    }
-                });
-            }
-            case ScrollCommand scrollCommand -> {
-                // log.info("ScrollCommand received: {} ({})", inputCommand.getClass().getSimpleName(), mapToScrollDirection(scrollCommand.getNanoTimedEvent().getEvent()));
-                // code to zoom in/out
-                this.getEntity().<PhysicCoreComponent>locateComponent(ComponentType.PhysicsCoreComponent).ifPresent(physicsCoreComponent -> {
-                    if (scrollCommand.getNanoTimedEvent().getEvent().getDeltaY() > 0) {
-                        // todo
-                    } else if (scrollCommand.getNanoTimedEvent().getEvent().getDeltaY() < 0) {
-                        // todo
-                    }
-                });
-            }
-            case MouseDragCommand mouseDragCommand -> {
-                if (mouseDragCommand.getMouseButton().equals(MouseButton.SECONDARY)) {
-                    this.getEntity().<PhysicCoreComponent>locateComponent(ComponentType.PhysicsCoreComponent).ifPresent(physicsCoreComponent -> {
-                        if (mouseDragCommand.isInOriginPosition()) {
-                            physicsCoreComponent.setVelocityXComponent(0);
-                            physicsCoreComponent.setVelocityYComponent(0);
-                        } else {
-                            physicsCoreComponent.setVelocityXComponent(-1 * mouseDragCommand.getDistanceX() * DRAG_SPEED_COEFFICIENT);
-                            physicsCoreComponent.setVelocityYComponent(-1 * mouseDragCommand.getDistanceY() * DRAG_SPEED_COEFFICIENT);
-                        }
-                    });
-                } else {
-                    log.info("MouseDragCommand received: {} ({})", inputCommand.getClass().getSimpleName(), mouseDragCommand.getMouseButton());
-                }
-            }
+            case KeyboardCommand keyboardCommand -> handleKeyboardCommand(keyboardCommand);
+            case ScrollCommand scrollCommand -> handleScrollCommand(scrollCommand);
+            case MouseDragCommand mouseDragCommand -> handleMouseDragCommand(inputCommand, mouseDragCommand);
             default -> logInputCommand(inputCommand);
         }
+    }
+
+    private void handleKeyboardCommand(@NonNull final KeyboardCommand keyboardCommand) {
+        this.getEntity().<PhysicCoreComponent>locateComponent(ComponentType.PhysicsCoreComponent).ifPresent(physicsCoreComponent -> {
+            if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.LEFT)) {
+                physicsCoreComponent.addVelocityXComponent(MOVING_FORCE);
+            } else if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.RIGHT)) {
+                physicsCoreComponent.addVelocityXComponent(-MOVING_FORCE);
+            } else if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.UP)) {
+                physicsCoreComponent.addVelocityYComponent(MOVING_FORCE);
+            } else if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.DOWN)) {
+                physicsCoreComponent.addVelocityYComponent(-MOVING_FORCE);
+            }
+        });
+    }
+
+    private void handleScrollCommand(@NonNull final ScrollCommand scrollCommand) {
+        this.getEntity().<PhysicCoreComponent>locateComponent(ComponentType.PhysicsCoreComponent).ifPresent(physicsCoreComponent -> {
+            if (scrollCommand.getNanoTimedEvent().getEvent().getDeltaY() > 0) {
+                locateRecomMapComponent().ifPresent(RECOMMapComponent::zoomIn);
+            } else if (scrollCommand.getNanoTimedEvent().getEvent().getDeltaY() < 0) {
+                locateRecomMapComponent().ifPresent(RECOMMapComponent::zoomOut);
+            }
+        });
+    }
+
+    private void handleMouseDragCommand(
+            @NonNull final IsCommand<?> inputCommand,
+            @NonNull final MouseDragCommand mouseDragCommand
+    ) {
+        if (mouseDragCommand.getMouseButton().equals(MouseButton.SECONDARY)) {
+            this.getEntity().<PhysicCoreComponent>locateComponent(ComponentType.PhysicsCoreComponent).ifPresent(physicsCoreComponent -> {
+                if (mouseDragCommand.isInOriginPosition()) {
+                    physicsCoreComponent.setVelocityXComponent(0);
+                    physicsCoreComponent.setVelocityYComponent(0);
+                } else {
+                    physicsCoreComponent.setVelocityXComponent(-1 * mouseDragCommand.getDistanceX() * DRAG_SPEED_COEFFICIENT);
+                    physicsCoreComponent.setVelocityYComponent(-1 * mouseDragCommand.getDistanceY() * DRAG_SPEED_COEFFICIENT);
+                }
+            });
+        } else {
+            log.info("MouseDragCommand received: {} ({})", inputCommand.getClass().getSimpleName(), mouseDragCommand.getMouseButton());
+        }
+    }
+
+    // @TODO; kann man das generalisieren?
+    @NonNull
+    private Optional<RECOMMapComponent> locateRecomMapComponent() {
+        if (maybeMapComponent.isEmpty()) {
+            maybeMapComponent = this.getEntity().locateComponents(ComponentType.RenderableComponent).stream()
+                    .filter(component -> component instanceof RECOMMapComponent)
+                    .map(component -> (RECOMMapComponent) component)
+                    .findFirst();
+        }
+
+        return maybeMapComponent;
     }
 
     private void logInputCommand(@NonNull final IsCommand<?> inputCommand) {

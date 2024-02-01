@@ -17,7 +17,7 @@ public class PhysicCoreComponent extends ComponentTemplate {
 
     private double dragInNewton = 1.0;
 
-    private double restoringForce = 0;
+    private double frictionForce = 0;
 
 
     public PhysicCoreComponent() {

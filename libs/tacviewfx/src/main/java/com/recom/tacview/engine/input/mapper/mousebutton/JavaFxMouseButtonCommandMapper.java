@@ -39,7 +39,6 @@ public class JavaFxMouseButtonCommandMapper implements IsInputCommandMapper<IsMo
         mouseButtonEventFSMs.forEach(IsMouseButtonEventFSM::start);
     }
 
-
     @Override
     @SuppressWarnings("unchecked")
     public boolean mapEvents(@NonNull final Stream<NanoTimedEvent<? extends InputEvent>> timedMouseEventStream) {

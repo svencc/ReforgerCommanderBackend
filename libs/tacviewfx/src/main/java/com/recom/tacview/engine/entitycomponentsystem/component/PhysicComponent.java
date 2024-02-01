@@ -19,7 +19,7 @@ public class PhysicComponent extends ComponentTemplate {
                 physicsCoreComponent.setPositionX(newPositionX);
                 physicsCoreComponent.setPositionY(newPositionY);
 
-                final double restoringForce = physicsCoreComponent.getRestoringForce();
+                final double restoringForce = physicsCoreComponent.getFrictionForce();
                 if (restoringForce != 0) {
                     double newVelocityX = applyRestoringForce(physicsCoreComponent.getVelocityXComponent(), restoringForce);
                     double newVelocityY = applyRestoringForce(physicsCoreComponent.getVelocityYComponent(), restoringForce);
