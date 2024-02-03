@@ -110,9 +110,9 @@ public class TacViewer extends Canvas {
     public synchronized void stop() {
         engineLoopRunnerThread.interrupt();
         try {
-            Thread.sleep(Duration.ofSeconds(1));
+            Thread.sleep(Duration.ofMillis(10));
         } catch (InterruptedException e) {
-            log.error("Interrupted while waiting for engine loop to stop", e);
+            log.error("Interrupted while waiting for engine loop to stop");
         }
     }
 
@@ -132,8 +132,8 @@ public class TacViewer extends Canvas {
         if (potentialNanosToSleep > 0) {
             try {
                 Thread.sleep(potentialNanosToSleep / 1_000_000, (int) (potentialNanosToSleep % 1_000_000));
-            } catch (InterruptedException e) {
-                log.error("Interrupted engineLoop while sleeping", e);
+            } catch (final InterruptedException e) {
+                log.warn("Interrupted engineLoop while sleeping");
             }
         }
 
