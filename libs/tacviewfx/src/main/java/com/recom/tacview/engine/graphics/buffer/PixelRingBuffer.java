@@ -13,6 +13,8 @@ public class PixelRingBuffer implements HasPixelBuffer {
     protected final PixelBuffer[] pixelBufferRing;
     @Getter
     private int currentBufferIndex;
+    @Getter
+    private int previouslyFinishedBufferIndex;
 
 
     public PixelRingBuffer(
@@ -22,6 +24,7 @@ public class PixelRingBuffer implements HasPixelBuffer {
         this.dimension = dimension;
         this.pixelBufferRing = new PixelBuffer[capacity];
         this.currentBufferIndex = 0;
+        this.previouslyFinishedBufferIndex = capacity - 1;
 
         preInitialize(capacity);
     }
@@ -31,9 +34,11 @@ public class PixelRingBuffer implements HasPixelBuffer {
             pixelBufferRing[i] = new PixelBuffer(dimension);
         }
         currentBufferIndex = 0;
+        this.previouslyFinishedBufferIndex = capacity - 1;
     }
 
     public void next() {
+        previouslyFinishedBufferIndex = currentBufferIndex;
         currentBufferIndex = (currentBufferIndex + 1) % pixelBufferRing.length;
         getPixelBuffer().setDirty(true);
     }
@@ -42,6 +47,11 @@ public class PixelRingBuffer implements HasPixelBuffer {
     @Override
     public PixelBuffer getPixelBuffer() {
         return pixelBufferRing[currentBufferIndex];
+    }
+
+    @NonNull
+    public PixelBuffer getPreviouslyFinishedPixelBuffer() {
+        return pixelBufferRing[previouslyFinishedBufferIndex];
     }
 
     // @TODO: >>>> to interface and further implement

@@ -6,8 +6,8 @@ import com.recom.commander.exception.GlobalExceptionHandler;
 import com.recom.commander.property.SpringApplicationProperties;
 import com.recom.tacview.engine.TacViewer;
 import com.recom.tacview.engine.graphics.ScreenComposer;
-import com.recom.tacview.engine.input.InputManager;
 import com.recom.tacview.engine.input.GenericFXInputEventListener;
+import com.recom.tacview.engine.input.InputManager;
 import com.recom.tacview.engine.module.EngineModule;
 import com.recom.tacview.property.RendererProperties;
 import com.recom.tacview.property.TickProperties;
@@ -24,6 +24,7 @@ import javafx.stage.Stage;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.SpringApplication;
 import org.springframework.context.event.EventListener;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -64,6 +65,11 @@ public class TacViewStageInitializer {
             final Stage tacViewStage = event.getStage();
             populateTacViewStage(tacViewStage);
             tacViewStage.show();
+            tacViewStage.setOnCloseRequest(onCloseEvent -> {
+                tacViewer.stop();
+                Platform.exit();
+                Platform.runLater(Platform::exit);
+            });
         } catch (final Throwable t) {
             globalExceptionHandler.uncaughtException(Thread.currentThread(), t);
         }
@@ -80,7 +86,9 @@ public class TacViewStageInitializer {
                 screenComposer,
                 engineModule,
                 genericFXInputEventListener,
-                inputManager
+                inputManager,
+                globalExceptionHandler
+
         );
         root.setCenter(tacViewer);
 
@@ -90,7 +98,6 @@ public class TacViewStageInitializer {
 //        final Window window = stage.getOwner();
 //        stage.initStyle(StageStyle.UNDECORATED); // BORDERLESS -> NEED to make movable on your own!
 
-
         final StringProperty titleProperty = stage.titleProperty();
 
         final ProfileFPSStrategy profileFPSStrategy = new ProfileFPSStrategy((@NonNull final String profiled) -> {
@@ -99,22 +106,16 @@ public class TacViewStageInitializer {
         tacViewer.setProfileFPSStrategy(profileFPSStrategy);
         tacViewer.start();
 
-        //__exampleHandler("test");
-
         stage.setResizable(false);
         stage.setScene(scene);
-    }
-
-    private void __exampleHandler(@NonNull final StringProperty stringProperty) {
-        tacViewer.setOnMouseClicked(event -> {
-            stringProperty.setValue(String.valueOf(Math.random()));
-        });
     }
 
     @EventListener(classes = ShutdownEvent.class)
     public void shutdown() {
         log.warn("Shutdown TacViewer ...");
-        tacViewer.stop();
+        if (tacViewer != null) {
+            tacViewer.stop();
+        }
     }
 
 }

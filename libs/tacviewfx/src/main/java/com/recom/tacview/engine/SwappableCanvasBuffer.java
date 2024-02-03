@@ -21,12 +21,10 @@ public class SwappableCanvasBuffer {
 
     private IntBuffer intBuffer = null;
     private PixelFormat<IntBuffer> pixelFormat = null;
-    private PixelBuffer<IntBuffer> pixelBuffer = null;
+    private PixelBuffer<IntBuffer> imagePixelBuffer = null;
     private WritableImage img = null;
 
-
-    public int currentBackBufferIndex = 0;
-    public int lastBackBufferIndex = -1;
+    public int currentShownBackBufferIndex = -1;
 
 
     public SwappableCanvasBuffer(
@@ -39,20 +37,21 @@ public class SwappableCanvasBuffer {
 
         intBuffer = IntBuffer.allocate(rendererProperties.getWidth() * rendererProperties.getHeight());
         pixelFormat = PixelFormat.getIntArgbPreInstance();
-        pixelBuffer = new PixelBuffer<>(rendererProperties.getWidth(), rendererProperties.getHeight(), intBuffer, pixelFormat);
-        img = new WritableImage(pixelBuffer);
+        imagePixelBuffer = new PixelBuffer<>(rendererProperties.getWidth(), rendererProperties.getHeight(), intBuffer, pixelFormat);
+        img = new WritableImage(imagePixelBuffer);
     }
 
     void swap() {
         // swap the back buffer, and the front buffer
-        if (currentBackBufferIndex == lastBackBufferIndex) {
+        int previouslyFinishedBufferIndex = screenComposer.getPreviouslyFinishedBufferIndex();
+        if (currentShownBackBufferIndex == previouslyFinishedBufferIndex) {
             // if the buffers are the same, do nothing
         } else {
             // else swap the buffers
-            lastBackBufferIndex = currentBackBufferIndex;
-            pixelBuffer.getBuffer().put(screenComposer.getPixelBuffer().directBufferAccess());
-            pixelBuffer.getBuffer().flip();
-            pixelBuffer.updateBuffer(__ -> null);
+            currentShownBackBufferIndex = previouslyFinishedBufferIndex;
+            imagePixelBuffer.getBuffer().put(screenComposer.getPreviouslyFinishedPixelBuffer().directBufferAccess());
+            imagePixelBuffer.getBuffer().flip();
+            imagePixelBuffer.updateBuffer(__ -> null);
 
             final GraphicsContext graphicsContext2D = canvas.getGraphicsContext2D();
             graphicsContext2D.drawImage(img, 0, 0, canvas.getWidth(), canvas.getHeight());
