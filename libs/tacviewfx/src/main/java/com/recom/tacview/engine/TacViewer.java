@@ -11,7 +11,7 @@ import com.recom.tacview.property.RendererProperties;
 import com.recom.tacview.property.TickProperties;
 import com.recom.tacview.service.profiler.ProfilerProvider;
 import com.recom.tacview.strategy.ProfileFPSStrategy;
-import javafx.application.Platform;
+import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.InputEvent;
 import lombok.NonNull;
@@ -38,6 +38,8 @@ public class TacViewer extends Canvas {
     private final GenericFXInputEventListener genericFXInputEventListener;
     @NonNull
     private final InputManager inputManager;
+    @NonNull
+    private final AnimationTimer animationTimerLoop;
     @NonNull
     private final Thread.UncaughtExceptionHandler globalExceptionHandler;
 
@@ -75,6 +77,8 @@ public class TacViewer extends Canvas {
         this.profiler = new TacViewerProfiler(profilerProvider);
         this.profiler.startProfiling();
 
+        this.animationTimerLoop = provideAnimationTimer();
+
         this.setFocusTraversable(true);
         this.requestFocus();
 
@@ -85,6 +89,18 @@ public class TacViewer extends Canvas {
         this.inputManager.registerCommandMapper(new JavaFxKeyboardCommandMapper());
     }
 
+    @NonNull
+    private AnimationTimer provideAnimationTimer() {
+        return new AnimationTimer() {
+            @Override
+            public void handle(final long now) {
+//                engineLoop(tickProperties, rendererProperties);
+                canvasBuffer.swap();
+//                profiler.getLoopCounter().countLoop();
+            }
+        };
+    }
+
     private void runEngineLoop() {
         engineLoopRunnerThread = new Thread(() -> {
             Thread.currentThread().setUncaughtExceptionHandler(globalExceptionHandler);
@@ -92,7 +108,7 @@ public class TacViewer extends Canvas {
 
             while (!Thread.currentThread().isInterrupted()) {
                 engineLoop(tickProperties, rendererProperties);
-                Platform.runLater(canvasBuffer::swap);
+//                Platform.runLater(canvasBuffer::swap);
                 profiler.getLoopCounter().countLoop();
             }
         });
@@ -104,14 +120,16 @@ public class TacViewer extends Canvas {
 
     public synchronized void start() {
         engineModule.run();
+        animationTimerLoop.start();
         runEngineLoop();
     }
 
     public synchronized void stop() {
+        animationTimerLoop.stop();
         engineLoopRunnerThread.interrupt();
         try {
             Thread.sleep(Duration.ofMillis(10));
-        } catch (InterruptedException e) {
+        } catch (final InterruptedException e) {
             log.error("Interrupted while waiting for engine loop to stop");
         }
     }
@@ -120,23 +138,12 @@ public class TacViewer extends Canvas {
             @NonNull final TickProperties tickProperties,
             @NonNull final RendererProperties rendererProperties
     ) {
-        long targetNanosBetweenLoops = Math.max(tickProperties.getTickThresholdNanoTime(), rendererProperties.getFrameThresholdNanoTime());
-
         // HANDLE TIME
-        final long currentNanoTime = System.nanoTime();
-        final long elapsedEngineNanoTime = (currentNanoTime - profiler.previousTickNanoTime);
-        final long deltaTickNanoTime = currentNanoTime - profiler.previousTickNanoTime;
-        final long deltaFrameNanoTime = currentNanoTime - profiler.previousFrameNanoTime;
-
-        final long potentialNanosToSleep = targetNanosBetweenLoops - elapsedEngineNanoTime;
-        if (potentialNanosToSleep > 0) {
-            try {
-                Thread.sleep(potentialNanosToSleep / 1_000_000, (int) (potentialNanosToSleep % 1_000_000));
-            } catch (final InterruptedException e) {
-                log.warn("Interrupted engineLoop while sleeping");
-            }
-        }
-
+        final long currentNanoTimeOnLoopStart = System.nanoTime();
+        final long elapsedEngineNanoTime = (currentNanoTimeOnLoopStart - profiler.previousTickNanoTime);
+        final long deltaTickNanoTime = currentNanoTimeOnLoopStart - profiler.previousTickNanoTime;
+        final long deltaFrameNanoTime = currentNanoTimeOnLoopStart - profiler.previousFrameNanoTime;
+        final long targetNanosOfLoops = Math.max(tickProperties.getTickThresholdNanoTime(), rendererProperties.getFrameThresholdNanoTime());
 
         // HANDLE INPUT
         final long inputHandlingStart = System.nanoTime();
@@ -161,6 +168,18 @@ public class TacViewer extends Canvas {
         // HANDLE PROFILING
         if (profileFPSStrategy != null && profiler.getLoopCounter().isOneSecondPassed()) {
             profileFPSStrategy.execute(profiler.writeProfile());
+        }
+
+
+        // sleep until next loop
+        final long loopDuration = System.nanoTime() - currentNanoTimeOnLoopStart;
+        final long nanosToSleep = targetNanosOfLoops - loopDuration;
+        if (nanosToSleep >= nanosToSleep/10) {
+            try {
+                Thread.sleep(nanosToSleep / 1_000_000, (int) (nanosToSleep % 1_000_000));
+            } catch (final InterruptedException e) {
+                log.warn("Interrupted engineLoop while sleeping");
+            }
         }
     }
 
