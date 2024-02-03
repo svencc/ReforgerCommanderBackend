@@ -94,9 +94,7 @@ public class TacViewer extends Canvas {
         return new AnimationTimer() {
             @Override
             public void handle(final long now) {
-//                engineLoop(tickProperties, rendererProperties);
                 canvasBuffer.swap();
-//                profiler.getLoopCounter().countLoop();
             }
         };
     }
@@ -108,7 +106,6 @@ public class TacViewer extends Canvas {
 
             while (!Thread.currentThread().isInterrupted()) {
                 engineLoop(tickProperties, rendererProperties);
-//                Platform.runLater(canvasBuffer::swap);
                 profiler.getLoopCounter().countLoop();
             }
         });

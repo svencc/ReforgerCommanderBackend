@@ -24,9 +24,7 @@ public class SwappableCanvasBuffer {
     private PixelBuffer<IntBuffer> imagePixelBuffer = null;
     private WritableImage img = null;
 
-
     public int currentShownBackBufferIndex = -1;
-//    public int lastBackBufferIndex = -1;
 
 
     public SwappableCanvasBuffer(
@@ -47,6 +45,8 @@ public class SwappableCanvasBuffer {
         // swap the back buffer, and the front buffer
         int previouslyFinishedBufferIndex = screenComposer.getPreviouslyFinishedBufferIndex();
         if (currentShownBackBufferIndex == previouslyFinishedBufferIndex) {
+            int a = 0;
+            a++;
             // if the buffers are the same, do nothing
         } else {
             // else swap the buffers

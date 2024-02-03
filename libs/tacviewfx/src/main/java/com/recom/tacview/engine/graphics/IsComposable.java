@@ -6,6 +6,6 @@ import lombok.NonNull;
 
 public interface IsComposable extends HasPixelBuffer {
 
-    int compose(@NonNull final Environment environment);
+    void compose(@NonNull final Environment environment);
 
 }

@@ -33,22 +33,17 @@ public class ScreenComposer implements IsComposable {
     }
 
     @Override
-    public int compose(@NonNull final Environment environment) {
-        if (!environment.getRenderPipeline().isDirty()) {
-//            return pixelRingBuffer.getCurrentBufferIndex();
-            return pixelRingBuffer.getPreviouslyFinishedBufferIndex();
-        } else {
-            pixelRingBuffer.next();
+    public void compose(@NonNull final Environment environment) {
+        if (environment.getRenderPipeline().isDirty()) {
             pixelRingBuffer.getPixelBuffer().clearBuffer();
             renderLayersInParallel(environment.getRenderPipeline());
             environment.getRenderPipeline().getLayers().forEach(layer -> {
                 layer.mergeBufferWith(pixelRingBuffer.getPixelBuffer(), 0, 0);
                 layer.dispose();
             });
+            pixelRingBuffer.next();
 
             environment.getRenderPipeline().propagateCleanStateToChildren();
-
-            return pixelRingBuffer.getPreviouslyFinishedBufferIndex();
         }
     }
 
