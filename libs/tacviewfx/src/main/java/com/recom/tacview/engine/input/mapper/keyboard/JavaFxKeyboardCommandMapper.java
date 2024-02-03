@@ -6,12 +6,13 @@ import com.recom.tacview.engine.input.command.keyboard.KeyboardCommand;
 import com.recom.tacview.engine.input.mapper.IsInputCommandMapper;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Comparator;
 import java.util.LinkedList;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -19,19 +20,25 @@ import java.util.stream.Stream;
 public class JavaFxKeyboardCommandMapper implements IsInputCommandMapper<KeyboardCommand> {
 
     @NonNull
-    private final LinkedList<NanoTimedEvent<KeyEvent>> unprocessedKeypressEvents = new LinkedList<>();
+    private final BlockingQueue<NanoTimedEvent<KeyEvent>> unprocessedKeypressEvents = new LinkedBlockingQueue<>();
     @NonNull
     private final KeyboardCommandGenerator keyboardCommandGenerator = new KeyboardCommandGenerator();
 
 
     @Override
     @SuppressWarnings("unchecked")
-    public boolean mapEvents(@NonNull final Stream<NanoTimedEvent<? extends InputEvent>> timedMouseEventStream) {
-        timedMouseEventStream
+    public boolean mapEvents(@NonNull final Stream<NanoTimedEvent<? extends InputEvent>> timedKeyboardEventStream) {
+        timedKeyboardEventStream
                 .filter(event -> event.getEvent() instanceof KeyEvent)
                 .map(event -> (NanoTimedEvent<KeyEvent>) event)
                 .filter(this::isObservedKeyEvent)
-                .forEach(unprocessedKeypressEvents::add);
+                .forEach(nanoTimedEvent -> {
+                    try {
+                        unprocessedKeypressEvents.put(nanoTimedEvent);
+                    } catch (final InterruptedException e) {
+                        log.error("Interrupted while adding keypress event to queue", e);
+                    }
+                });
 
         return runKeypresGenerator();
     }

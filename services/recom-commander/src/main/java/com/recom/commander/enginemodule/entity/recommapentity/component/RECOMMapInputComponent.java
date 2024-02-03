@@ -56,8 +56,10 @@ public class RECOMMapInputComponent extends InputComponent {
         this.getEntity().<PhysicCoreComponent>locateComponent(ComponentType.PhysicsCoreComponent).ifPresent(physicsCoreComponent -> {
             if (scrollCommand.getNanoTimedEvent().getEvent().getDeltaY() > 0) {
                 locateRecomMapComponent().ifPresent(RECOMMapComponent::zoomIn);
+                // TODO: Re-Reouting Events to entity -> ReDispatch; locate consumer(s), cache and call them with event
             } else if (scrollCommand.getNanoTimedEvent().getEvent().getDeltaY() < 0) {
                 locateRecomMapComponent().ifPresent(RECOMMapComponent::zoomOut);
+                // TODO: Re-Reouting Events to entity -> ReDispatch; locate consumer(s), cache and call them with event
             }
         });
     }

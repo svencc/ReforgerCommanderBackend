@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 @Slf4j
 @Service
@@ -18,7 +20,9 @@ public class InputManager {
 
     @Getter
     @NonNull
-    private final LinkedList<NanoTimedEvent<? extends InputEvent>> inputEventQueue = new LinkedList<>();
+    private final BlockingQueue<NanoTimedEvent<? extends InputEvent>> inputEventQueue = new LinkedBlockingQueue<>();
+    @NonNull
+    final LinkedList<NanoTimedEvent<? extends InputEvent>> drainedInputEventQueue = new LinkedList<>();
 
     @NonNull
     private final LinkedList<IsInputCommandMapper<?>> registeredCommandsMappers = new LinkedList<>();
@@ -28,15 +32,13 @@ public class InputManager {
 
 
     public void mapInputEventsToCommands() {
+        inputEventQueue.drainTo(drainedInputEventQueue);
         for (final IsInputCommandMapper<?> mapper : registeredCommandsMappers) {
-            if (mapper.mapEvents(inputEventQueue.stream())) {
+            if (mapper.mapEvents(drainedInputEventQueue.stream())) {
                 createdInputCommands.addAll(mapper.popCreatedCommands());
             }
         }
-    }
-
-    public void clearInputQueues() {
-        inputEventQueue.clear();
+        drainedInputEventQueue.clear();
     }
 
     @NonNull

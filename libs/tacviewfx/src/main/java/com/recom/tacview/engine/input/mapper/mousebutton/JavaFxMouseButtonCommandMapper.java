@@ -15,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import java.time.Duration;
 import java.util.Comparator;
 import java.util.LinkedList;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -22,15 +24,15 @@ import java.util.stream.Stream;
 public class JavaFxMouseButtonCommandMapper implements IsInputCommandMapper<IsMouseCommand<MouseEvent>> {
 
     @NonNull
-    private final LinkedList<NanoTimedEvent<MouseEvent>> unprocessedMouseEvents = new LinkedList<>();
+    private final BlockingQueue<NanoTimedEvent<MouseEvent>> unprocessedMouseEvents = new LinkedBlockingQueue<>();
     @NonNull
     private final LinkedList<IsMouseButtonEventFSM> mouseButtonEventFSMs = new LinkedList<>();
 
 
     public JavaFxMouseButtonCommandMapper() {
-        mouseButtonEventFSMs.add(new MouseButtonEventFSM2(Duration.ofMillis(150),Duration.ofMillis(175), MouseButton.PRIMARY));
-        mouseButtonEventFSMs.add(new MouseButtonEventFSM2(Duration.ofMillis(150),Duration.ofMillis(175), MouseButton.SECONDARY));
-        mouseButtonEventFSMs.add(new MouseButtonEventFSM2(Duration.ofMillis(150),Duration.ofMillis(175), MouseButton.MIDDLE));
+        mouseButtonEventFSMs.add(new MouseButtonEventFSM2(Duration.ofMillis(150), Duration.ofMillis(175), MouseButton.PRIMARY));
+        mouseButtonEventFSMs.add(new MouseButtonEventFSM2(Duration.ofMillis(150), Duration.ofMillis(175), MouseButton.SECONDARY));
+        mouseButtonEventFSMs.add(new MouseButtonEventFSM2(Duration.ofMillis(150), Duration.ofMillis(175), MouseButton.MIDDLE));
 
         startMachines();
     }
@@ -46,7 +48,13 @@ public class JavaFxMouseButtonCommandMapper implements IsInputCommandMapper<IsMo
                 .filter(event -> event.getEvent() instanceof MouseEvent)
                 .map(event -> (NanoTimedEvent<MouseEvent>) event)
                 .filter(this::isObservedMouseButtonEvent)
-                .forEach(unprocessedMouseEvents::add);
+                .forEach(nanoTimedEvent -> {
+                    try {
+                        unprocessedMouseEvents.put(nanoTimedEvent);
+                    } catch (final InterruptedException e) {
+                        log.error("Interrupted while adding keypress event to queue", e);
+                    }
+                });
 
         return runMouseButtonFSM();
     }

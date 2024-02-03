@@ -54,7 +54,8 @@ public abstract class Gateway<REQUEST, RESPONSE> {
                             if (response.getBody() != null) {
                                 try {
                                     final RESPONSE responseBody = objectMapper.readValue(response.getBody(), responseClazz);
-                                    requestLogger.profileRequest(request, response, nullableRequestBody, responseBody, started);
+                                    requestLogger.profileRequest(request, response, nullableRequestBody, null, started);
+//                                    requestLogger.profileRequest(request, response, nullableRequestBody, responseBody, started);
                                     return ResponseEntity.ok(responseBody);
                                 } catch (final Exception e) {
                                     throw new HttpErrorException(e.getMessage(), e);

@@ -9,13 +9,15 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.LinkedList;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Stream;
 
 @Slf4j
 public class JavaFxMouseScrollCommandMapper implements IsInputCommandMapper<ScrollCommand> {
 
     @NonNull
-    private final LinkedList<NanoTimedEvent<ScrollEvent>> unprocessedScrollEvents = new LinkedList<>();
+    private final BlockingQueue<NanoTimedEvent<ScrollEvent>> unprocessedScrollEvents = new LinkedBlockingQueue<>();
 
     @NonNull
     private final LinkedList<ScrollCommand> mappedCommands = new LinkedList<>();
@@ -23,21 +25,26 @@ public class JavaFxMouseScrollCommandMapper implements IsInputCommandMapper<Scro
 
     @Override
     @SuppressWarnings("unchecked")
-    public boolean mapEvents(@NonNull final Stream<NanoTimedEvent<? extends InputEvent>> timedMouseEventStream) {
-        timedMouseEventStream
+    public boolean mapEvents(@NonNull final Stream<NanoTimedEvent<? extends InputEvent>> timedMouseScrollEventStream) {
+        timedMouseScrollEventStream
                 .filter(event -> event.getEvent() instanceof ScrollEvent)
                 .map(event -> (NanoTimedEvent<ScrollEvent>) event)
                 .filter(this::isMouseScrollEvent)
-                .forEach(unprocessedScrollEvents::add);
+                .forEach(nanoTimedEvent -> {
+                    try {
+                        unprocessedScrollEvents.put(nanoTimedEvent);
+                    } catch (final InterruptedException e) {
+                        log.error("Interrupted while adding keypress event to queue", e);
+                    }
+                });
 
         return mapEventsToCommands();
     }
 
     private boolean mapEventsToCommands() {
-        unprocessedScrollEvents.stream()
-                .map(ScrollCommand::of)
-                .forEach(mappedCommands::add);
-        unprocessedScrollEvents.clear();
+        while (!unprocessedScrollEvents.isEmpty()) {
+            mappedCommands.add(ScrollCommand.of(unprocessedScrollEvents.poll()));
+        }
 
         return !mappedCommands.isEmpty();
     }

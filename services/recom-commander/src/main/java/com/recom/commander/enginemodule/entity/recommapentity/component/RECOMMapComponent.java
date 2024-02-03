@@ -23,6 +23,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import java.util.LinkedList;
+
 @Slf4j
 @Component
 public class RECOMMapComponent extends RenderableComponent implements AutoCloseable {
@@ -40,6 +42,9 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
     private ReactiveObserver<HeightMapDescriptorDto> mapTopographyDataReactiveObserver;
 
     private int pixelFactor = 1;
+
+    @NonNull
+    private final LinkedList<PixelBuffer> scaledMapPixelBufferList = new LinkedList<>();
 
 
     public RECOMMapComponent(
@@ -131,11 +136,10 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
     }
 
     private void swapBuffer() {
-        // @TODO <<<<---------------------------------------------------------------------------------------------------
-        // swap buffer this.pixelBuffer = new PixelBuffer(dimension, pixelBufferArray);
+        // @TODO <<<<--------------------------------------------------------------------------------------------------
 
-        // create LinkedList<PixelBuffer> pixelBufferList
         // init first element with actual buffer!
+        scaledMapPixelBufferList.add(this.pixelBuffer);
     }
 
 }
