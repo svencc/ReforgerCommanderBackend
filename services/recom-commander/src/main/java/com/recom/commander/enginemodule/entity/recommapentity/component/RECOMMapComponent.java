@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import java.util.LinkedList;
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -35,16 +35,16 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
     private final MapTopographyDataService mapTopographyDataService;
     @NonNull
     private final HeightmapRasterizer heightmapRasterizer;
+    @NonNull
+    private Optional<HeightMapDescriptor> maybeHeightMapDescriptor = Optional.empty();
+
 
     @Nullable
     private ReactiveObserver<MapOverviewDto> mapOverviewReactiveObserver;
     @Nullable
     private ReactiveObserver<HeightMapDescriptorDto> mapTopographyDataReactiveObserver;
 
-    private int pixelFactor = 1;
-
-    @NonNull
-    private final LinkedList<PixelBuffer> scaledMapPixelBufferList = new LinkedList<>();
+    private int scaleFactor = 0;
 
 
     public RECOMMapComponent(
@@ -77,13 +77,18 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
             log.debug("Received map topography data");
             final HeightMapDescriptorDto heightMapDescriptorDto = notification.getPayload();
             final HeightMapDescriptor heightMapDescriptor = HeightMapDescriptorMapper.INSTANCE.toModel(heightMapDescriptorDto);
+            maybeHeightMapDescriptor = Optional.of(heightMapDescriptor);
 
-            final int[] pixelBufferArray = heightmapRasterizer.rasterizeHeightMapRGB(heightMapDescriptor);
-            final PixelDimension dimension = PixelDimension.of(heightMapDescriptor.getHeightMap().length, heightMapDescriptor.getHeightMap()[0].length);
-
-            this.pixelBuffer = new PixelBuffer(dimension, pixelBufferArray);
-            propagateDirtyStateToParent();
+            setNativeMap(heightMapDescriptor);
         };
+    }
+
+    private void setNativeMap(@NonNull final HeightMapDescriptor heightMapDescriptor) {
+        final int[] pixelBufferArray = heightmapRasterizer.rasterizeHeightMapRGB(heightMapDescriptor);
+        final PixelDimension dimension = PixelDimension.of(heightMapDescriptor.getHeightMap().length, heightMapDescriptor.getHeightMap()[0].length);
+        this.pixelBuffer = new PixelBuffer(dimension, pixelBufferArray);
+
+        propagateDirtyStateToParent();
     }
 
     @NonNull
@@ -121,24 +126,74 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
     }
 
     public void zoomIn() {
-        if (pixelFactor == 1) {
-            return;
-        } else {
-            pixelFactor--;
-            swapBuffer();
+        if (maybeHeightMapDescriptor.isPresent()) {
+            final HeightMapDescriptor heightMapDescriptor = maybeHeightMapDescriptor.get();
+            final int originalMapHeight = heightMapDescriptor.getHeightMap().length;
+            final int originalMapWidth = heightMapDescriptor.getHeightMap().length;
+
+            switch (scaleFactor) {
+                case -2:
+                    scaleFactor = 0;
+                    break;
+                case 0, 1:
+                    scaleFactor = 2;
+                    break;
+                default:
+                    scaleFactor++;
+                    break;
+            }
+
+            if (scaleFactor == 0) {
+                setNativeMap(heightMapDescriptor);
+            } else {
+                setScaledMap(heightMapDescriptor, originalMapWidth, originalMapHeight);
+            }
         }
     }
 
     public void zoomOut() {
-        pixelFactor++;
-        swapBuffer();
+        if (maybeHeightMapDescriptor.isPresent()) {
+            final HeightMapDescriptor heightMapDescriptor = maybeHeightMapDescriptor.get();
+            final int originalMapHeight = heightMapDescriptor.getHeightMap().length;
+            final int originalMapWidth = heightMapDescriptor.getHeightMap().length;
+
+            switch (scaleFactor) {
+                case 2:
+                    scaleFactor = 0;
+                    break;
+                case 0, -1:
+                    scaleFactor = -2;
+                    break;
+                default:
+                    scaleFactor--;
+                    break;
+            }
+
+            if (scaleFactor == 0) {
+                setNativeMap(heightMapDescriptor);
+            } else {
+                setScaledMap(heightMapDescriptor, originalMapWidth, originalMapHeight);
+            }
+        }
     }
 
-    private void swapBuffer() {
-        // @TODO <<<<--------------------------------------------------------------------------------------------------
+    private void setScaledMap(HeightMapDescriptor heightMapDescriptor, int originalMapWidth, int originalMapHeight) {
+        final int[] newScaledPixelArray = heightmapRasterizer.rasterizeHeightMapRGB(heightMapDescriptor, scaleFactor);
+        final PixelBuffer newScaledPixelBuffer = new PixelBuffer(PixelDimension.of(scaledPixelDimension(originalMapWidth, scaleFactor), scaledPixelDimension(originalMapHeight, scaleFactor)), newScaledPixelArray);
+        this.setPixelBuffer(newScaledPixelBuffer);
 
-        // init first element with actual buffer!
-        scaledMapPixelBufferList.add(this.pixelBuffer);
+        propagateDirtyStateToParent();
+    }
+
+    private int scaledPixelDimension(
+            final int originalDimension,
+            final int scaleFactor
+    ) {
+        if (scaleFactor > 0) {
+            return originalDimension * scaleFactor;
+        } else {
+            return originalDimension / Math.abs(scaleFactor);
+        }
     }
 
 }
