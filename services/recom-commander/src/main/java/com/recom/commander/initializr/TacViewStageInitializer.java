@@ -25,7 +25,6 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -54,9 +53,8 @@ public class TacViewStageInitializer {
     private final GenericFXInputEventListener genericFXInputEventListener;
     @NonNull
     private final InputManager inputManager;
-
-    @Nullable
-    private TacViewer tacViewer = null;
+    @NonNull
+    private Optional<TacViewer> maybeTacViewer = Optional.empty();
 
 
     @EventListener(classes = InitializeStageEvent.class)
@@ -79,7 +77,7 @@ public class TacViewStageInitializer {
         final BorderPane root = new BorderPane();
         root.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
 
-        tacViewer = new TacViewer(
+        final TacViewer tacViewer = new TacViewer(
                 rendererProperties,
                 tickProperties,
                 profilerProvider,
@@ -90,7 +88,8 @@ public class TacViewStageInitializer {
                 globalExceptionHandler
 
         );
-        root.setCenter(tacViewer);
+        maybeTacViewer = Optional.of(tacViewer);
+        root.setCenter(maybeTacViewer.get());
 
         final Scene scene = new Scene(root, rendererProperties.getScaledWindowWidth(), rendererProperties.getScaledWindowHeight());
         stage.setTitle(springApplicationProperties.getName());
@@ -113,9 +112,7 @@ public class TacViewStageInitializer {
     @EventListener(classes = ShutdownEvent.class)
     public void shutdown() {
         log.warn("Shutdown TacViewer ...");
-        if (tacViewer != null) {
-            tacViewer.stop();
-        }
+        maybeTacViewer.ifPresent(TacViewer::stop);
     }
 
 }
