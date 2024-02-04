@@ -67,9 +67,8 @@ public class TacViewStageInitializer {
             populateTacViewStage(tacViewStage);
             tacViewStage.show();
             tacViewStage.setOnCloseRequest(onCloseEvent -> {
-                tacViewer.stop();
+                System.out.println("\n\n------------------------------------ CLOSED ------------------------------------");
                 Platform.exit();
-                Platform.runLater(Platform::exit);
             });
         } catch (final Throwable t) {
             globalExceptionHandler.uncaughtException(Thread.currentThread(), t);

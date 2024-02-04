@@ -54,6 +54,7 @@ public class JavaFxApplication extends Application {
 
     @Override
     public void stop() {
+        System.out.println("\n\n------------------------------------- STOP -------------------------------------");
         log.warn("Closing application context ...");
         applicationContext.publishEvent(new ShutdownEvent(this));
         applicationContext.close();
