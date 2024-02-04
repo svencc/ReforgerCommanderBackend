@@ -1,6 +1,6 @@
 package com.recom.tacview.engine.input.command.mousebutton;
 
-import com.recom.tacview.TrigonometricCalculator;
+import com.recom.tacview.util.TrigonometricCalculator;
 import com.recom.tacview.engine.input.NanoTimedEvent;
 import javafx.scene.input.MouseEvent;
 import lombok.Getter;

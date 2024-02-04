@@ -1,8 +1,10 @@
-package com.recom.tacview;
+package com.recom.tacview.util;
 
 import javafx.scene.input.MouseEvent;
 import lombok.NonNull;
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
 public class TrigonometricCalculator {
 
     public static double calculateRadiantBetweenMouseEvents(
@@ -18,13 +20,13 @@ public class TrigonometricCalculator {
     }
 
     public static double calculateRadiantBetweenPoints(
-            final double x,
-            final double y,
             final double x1,
-            final double y1
+            final double y1,
+            final double x2,
+            final double y2
     ) {
-        final double deltaX = x1 - x;
-        final double deltaY = y1 - y;
+        final double deltaX = x2 - x1;
+        final double deltaY = y2 - y1;
 
         return Math.atan2(deltaY, deltaX);
     }
