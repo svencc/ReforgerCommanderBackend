@@ -4,6 +4,7 @@ import com.recom.commander.event.InitializeStageEvent;
 import com.recom.commander.event.ShutdownEvent;
 import com.recom.commander.exception.GlobalExceptionHandler;
 import com.recom.commander.property.SpringApplicationProperties;
+import com.recom.commander.util.LoggerUtil;
 import com.recom.tacview.engine.TacViewer;
 import com.recom.tacview.engine.graphics.ScreenComposer;
 import com.recom.tacview.engine.input.GenericFXInputEventListener;
@@ -65,7 +66,7 @@ public class TacViewStageInitializer {
             populateTacViewStage(tacViewStage);
             tacViewStage.show();
             tacViewStage.setOnCloseRequest(onCloseEvent -> {
-                System.out.println("\n\n------------------------------------ CLOSED ------------------------------------");
+                System.out.println("\n\n" + LoggerUtil.generateCenteredString("CLOSED"));
                 Platform.exit();
             });
         } catch (final Throwable t) {
