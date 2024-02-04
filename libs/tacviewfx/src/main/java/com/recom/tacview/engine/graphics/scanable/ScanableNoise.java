@@ -16,6 +16,7 @@ public class ScanableNoise implements IsScanable {
     @NonNull
     private final PixelDimension dimension;
 
+
     @Override
     public int scanPixelAt(
             final int x,

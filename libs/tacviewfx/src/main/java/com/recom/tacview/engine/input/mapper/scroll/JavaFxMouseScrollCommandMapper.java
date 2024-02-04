@@ -18,7 +18,6 @@ public class JavaFxMouseScrollCommandMapper implements IsInputCommandMapper<Scro
 
     @NonNull
     private final BlockingQueue<NanoTimedEvent<ScrollEvent>> unprocessedScrollEvents = new LinkedBlockingQueue<>();
-
     @NonNull
     private final LinkedList<ScrollCommand> mappedCommands = new LinkedList<>();
 

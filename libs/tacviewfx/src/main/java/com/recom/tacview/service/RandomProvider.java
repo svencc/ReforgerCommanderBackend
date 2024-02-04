@@ -14,6 +14,7 @@ public final class RandomProvider {
     private int poolSize = 10;
     private int currentInstance = 0;
 
+
     @PostConstruct
     public void postConstruct() {
         instancePool = new Random[poolSize];

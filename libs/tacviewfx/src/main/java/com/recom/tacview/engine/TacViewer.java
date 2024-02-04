@@ -7,6 +7,7 @@ import com.recom.tacview.engine.input.mapper.keyboard.JavaFxKeyboardCommandMappe
 import com.recom.tacview.engine.input.mapper.mousebutton.JavaFxMouseButtonCommandMapper;
 import com.recom.tacview.engine.input.mapper.scroll.JavaFxMouseScrollCommandMapper;
 import com.recom.tacview.engine.module.EngineModule;
+import com.recom.tacview.engine.units.TimeUnits;
 import com.recom.tacview.property.RendererProperties;
 import com.recom.tacview.property.TickProperties;
 import com.recom.tacview.service.profiler.ProfilerProvider;
@@ -17,9 +18,9 @@ import javafx.scene.input.InputEvent;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.lang.Nullable;
 
 import java.time.Duration;
+import java.util.Optional;
 
 @Slf4j
 public class TacViewer extends Canvas {
@@ -39,19 +40,16 @@ public class TacViewer extends Canvas {
     @NonNull
     private final InputManager inputManager;
     @NonNull
-    private final AnimationTimer animationTimerLoop;
-    @NonNull
     private final Thread.UncaughtExceptionHandler globalExceptionHandler;
-
-
     @NonNull
     private final SwappableCanvasBuffer canvasBuffer;
     @NonNull
-    private Thread engineLoopRunnerThread;
-
+    private final AnimationTimer animationTimerLoop;
+    @NonNull
+    private final Thread engineLoopThread;
     @Setter
-    @Nullable
-    private ProfileFPSStrategy profileFPSStrategy;
+    @NonNull
+    private Optional<ProfileFPSStrategy> maybeProfileFPSStrategy;
 
 
     public TacViewer(
@@ -78,6 +76,7 @@ public class TacViewer extends Canvas {
         this.profiler.startProfiling();
 
         this.animationTimerLoop = provideAnimationTimer();
+        this.engineLoopThread = provideEngineLoopThread();
 
         this.setFocusTraversable(true);
         this.requestFocus();
@@ -99,8 +98,10 @@ public class TacViewer extends Canvas {
         };
     }
 
-    private void runEngineLoop() {
-        engineLoopRunnerThread = new Thread(() -> {
+
+    @NonNull
+    private Thread provideEngineLoopThread() {
+        final Thread thread = new Thread(() -> {
             Thread.currentThread().setUncaughtExceptionHandler(globalExceptionHandler);
             Thread.setDefaultUncaughtExceptionHandler(globalExceptionHandler);
 
@@ -109,21 +110,20 @@ public class TacViewer extends Canvas {
                 profiler.getLoopCounter().countLoop();
             }
         });
+        thread.setDaemon(false);
 
-        engineLoopRunnerThread.setDaemon(false);
-        engineLoopRunnerThread.start();
+        return thread;
     }
-
 
     public synchronized void start() {
         engineModule.run();
         animationTimerLoop.start();
-        runEngineLoop();
+        engineLoopThread.start();
     }
 
     public synchronized void stop() {
         animationTimerLoop.stop();
-        engineLoopRunnerThread.interrupt();
+        engineLoopThread.interrupt();
         try {
             Thread.sleep(Duration.ofMillis(10));
         } catch (final InterruptedException e) {
@@ -135,7 +135,7 @@ public class TacViewer extends Canvas {
             @NonNull final TickProperties tickProperties,
             @NonNull final RendererProperties rendererProperties
     ) {
-        // HANDLE TIME
+        // HANDLE TIME CALCULATIONS
         final long currentNanoTimeOnLoopStart = System.nanoTime();
         final long elapsedEngineNanoTime = (currentNanoTimeOnLoopStart - profiler.previousTickNanoTime);
         final long deltaTickNanoTime = currentNanoTimeOnLoopStart - profiler.previousTickNanoTime;
@@ -163,17 +163,17 @@ public class TacViewer extends Canvas {
         }
 
         // HANDLE PROFILING
-        if (profileFPSStrategy != null && profiler.getLoopCounter().isOneSecondPassed()) {
-            profileFPSStrategy.execute(profiler.writeProfile());
+        if (maybeProfileFPSStrategy.isPresent() && profiler.getLoopCounter().isOneSecondPassed()) {
+            maybeProfileFPSStrategy.get().execute(profiler.writeProfile());
         }
 
-
-        // sleep until next loop
-        final long loopDuration = System.nanoTime() - currentNanoTimeOnLoopStart;
-        final long nanosToSleep = targetNanosOfLoops - loopDuration;
-        if (nanosToSleep >= nanosToSleep/10) {
+        // SLEEP UNTIL NEXT LOOP
+        final long loopNanosUntilHere = System.nanoTime() - currentNanoTimeOnLoopStart;
+        final long nanosToSleep = targetNanosOfLoops - loopNanosUntilHere;
+        if (nanosToSleep >= nanosToSleep / 10) {
             try {
                 Thread.sleep(nanosToSleep / 1_000_000, (int) (nanosToSleep % 1_000_000));
+                Thread.sleep(nanosToSleep / TimeUnits.ONE_MILLI_IN_NANOS_L, (int) (nanosToSleep % TimeUnits.ONE_MILLI_IN_NANOS_L));
             } catch (final InterruptedException e) {
                 log.warn("Interrupted engineLoop while sleeping");
             }

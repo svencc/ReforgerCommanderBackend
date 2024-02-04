@@ -8,15 +8,10 @@ import lombok.Setter;
 public class PhysicCoreComponent extends ComponentTemplate {
 
     private double positionX = 0.0;
-
     private double positionY = 0.0;
-
     private double velocityXComponent = 0.0;
-
     private double velocityYComponent = 0.0;
-
     private double dragInNewton = 1.0;
-
     private double frictionForce = 0;
 
 

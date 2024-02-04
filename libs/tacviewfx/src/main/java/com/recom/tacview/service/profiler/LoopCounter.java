@@ -22,7 +22,7 @@ public class LoopCounter {
 
     public boolean isOneSecondPassed() {
         final long now = System.currentTimeMillis();
-        final boolean isOneSecondPassed = now - lastProfileIterationInMillis > TimeUnits.SECOND_IN_MILLIS;
+        final boolean isOneSecondPassed = now - lastProfileIterationInMillis > TimeUnits.SECOND_IN_MILLIS_D;
         if (isOneSecondPassed) {
             lastProfileIterationInMillis = now;
         }

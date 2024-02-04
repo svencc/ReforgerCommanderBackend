@@ -13,7 +13,9 @@ import java.util.Map;
 
 public class NullRenderPipeline implements IsRenderPipeline {
 
+    @NonNull
     public static final NullRenderPipeline INSTANCE = new NullRenderPipeline();
+
 
     private NullRenderPipeline() {
     }

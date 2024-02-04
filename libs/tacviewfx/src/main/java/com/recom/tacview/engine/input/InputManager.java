@@ -23,10 +23,8 @@ public class InputManager {
     private final BlockingQueue<NanoTimedEvent<? extends InputEvent>> inputEventQueue = new LinkedBlockingQueue<>();
     @NonNull
     final LinkedList<NanoTimedEvent<? extends InputEvent>> drainedInputEventQueue = new LinkedList<>();
-
     @NonNull
     private final LinkedList<IsInputCommandMapper<?>> registeredCommandsMappers = new LinkedList<>();
-
     @NonNull
     private final LinkedList<IsCommand<?>> createdInputCommands = new LinkedList<>();
 

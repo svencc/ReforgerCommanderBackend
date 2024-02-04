@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface HasComponents {
 
-    @NonNull List<IsComponent> getComponents();
+    @NonNull
+    List<IsComponent> getComponents();
 
 }

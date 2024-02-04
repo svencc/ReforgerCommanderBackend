@@ -12,12 +12,11 @@ public class PixelBuffer implements IsBufferable {
 
     @Getter
     protected PixelDimension dimension;
-
     @Getter
     @Setter
     private boolean dirty = false;
-
     protected int[] pixelBuffer;
+
 
     public PixelBuffer(@NonNull final PixelDimension dimension) {
         this.dimension = dimension;

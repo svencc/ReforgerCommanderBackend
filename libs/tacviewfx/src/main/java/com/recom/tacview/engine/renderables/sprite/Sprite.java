@@ -12,6 +12,7 @@ public class Sprite implements HasPixelBuffer {
     @NonNull
     private final PixelBuffer pixelBuffer;
 
+
     public Sprite(@NonNull final PixelDimension dimension) {
         pixelBuffer = new PixelBuffer(dimension);
     }

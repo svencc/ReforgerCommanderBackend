@@ -14,7 +14,6 @@ public abstract class ComponentTemplate implements IsComponent {
     @Setter
     @NonNull
     private IsEntity entity = NullEntity.INSTANCE;
-
     @NonNull
     private final ComponentType componentType;
 

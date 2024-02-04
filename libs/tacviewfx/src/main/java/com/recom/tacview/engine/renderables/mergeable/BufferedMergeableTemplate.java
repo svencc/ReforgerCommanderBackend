@@ -15,9 +15,9 @@ public abstract class BufferedMergeableTemplate implements IsMergeable, HasPixel
     @Getter
     @NonNull
     private final PixelBuffer pixelBuffer;
-
     @NonNull
     private final RenderProvider renderProvider;
+
 
     public BufferedMergeableTemplate(
             @NonNull final PixelDimension dimension,

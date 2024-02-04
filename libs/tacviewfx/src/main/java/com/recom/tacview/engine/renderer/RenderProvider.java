@@ -22,6 +22,7 @@ public final class RenderProvider {
     @Nullable
     private IsRenderable instance;
 
+
     public IsRenderable provide() {
         if (instance == null) {
             if (rendererProperties.isParallelizedRendering()) {

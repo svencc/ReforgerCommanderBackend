@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface HasEntities {
 
-    @NonNull List<Entity> getEntities();
+    @NonNull
+    List<Entity> getEntities();
 
 }

@@ -24,10 +24,11 @@ import javafx.stage.Stage;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.SpringApplication;
 import org.springframework.context.event.EventListener;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 
 @Slf4j
@@ -103,7 +104,7 @@ public class TacViewStageInitializer {
         final ProfileFPSStrategy profileFPSStrategy = new ProfileFPSStrategy((@NonNull final String profiled) -> {
             Platform.runLater(() -> titleProperty.setValue(profiled));
         });
-        tacViewer.setProfileFPSStrategy(profileFPSStrategy);
+        tacViewer.setMaybeProfileFPSStrategy(Optional.of(profileFPSStrategy));
         tacViewer.start();
 
         stage.setResizable(false);

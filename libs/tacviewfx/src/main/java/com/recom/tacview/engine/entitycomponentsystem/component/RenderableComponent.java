@@ -17,7 +17,6 @@ import lombok.Setter;
 public abstract class RenderableComponent extends ComponentTemplate implements HasPixelBuffer, BelongsToMergeableComponentLayer, ParentPropagateableSoilableState, ChildPropagateableSoilableState {
 
     private int zIndex = 0;
-
     @NonNull
     protected PixelBuffer pixelBuffer;
 

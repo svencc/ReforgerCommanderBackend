@@ -16,12 +16,10 @@ public class Entity implements IsEntity {
 
     @NonNull
     private final List<IsComponent> components = new ArrayList<>();
-
     @Getter
     @Setter
     @NonNull
     private IsEnvironment environment = NullEnvironment.INSTANCE;
-
     @NonNull
     private Map<? extends Class<? extends IsComponent>, List<IsComponent>> componentMap = new HashMap<>();
 

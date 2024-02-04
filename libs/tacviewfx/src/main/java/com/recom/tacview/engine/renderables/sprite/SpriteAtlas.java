@@ -16,6 +16,7 @@ public class SpriteAtlas implements HasPixelBuffer {
     @NonNull
     private final PixelBuffer pixelBuffer;
 
+
     public SpriteAtlas(@NonNull final String path) throws IOException {
         final BufferedImage image = ImageIO.read(SpriteAtlas.class.getResource(path));
         final PixelDimension dimension = PixelDimension.of(image.getWidth(), image.getHeight());

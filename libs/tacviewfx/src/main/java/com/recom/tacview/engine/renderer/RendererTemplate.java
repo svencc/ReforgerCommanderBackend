@@ -15,6 +15,7 @@ abstract class RendererTemplate implements IsRenderable {
     @NonNull
     protected final ARGBCalculatorProvider argbCalculatorProvider;
 
+
     public RendererTemplate(@NonNull final ARGBCalculatorProvider argbCalculatorProvider) {
         this.argbCalculatorProvider = argbCalculatorProvider;
     }

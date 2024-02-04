@@ -30,8 +30,6 @@ public abstract class Environment implements IsEnvironment {
     @Getter
     @NonNull
     private final IsRenderPipeline renderPipeline = new RenderPipeline(this);
-
-
     @NonNull
     private final List<Entity> entities = new ArrayList<>();
 

@@ -17,7 +17,6 @@
   * add menu
 
 
-
 # 1.1
 * load entity to environment
 * load new environment

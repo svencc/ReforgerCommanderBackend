@@ -12,10 +12,10 @@ public class PixelDimension {
 
     @NonNull
     private static final HashMap<String, PixelDimension> INSTANCE_LIST = new HashMap<>();
-
     private final int widthX;
     private final int heightY;
 
+    
     @NonNull
     public static PixelDimension of(
             final int widthX,

@@ -20,14 +20,11 @@ public class RenderPipeline implements IsRenderPipeline {
 
     @NonNull
     private final IsEnvironment environment;
-
     @NonNull
-    final Map<Integer, List<RenderableComponent>> renderableComponentList = new HashMap<>();
-
+    private final Map<Integer, List<RenderableComponent>> renderableComponentList = new HashMap<>();
     @Getter
     @NonNull
     private final List<MergeableComponentLayer> layers = new ArrayList<>();
-
     @Getter
     @Setter
     private boolean dirty = true;

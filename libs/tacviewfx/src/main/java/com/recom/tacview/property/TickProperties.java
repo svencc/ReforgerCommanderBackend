@@ -16,7 +16,6 @@ import java.time.Duration;
 public class TickProperties {
 
     private int targetTps;
-
     private long tickThresholdNanoTime = 0;
 
 
