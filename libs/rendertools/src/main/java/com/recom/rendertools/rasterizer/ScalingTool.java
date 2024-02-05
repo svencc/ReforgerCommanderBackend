@@ -29,9 +29,9 @@ public class ScalingTool {
             final int scaleFactor
     ) {
         if (scaleFactor > 0) {
-            return scaledDimension / (double) Math.abs(scaleFactor);
+            return scaledDimension / (double) scaleFactor;
         } else {
-            return scaledDimension * scaleFactor;
+            return scaledDimension * Math.abs(scaleFactor);
         }
     }
 
@@ -40,9 +40,9 @@ public class ScalingTool {
             final int scaleFactor
     ) {
         if (scaleFactor > 0) {
-            return scaledDimension / (double) Math.abs(scaleFactor);
+            return scaledDimension / (double) scaleFactor;
         } else {
-            return scaledDimension * scaleFactor;
+            return scaledDimension * Math.abs(scaleFactor);
         }
     }
 

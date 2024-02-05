@@ -224,6 +224,8 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
         propagateDirtyStateToParent();
     }
 
+
+    // extract
     public int round(final double number) {
         final int integerComponent = (int) Math.floor(number);
         final double decimalComponent = number - integerComponent;
@@ -232,6 +234,26 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
             return integerComponent + 1;
         } else {
             return integerComponent;
+        }
+    }
+
+    public int getSign(final int number) {
+        if (number > 0) {
+            return 1;
+        } else if (number < 0) {
+            return -1;
+        } else {
+            return 0;
+        }
+    }
+
+    public int getSign(final double number) {
+        if (number > 0) {
+            return 1;
+        } else if (number < 0) {
+            return -1;
+        } else {
+            return 0;
         }
     }
 

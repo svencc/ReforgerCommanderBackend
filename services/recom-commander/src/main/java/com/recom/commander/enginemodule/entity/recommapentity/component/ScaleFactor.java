@@ -40,11 +40,21 @@ public class ScaleFactor implements Cloneable {
         }
     }
 
+    public int getSign() {
+        if (scaleFactor > 0) {
+            return 1;
+        } else if (scaleFactor < 0) {
+            return -1;
+        } else {
+            return 0;
+        }
+    }
+
     @Override
     public ScaleFactor clone() {
         final ScaleFactor scaleFactorClone = new ScaleFactor();
         scaleFactorClone.scaleFactor = this.scaleFactor;
-        
+
         return scaleFactorClone;
     }
 
