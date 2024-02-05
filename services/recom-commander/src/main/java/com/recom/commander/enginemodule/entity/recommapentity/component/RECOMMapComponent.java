@@ -13,6 +13,7 @@ import com.recom.observer.Subjective;
 import com.recom.observer.TakeNoticeRunnable;
 import com.recom.rendertools.rasterizer.HeightMapDescriptor;
 import com.recom.rendertools.rasterizer.HeightmapRasterizer;
+import com.recom.rendertools.rasterizer.ScalingTool;
 import com.recom.tacview.engine.entitycomponentsystem.component.PhysicCoreComponent;
 import com.recom.tacview.engine.entitycomponentsystem.component.RenderableComponent;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
@@ -39,12 +40,10 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
     private final HeightmapRasterizer heightmapRasterizer;
     @NonNull
     private Optional<HeightMapDescriptor> maybeHeightMapDescriptor = Optional.empty();
-
     @Nullable
     private final ReactiveObserver<MapOverviewDto> mapOverviewReactiveObserver;
     @Nullable
     private final ReactiveObserver<HeightMapDescriptorDto> mapTopographyDataReactiveObserver;
-
     private int scaleFactor = 1;
 
 
@@ -77,10 +76,9 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
             final HeightMapDescriptor heightMapDescriptor = HeightMapDescriptorMapper.INSTANCE.toModel(heightMapDescriptorDto);
             maybeHeightMapDescriptor = Optional.of(heightMapDescriptor);
 
-            setNativeMap(heightMapDescriptor);
+            setMap(heightMapDescriptor);
         };
     }
-
 
     @NonNull
     private TakeNoticeRunnable<MapOverviewDto> onReloadMapOverviewReaction() {
@@ -127,10 +125,6 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
             final double mousePositionOnMapX = (-1 * originXOld + nanoTimedEvent.getEvent().getSceneX()) / scaleFactorOld;
             final double mousePositionOnMapY = (-1 * originYOld + nanoTimedEvent.getEvent().getSceneY()) / scaleFactorOld;
 
-            final HeightMapDescriptor heightMapDescriptor = maybeHeightMapDescriptor.get();
-            final int originalMapHeight = heightMapDescriptor.getHeightMap().length;
-            final int originalMapWidth = heightMapDescriptor.getHeightMap().length;
-
             switch (scaleFactor) {
                 case -2:
                     scaleFactor = 1;
@@ -144,14 +138,14 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
             }
 
             if (scaleFactor == 1) {
-                setNativeMap(heightMapDescriptor);
+                setMap(maybeHeightMapDescriptor.get());
             } else {
-                setScaledMap(heightMapDescriptor, originalMapWidth, originalMapHeight);
+                setScaledMap(maybeHeightMapDescriptor.get(), scaleFactor);
             }
 
 
-            double scaledMousePositionOnMapX = scaledPixelDimension(mousePositionOnMapX, scaleFactor);
-            double scaledMousePositionOnMapY = scaledPixelDimension(mousePositionOnMapY, scaleFactor);
+            double scaledMousePositionOnMapX = ScalingTool.scaledPixelDimension(mousePositionOnMapX, scaleFactor);
+            double scaledMousePositionOnMapY = ScalingTool.scaledPixelDimension(mousePositionOnMapY, scaleFactor);
 
             double newPositionX = 0 - scaledMousePositionOnMapX + (mousePositionOnMapX);
             double newPositionY = 0 - scaledMousePositionOnMapY + (mousePositionOnMapY);
@@ -171,11 +165,6 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
             final double mousePositionOnMapX = (-1 * originXOld + nanoTimedEvent.getEvent().getSceneX()) / scaleFactorOld;
             final double mousePositionOnMapY = (-1 * originYOld + nanoTimedEvent.getEvent().getSceneY()) / scaleFactorOld;
 
-
-            final HeightMapDescriptor heightMapDescriptor = maybeHeightMapDescriptor.get();
-            final int originalMapHeight = heightMapDescriptor.getHeightMap().length;
-            final int originalMapWidth = heightMapDescriptor.getHeightMap().length;
-
             switch (scaleFactor) {
                 case 2:
                     scaleFactor = 1;
@@ -189,14 +178,14 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
             }
 
             if (scaleFactor == 1) {
-                setNativeMap(heightMapDescriptor);
+                setMap(maybeHeightMapDescriptor.get());
             } else {
-                setScaledMap(heightMapDescriptor, originalMapWidth, originalMapHeight);
+                setScaledMap(maybeHeightMapDescriptor.get(), scaleFactor);
             }
 
 
-            double scaledMousePositionOnMapX = scaledPixelDimension(mousePositionOnMapX, scaleFactor);
-            double scaledMousePositionOnMapY = scaledPixelDimension(mousePositionOnMapY, scaleFactor);
+            double scaledMousePositionOnMapX = ScalingTool.scaledPixelDimension(mousePositionOnMapX, scaleFactor);
+            double scaledMousePositionOnMapY = ScalingTool.scaledPixelDimension(mousePositionOnMapY, scaleFactor);
 
             double newPositionX = 0 - scaledMousePositionOnMapX + (mousePositionOnMapX);
             double newPositionY = 0 - scaledMousePositionOnMapY + (mousePositionOnMapY);
@@ -205,52 +194,35 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
         }
     }
 
-    private void setNativeMap(@NonNull final HeightMapDescriptor heightMapDescriptor) {
+    private void setMap(@NonNull final HeightMapDescriptor heightMapDescriptor) {
+        final int mapWidth = heightMapDescriptor.getHeightMap().length;
+        final int mapHeight = heightMapDescriptor.getHeightMap()[0].length;
+
         final int[] pixelBufferArray = heightmapRasterizer.rasterizeHeightMapRGB(heightMapDescriptor);
-        final PixelDimension dimension = PixelDimension.of(heightMapDescriptor.getHeightMap().length, heightMapDescriptor.getHeightMap()[0].length);
-        this.pixelBuffer = new PixelBuffer(dimension, pixelBufferArray);
+
+        final PixelBuffer newPixelBuffer = new PixelBuffer(PixelDimension.of(mapWidth, mapHeight), pixelBufferArray);
+        this.setPixelBuffer(newPixelBuffer);
 
         propagateDirtyStateToParent();
     }
 
     private void setScaledMap(
             @NonNull HeightMapDescriptor heightMapDescriptor,
-            final int originalMapWidth,
-            final int originalMapHeight
+            final int scaleFactor
     ) {
+        final int originalMapHeight = heightMapDescriptor.getHeightMap().length;
+        final int originalMapWidth = heightMapDescriptor.getHeightMap()[0].length;
+
+        final int scaledMapWidth = (int) ScalingTool.scaledPixelDimension(originalMapWidth, scaleFactor);
+        final int scaledMapHeight = (int) ScalingTool.scaledPixelDimension(originalMapHeight, scaleFactor);
+
         final int[] newScaledPixelArray = heightmapRasterizer.rasterizeHeightMapRGB(heightMapDescriptor, scaleFactor);
-        final PixelBuffer newScaledPixelBuffer = new PixelBuffer(
-                PixelDimension.of(
-                        (int) scaledPixelDimension(originalMapWidth, scaleFactor),
-                        (int) scaledPixelDimension(originalMapHeight, scaleFactor)
-                ),
-                newScaledPixelArray
-        );
+
+        final PixelBuffer newScaledPixelBuffer = new PixelBuffer(PixelDimension.of(scaledMapWidth, scaledMapHeight), newScaledPixelArray);
         this.setPixelBuffer(newScaledPixelBuffer);
 
         propagateDirtyStateToParent();
     }
 
-    private double scaledPixelDimension(
-            final int originalDimension,
-            final int scaleFactor
-    ) {
-        if (scaleFactor > 0) {
-            return originalDimension * scaleFactor;
-        } else {
-            return originalDimension / (double) Math.abs(scaleFactor);
-        }
-    }
-
-    private double scaledPixelDimension(
-            final double originalDimension,
-            final int scaleFactor
-    ) {
-        if (scaleFactor > 0) {
-            return originalDimension * scaleFactor;
-        } else {
-            return originalDimension / (double) Math.abs(scaleFactor);
-        }
-    }
 
 }
