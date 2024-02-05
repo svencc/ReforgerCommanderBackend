@@ -2,7 +2,7 @@ package com.recom.rendertools.rasterizer;
 
 public class ScalingTool {
 
-    public static double scaledPixelDimension(
+    public static double scaleDimension(
             final int originalDimension,
             final int scaleFactor
     ) {
@@ -13,7 +13,7 @@ public class ScalingTool {
         }
     }
 
-    public static double scaledPixelDimension(
+    public static double scaleDimension(
             final double originalDimension,
             final int scaleFactor
     ) {
@@ -21,6 +21,28 @@ public class ScalingTool {
             return originalDimension * scaleFactor;
         } else {
             return originalDimension / (double) Math.abs(scaleFactor);
+        }
+    }
+
+    public static double normalizeDimension(
+            final int scaledDimension,
+            final int scaleFactor
+    ) {
+        if (scaleFactor > 0) {
+            return scaledDimension / (double) Math.abs(scaleFactor);
+        } else {
+            return scaledDimension * scaleFactor;
+        }
+    }
+
+    public static double normalizeDimension(
+            final double scaledDimension,
+            final int scaleFactor
+    ) {
+        if (scaleFactor > 0) {
+            return scaledDimension / (double) Math.abs(scaleFactor);
+        } else {
+            return scaledDimension * scaleFactor;
         }
     }
 

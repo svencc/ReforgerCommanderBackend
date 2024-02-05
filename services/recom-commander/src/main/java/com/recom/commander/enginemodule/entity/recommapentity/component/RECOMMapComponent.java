@@ -18,6 +18,7 @@ import com.recom.tacview.engine.entitycomponentsystem.component.PhysicCoreCompon
 import com.recom.tacview.engine.entitycomponentsystem.component.RenderableComponent;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
 import com.recom.tacview.engine.input.NanoTimedEvent;
+import com.recom.tacview.engine.units.PixelCoordinate;
 import com.recom.tacview.engine.units.PixelDimension;
 import jakarta.annotation.Nullable;
 import javafx.scene.input.ScrollEvent;
@@ -44,7 +45,7 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
     private final ReactiveObserver<MapOverviewDto> mapOverviewReactiveObserver;
     @Nullable
     private final ReactiveObserver<HeightMapDescriptorDto> mapTopographyDataReactiveObserver;
-    private int scaleFactor = 1;
+    private ScaleFactor scaleFactor = new ScaleFactor();
 
 
     public RECOMMapComponent(
@@ -119,79 +120,78 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
             @NonNull final PhysicCoreComponent physicsCoreComponent
     ) {
         if (maybeHeightMapDescriptor.isPresent()) {
-            final double originXOld = physicsCoreComponent.getPositionX();
-            final double originYOld = physicsCoreComponent.getPositionY();
-            final double scaleFactorOld = (scaleFactor > 0) ? scaleFactor : 1 / (double) Math.abs(scaleFactor);
-            final double mousePositionOnMapX = (-1 * originXOld + nanoTimedEvent.getEvent().getSceneX()) / scaleFactorOld;
-            final double mousePositionOnMapY = (-1 * originYOld + nanoTimedEvent.getEvent().getSceneY()) / scaleFactorOld;
+            final PixelCoordinate mouseCoordinateOnCanvas = PixelCoordinate.of(nanoTimedEvent.getEvent());
+            final PixelCoordinate normalizedCoordinateOnMap = getCoordinateOfMouseOnMap(nanoTimedEvent, physicsCoreComponent, scaleFactor);
 
-            switch (scaleFactor) {
-                case -2:
-                    scaleFactor = 1;
-                    break;
-                case -1, 1:
-                    scaleFactor = 2;
-                    break;
-                default:
-                    scaleFactor++;
-                    break;
-            }
-
-            if (scaleFactor == 1) {
+            scaleFactor.zoomIn();
+            if (scaleFactor.getScaleFactor() == 1) {
                 setMap(maybeHeightMapDescriptor.get());
             } else {
-                setScaledMap(maybeHeightMapDescriptor.get(), scaleFactor);
+                setScaledMap(maybeHeightMapDescriptor.get(), scaleFactor.getScaleFactor());
             }
 
-
-            double scaledMousePositionOnMapX = ScalingTool.scaledPixelDimension(mousePositionOnMapX, scaleFactor);
-            double scaledMousePositionOnMapY = ScalingTool.scaledPixelDimension(mousePositionOnMapY, scaleFactor);
-
-            double newPositionX = 0 - scaledMousePositionOnMapX + (mousePositionOnMapX);
-            double newPositionY = 0 - scaledMousePositionOnMapY + (mousePositionOnMapY);
-            physicsCoreComponent.setPositionX(newPositionX);
-            physicsCoreComponent.setPositionY(newPositionY);
+            final PixelCoordinate scaledMapCoordinate = normalizedCoordinateOnMap.scaled(scaleFactor.getScaleFactor());
+            physicsCoreComponent.setPositionX(-scaledMapCoordinate.getX() + mouseCoordinateOnCanvas.getX());
+            physicsCoreComponent.setPositionY(-scaledMapCoordinate.getY() + mouseCoordinateOnCanvas.getY());
         }
     }
+
+    /*
+    ANLEITUNG ZUM ZOOMEN:
+    Also das wird so laufen:
+    1. ermitteln der Mausposition auf der Map (/)
+    2. ermitteln der skalierten Mausposition auf der skalierten Map (durch die ScalingTool Klasse)
+    3. die 0,0 Position der Map wird auf die skalierte Mausposition gesetzt
+    4. die Map wird neu gezeichnet
+    5. die Map wird um die skalierte Mausposition entgegen der Mausposition verschoben
+
+    Frage: Wird das dazu führen, dass die Map wieder so zentriert wird, dass die Mausposition auf der Map wieder die gleiche ist wie vor dem Zoomen?
+    Antwort: Ja, das wird dazu führen, dass die Map wieder so zentriert wird, dass die Mausposition auf der Map wieder die gleiche ist wie vor dem Zoomen.
+     */
 
     public void zoomOut(
             @NonNull final NanoTimedEvent<ScrollEvent> nanoTimedEvent,
             @NonNull final PhysicCoreComponent physicsCoreComponent
     ) {
         if (maybeHeightMapDescriptor.isPresent()) {
-            final double originXOld = physicsCoreComponent.getPositionX();
-            final double originYOld = physicsCoreComponent.getPositionY();
-            final double scaleFactorOld = (scaleFactor > 0) ? scaleFactor : 1 / (double) Math.abs(scaleFactor);
-            final double mousePositionOnMapX = (-1 * originXOld + nanoTimedEvent.getEvent().getSceneX()) / scaleFactorOld;
-            final double mousePositionOnMapY = (-1 * originYOld + nanoTimedEvent.getEvent().getSceneY()) / scaleFactorOld;
+            final PixelCoordinate mouseCoordinateOnCanvas = PixelCoordinate.of(nanoTimedEvent.getEvent());
+            final PixelCoordinate normalizedCoordinateOnMap = getCoordinateOfMouseOnMap(nanoTimedEvent, physicsCoreComponent, scaleFactor);
 
-            switch (scaleFactor) {
-                case 2:
-                    scaleFactor = 1;
-                    break;
-                case 1, -1:
-                    scaleFactor = -2;
-                    break;
-                default:
-                    scaleFactor--;
-                    break;
-            }
+            scaleFactor.zoomOut();
 
-            if (scaleFactor == 1) {
+            if (scaleFactor.getScaleFactor() == 1) {
                 setMap(maybeHeightMapDescriptor.get());
             } else {
-                setScaledMap(maybeHeightMapDescriptor.get(), scaleFactor);
+                setScaledMap(maybeHeightMapDescriptor.get(), scaleFactor.getScaleFactor());
             }
 
-
-            double scaledMousePositionOnMapX = ScalingTool.scaledPixelDimension(mousePositionOnMapX, scaleFactor);
-            double scaledMousePositionOnMapY = ScalingTool.scaledPixelDimension(mousePositionOnMapY, scaleFactor);
-
-            double newPositionX = 0 - scaledMousePositionOnMapX + (mousePositionOnMapX);
-            double newPositionY = 0 - scaledMousePositionOnMapY + (mousePositionOnMapY);
-            physicsCoreComponent.setPositionX(newPositionX);
-            physicsCoreComponent.setPositionY(newPositionY);
+            final PixelCoordinate scaledMapCoordinate = normalizedCoordinateOnMap.scaled(scaleFactor.getScaleFactor());
+            physicsCoreComponent.setPositionX(-scaledMapCoordinate.getX() + mouseCoordinateOnCanvas.getX());
+            physicsCoreComponent.setPositionY(-scaledMapCoordinate.getY() + mouseCoordinateOnCanvas.getY());
         }
+    }
+
+    @NonNull
+    private PixelCoordinate getCoordinateOfMouseOnMap(
+            @NonNull final NanoTimedEvent<ScrollEvent> nanoTimedEvent,
+            @NonNull final PhysicCoreComponent physicsCoreComponent,
+            @NonNull final ScaleFactor scaleFactor
+    ) {
+        final double originX = physicsCoreComponent.getPositionX();
+        final double originY = physicsCoreComponent.getPositionY();
+
+        final double mouseOnCanvasX = nanoTimedEvent.getEvent().getSceneX();
+        final double mouseOnCanvasY = nanoTimedEvent.getEvent().getSceneY();
+
+        final int scaledMousePositionOnScaledMapX = (int) (-1 * originX + mouseOnCanvasX);
+        final int scaledMousePositionOnScaledMapY = (int) (-1 * originY + mouseOnCanvasY);
+
+        final int normalizedMousePositionOnNormalizedMapX = round(ScalingTool.normalizeDimension(scaledMousePositionOnScaledMapX, scaleFactor.getScaleFactor()));
+        final int normalizedMousePositionOnNormalizedMapY = round(ScalingTool.normalizeDimension(scaledMousePositionOnScaledMapY, scaleFactor.getScaleFactor()));
+        log.info("normalizedMapX: " + normalizedMousePositionOnNormalizedMapX);
+        log.info("normalizedMapY: " + normalizedMousePositionOnNormalizedMapY);
+
+        return PixelCoordinate.of(normalizedMousePositionOnNormalizedMapX, normalizedMousePositionOnNormalizedMapY);
     }
 
     private void setMap(@NonNull final HeightMapDescriptor heightMapDescriptor) {
@@ -213,8 +213,8 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
         final int originalMapHeight = heightMapDescriptor.getHeightMap().length;
         final int originalMapWidth = heightMapDescriptor.getHeightMap()[0].length;
 
-        final int scaledMapWidth = (int) ScalingTool.scaledPixelDimension(originalMapWidth, scaleFactor);
-        final int scaledMapHeight = (int) ScalingTool.scaledPixelDimension(originalMapHeight, scaleFactor);
+        final int scaledMapWidth = (int) ScalingTool.scaleDimension(originalMapWidth, scaleFactor);
+        final int scaledMapHeight = (int) ScalingTool.scaleDimension(originalMapHeight, scaleFactor);
 
         final int[] newScaledPixelArray = heightmapRasterizer.rasterizeHeightMapRGB(heightMapDescriptor, scaleFactor);
 
@@ -224,5 +224,15 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
         propagateDirtyStateToParent();
     }
 
+    public int round(final double number) {
+        final int integerComponent = (int) Math.floor(number);
+        final double decimalComponent = number - integerComponent;
+
+        if (decimalComponent >= 0.5) {
+            return integerComponent + 1;
+        } else {
+            return integerComponent;
+        }
+    }
 
 }
