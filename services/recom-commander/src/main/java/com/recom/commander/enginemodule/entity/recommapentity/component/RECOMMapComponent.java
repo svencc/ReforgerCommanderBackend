@@ -219,7 +219,13 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
             final int originalMapHeight
     ) {
         final int[] newScaledPixelArray = heightmapRasterizer.rasterizeHeightMapRGB(heightMapDescriptor, scaleFactor);
-        final PixelBuffer newScaledPixelBuffer = new PixelBuffer(PixelDimension.of((int) scaledPixelDimension(originalMapWidth, scaleFactor), (int) scaledPixelDimension(originalMapHeight, scaleFactor)), newScaledPixelArray);
+        final PixelBuffer newScaledPixelBuffer = new PixelBuffer(
+                PixelDimension.of(
+                        (int) scaledPixelDimension(originalMapWidth, scaleFactor),
+                        (int) scaledPixelDimension(originalMapHeight, scaleFactor)
+                ),
+                newScaledPixelArray
+        );
         this.setPixelBuffer(newScaledPixelBuffer);
 
         propagateDirtyStateToParent();
