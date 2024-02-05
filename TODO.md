@@ -4,6 +4,7 @@
 * new InputComponent interacting with MapComponent
   * (map) zooming (/)
   * zoom-out interpolation/ calculating average color of surrounding pixels!!!!! (<-)
+  * tidy up
 * add sortable physics modifier components
 * NULLImplementations -> Optionals ...
 * 
