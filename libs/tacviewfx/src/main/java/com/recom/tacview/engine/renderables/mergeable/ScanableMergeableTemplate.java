@@ -2,7 +2,7 @@ package com.recom.tacview.engine.renderables.mergeable;
 
 import com.recom.tacview.engine.graphics.IsScanable;
 import com.recom.tacview.engine.renderables.IsMergeable;
-import com.recom.tacview.engine.units.PixelDimension;
+import com.recom.commons.units.PixelDimension;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

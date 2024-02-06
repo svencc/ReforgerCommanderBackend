@@ -1,7 +1,7 @@
 package com.recom.tacview.engine.graphics.buffer;
 
 import com.recom.tacview.engine.graphics.IsBufferable;
-import com.recom.tacview.engine.units.PixelDimension;
+import com.recom.commons.units.PixelDimension;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -12,12 +12,11 @@ public class PixelBuffer implements IsBufferable {
 
     @Getter
     protected PixelDimension dimension;
-
     @Getter
     @Setter
     private boolean dirty = false;
-
     protected int[] pixelBuffer;
+
 
     public PixelBuffer(@NonNull final PixelDimension dimension) {
         this.dimension = dimension;

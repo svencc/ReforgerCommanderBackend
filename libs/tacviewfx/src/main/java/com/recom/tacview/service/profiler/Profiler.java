@@ -10,7 +10,6 @@ public class Profiler {
     @NonNull
     private final String profilerName;
     private long nanoTimeStart;
-
     @Getter
     private long profiledNanos = 0;
 

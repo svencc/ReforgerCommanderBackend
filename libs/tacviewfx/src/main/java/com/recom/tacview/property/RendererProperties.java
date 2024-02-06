@@ -1,6 +1,6 @@
 package com.recom.tacview.property;
 
-import com.recom.tacview.engine.units.PixelDimension;
+import com.recom.commons.units.PixelDimension;
 import lombok.*;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

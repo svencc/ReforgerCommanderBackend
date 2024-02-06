@@ -10,7 +10,6 @@ public class MouseButtonCommand implements IsMouseCommand<MouseEvent> {
 
     private final long timeBetweenDragStartAndDragStop;
     private final boolean probableDraggingIntention;
-
     @NonNull
     private final NanoTimedEvent<MouseEvent> nanoTimedEvent;
     private final boolean doubleClick;

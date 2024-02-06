@@ -1,7 +1,7 @@
 package com.recom.tacview.engine.module;
 
-import com.recom.tacview.engine.entitycomponentsystem.entity.Entity;
-import com.recom.tacview.engine.entitycomponentsystem.environment.IsEnvironment;
+import com.recom.tacview.engine.ecs.entity.Entity;
+import com.recom.tacview.engine.ecs.environment.IsEnvironment;
 import com.recom.tacview.engine.graphics.renderpipeline.IsRenderPipeline;
 import com.recom.tacview.engine.graphics.renderpipeline.NullRenderPipeline;
 import com.recom.tacview.engine.renderer.RenderProvider;

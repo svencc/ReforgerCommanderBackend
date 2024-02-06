@@ -1,6 +1,6 @@
 package com.recom.tacview.engine.graphics.renderpipeline;
 
-import com.recom.tacview.engine.entitycomponentsystem.component.RenderableComponent;
+import com.recom.tacview.engine.ecs.component.RenderableComponent;
 import com.recom.tacview.engine.renderables.mergeable.MergeableComponentLayer;
 import lombok.Getter;
 import lombok.NonNull;
@@ -13,7 +13,9 @@ import java.util.Map;
 
 public class NullRenderPipeline implements IsRenderPipeline {
 
+    @NonNull
     public static final NullRenderPipeline INSTANCE = new NullRenderPipeline();
+
 
     private NullRenderPipeline() {
     }

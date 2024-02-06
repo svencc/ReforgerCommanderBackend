@@ -21,13 +21,12 @@ public class KeyboardCommandGenerator {
 
     @NonNull
     private final HashMap<KeyCode, NanoTimedEvent<KeyEvent>> pressedKeyEventsBuffer = new HashMap<>();
-
     @NonNull
     private final LinkedList<KeyboardCommand> bufferedCommands = new LinkedList<>();
-
     @NonNull
     private final HashSet<KeyCode> ignoredKeyCodes = new HashSet<>();
 
+    
     public KeyboardCommandGenerator() {
         ignoredKeyCodes.add(KeyCode.WINDOWS);
     }

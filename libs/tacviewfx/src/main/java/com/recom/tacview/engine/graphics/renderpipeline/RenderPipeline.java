@@ -1,8 +1,8 @@
 package com.recom.tacview.engine.graphics.renderpipeline;
 
-import com.recom.tacview.engine.entitycomponentsystem.component.ComponentType;
-import com.recom.tacview.engine.entitycomponentsystem.component.RenderableComponent;
-import com.recom.tacview.engine.entitycomponentsystem.environment.IsEnvironment;
+import com.recom.tacview.engine.ecs.component.ComponentType;
+import com.recom.tacview.engine.ecs.component.RenderableComponent;
+import com.recom.tacview.engine.ecs.environment.IsEnvironment;
 import com.recom.tacview.engine.renderables.mergeable.MergeableComponentLayer;
 import lombok.Getter;
 import lombok.NonNull;
@@ -20,14 +20,11 @@ public class RenderPipeline implements IsRenderPipeline {
 
     @NonNull
     private final IsEnvironment environment;
-
     @NonNull
-    final Map<Integer, List<RenderableComponent>> renderableComponentList = new HashMap<>();
-
+    private final Map<Integer, List<RenderableComponent>> renderableComponentList = new HashMap<>();
     @Getter
     @NonNull
     private final List<MergeableComponentLayer> layers = new ArrayList<>();
-
     @Getter
     @Setter
     private boolean dirty = true;

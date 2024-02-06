@@ -1,10 +1,10 @@
 # TODO LIST
 
 # 1
-* new InputComponent interacting with MapComponent
-  * (map) zooming (<<<<<<<--------------------------------)
-* add sortable physics modifier components
 * NULLImplementations -> Optionals ...
+* 
+* only render visible part of screen! special renderer for screen. (<-)
+* add sortable physics modifier components
 * 
 * dynamic changeable render properties!
 * optimize Layers so that they must not be reinstantiated every time on update. Reuse layers and remove/extend entities on update
@@ -15,7 +15,6 @@
   * add scale bar
   * add measurement tool
   * add menu
-
 
 
 # 1.1

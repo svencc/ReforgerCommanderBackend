@@ -1,6 +1,6 @@
 package com.recom.tacview.engine.graphics.buffer;
 
-import com.recom.tacview.engine.units.PixelDimension;
+import com.recom.commons.units.PixelDimension;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

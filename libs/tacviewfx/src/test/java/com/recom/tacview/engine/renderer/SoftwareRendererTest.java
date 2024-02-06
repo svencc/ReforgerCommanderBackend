@@ -3,7 +3,7 @@ package com.recom.tacview.engine.renderer;
 import com.recom.tacview.engine.graphics.IsScanable;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
 import com.recom.tacview.engine.renderables.sprite.SpriteAtlas;
-import com.recom.tacview.engine.units.PixelDimension;
+import com.recom.commons.units.PixelDimension;
 import com.recom.tacview.service.argb.ARGBCalculatorProvider;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

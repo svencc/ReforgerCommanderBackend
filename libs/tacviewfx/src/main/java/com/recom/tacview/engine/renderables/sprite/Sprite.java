@@ -2,7 +2,7 @@ package com.recom.tacview.engine.renderables.sprite;
 
 import com.recom.tacview.engine.renderables.HasPixelBuffer;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
-import com.recom.tacview.engine.units.PixelDimension;
+import com.recom.commons.units.PixelDimension;
 import lombok.Getter;
 import lombok.NonNull;
 
@@ -11,6 +11,7 @@ public class Sprite implements HasPixelBuffer {
     @Getter
     @NonNull
     private final PixelBuffer pixelBuffer;
+
 
     public Sprite(@NonNull final PixelDimension dimension) {
         pixelBuffer = new PixelBuffer(dimension);

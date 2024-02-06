@@ -1,10 +1,12 @@
 package com.recom.tacview.engine.graphics;
 
 import com.recom.tacview.engine.renderables.IsSoilable;
-import com.recom.tacview.engine.units.PixelDimension;
+import com.recom.commons.units.PixelDimension;
+import lombok.NonNull;
 
 public interface IsBufferable extends IsScanable, IsSoilable {
 
+    @NonNull
     PixelDimension getDimension();
 
     void bufferPixelAt(

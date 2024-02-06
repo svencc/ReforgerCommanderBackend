@@ -1,8 +1,8 @@
 package com.recom.commander.enginemodule.entity.recommapentity.component;
 
-import com.recom.tacview.engine.entitycomponentsystem.component.ComponentType;
-import com.recom.tacview.engine.entitycomponentsystem.component.InputComponent;
-import com.recom.tacview.engine.entitycomponentsystem.component.PhysicCoreComponent;
+import com.recom.tacview.engine.ecs.component.ComponentType;
+import com.recom.tacview.engine.ecs.component.InputComponent;
+import com.recom.tacview.engine.ecs.component.PhysicCoreComponent;
 import com.recom.tacview.engine.input.command.IsCommand;
 import com.recom.tacview.engine.input.command.keyboard.KeyboardCommand;
 import com.recom.tacview.engine.input.command.mousebutton.MouseButton;
@@ -55,10 +55,10 @@ public class RECOMMapInputComponent extends InputComponent {
     private void handleScrollCommand(@NonNull final ScrollCommand scrollCommand) {
         this.getEntity().<PhysicCoreComponent>locateComponent(ComponentType.PhysicsCoreComponent).ifPresent(physicsCoreComponent -> {
             if (scrollCommand.getNanoTimedEvent().getEvent().getDeltaY() > 0) {
-                locateRecomMapComponent().ifPresent(RECOMMapComponent::zoomIn);
+                locateRecomMapComponent().ifPresent((mapComponent) -> mapComponent.zoomIn(scrollCommand.getNanoTimedEvent(), physicsCoreComponent));
                 // TODO: Re-Reouting Events to entity -> ReDispatch; locate consumer(s), cache and call them with event
             } else if (scrollCommand.getNanoTimedEvent().getEvent().getDeltaY() < 0) {
-                locateRecomMapComponent().ifPresent(RECOMMapComponent::zoomOut);
+                locateRecomMapComponent().ifPresent((mapComponent) -> mapComponent.zoomOut(scrollCommand.getNanoTimedEvent(), physicsCoreComponent));
                 // TODO: Re-Reouting Events to entity -> ReDispatch; locate consumer(s), cache and call them with event
             }
         });

@@ -17,9 +17,7 @@ import java.util.stream.Stream;
 @Slf4j
 public class MouseButtonEventFSM2 implements IsMouseButtonEventFSM {
 
-    @NonNull
     private final long doubleClickThresholdNanos;
-    @NonNull
     private final long dragToClickThresholdNanos;
     @NonNull
     private final MouseButton responsibleForMouseButton;

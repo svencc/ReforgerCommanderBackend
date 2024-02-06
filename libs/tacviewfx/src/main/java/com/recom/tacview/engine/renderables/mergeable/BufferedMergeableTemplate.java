@@ -5,7 +5,7 @@ import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
 import com.recom.tacview.engine.renderables.HasPixelBuffer;
 import com.recom.tacview.engine.renderables.IsMergeable;
 import com.recom.tacview.engine.renderer.RenderProvider;
-import com.recom.tacview.engine.units.PixelDimension;
+import com.recom.commons.units.PixelDimension;
 import lombok.Getter;
 import lombok.NonNull;
 
@@ -15,9 +15,9 @@ public abstract class BufferedMergeableTemplate implements IsMergeable, HasPixel
     @Getter
     @NonNull
     private final PixelBuffer pixelBuffer;
-
     @NonNull
     private final RenderProvider renderProvider;
+
 
     public BufferedMergeableTemplate(
             @NonNull final PixelDimension dimension,

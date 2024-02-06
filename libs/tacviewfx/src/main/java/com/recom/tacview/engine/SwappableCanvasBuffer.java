@@ -17,13 +17,10 @@ public class SwappableCanvasBuffer {
     private final Canvas canvas;
     @NonNull
     private final ScreenComposer screenComposer;
-
-
     private IntBuffer intBuffer = null;
     private PixelFormat<IntBuffer> pixelFormat = null;
     private PixelBuffer<IntBuffer> imagePixelBuffer = null;
     private WritableImage img = null;
-
     public int currentShownBackBufferIndex = -1;
 
 

@@ -4,6 +4,7 @@ import com.recom.commander.event.InitializeStageEvent;
 import com.recom.commander.event.ShutdownEvent;
 import com.recom.commander.exception.GlobalExceptionHandler;
 import com.recom.commander.property.SpringApplicationProperties;
+import com.recom.commander.util.LoggerUtil;
 import com.recom.tacview.engine.TacViewer;
 import com.recom.tacview.engine.graphics.ScreenComposer;
 import com.recom.tacview.engine.input.GenericFXInputEventListener;
@@ -24,10 +25,10 @@ import javafx.stage.Stage;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.SpringApplication;
 import org.springframework.context.event.EventListener;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 
 @Slf4j
@@ -53,9 +54,8 @@ public class TacViewStageInitializer {
     private final GenericFXInputEventListener genericFXInputEventListener;
     @NonNull
     private final InputManager inputManager;
-
-    @Nullable
-    private TacViewer tacViewer = null;
+    @NonNull
+    private Optional<TacViewer> maybeTacViewer = Optional.empty();
 
 
     @EventListener(classes = InitializeStageEvent.class)
@@ -66,9 +66,8 @@ public class TacViewStageInitializer {
             populateTacViewStage(tacViewStage);
             tacViewStage.show();
             tacViewStage.setOnCloseRequest(onCloseEvent -> {
-                tacViewer.stop();
+                System.out.println("\n\n" + LoggerUtil.generateCenteredString("CLOSED"));
                 Platform.exit();
-                Platform.runLater(Platform::exit);
             });
         } catch (final Throwable t) {
             globalExceptionHandler.uncaughtException(Thread.currentThread(), t);
@@ -79,7 +78,7 @@ public class TacViewStageInitializer {
         final BorderPane root = new BorderPane();
         root.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
 
-        tacViewer = new TacViewer(
+        final TacViewer tacViewer = new TacViewer(
                 rendererProperties,
                 tickProperties,
                 profilerProvider,
@@ -90,7 +89,8 @@ public class TacViewStageInitializer {
                 globalExceptionHandler
 
         );
-        root.setCenter(tacViewer);
+        maybeTacViewer = Optional.of(tacViewer);
+        root.setCenter(maybeTacViewer.get());
 
         final Scene scene = new Scene(root, rendererProperties.getScaledWindowWidth(), rendererProperties.getScaledWindowHeight());
         stage.setTitle(springApplicationProperties.getName());
@@ -103,7 +103,7 @@ public class TacViewStageInitializer {
         final ProfileFPSStrategy profileFPSStrategy = new ProfileFPSStrategy((@NonNull final String profiled) -> {
             Platform.runLater(() -> titleProperty.setValue(profiled));
         });
-        tacViewer.setProfileFPSStrategy(profileFPSStrategy);
+        tacViewer.setMaybeProfileFPSStrategy(Optional.of(profileFPSStrategy));
         tacViewer.start();
 
         stage.setResizable(false);
@@ -113,9 +113,7 @@ public class TacViewStageInitializer {
     @EventListener(classes = ShutdownEvent.class)
     public void shutdown() {
         log.warn("Shutdown TacViewer ...");
-        if (tacViewer != null) {
-            tacViewer.stop();
-        }
+        maybeTacViewer.ifPresent(TacViewer::stop);
     }
 
 }

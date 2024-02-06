@@ -12,13 +12,10 @@ public class TacViewerProfiler {
 
     @NonNull
     private final LoopCounter loopCounter;
-
     @NonNull
     private final FPSCounter fpsCounter;
-
     @NonNull
     private final TPSCounter tpsCounter;
-
     public long previousTickNanoTime = 0;
     public long previousFrameNanoTime = 0;
     public long inputHandlingNanoTime = 0;

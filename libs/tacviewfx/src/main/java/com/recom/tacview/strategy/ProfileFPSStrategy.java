@@ -11,6 +11,7 @@ public class ProfileFPSStrategy {
     @NonNull
     private final IsFPSProfilable runnable;
 
+
     public void execute(@NonNull final String profiled) {
         runnable.setFPS(profiled);
     }

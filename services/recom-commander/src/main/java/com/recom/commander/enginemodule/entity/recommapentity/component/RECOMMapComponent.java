@@ -4,6 +4,13 @@ import com.recom.commander.event.InitialAuthenticationEvent;
 import com.recom.commander.mapper.HeightMapDescriptorMapper;
 import com.recom.commander.service.map.overview.data.MapsOverviewService;
 import com.recom.commander.service.map.topography.data.MapTopographyDataService;
+import com.recom.commander.util.MapCalculator;
+import com.recom.commons.rasterizer.HeightMapDescriptor;
+import com.recom.commons.rasterizer.HeightmapRasterizer;
+import com.recom.commons.units.PixelCoordinate;
+import com.recom.commons.units.PixelDimension;
+import com.recom.commons.units.ScaleFactor;
+import com.recom.commons.units.calc.ScalingTool;
 import com.recom.dto.map.MapOverviewDto;
 import com.recom.dto.map.topography.HeightMapDescriptorDto;
 import com.recom.dto.map.topography.MapTopographyRequestDto;
@@ -11,19 +18,19 @@ import com.recom.observer.Notification;
 import com.recom.observer.ReactiveObserver;
 import com.recom.observer.Subjective;
 import com.recom.observer.TakeNoticeRunnable;
-import com.recom.rendertools.rasterizer.HeightMapDescriptor;
-import com.recom.rendertools.rasterizer.HeightmapRasterizer;
-import com.recom.tacview.engine.entitycomponentsystem.component.RenderableComponent;
+import com.recom.tacview.engine.ecs.component.PhysicCoreComponent;
+import com.recom.tacview.engine.ecs.component.RenderableComponent;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
-import com.recom.tacview.engine.units.PixelDimension;
+import com.recom.tacview.engine.input.NanoTimedEvent;
+import com.recom.tacview.property.RendererProperties;
 import jakarta.annotation.Nullable;
-import jakarta.annotation.PostConstruct;
+import javafx.scene.input.ScrollEvent;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import java.util.LinkedList;
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -35,32 +42,31 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
     private final MapTopographyDataService mapTopographyDataService;
     @NonNull
     private final HeightmapRasterizer heightmapRasterizer;
-
-    @Nullable
-    private ReactiveObserver<MapOverviewDto> mapOverviewReactiveObserver;
-    @Nullable
-    private ReactiveObserver<HeightMapDescriptorDto> mapTopographyDataReactiveObserver;
-
-    private int pixelFactor = 1;
-
     @NonNull
-    private final LinkedList<PixelBuffer> scaledMapPixelBufferList = new LinkedList<>();
+    private final RendererProperties rendererProperties;
+    @NonNull
+    private Optional<HeightMapDescriptor> maybeHeightMapDescriptor = Optional.empty();
+    @Nullable
+    private final ReactiveObserver<MapOverviewDto> mapOverviewReactiveObserver;
+    @Nullable
+    private final ReactiveObserver<HeightMapDescriptorDto> mapTopographyDataReactiveObserver;
+    @NonNull
+    private final ScaleFactor mapScale = new ScaleFactor();
 
 
     public RECOMMapComponent(
             @NonNull final MapsOverviewService mapsOverviewService,
             @NonNull final MapTopographyDataService mapTopographyDataService,
-            @NonNull final HeightmapRasterizer heightmapRasterizer
+            @NonNull final HeightmapRasterizer heightmapRasterizer,
+            @NonNull final RendererProperties rendererProperties
     ) {
         super();
         this.mapsOverviewService = mapsOverviewService;
         this.mapTopographyDataService = mapTopographyDataService;
         this.heightmapRasterizer = heightmapRasterizer;
+        this.rendererProperties = rendererProperties;
         this.setZIndex(0);
-    }
 
-    @PostConstruct
-    public void init() {
         mapOverviewReactiveObserver = ReactiveObserver.reactWith(onReloadMapOverviewReaction());
         mapOverviewReactiveObserver.observe(mapsOverviewService.getBufferedSubject());
 
@@ -77,12 +83,9 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
             log.debug("Received map topography data");
             final HeightMapDescriptorDto heightMapDescriptorDto = notification.getPayload();
             final HeightMapDescriptor heightMapDescriptor = HeightMapDescriptorMapper.INSTANCE.toModel(heightMapDescriptorDto);
+            maybeHeightMapDescriptor = Optional.of(heightMapDescriptor);
 
-            final int[] pixelBufferArray = heightmapRasterizer.rasterizeHeightMapRGB(heightMapDescriptor);
-            final PixelDimension dimension = PixelDimension.of(heightMapDescriptor.getHeightMap().length, heightMapDescriptor.getHeightMap()[0].length);
-
-            this.pixelBuffer = new PixelBuffer(dimension, pixelBufferArray);
-            propagateDirtyStateToParent();
+            setMap(heightMapDescriptor);
         };
     }
 
@@ -120,25 +123,83 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
         }
     }
 
-    public void zoomIn() {
-        if (pixelFactor == 1) {
-            return;
-        } else {
-            pixelFactor--;
-            swapBuffer();
+    public void zoomIn(
+            @NonNull final NanoTimedEvent<ScrollEvent> nanoTimedEvent,
+            @NonNull final PhysicCoreComponent physicsCoreComponent
+    ) {
+        if (maybeHeightMapDescriptor.isPresent()) {
+            final PixelCoordinate mouseCoordinateOnCanvas = PixelCoordinate.of(
+                    MapCalculator.applyRenderScale(nanoTimedEvent.getEvent().getSceneX(), rendererProperties),
+                    MapCalculator.applyRenderScale(nanoTimedEvent.getEvent().getSceneY(), rendererProperties)
+            );
+            final PixelCoordinate normalizedCoordinateOnMap = MapCalculator.getCoordinateOfMouseOnMap(nanoTimedEvent, physicsCoreComponent, mapScale, rendererProperties);
+
+            mapScale.zoomIn();
+            if (mapScale.getScaleFactor() == 1) {
+                setMap(maybeHeightMapDescriptor.get());
+            } else {
+                setScaledMap(maybeHeightMapDescriptor.get(), mapScale.getScaleFactor());
+            }
+
+            final PixelCoordinate scaledMapCoordinate = normalizedCoordinateOnMap.scaled(mapScale.getScaleFactor());
+            physicsCoreComponent.setPositionX(-scaledMapCoordinate.getX() + mouseCoordinateOnCanvas.getX());
+            physicsCoreComponent.setPositionY(-scaledMapCoordinate.getY() + mouseCoordinateOnCanvas.getY());
         }
     }
 
-    public void zoomOut() {
-        pixelFactor++;
-        swapBuffer();
+    public void zoomOut(
+            @NonNull final NanoTimedEvent<ScrollEvent> nanoTimedEvent,
+            @NonNull final PhysicCoreComponent physicsCoreComponent
+    ) {
+        if (maybeHeightMapDescriptor.isPresent()) {
+            final PixelCoordinate mouseCoordinateOnCanvas = PixelCoordinate.of(
+                    MapCalculator.applyRenderScale(nanoTimedEvent.getEvent().getSceneX(), rendererProperties),
+                    MapCalculator.applyRenderScale(nanoTimedEvent.getEvent().getSceneY(), rendererProperties)
+            );
+            final PixelCoordinate normalizedCoordinateOnMap = MapCalculator.getCoordinateOfMouseOnMap(nanoTimedEvent, physicsCoreComponent, mapScale, rendererProperties);
+
+            mapScale.zoomOut();
+
+            if (mapScale.getScaleFactor() == 1) {
+                setMap(maybeHeightMapDescriptor.get());
+            } else {
+                setScaledMap(maybeHeightMapDescriptor.get(), mapScale.getScaleFactor());
+            }
+
+            final PixelCoordinate scaledMapCoordinate = normalizedCoordinateOnMap.scaled(mapScale.getScaleFactor());
+            physicsCoreComponent.setPositionX(-scaledMapCoordinate.getX() + mouseCoordinateOnCanvas.getX());
+            physicsCoreComponent.setPositionY(-scaledMapCoordinate.getY() + mouseCoordinateOnCanvas.getY());
+        }
     }
 
-    private void swapBuffer() {
-        // @TODO <<<<--------------------------------------------------------------------------------------------------
+    private void setMap(@NonNull final HeightMapDescriptor heightMapDescriptor) {
+        final int mapWidth = heightMapDescriptor.getHeightMap().length;
+        final int mapHeight = heightMapDescriptor.getHeightMap()[0].length;
 
-        // init first element with actual buffer!
-        scaledMapPixelBufferList.add(this.pixelBuffer);
+        final int[] pixelBufferArray = heightmapRasterizer.rasterizeHeightMapRGB(heightMapDescriptor);
+
+        final PixelBuffer newPixelBuffer = new PixelBuffer(PixelDimension.of(mapWidth, mapHeight), pixelBufferArray);
+        this.setPixelBuffer(newPixelBuffer);
+
+        propagateDirtyStateToParent();
+    }
+
+    private void setScaledMap(
+            @NonNull HeightMapDescriptor heightMapDescriptor,
+            final int scaleFactor
+    ) {
+        final int originalMapHeight = heightMapDescriptor.getHeightMap().length;
+        final int originalMapWidth = heightMapDescriptor.getHeightMap()[0].length;
+
+        final int scaledMapWidth = (int) ScalingTool.scaleDimension(originalMapWidth, scaleFactor);
+        final int scaledMapHeight = (int) ScalingTool.scaleDimension(originalMapHeight, scaleFactor);
+
+        final int[] newScaledPixelArray = heightmapRasterizer.rasterizeHeightMapRGB(heightMapDescriptor, scaleFactor);
+
+        final PixelBuffer newScaledPixelBuffer = new PixelBuffer(PixelDimension.of(scaledMapWidth, scaledMapHeight), newScaledPixelArray);
+        this.setPixelBuffer(newScaledPixelBuffer);
+
+        propagateDirtyStateToParent();
     }
 
 }

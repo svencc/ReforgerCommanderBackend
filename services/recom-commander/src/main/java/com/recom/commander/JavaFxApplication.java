@@ -5,6 +5,7 @@ import com.recom.commander.event.InitializeStageEvent;
 import com.recom.commander.event.ShutdownEvent;
 import com.recom.commander.event.StageReadyEvent;
 import com.recom.commander.exception.GlobalExceptionHandler;
+import com.recom.commander.util.LoggerUtil;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -54,6 +55,7 @@ public class JavaFxApplication extends Application {
 
     @Override
     public void stop() {
+        System.out.println("\n\n" + LoggerUtil.generateCenteredString("STOP"));
         log.warn("Closing application context ...");
         applicationContext.publishEvent(new ShutdownEvent(this));
         applicationContext.close();
