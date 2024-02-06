@@ -1,13 +1,11 @@
 package com.recom.rendertools.calculator;
 
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.UtilityClass;
 
 @NoArgsConstructor
 public class ARGBCalculator {
 
-    public int blend(final int foregroundColor, final int backgroundColour) {
+    public static int blend(final int foregroundColor, final int backgroundColour) {
         final double alpha = getAlphaComponent(foregroundColor) / 255.0;
         final double oneMinusAlpha = 1 - alpha;
 
@@ -19,23 +17,23 @@ public class ARGBCalculator {
         return compose(newAlpha, (int) newRed, (int) newGreen, (int) newBlue);
     }
 
-    public int getAlphaComponent(final int color) {
+    public static int getAlphaComponent(final int color) {
         return (color >> 24) & 0xff;
     }
 
-    public int getRedComponent(final int color) {
+    public static int getRedComponent(final int color) {
         return (color >> 16) & 0xff;
     }
 
-    public int getGreenComponent(final int color) {
+    public static int getGreenComponent(final int color) {
         return (color >> 8) & 0xff;
     }
 
-    public int getBlueComponent(final int color) {
+    public static int getBlueComponent(final int color) {
         return color & 0xff;
     }
 
-    public int compose(final int alpha, final int red, final int green, final int blue) {
+    public static int compose(final int alpha, final int red, final int green, final int blue) {
         return ((alpha & 0xFF) << 24) |
                 ((red & 0xFF) << 16) |
                 ((green & 0xFF) << 8) |
