@@ -5,6 +5,8 @@
   * (map) zooming (/)
   * zoom-out interpolation/ calculating average color of surrounding pixels!!!!! (<-)
   * tidy up
+    * make new pom submodule fpr pixel and dimension units, and trigonometry and mouse click on map helpers and calculators
+  * reflect render-scaler in mouse position calculation on map
 * add sortable physics modifier components
 * NULLImplementations -> Optionals ...
 * 

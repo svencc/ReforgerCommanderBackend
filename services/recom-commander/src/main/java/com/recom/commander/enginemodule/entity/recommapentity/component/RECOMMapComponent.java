@@ -188,8 +188,6 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
 
         final int normalizedMousePositionOnNormalizedMapX = round(ScalingTool.normalizeDimension(scaledMousePositionOnScaledMapX, scaleFactor.getScaleFactor()));
         final int normalizedMousePositionOnNormalizedMapY = round(ScalingTool.normalizeDimension(scaledMousePositionOnScaledMapY, scaleFactor.getScaleFactor()));
-        log.info("normalizedMapX: " + normalizedMousePositionOnNormalizedMapX);
-        log.info("normalizedMapY: " + normalizedMousePositionOnNormalizedMapY);
 
         return PixelCoordinate.of(normalizedMousePositionOnNormalizedMapX, normalizedMousePositionOnNormalizedMapY);
     }

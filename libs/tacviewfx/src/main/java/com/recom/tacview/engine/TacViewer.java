@@ -170,9 +170,8 @@ public class TacViewer extends Canvas {
         // SLEEP UNTIL NEXT LOOP
         final long loopNanosUntilHere = System.nanoTime() - currentNanoTimeOnLoopStart;
         final long nanosToSleep = targetNanosOfLoops - loopNanosUntilHere;
-        if (nanosToSleep >= nanosToSleep / 10) {
+        if (nanosToSleep >= 0) {
             try {
-                Thread.sleep(nanosToSleep / 1_000_000, (int) (nanosToSleep % 1_000_000));
                 Thread.sleep(nanosToSleep / TimeUnits.ONE_MILLI_IN_NANOS_L, (int) (nanosToSleep % TimeUnits.ONE_MILLI_IN_NANOS_L));
             } catch (final InterruptedException e) {
                 log.warn("Interrupted engineLoop while sleeping");
