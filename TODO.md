@@ -1,9 +1,10 @@
 # TODO LIST
 
 # 1
-* only render visible part of screen! special render for screen.
-* add sortable physics modifier components
 * NULLImplementations -> Optionals ...
+* 
+* only render visible part of screen! special renderer for screen. (<-)
+* add sortable physics modifier components
 * 
 * dynamic changeable render properties!
 * optimize Layers so that they must not be reinstantiated every time on update. Reuse layers and remove/extend entities on update
