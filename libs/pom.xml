@@ -14,14 +14,14 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>sharedmodels</module>
-        <module>goapcom</module>
-        <module>observer</module>
-        <module>rendertools</module>
-        <module>maze</module>
-        <module>tacviewfx</module>
-        <module>javafxdependencies</module>
+        <module>commons</module>
         <module>dynamicproperties</module>
+        <module>goapcom</module>
+        <module>javafxdependencies</module>
+        <module>maze</module>
+        <module>observer</module>
+        <module>sharedmodels</module>
+        <module>tacviewfx</module>
     </modules>
 
     <dependencies>

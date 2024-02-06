@@ -1,7 +1,7 @@
 package com.recom.commander.enginemodule;
 
 import com.recom.commander.enginemodule.entity.recommapentity.RECOMMapEntity;
-import com.recom.tacview.engine.entitycomponentsystem.environment.Environment;
+import com.recom.tacview.engine.ecs.environment.Environment;
 import com.recom.tacview.engine.module.EngineModule;
 import lombok.NonNull;
 import org.springframework.stereotype.Component;

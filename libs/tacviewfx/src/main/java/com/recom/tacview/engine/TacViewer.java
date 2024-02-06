@@ -7,7 +7,7 @@ import com.recom.tacview.engine.input.mapper.keyboard.JavaFxKeyboardCommandMappe
 import com.recom.tacview.engine.input.mapper.mousebutton.JavaFxMouseButtonCommandMapper;
 import com.recom.tacview.engine.input.mapper.scroll.JavaFxMouseScrollCommandMapper;
 import com.recom.tacview.engine.module.EngineModule;
-import com.recom.tacview.engine.units.TimeUnits;
+import com.recom.commons.units.TimeUnits;
 import com.recom.tacview.property.RendererProperties;
 import com.recom.tacview.property.TickProperties;
 import com.recom.tacview.service.profiler.ProfilerProvider;

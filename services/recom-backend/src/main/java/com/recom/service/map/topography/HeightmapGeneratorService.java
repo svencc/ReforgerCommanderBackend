@@ -2,8 +2,8 @@ package com.recom.service.map.topography;
 
 import com.recom.entity.map.MapTopography;
 import com.recom.model.map.TopographyData;
-import com.recom.rendertools.rasterizer.HeightMapDescriptor;
-import com.recom.rendertools.rasterizer.HeightmapRasterizer;
+import com.recom.commons.rasterizer.HeightMapDescriptor;
+import com.recom.commons.rasterizer.HeightmapRasterizer;
 import com.recom.service.SerializationService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
 package com.recom.tacview.engine.graphics.renderpipeline;
 
-import com.recom.tacview.engine.entitycomponentsystem.component.RenderableComponent;
+import com.recom.tacview.engine.ecs.component.RenderableComponent;
 import com.recom.tacview.engine.renderables.mergeable.MergeableComponentLayer;
 import lombok.Getter;
 import lombok.NonNull;

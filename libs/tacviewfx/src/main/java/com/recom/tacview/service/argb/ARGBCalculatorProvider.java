@@ -1,6 +1,6 @@
 package com.recom.tacview.service.argb;
 
-import com.recom.rendertools.calculator.ARGBCalculator;
+import com.recom.commons.calculator.ARGBCalculator;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 

@@ -1,6 +1,6 @@
 package com.recom.tacview.configuration;
 
-import com.recom.tacview.engine.entitycomponentsystem.environment.Environment;
+import com.recom.tacview.engine.ecs.environment.Environment;
 import com.recom.tacview.engine.module.DefaultEnvironment;
 import com.recom.tacview.engine.renderer.RenderProvider;
 import com.recom.tacview.property.RendererProperties;

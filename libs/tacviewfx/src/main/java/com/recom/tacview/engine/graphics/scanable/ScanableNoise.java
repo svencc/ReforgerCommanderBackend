@@ -1,7 +1,7 @@
 package com.recom.tacview.engine.graphics.scanable;
 
 import com.recom.tacview.engine.graphics.IsScanable;
-import com.recom.tacview.engine.units.PixelDimension;
+import com.recom.commons.units.PixelDimension;
 import com.recom.tacview.service.RandomProvider;
 import lombok.Getter;
 import lombok.NonNull;

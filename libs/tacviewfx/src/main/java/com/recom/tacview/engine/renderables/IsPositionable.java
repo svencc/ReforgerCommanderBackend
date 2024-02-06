@@ -1,6 +1,6 @@
 package com.recom.tacview.engine.renderables;
 
-import com.recom.tacview.engine.units.PixelCoordinate;
+import com.recom.commons.units.PixelCoordinate;
 import lombok.NonNull;
 
 public interface IsPositionable {

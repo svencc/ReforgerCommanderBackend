@@ -1,9 +1,9 @@
 package com.recom.tacview.engine.module;
 
 import com.recom.tacview.engine.IsUpdatable;
-import com.recom.tacview.engine.entitycomponentsystem.component.ComponentType;
-import com.recom.tacview.engine.entitycomponentsystem.component.InputComponent;
-import com.recom.tacview.engine.entitycomponentsystem.environment.Environment;
+import com.recom.tacview.engine.ecs.component.ComponentType;
+import com.recom.tacview.engine.ecs.component.InputComponent;
+import com.recom.tacview.engine.ecs.environment.Environment;
 import com.recom.tacview.engine.input.command.IsCommand;
 import lombok.Getter;
 import lombok.NonNull;

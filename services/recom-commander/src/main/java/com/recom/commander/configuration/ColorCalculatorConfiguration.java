@@ -1,6 +1,6 @@
 package com.recom.commander.configuration;
 
-import com.recom.rendertools.calculator.ARGBCalculator;
+import com.recom.commons.calculator.ARGBCalculator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,7 +1,7 @@
 package com.recom.tacview.service.profiler;
 
 
-import com.recom.tacview.engine.units.TimeUnits;
+import com.recom.commons.units.TimeUnits;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 

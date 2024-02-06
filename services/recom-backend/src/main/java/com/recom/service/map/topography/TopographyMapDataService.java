@@ -4,7 +4,7 @@ import com.recom.entity.map.GameMap;
 import com.recom.entity.map.MapTopography;
 import com.recom.exception.HttpNotFoundException;
 import com.recom.exception.HttpUnprocessableEntityException;
-import com.recom.rendertools.rasterizer.HeightMapDescriptor;
+import com.recom.commons.rasterizer.HeightMapDescriptor;
 import com.recom.persistence.map.topography.MapLocatedTopographyPersistenceLayer;
 import com.recom.service.SerializationService;
 import lombok.NonNull;

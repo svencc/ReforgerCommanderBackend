@@ -1,6 +1,6 @@
 package com.recom.tacview.configuration;
 
-import com.recom.tacview.engine.entitycomponentsystem.environment.Environment;
+import com.recom.tacview.engine.ecs.environment.Environment;
 import com.recom.tacview.engine.module.DefaultEngineModule;
 import com.recom.tacview.engine.module.EngineModule;
 import com.recom.tacview.service.RandomProvider;

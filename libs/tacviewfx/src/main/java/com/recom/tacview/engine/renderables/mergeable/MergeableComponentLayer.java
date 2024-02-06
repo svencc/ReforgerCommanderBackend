@@ -1,9 +1,9 @@
 package com.recom.tacview.engine.renderables.mergeable;
 
-import com.recom.tacview.engine.entitycomponentsystem.component.ComponentType;
-import com.recom.tacview.engine.entitycomponentsystem.component.PhysicCoreComponent;
-import com.recom.tacview.engine.entitycomponentsystem.component.RenderableComponent;
-import com.recom.tacview.engine.entitycomponentsystem.environment.IsEnvironment;
+import com.recom.tacview.engine.ecs.component.ComponentType;
+import com.recom.tacview.engine.ecs.component.PhysicCoreComponent;
+import com.recom.tacview.engine.ecs.component.RenderableComponent;
+import com.recom.tacview.engine.ecs.environment.IsEnvironment;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;

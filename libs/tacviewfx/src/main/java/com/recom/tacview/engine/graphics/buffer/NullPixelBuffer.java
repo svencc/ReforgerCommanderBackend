@@ -1,6 +1,6 @@
 package com.recom.tacview.engine.graphics.buffer;
 
-import com.recom.tacview.engine.units.PixelDimension;
+import com.recom.commons.units.PixelDimension;
 import lombok.NonNull;
 
 public class NullPixelBuffer extends PixelBuffer {

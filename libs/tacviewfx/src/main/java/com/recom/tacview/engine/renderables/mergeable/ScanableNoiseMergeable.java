@@ -4,7 +4,7 @@ import com.recom.tacview.engine.graphics.IsBufferable;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
 import com.recom.tacview.engine.graphics.scanable.ScanableNoise;
 import com.recom.tacview.engine.renderer.RenderProvider;
-import com.recom.tacview.engine.units.PixelDimension;
+import com.recom.commons.units.PixelDimension;
 import com.recom.tacview.service.RandomProvider;
 import lombok.NonNull;
 

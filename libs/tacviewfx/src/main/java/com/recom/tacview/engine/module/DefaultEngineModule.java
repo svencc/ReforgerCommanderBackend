@@ -1,11 +1,11 @@
 package com.recom.tacview.engine.module;
 
-import com.recom.tacview.engine.entitycomponentsystem.component.RenderableComponent;
-import com.recom.tacview.engine.entitycomponentsystem.entity.Entity;
-import com.recom.tacview.engine.entitycomponentsystem.environment.Environment;
+import com.recom.tacview.engine.ecs.component.RenderableComponent;
+import com.recom.tacview.engine.ecs.entity.Entity;
+import com.recom.tacview.engine.ecs.environment.Environment;
 import com.recom.tacview.engine.renderables.mergeable.ScanableNoiseMergeable;
 import com.recom.tacview.engine.renderer.RenderProvider;
-import com.recom.tacview.engine.units.PixelDimension;
+import com.recom.commons.units.PixelDimension;
 import com.recom.tacview.service.RandomProvider;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
 package com.recom.tacview.engine.input.command.mousebutton;
 
-import com.recom.tacview.util.TrigonometricCalculator;
+import com.recom.tacview.util.MouseCalculator;
 import com.recom.tacview.engine.input.NanoTimedEvent;
 import javafx.scene.input.MouseEvent;
 import lombok.Getter;
@@ -96,7 +96,7 @@ public class MouseDragCommand implements IsMouseCommand<MouseEvent> {
     }
 
     public double getDistance() {
-        return TrigonometricCalculator.calculateDistanceBetweenMouseEvents(sourceNanoTimedEvent.getEvent(), nanoTimedEvent.getEvent());
+        return MouseCalculator.calculateDistanceBetweenMouseEvents(sourceNanoTimedEvent.getEvent(), nanoTimedEvent.getEvent());
     }
 
     public double getDistanceX() {
@@ -108,7 +108,7 @@ public class MouseDragCommand implements IsMouseCommand<MouseEvent> {
     }
 
     public double getRadiant() {
-        return TrigonometricCalculator.calculateRadiantBetweenMouseEvents(sourceNanoTimedEvent.getEvent(), nanoTimedEvent.getEvent());
+        return MouseCalculator.calculateRadiantBetweenMouseEvents(sourceNanoTimedEvent.getEvent(), nanoTimedEvent.getEvent());
     }
 
 }
