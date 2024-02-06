@@ -1,9 +1,6 @@
 # TODO LIST
 
 # 1
-* new InputComponent interacting with MapComponent
-  * reflect render-scaler in mouse position calculation on map
-* 
 * only render visible part of screen! special render for screen.
 * add sortable physics modifier components
 * NULLImplementations -> Optionals ...

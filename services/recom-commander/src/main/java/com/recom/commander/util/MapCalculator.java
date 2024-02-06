@@ -6,6 +6,7 @@ import com.recom.commons.units.ScaleFactor;
 import com.recom.commons.units.calc.ScalingTool;
 import com.recom.tacview.engine.ecs.component.PhysicCoreComponent;
 import com.recom.tacview.engine.input.NanoTimedEvent;
+import com.recom.tacview.property.RendererProperties;
 import javafx.scene.input.ScrollEvent;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
@@ -18,13 +19,14 @@ public class MapCalculator {
     public PixelCoordinate getCoordinateOfMouseOnMap(
             @NonNull final NanoTimedEvent<ScrollEvent> nanoTimedEvent,
             @NonNull final PhysicCoreComponent physicsCoreComponent,
-            @NonNull final ScaleFactor scaleFactor
+            @NonNull final ScaleFactor scaleFactor,
+            @NonNull final RendererProperties rendererProperties
     ) {
         final double originX = physicsCoreComponent.getPositionX();
         final double originY = physicsCoreComponent.getPositionY();
 
-        final double mouseOnCanvasX = nanoTimedEvent.getEvent().getSceneX();
-        final double mouseOnCanvasY = nanoTimedEvent.getEvent().getSceneY();
+        final double mouseOnCanvasX = applyRenderScale(nanoTimedEvent.getEvent().getSceneX(), rendererProperties);
+        final double mouseOnCanvasY = applyRenderScale(nanoTimedEvent.getEvent().getSceneY(), rendererProperties);
 
         final int scaledMousePositionOnScaledMapX = (int) (-1 * originX + mouseOnCanvasX);
         final int scaledMousePositionOnScaledMapY = (int) (-1 * originY + mouseOnCanvasY);
@@ -33,6 +35,20 @@ public class MapCalculator {
         final int normalizedMousePositionOnNormalizedMapY = Round.halfUp(ScalingTool.normalizeDimension(scaledMousePositionOnScaledMapY, scaleFactor.getScaleFactor()));
 
         return PixelCoordinate.of(normalizedMousePositionOnNormalizedMapX, normalizedMousePositionOnNormalizedMapY);
+    }
+
+    public double applyRenderScale(
+            @NonNull final int dimension,
+            @NonNull final RendererProperties rendererProperties
+    ) {
+        return dimension / (double) rendererProperties.getScale();
+    }
+
+    public double applyRenderScale(
+            @NonNull final double dimension,
+            @NonNull final RendererProperties rendererProperties
+    ) {
+        return dimension / (double) rendererProperties.getScale();
     }
 
 }
