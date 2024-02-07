@@ -50,7 +50,7 @@ public class Entity implements IsEntity {
     @Override
     public void removeComponent(@NonNull final IsComponent component) {
         components.remove(component);
-        component.setEntity(NullEntity.INSTANCE);
+        component.setEntity(null);
         reIndexComponents();
     }
 

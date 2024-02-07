@@ -13,11 +13,12 @@ import lombok.Setter;
 
 import java.util.Optional;
 
-@Setter
 @Getter
 public abstract class RenderableComponent extends ComponentTemplate implements HasPixelBuffer, BelongsToMergeableComponentLayer, ParentPropagateableSoilableState, ChildPropagateableSoilableState {
 
+    @Setter
     private int zIndex = 0;
+    @Setter
     @NonNull
     protected PixelBuffer pixelBuffer;
     @NonNull

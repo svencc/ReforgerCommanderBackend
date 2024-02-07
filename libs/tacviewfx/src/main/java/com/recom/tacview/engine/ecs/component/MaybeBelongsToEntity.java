@@ -4,10 +4,12 @@ import com.recom.tacview.engine.ecs.entity.IsEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-public interface BelongsToEntity {
+import java.util.Optional;
+
+public interface MaybeBelongsToEntity {
 
     @Nullable
-    IsEntity getEntity();
+    Optional<IsEntity> getMaybeEntity();
 
     void setEntity(@NonNull final IsEntity entity);
 

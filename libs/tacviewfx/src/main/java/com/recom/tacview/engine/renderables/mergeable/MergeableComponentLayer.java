@@ -56,10 +56,12 @@ public class MergeableComponentLayer extends BufferedMergeableTemplate implement
             int offsetX = 0;
             int offsetY = 0;
 
-            final Optional<PhysicCoreComponent> maybePhysicCoreComponent = component.getEntity().locateComponent(ComponentType.PhysicsCoreComponent);
-            if (maybePhysicCoreComponent.isPresent()) {
-                offsetX = (int) maybePhysicCoreComponent.get().getPositionX();
-                offsetY = (int) maybePhysicCoreComponent.get().getPositionY();
+            if (component.getMaybeEntity().isPresent()) {
+                final Optional<PhysicCoreComponent> maybePhysicCoreComponent = component.getMaybeEntity().get().locateComponent(ComponentType.PhysicsCoreComponent);
+                if (maybePhysicCoreComponent.isPresent()) {
+                    offsetX = (int) maybePhysicCoreComponent.get().getPositionX();
+                    offsetY = (int) maybePhysicCoreComponent.get().getPositionY();
+                }
             }
 
             environment.getRenderProvider().provide().render(component.getPixelBuffer(), this.getPixelBuffer(), offsetX, offsetY);

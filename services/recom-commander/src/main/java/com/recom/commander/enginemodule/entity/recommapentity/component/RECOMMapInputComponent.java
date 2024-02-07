@@ -39,55 +39,61 @@ public class RECOMMapInputComponent extends InputComponent {
     }
 
     private void handleKeyboardCommand(@NonNull final KeyboardCommand keyboardCommand) {
-        this.getEntity().<PhysicCoreComponent>locateComponent(ComponentType.PhysicsCoreComponent).ifPresent(physicsCoreComponent -> {
-            if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.LEFT)) {
-                physicsCoreComponent.addVelocityXComponent(MOVING_FORCE);
-            } else if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.RIGHT)) {
-                physicsCoreComponent.addVelocityXComponent(-MOVING_FORCE);
-            } else if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.UP)) {
-                physicsCoreComponent.addVelocityYComponent(MOVING_FORCE);
-            } else if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.DOWN)) {
-                physicsCoreComponent.addVelocityYComponent(-MOVING_FORCE);
-            }
-        });
+        if (this.getMaybeEntity().isPresent()) {
+            this.getMaybeEntity().get().<PhysicCoreComponent>locateComponent(ComponentType.PhysicsCoreComponent).ifPresent(physicsCoreComponent -> {
+                if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.LEFT)) {
+                    physicsCoreComponent.addVelocityXComponent(MOVING_FORCE);
+                } else if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.RIGHT)) {
+                    physicsCoreComponent.addVelocityXComponent(-MOVING_FORCE);
+                } else if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.UP)) {
+                    physicsCoreComponent.addVelocityYComponent(MOVING_FORCE);
+                } else if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.DOWN)) {
+                    physicsCoreComponent.addVelocityYComponent(-MOVING_FORCE);
+                }
+            });
+        }
     }
 
     private void handleScrollCommand(@NonNull final ScrollCommand scrollCommand) {
-        this.getEntity().<PhysicCoreComponent>locateComponent(ComponentType.PhysicsCoreComponent).ifPresent(physicsCoreComponent -> {
-            if (scrollCommand.getNanoTimedEvent().getEvent().getDeltaY() > 0) {
-                locateRecomMapComponent().ifPresent((mapComponent) -> mapComponent.zoomIn(scrollCommand.getNanoTimedEvent(), physicsCoreComponent));
-                // TODO: Re-Reouting Events to entity -> ReDispatch; locate consumer(s), cache and call them with event
-            } else if (scrollCommand.getNanoTimedEvent().getEvent().getDeltaY() < 0) {
-                locateRecomMapComponent().ifPresent((mapComponent) -> mapComponent.zoomOut(scrollCommand.getNanoTimedEvent(), physicsCoreComponent));
-                // TODO: Re-Reouting Events to entity -> ReDispatch; locate consumer(s), cache and call them with event
-            }
-        });
+        if (this.getMaybeEntity().isPresent()) {
+            this.getMaybeEntity().get().<PhysicCoreComponent>locateComponent(ComponentType.PhysicsCoreComponent).ifPresent(physicsCoreComponent -> {
+                if (scrollCommand.getNanoTimedEvent().getEvent().getDeltaY() > 0) {
+                    locateRecomMapComponent().ifPresent((mapComponent) -> mapComponent.zoomIn(scrollCommand.getNanoTimedEvent(), physicsCoreComponent));
+                    // TODO: Re-Reouting Events to entity -> ReDispatch; locate consumer(s), cache and call them with event
+                } else if (scrollCommand.getNanoTimedEvent().getEvent().getDeltaY() < 0) {
+                    locateRecomMapComponent().ifPresent((mapComponent) -> mapComponent.zoomOut(scrollCommand.getNanoTimedEvent(), physicsCoreComponent));
+                    // TODO: Re-Reouting Events to entity -> ReDispatch; locate consumer(s), cache and call them with event
+                }
+            });
+        }
     }
 
     private void handleMouseDragCommand(
             @NonNull final IsCommand<?> inputCommand,
             @NonNull final MouseDragCommand mouseDragCommand
     ) {
-        if (mouseDragCommand.getMouseButton().equals(MouseButton.SECONDARY)) {
-            this.getEntity().<PhysicCoreComponent>locateComponent(ComponentType.PhysicsCoreComponent).ifPresent(physicsCoreComponent -> {
-                if (mouseDragCommand.isInOriginPosition()) {
-                    physicsCoreComponent.setVelocityXComponent(0);
-                    physicsCoreComponent.setVelocityYComponent(0);
-                } else {
-                    physicsCoreComponent.setVelocityXComponent(-1 * mouseDragCommand.getDistanceX() * DRAG_SPEED_COEFFICIENT);
-                    physicsCoreComponent.setVelocityYComponent(-1 * mouseDragCommand.getDistanceY() * DRAG_SPEED_COEFFICIENT);
-                }
-            });
-        } else {
-            log.info("MouseDragCommand received: {} ({})", inputCommand.getClass().getSimpleName(), mouseDragCommand.getMouseButton());
+        if (this.getMaybeEntity().isPresent()) {
+            if (mouseDragCommand.getMouseButton().equals(MouseButton.SECONDARY)) {
+                this.getMaybeEntity().get().<PhysicCoreComponent>locateComponent(ComponentType.PhysicsCoreComponent).ifPresent(physicsCoreComponent -> {
+                    if (mouseDragCommand.isInOriginPosition()) {
+                        physicsCoreComponent.setVelocityXComponent(0);
+                        physicsCoreComponent.setVelocityYComponent(0);
+                    } else {
+                        physicsCoreComponent.setVelocityXComponent(-1 * mouseDragCommand.getDistanceX() * DRAG_SPEED_COEFFICIENT);
+                        physicsCoreComponent.setVelocityYComponent(-1 * mouseDragCommand.getDistanceY() * DRAG_SPEED_COEFFICIENT);
+                    }
+                });
+            } else {
+                log.info("MouseDragCommand received: {} ({})", inputCommand.getClass().getSimpleName(), mouseDragCommand.getMouseButton());
+            }
         }
     }
 
     // @TODO; kann man das generalisieren?
     @NonNull
     private Optional<RECOMMapComponent> locateRecomMapComponent() {
-        if (maybeMapComponent.isEmpty()) {
-            maybeMapComponent = this.getEntity().locateComponents(ComponentType.RenderableComponent).stream()
+        if (maybeMapComponent.isEmpty() && this.getMaybeEntity().isPresent()) {
+            maybeMapComponent = this.getMaybeEntity().get().locateComponents(ComponentType.RenderableComponent).stream()
                     .filter(component -> component instanceof RECOMMapComponent)
                     .map(component -> (RECOMMapComponent) component)
                     .findFirst();
