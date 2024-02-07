@@ -1,10 +1,6 @@
 # TODO LIST
 
 # 1
-* only render visible part of screen! special renderer for screen. (<-)
-* 
-* add sortable physics modifier components
-* 
 * dynamic changeable render properties!
 * optimize Layers so that they must not be reinstantiated every time on update. Reuse layers and remove/extend entities on update
 * new type of keyboard input: keypressed (once at release)
@@ -49,6 +45,13 @@
 
 * x heatmaps generator
 * unit scanner: run regularly
+
+# IMPROVEMENTS
+* render/pixelbuffeer optimization -> use native buffer
+* add sortable physics modifier components
+
+
+
 
 
 
@@ -132,7 +135,6 @@
 * gameMap entity query/filter controller
 * documentation / wiki
 * project page
-* build pipeline / cd
 
 ------
 
@@ -143,9 +145,3 @@
 ------
 separate libs / dependencies / common shared code
 * dbcached
-* observables
-* hint: https://stackoverflow.com/questions/2585220/how-to-configure-a-subproject-dependency-in-maven-without-deploying-jars
-* eventually create java modules?
-* multi-pom-project?
-  * backend
-  * client

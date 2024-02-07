@@ -1,11 +1,24 @@
 package com.recom.commons.calculator;
 
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @NoArgsConstructor
 public class ARGBCalculator {
 
-    public static int blend(final int foregroundColor, final int backgroundColour) {
+    @NonNull
+    private final Map<Integer, Integer> colorCache = new HashMap<>();
+
+
+    public int blend(final int foregroundColor, final int backgroundColour) {
+        int cachedResult = colorCache.getOrDefault(foregroundColor, -1);
+        if (cachedResult != -1) {
+            return cachedResult;
+        }
+
         final double alpha = getAlphaComponent(foregroundColor) / 255.0;
         final double oneMinusAlpha = 1 - alpha;
 
@@ -14,26 +27,29 @@ public class ARGBCalculator {
         final double newBlue = ((getBlueComponent(foregroundColor) * alpha) + (oneMinusAlpha * getBlueComponent(backgroundColour)));
         final int newAlpha = getAlphaComponent(backgroundColour);
 
-        return compose(newAlpha, (int) newRed, (int) newGreen, (int) newBlue);
+        int result = compose(newAlpha, (int) newRed, (int) newGreen, (int) newBlue);
+        colorCache.put(foregroundColor, result);
+
+        return result;
     }
 
-    public static int getAlphaComponent(final int color) {
+    public int getAlphaComponent(final int color) {
         return (color >> 24) & 0xff;
     }
 
-    public static int getRedComponent(final int color) {
+    public int getRedComponent(final int color) {
         return (color >> 16) & 0xff;
     }
 
-    public static int getGreenComponent(final int color) {
+    public int getGreenComponent(final int color) {
         return (color >> 8) & 0xff;
     }
 
-    public static int getBlueComponent(final int color) {
+    public int getBlueComponent(final int color) {
         return color & 0xff;
     }
 
-    public static int compose(final int alpha, final int red, final int green, final int blue) {
+    public int compose(final int alpha, final int red, final int green, final int blue) {
         return ((alpha & 0xFF) << 24) |
                 ((red & 0xFF) << 16) |
                 ((green & 0xFF) << 8) |

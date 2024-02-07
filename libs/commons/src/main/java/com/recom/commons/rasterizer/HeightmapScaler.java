@@ -2,8 +2,13 @@ package com.recom.commons.rasterizer;
 
 import com.recom.commons.calculator.ARGBCalculator;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class HeightmapScaler {
+
+    @NonNull
+    private final ARGBCalculator argbCalculator = new ARGBCalculator();
 
 
     public int[] scaleMap(
@@ -48,10 +53,10 @@ public class HeightmapScaler {
                     int blueComponentSum = 0;
                     for (int scaledPixelX = 0; scaledPixelX < absScale; scaledPixelX++) {
                         for (int scaledPixelZ = 0; scaledPixelZ < absScale; scaledPixelZ++) {
-                            alphaComponentSum += ARGBCalculator.getAlphaComponent(originalHeightMap[(x * absScale + scaledPixelX) + (z * absScale + scaledPixelZ) * originalWidth]);
-                            redComponentSum += ARGBCalculator.getRedComponent(originalHeightMap[(x * absScale + scaledPixelX) + (z * absScale + scaledPixelZ) * originalWidth]);
-                            greenComponentSum += ARGBCalculator.getGreenComponent(originalHeightMap[(x * absScale + scaledPixelX) + (z * absScale + scaledPixelZ) * originalWidth]);
-                            blueComponentSum += ARGBCalculator.getBlueComponent(originalHeightMap[(x * absScale + scaledPixelX) + (z * absScale + scaledPixelZ) * originalWidth]);
+                            alphaComponentSum += argbCalculator.getAlphaComponent(originalHeightMap[(x * absScale + scaledPixelX) + (z * absScale + scaledPixelZ) * originalWidth]);
+                            redComponentSum += argbCalculator.getRedComponent(originalHeightMap[(x * absScale + scaledPixelX) + (z * absScale + scaledPixelZ) * originalWidth]);
+                            greenComponentSum += argbCalculator.getGreenComponent(originalHeightMap[(x * absScale + scaledPixelX) + (z * absScale + scaledPixelZ) * originalWidth]);
+                            blueComponentSum += argbCalculator.getBlueComponent(originalHeightMap[(x * absScale + scaledPixelX) + (z * absScale + scaledPixelZ) * originalWidth]);
                         }
                     }
                     final int scalePow = (int) Math.pow(absScale, 2);
@@ -60,7 +65,7 @@ public class HeightmapScaler {
                     greenComponentSum /= scalePow;
                     blueComponentSum /= scalePow;
 
-                    scaledMap[x + z * scaledWidth] = ARGBCalculator.compose(alphaComponentSum, redComponentSum, greenComponentSum, blueComponentSum);
+                    scaledMap[x + z * scaledWidth] = argbCalculator.compose(alphaComponentSum, redComponentSum, greenComponentSum, blueComponentSum);
                 }
             }
 

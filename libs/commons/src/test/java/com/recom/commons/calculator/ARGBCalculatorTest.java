@@ -1,18 +1,25 @@
 package com.recom.commons.calculator;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ARGBCalculatorTest {
 
+    private ARGBCalculator argbCalculator;
+
+    @BeforeEach
+    void setUp() {
+        argbCalculator = new ARGBCalculator();
+    }
 
     @Test
     void getAlpha() {
         // PREPARE
         int argb = 0xffaaaaaa;
         // EXECUTE
-        int alphaComponent = ARGBCalculator.getAlphaComponent(argb);
+        int alphaComponent = argbCalculator.getAlphaComponent(argb);
         // ASSERT
         assertEquals(0xff, alphaComponent);
     }
@@ -22,7 +29,7 @@ class ARGBCalculatorTest {
         // PREPARE
         int argb = 0x00aaaaaa;
         // EXECUTE
-        int alphaComponent = ARGBCalculator.getAlphaComponent(argb);
+        int alphaComponent = argbCalculator.getAlphaComponent(argb);
         // ASSERT
         assertEquals(0x00, alphaComponent);
     }
@@ -32,7 +39,7 @@ class ARGBCalculatorTest {
         // PREPARE
         int argb = 0x99aaaaaa;
         // EXECUTE
-        int alphaComponent = ARGBCalculator.getAlphaComponent(argb);
+        int alphaComponent = argbCalculator.getAlphaComponent(argb);
         // ASSERT
         assertEquals(0x99, alphaComponent);
     }
@@ -42,7 +49,7 @@ class ARGBCalculatorTest {
         // PREPARE
         int argb = 0xffaa9999;
         // EXECUTE
-        int alphaComponent = ARGBCalculator.getRedComponent(argb);
+        int alphaComponent = argbCalculator.getRedComponent(argb);
         // ASSERT
         assertEquals(0xaa, alphaComponent);
     }
@@ -52,7 +59,7 @@ class ARGBCalculatorTest {
         // PREPARE
         int argb = 0x00ffaaaa;
         // EXECUTE
-        int alphaComponent = ARGBCalculator.getRedComponent(argb);
+        int alphaComponent = argbCalculator.getRedComponent(argb);
         // ASSERT
         assertEquals(0xff, alphaComponent);
     }
@@ -62,7 +69,7 @@ class ARGBCalculatorTest {
         // PREPARE
         int argb = 0xff99aa99;
         // EXECUTE
-        int alphaComponent = ARGBCalculator.getGreenComponent(argb);
+        int alphaComponent = argbCalculator.getGreenComponent(argb);
         // ASSERT
         assertEquals(0xaa, alphaComponent);
     }
@@ -72,7 +79,7 @@ class ARGBCalculatorTest {
         // PREPARE
         int argb = 0x00aaffaa;
         // EXECUTE
-        int alphaComponent = ARGBCalculator.getGreenComponent(argb);
+        int alphaComponent = argbCalculator.getGreenComponent(argb);
         // ASSERT
         assertEquals(0xff, alphaComponent);
     }
@@ -82,7 +89,7 @@ class ARGBCalculatorTest {
         // PREPARE
         int argb = 0xff9999aa;
         // EXECUTE
-        int alphaComponent = ARGBCalculator.getBlueComponent(argb);
+        int alphaComponent = argbCalculator.getBlueComponent(argb);
         // ASSERT
         assertEquals(0xaa, alphaComponent);
     }
@@ -92,7 +99,7 @@ class ARGBCalculatorTest {
         // PREPARE
         int argb = 0x00aaaaff;
         // EXECUTE
-        int alphaComponent = ARGBCalculator.getBlueComponent(argb);
+        int alphaComponent = argbCalculator.getBlueComponent(argb);
         // ASSERT
         assertEquals(0xff, alphaComponent);
     }
@@ -103,7 +110,7 @@ class ARGBCalculatorTest {
         int solidWhite = 0xffffffff;
         int solidRed = 0xffff0000;
         // EXECUTE
-        int mixedColor1 = ARGBCalculator.blend(solidWhite, solidRed);
+        int mixedColor1 = argbCalculator.blend(solidWhite, solidRed);
         // ASSERT
         assertEquals(0xffffffff, mixedColor1);
     }
@@ -114,7 +121,7 @@ class ARGBCalculatorTest {
         int solidWhiteForeground = 0xffffffff;
         int solidBlackBackground = 0xff000000;
         // EXECUTE
-        int mixedColor = ARGBCalculator.blend(solidWhiteForeground, solidBlackBackground);
+        int mixedColor = argbCalculator.blend(solidWhiteForeground, solidBlackBackground);
         // ASSERT
         assertEquals(solidWhiteForeground, mixedColor);
     }
@@ -125,7 +132,7 @@ class ARGBCalculatorTest {
         int solidWhiteBackground = 0xffFFFFFF;
         int alphaRedForeground = 0x7dFF0000;
         // EXECUTE
-        int mixedColor1 = ARGBCalculator.blend(alphaRedForeground, solidWhiteBackground);
+        int mixedColor1 = argbCalculator.blend(alphaRedForeground, solidWhiteBackground);
         // ASSERT
         assertEquals(0xffFF8282, mixedColor1);
     }
