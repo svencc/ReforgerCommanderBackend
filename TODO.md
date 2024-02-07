@@ -1,8 +1,6 @@
 # TODO LIST
 
 # 1
-* NULLImplementations -> Optionals ...
-* 
 * only render visible part of screen! special renderer for screen. (<-)
 * 
 * add sortable physics modifier components
