@@ -3,7 +3,7 @@ package com.recom.tacview.engine.renderables.mergeable;
 import com.recom.tacview.engine.ecs.component.ComponentType;
 import com.recom.tacview.engine.ecs.component.PhysicCoreComponent;
 import com.recom.tacview.engine.ecs.component.RenderableComponent;
-import com.recom.tacview.engine.ecs.environment.IsEnvironment;
+import com.recom.tacview.engine.ecs.environment.Environment;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ import java.util.concurrent.ExecutorService;
 public class MergeableComponentLayer extends BufferedMergeableTemplate implements IsMergeableComponentLayer {
 
     @NonNull
-    private final IsEnvironment environment;
+    private final Environment environment;
     @Getter
     @NonNull
     private final Integer renderLayer;
@@ -28,7 +28,7 @@ public class MergeableComponentLayer extends BufferedMergeableTemplate implement
 
 
     public MergeableComponentLayer(
-            @NonNull final IsEnvironment environment,
+            @NonNull final Environment environment,
             @NonNull final Integer renderLayer,
             @NonNull final List<RenderableComponent> components
     ) {
