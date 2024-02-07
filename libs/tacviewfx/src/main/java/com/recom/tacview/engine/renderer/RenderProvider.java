@@ -26,7 +26,7 @@ public final class RenderProvider {
     public IsRenderable provide() {
         if (instance == null) {
             if (rendererProperties.isParallelizedRendering()) {
-                instance = new MultithreadedSoftwareRenderer2(rendererExecutorProvider, argbCalculatorProvider, rendererProperties);
+                instance = new MultithreadedSoftwareRenderer3(rendererExecutorProvider, argbCalculatorProvider, rendererProperties);
             } else {
                 instance = new SoftwareRenderer(argbCalculatorProvider);
             }
