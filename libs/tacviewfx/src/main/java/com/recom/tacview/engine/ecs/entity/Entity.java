@@ -3,11 +3,9 @@ package com.recom.tacview.engine.ecs.entity;
 import com.recom.tacview.engine.IsUpdatable;
 import com.recom.tacview.engine.ecs.component.ComponentType;
 import com.recom.tacview.engine.ecs.component.IsComponent;
-import com.recom.tacview.engine.ecs.environment.IsEnvironment;
-import com.recom.tacview.engine.module.NullEnvironment;
+import com.recom.tacview.engine.ecs.environment.Environment;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -17,12 +15,15 @@ public class Entity implements IsEntity {
     @NonNull
     private final List<IsComponent> components = new ArrayList<>();
     @Getter
-    @Setter
     @NonNull
-    private IsEnvironment environment = NullEnvironment.INSTANCE;
+    private Optional<Environment> maybeEnvironment = Optional.empty();
     @NonNull
     private Map<? extends Class<? extends IsComponent>, List<IsComponent>> componentMap = new HashMap<>();
 
+
+    public void setEnvironment(@NonNull final Environment maybeEnvironment) {
+        this.maybeEnvironment = Optional.of(maybeEnvironment);
+    }
 
     @Override
     public void addComponent(@NonNull final IsComponent component) {
@@ -49,7 +50,7 @@ public class Entity implements IsEntity {
     @Override
     public void removeComponent(@NonNull final IsComponent component) {
         components.remove(component);
-        component.setEntity(NullEntity.INSTANCE);
+        component.setEntity(null);
         reIndexComponents();
     }
 

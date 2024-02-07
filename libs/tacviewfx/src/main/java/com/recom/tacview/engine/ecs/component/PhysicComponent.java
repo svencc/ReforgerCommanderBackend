@@ -1,6 +1,7 @@
 package com.recom.tacview.engine.ecs.component;
 
 import com.recom.commons.units.TimeUnits;
+import com.recom.tacview.engine.ecs.entity.IsEntity;
 
 public class PhysicComponent extends ComponentTemplate {
 
@@ -10,27 +11,30 @@ public class PhysicComponent extends ComponentTemplate {
 
     @Override
     public void update(final long elapsedNanoTime) {
-        this.getEntity().<PhysicCoreComponent>locateComponent(ComponentType.PhysicsCoreComponent).ifPresent(physicsCoreComponent -> {
-            if (physicsCoreComponent.getVelocityXComponent() == 0 && physicsCoreComponent.getVelocityYComponent() == 0) {
-                return;
-            } else {
-                double elapsedSeconds = elapsedSeconds(elapsedNanoTime);
+        if (this.getMaybeEntity().isPresent()) {
+            final IsEntity entity = this.getMaybeEntity().get();
+            entity.<PhysicCoreComponent>locateComponent(ComponentType.PhysicsCoreComponent).ifPresent(physicsCoreComponent -> {
+                if (physicsCoreComponent.getVelocityXComponent() == 0 && physicsCoreComponent.getVelocityYComponent() == 0) {
+                    return;
+                } else {
+                    double elapsedSeconds = elapsedSeconds(elapsedNanoTime);
 
-                double newPositionX = physicsCoreComponent.getPositionX() + (physicsCoreComponent.getVelocityXComponent() * elapsedSeconds);
-                double newPositionY = physicsCoreComponent.getPositionY() + (physicsCoreComponent.getVelocityYComponent() * elapsedSeconds);
-                physicsCoreComponent.setPositionX(newPositionX);
-                physicsCoreComponent.setPositionY(newPositionY);
+                    double newPositionX = physicsCoreComponent.getPositionX() + (physicsCoreComponent.getVelocityXComponent() * elapsedSeconds);
+                    double newPositionY = physicsCoreComponent.getPositionY() + (physicsCoreComponent.getVelocityYComponent() * elapsedSeconds);
+                    physicsCoreComponent.setPositionX(newPositionX);
+                    physicsCoreComponent.setPositionY(newPositionY);
 
-                final double restoringForce = physicsCoreComponent.getFrictionForce();
-                if (restoringForce != 0) {
-                    double newVelocityX = applyRestoringForce(physicsCoreComponent.getVelocityXComponent(), restoringForce);
-                    double newVelocityY = applyRestoringForce(physicsCoreComponent.getVelocityYComponent(), restoringForce);
-                    physicsCoreComponent.setVelocityXComponent(newVelocityX);
-                    physicsCoreComponent.setVelocityYComponent(newVelocityY);
+                    final double restoringForce = physicsCoreComponent.getFrictionForce();
+                    if (restoringForce != 0) {
+                        double newVelocityX = applyRestoringForce(physicsCoreComponent.getVelocityXComponent(), restoringForce);
+                        double newVelocityY = applyRestoringForce(physicsCoreComponent.getVelocityYComponent(), restoringForce);
+                        physicsCoreComponent.setVelocityXComponent(newVelocityX);
+                        physicsCoreComponent.setVelocityYComponent(newVelocityY);
+                    }
+                    entity.<RenderableComponent>locateComponent(ComponentType.RenderableComponent).ifPresent(RenderableComponent::propagateDirtyStateToParent);
                 }
-                this.getEntity().<RenderableComponent>locateComponent(ComponentType.RenderableComponent).ifPresent(RenderableComponent::propagateDirtyStateToParent);
-            }
-        });
+            });
+        }
     }
 
     private double elapsedSeconds(final long elapsedNanoTime) {

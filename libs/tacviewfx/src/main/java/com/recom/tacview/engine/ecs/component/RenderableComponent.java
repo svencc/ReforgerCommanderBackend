@@ -1,29 +1,28 @@
 package com.recom.tacview.engine.ecs.component;
 
+import com.recom.commons.units.PixelDimension;
 import com.recom.tacview.engine.ecs.ChildPropagateableSoilableState;
 import com.recom.tacview.engine.ecs.ParentPropagateableSoilableState;
 import com.recom.tacview.engine.graphics.buffer.NullPixelBuffer;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
 import com.recom.tacview.engine.renderables.HasPixelBuffer;
-import com.recom.tacview.engine.renderables.mergeable.IsMergeableComponentLayer;
-import com.recom.tacview.engine.renderables.mergeable.NullMergeableComponentLayer;
-import com.recom.commons.units.PixelDimension;
+import com.recom.tacview.engine.renderables.mergeable.MergeableComponentLayer;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 
-@Setter
+import java.util.Optional;
+
 @Getter
 public abstract class RenderableComponent extends ComponentTemplate implements HasPixelBuffer, BelongsToMergeableComponentLayer, ParentPropagateableSoilableState, ChildPropagateableSoilableState {
 
+    @Setter
     private int zIndex = 0;
-    @NonNull
-    protected PixelBuffer pixelBuffer;
-
-
     @Setter
     @NonNull
-    private IsMergeableComponentLayer mergeableComponentLayer = NullMergeableComponentLayer.INSTANCE;
+    protected PixelBuffer pixelBuffer;
+    @NonNull
+    private Optional<MergeableComponentLayer> maybeMergeableComponentLayer = Optional.empty();
 
     public RenderableComponent() {
         super(ComponentType.RenderableComponent);
@@ -40,13 +39,17 @@ public abstract class RenderableComponent extends ComponentTemplate implements H
         this.pixelBuffer = new PixelBuffer(dimension);
     }
 
+    public void setMergeableComponentLayer(@NonNull final MergeableComponentLayer mergeableComponentLayer) {
+        this.maybeMergeableComponentLayer = Optional.of(mergeableComponentLayer);
+    }
+
     public void propagateCleanStateToChildren() {
         pixelBuffer.setDirty(false);
     }
 
     public void propagateDirtyStateToParent() {
         pixelBuffer.setDirty(true);
-        getMergeableComponentLayer().propagateDirtyStateToParent();
+        maybeMergeableComponentLayer.ifPresent(MergeableComponentLayer::propagateDirtyStateToParent);
     }
 
     public void prepareBuffer() {

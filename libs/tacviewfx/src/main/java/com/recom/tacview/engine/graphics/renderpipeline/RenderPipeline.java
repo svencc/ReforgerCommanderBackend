@@ -2,7 +2,7 @@ package com.recom.tacview.engine.graphics.renderpipeline;
 
 import com.recom.tacview.engine.ecs.component.ComponentType;
 import com.recom.tacview.engine.ecs.component.RenderableComponent;
-import com.recom.tacview.engine.ecs.environment.IsEnvironment;
+import com.recom.tacview.engine.ecs.environment.Environment;
 import com.recom.tacview.engine.renderables.mergeable.MergeableComponentLayer;
 import lombok.Getter;
 import lombok.NonNull;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class RenderPipeline implements IsRenderPipeline {
 
     @NonNull
-    private final IsEnvironment environment;
+    private final Environment environment;
     @NonNull
     private final Map<Integer, List<RenderableComponent>> renderableComponentList = new HashMap<>();
     @Getter

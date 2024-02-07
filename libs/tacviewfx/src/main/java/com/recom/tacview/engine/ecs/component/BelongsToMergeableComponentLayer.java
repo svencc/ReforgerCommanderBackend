@@ -1,13 +1,15 @@
 package com.recom.tacview.engine.ecs.component;
 
-import com.recom.tacview.engine.renderables.mergeable.IsMergeableComponentLayer;
+import com.recom.tacview.engine.renderables.mergeable.MergeableComponentLayer;
 import org.springframework.lang.NonNull;
+
+import java.util.Optional;
 
 public interface BelongsToMergeableComponentLayer {
 
     @NonNull
-    IsMergeableComponentLayer getMergeableComponentLayer();
+    Optional<MergeableComponentLayer> getMaybeMergeableComponentLayer();
 
-    void setMergeableComponentLayer(@NonNull final IsMergeableComponentLayer mergeableComponentLayer);
+    void setMergeableComponentLayer(@NonNull final MergeableComponentLayer mergeableComponentLayer);
 
 }

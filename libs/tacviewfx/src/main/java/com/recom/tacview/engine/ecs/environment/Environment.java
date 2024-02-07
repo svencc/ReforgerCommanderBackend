@@ -16,7 +16,7 @@ import java.util.Collections;
 import java.util.List;
 
 @RequiredArgsConstructor
-public abstract class Environment implements IsEnvironment {
+public abstract class Environment {
 
     @Getter
     @NonNull
@@ -35,12 +35,10 @@ public abstract class Environment implements IsEnvironment {
 
 
     @NonNull
-    @Override
     public List<Entity> getEntities() {
         return Collections.unmodifiableList(entities);
     }
 
-    @Override
     public void registerNewEntity(@NonNull final Entity entity) {
         entity.setEnvironment(this);
         entities.add(entity);
@@ -52,7 +50,6 @@ public abstract class Environment implements IsEnvironment {
         }
     }
 
-    @Override
     public void registerNewEntities(@NonNull final List<Entity> entitiesToAdd) {
         final boolean hasRenderableComponents = entitiesToAdd.stream()
                 .map(entity -> !entity.locateComponents(ComponentType.RenderableComponent).isEmpty())

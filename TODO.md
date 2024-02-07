@@ -1,14 +1,14 @@
 # TODO LIST
 
 # 1
-* NULLImplementations -> Optionals ...
-* 
 * only render visible part of screen! special renderer for screen. (<-)
+* 
 * add sortable physics modifier components
 * 
 * dynamic changeable render properties!
 * optimize Layers so that they must not be reinstantiated every time on update. Reuse layers and remove/extend entities on update
-* 
+* new type of keyboard input: keypressed (once at release)
+* implement configurable observed keys for event-mapper!
 * add pre-click-event (preclick, click, doublecklic) events
 * 
 * UI/MAP:

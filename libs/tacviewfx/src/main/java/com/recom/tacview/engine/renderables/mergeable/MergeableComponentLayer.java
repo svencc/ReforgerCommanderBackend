@@ -1,9 +1,13 @@
 package com.recom.tacview.engine.renderables.mergeable;
 
+import com.recom.tacview.engine.ecs.ChildPropagateableSoilableState;
+import com.recom.tacview.engine.ecs.ParentPropagateableSoilableState;
 import com.recom.tacview.engine.ecs.component.ComponentType;
 import com.recom.tacview.engine.ecs.component.PhysicCoreComponent;
 import com.recom.tacview.engine.ecs.component.RenderableComponent;
-import com.recom.tacview.engine.ecs.environment.IsEnvironment;
+import com.recom.tacview.engine.ecs.environment.Environment;
+import com.recom.tacview.engine.renderables.HasPixelBuffer;
+import com.recom.tacview.engine.renderables.IsMergeable;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -14,10 +18,10 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 
 @Slf4j
-public class MergeableComponentLayer extends BufferedMergeableTemplate implements IsMergeableComponentLayer {
+public class MergeableComponentLayer extends BufferedMergeableTemplate implements IsMergeable, HasPixelBuffer, ParentPropagateableSoilableState, ChildPropagateableSoilableState {
 
     @NonNull
-    private final IsEnvironment environment;
+    private final Environment environment;
     @Getter
     @NonNull
     private final Integer renderLayer;
@@ -28,7 +32,7 @@ public class MergeableComponentLayer extends BufferedMergeableTemplate implement
 
 
     public MergeableComponentLayer(
-            @NonNull final IsEnvironment environment,
+            @NonNull final Environment environment,
             @NonNull final Integer renderLayer,
             @NonNull final List<RenderableComponent> components
     ) {
@@ -52,10 +56,12 @@ public class MergeableComponentLayer extends BufferedMergeableTemplate implement
             int offsetX = 0;
             int offsetY = 0;
 
-            final Optional<PhysicCoreComponent> maybePhysicCoreComponent = component.getEntity().locateComponent(ComponentType.PhysicsCoreComponent);
-            if (maybePhysicCoreComponent.isPresent()) {
-                offsetX = (int) maybePhysicCoreComponent.get().getPositionX();
-                offsetY = (int) maybePhysicCoreComponent.get().getPositionY();
+            if (component.getMaybeEntity().isPresent()) {
+                final Optional<PhysicCoreComponent> maybePhysicCoreComponent = component.getMaybeEntity().get().locateComponent(ComponentType.PhysicsCoreComponent);
+                if (maybePhysicCoreComponent.isPresent()) {
+                    offsetX = (int) maybePhysicCoreComponent.get().getPositionX();
+                    offsetY = (int) maybePhysicCoreComponent.get().getPositionY();
+                }
             }
 
             environment.getRenderProvider().provide().render(component.getPixelBuffer(), this.getPixelBuffer(), offsetX, offsetY);
