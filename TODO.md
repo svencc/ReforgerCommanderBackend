@@ -2,7 +2,7 @@
 
 # 1
 * dynamic changeable render properties!
-* optimize Layers so that they must not be reinstantiated every time on update. Reuse layers and remove/extend entities on update
+* 
 * new type of keyboard input: keypressed (once at release)
 * implement configurable observed keys for event-mapper!
 * add pre-click-event (preclick, click, doublecklic) events
@@ -11,6 +11,7 @@
   * add scale bar
   * add measurement tool
   * add menu
+  * improve map colors 
 
 
 # 1.1

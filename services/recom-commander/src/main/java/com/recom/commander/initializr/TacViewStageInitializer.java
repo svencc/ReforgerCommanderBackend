@@ -106,7 +106,7 @@ public class TacViewStageInitializer {
         tacViewer.setMaybeProfileFPSStrategy(Optional.of(profileFPSStrategy));
         tacViewer.start();
 
-        stage.setResizable(false);
+        stage.setResizable(true);
         stage.setScene(scene);
     }
 
