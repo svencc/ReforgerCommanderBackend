@@ -1,11 +1,12 @@
 package com.recom.tacview.engine.module;
 
+import com.recom.commons.units.PixelDimension;
 import com.recom.tacview.engine.ecs.component.RenderableComponent;
 import com.recom.tacview.engine.ecs.entity.Entity;
 import com.recom.tacview.engine.ecs.environment.Environment;
+import com.recom.tacview.engine.renderables.mergeable.MergeableComponentLayer;
 import com.recom.tacview.engine.renderables.mergeable.ScanableNoiseMergeable;
 import com.recom.tacview.engine.renderer.RenderProvider;
-import com.recom.commons.units.PixelDimension;
 import com.recom.tacview.service.RandomProvider;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -76,14 +77,14 @@ public class DefaultEngineModule extends EngineModule {
         public void propagateCleanStateToChildren() {
             // ScanableNoise is always dirty, as it is a random noise.
             pixelBuffer.setDirty(true);
-            getMergeableComponentLayer().propagateDirtyStateToParent();
+            getMaybeMergeableComponentLayer().ifPresent(MergeableComponentLayer::propagateDirtyStateToParent);
         }
 
         @Override
         public void propagateDirtyStateToParent() {
             // ScanableNoise is always dirty, as it is a random noise.
             pixelBuffer.setDirty(true);
-            getMergeableComponentLayer().propagateDirtyStateToParent();
+            getMaybeMergeableComponentLayer().ifPresent(MergeableComponentLayer::propagateDirtyStateToParent);
         }
 
     }

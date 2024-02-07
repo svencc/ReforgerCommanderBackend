@@ -1,9 +1,13 @@
 package com.recom.tacview.engine.renderables.mergeable;
 
+import com.recom.tacview.engine.ecs.ChildPropagateableSoilableState;
+import com.recom.tacview.engine.ecs.ParentPropagateableSoilableState;
 import com.recom.tacview.engine.ecs.component.ComponentType;
 import com.recom.tacview.engine.ecs.component.PhysicCoreComponent;
 import com.recom.tacview.engine.ecs.component.RenderableComponent;
 import com.recom.tacview.engine.ecs.environment.Environment;
+import com.recom.tacview.engine.renderables.HasPixelBuffer;
+import com.recom.tacview.engine.renderables.IsMergeable;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +18,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 
 @Slf4j
-public class MergeableComponentLayer extends BufferedMergeableTemplate implements IsMergeableComponentLayer {
+public class MergeableComponentLayer extends BufferedMergeableTemplate implements IsMergeable, HasPixelBuffer, ParentPropagateableSoilableState, ChildPropagateableSoilableState {
 
     @NonNull
     private final Environment environment;
