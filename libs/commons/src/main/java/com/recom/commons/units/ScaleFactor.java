@@ -1,6 +1,9 @@
 package com.recom.commons.units;
 
 import lombok.Getter;
+import lombok.NonNull;
+
+import java.util.Optional;
 
 /**
  * The scale factor is NEVER 0
@@ -10,7 +13,24 @@ import lombok.Getter;
 public class ScaleFactor implements Cloneable {
 
     private int scaleFactor = 1;
+    @NonNull
+    private Optional<Integer> maybeMaxScaleFactor = Optional.empty();
+    @NonNull
+    private Optional<Integer> maybeMinScaleFactor = Optional.empty();
 
+
+    public ScaleFactor() {
+
+    }
+
+    public ScaleFactor(
+            final int minScaleFactor,
+            final int maxScaleFactor
+    ) {
+        this.scaleFactor = scaleFactor;
+        this.maybeMaxScaleFactor = Optional.of(maxScaleFactor);
+        this.maybeMinScaleFactor = Optional.of(minScaleFactor);
+    }
 
     public void zoomIn() {
         switch (scaleFactor) {
@@ -21,7 +41,11 @@ public class ScaleFactor implements Cloneable {
                 scaleFactor = 2;
                 break;
             default:
-                scaleFactor++;
+                if (maybeMaxScaleFactor.isPresent() && scaleFactor + 1 > maybeMaxScaleFactor.get()) {
+                    scaleFactor = maybeMaxScaleFactor.get();
+                } else {
+                    scaleFactor++;
+                }
                 break;
         }
     }
@@ -35,18 +59,12 @@ public class ScaleFactor implements Cloneable {
                 scaleFactor = -2;
                 break;
             default:
-                scaleFactor--;
+                if (maybeMinScaleFactor.isPresent() && scaleFactor - 1 < maybeMinScaleFactor.get()) {
+                    scaleFactor = maybeMinScaleFactor.get();
+                } else {
+                    scaleFactor--;
+                }
                 break;
-        }
-    }
-
-    public int getSign() {
-        if (scaleFactor > 0) {
-            return 1;
-        } else if (scaleFactor < 0) {
-            return -1;
-        } else {
-            return 0;
         }
     }
 
@@ -54,6 +72,8 @@ public class ScaleFactor implements Cloneable {
     public ScaleFactor clone() {
         final ScaleFactor scaleFactorClone = new ScaleFactor();
         scaleFactorClone.scaleFactor = this.scaleFactor;
+        scaleFactorClone.maybeMaxScaleFactor = this.maybeMaxScaleFactor;
+        scaleFactorClone.maybeMinScaleFactor = this.maybeMinScaleFactor;
 
         return scaleFactorClone;
     }

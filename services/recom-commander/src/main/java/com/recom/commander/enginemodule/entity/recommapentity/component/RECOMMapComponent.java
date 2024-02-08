@@ -44,14 +44,14 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
     private final HeightmapRasterizer heightmapRasterizer;
     @NonNull
     private final RendererProperties rendererProperties;
-    @NonNull
-    private Optional<HeightMapDescriptor> maybeHeightMapDescriptor = Optional.empty();
     @Nullable
     private final ReactiveObserver<MapOverviewDto> mapOverviewReactiveObserver;
     @Nullable
     private final ReactiveObserver<HeightMapDescriptorDto> mapTopographyDataReactiveObserver;
     @NonNull
-    private final ScaleFactor mapScale = new ScaleFactor();
+    private final ScaleFactor mapScale = new ScaleFactor(-5, 5);
+    @NonNull
+    private Optional<HeightMapDescriptor> maybeHeightMapDescriptor = Optional.empty();
 
 
     public RECOMMapComponent(
@@ -75,21 +75,6 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
     }
 
     @NonNull
-    private TakeNoticeRunnable<HeightMapDescriptorDto> onReloadMapTopographyDataReaction() {
-        return (
-                @NonNull final Subjective<HeightMapDescriptorDto> subject,
-                @NonNull final Notification<HeightMapDescriptorDto> notification
-        ) -> {
-            log.debug("Received map topography data");
-            final HeightMapDescriptorDto heightMapDescriptorDto = notification.getPayload();
-            final HeightMapDescriptor heightMapDescriptor = HeightMapDescriptorMapper.INSTANCE.toModel(heightMapDescriptorDto);
-            maybeHeightMapDescriptor = Optional.of(heightMapDescriptor);
-
-            setMap(heightMapDescriptor);
-        };
-    }
-
-    @NonNull
     private TakeNoticeRunnable<MapOverviewDto> onReloadMapOverviewReaction() {
         return (
                 @NonNull final Subjective<MapOverviewDto> subject,
@@ -104,6 +89,33 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
                 mapTopographyDataService.reloadMapTopographyData(mapTopographyRequest);
             }
         };
+    }
+
+    @NonNull
+    private TakeNoticeRunnable<HeightMapDescriptorDto> onReloadMapTopographyDataReaction() {
+        return (
+                @NonNull final Subjective<HeightMapDescriptorDto> subject,
+                @NonNull final Notification<HeightMapDescriptorDto> notification
+        ) -> {
+            log.debug("Received map topography data");
+            final HeightMapDescriptorDto heightMapDescriptorDto = notification.getPayload();
+            final HeightMapDescriptor heightMapDescriptor = HeightMapDescriptorMapper.INSTANCE.toModel(heightMapDescriptorDto);
+            maybeHeightMapDescriptor = Optional.of(heightMapDescriptor);
+
+            setMap(heightMapDescriptor);
+        };
+    }
+
+    private void setMap(@NonNull final HeightMapDescriptor heightMapDescriptor) {
+        final int mapWidth = heightMapDescriptor.getHeightMap().length;
+        final int mapHeight = heightMapDescriptor.getHeightMap()[0].length;
+
+        final int[] pixelBufferArray = heightmapRasterizer.rasterizeHeightMapRGB(heightMapDescriptor);
+
+        final PixelBuffer newPixelBuffer = new PixelBuffer(PixelDimension.of(mapWidth, mapHeight), pixelBufferArray);
+        this.setPixelBuffer(newPixelBuffer);
+
+        propagateDirtyStateToParent();
     }
 
     @EventListener(InitialAuthenticationEvent.class)
@@ -147,6 +159,24 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
         }
     }
 
+    private void setScaledMap(
+            @NonNull HeightMapDescriptor heightMapDescriptor,
+            final int scaleFactor
+    ) {
+        final int originalMapHeight = heightMapDescriptor.getHeightMap().length;
+        final int originalMapWidth = heightMapDescriptor.getHeightMap()[0].length;
+
+        final int scaledMapWidth = (int) ScalingTool.scaleDimension(originalMapWidth, scaleFactor);
+        final int scaledMapHeight = (int) ScalingTool.scaleDimension(originalMapHeight, scaleFactor);
+
+        final int[] newScaledPixelArray = heightmapRasterizer.rasterizeHeightMapRGB(heightMapDescriptor, scaleFactor);
+
+        final PixelBuffer newScaledPixelBuffer = new PixelBuffer(PixelDimension.of(scaledMapWidth, scaledMapHeight), newScaledPixelArray);
+        this.setPixelBuffer(newScaledPixelBuffer);
+
+        propagateDirtyStateToParent();
+    }
+
     public void zoomOut(
             @NonNull final NanoTimedEvent<ScrollEvent> nanoTimedEvent,
             @NonNull final PhysicCoreComponent physicsCoreComponent
@@ -170,36 +200,6 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
             physicsCoreComponent.setPositionX(-scaledMapCoordinate.getX() + mouseCoordinateOnCanvas.getX());
             physicsCoreComponent.setPositionY(-scaledMapCoordinate.getY() + mouseCoordinateOnCanvas.getY());
         }
-    }
-
-    private void setMap(@NonNull final HeightMapDescriptor heightMapDescriptor) {
-        final int mapWidth = heightMapDescriptor.getHeightMap().length;
-        final int mapHeight = heightMapDescriptor.getHeightMap()[0].length;
-
-        final int[] pixelBufferArray = heightmapRasterizer.rasterizeHeightMapRGB(heightMapDescriptor);
-
-        final PixelBuffer newPixelBuffer = new PixelBuffer(PixelDimension.of(mapWidth, mapHeight), pixelBufferArray);
-        this.setPixelBuffer(newPixelBuffer);
-
-        propagateDirtyStateToParent();
-    }
-
-    private void setScaledMap(
-            @NonNull HeightMapDescriptor heightMapDescriptor,
-            final int scaleFactor
-    ) {
-        final int originalMapHeight = heightMapDescriptor.getHeightMap().length;
-        final int originalMapWidth = heightMapDescriptor.getHeightMap()[0].length;
-
-        final int scaledMapWidth = (int) ScalingTool.scaleDimension(originalMapWidth, scaleFactor);
-        final int scaledMapHeight = (int) ScalingTool.scaleDimension(originalMapHeight, scaleFactor);
-
-        final int[] newScaledPixelArray = heightmapRasterizer.rasterizeHeightMapRGB(heightMapDescriptor, scaleFactor);
-
-        final PixelBuffer newScaledPixelBuffer = new PixelBuffer(PixelDimension.of(scaledMapWidth, scaledMapHeight), newScaledPixelArray);
-        this.setPixelBuffer(newScaledPixelBuffer);
-
-        propagateDirtyStateToParent();
     }
 
 }
