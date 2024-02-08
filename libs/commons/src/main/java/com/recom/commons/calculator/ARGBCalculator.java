@@ -10,7 +10,7 @@ import java.util.Map;
 public class ARGBCalculator {
 
     @NonNull
-    private final Map<Integer, Integer> colorCache = new HashMap<>();
+    private static final Map<Integer, Integer> colorCache = new HashMap<>();
 
 
     public int blend(final int foregroundColor, final int backgroundColour) {

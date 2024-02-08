@@ -2,6 +2,9 @@
 
 # 1
 * dynamic changeable render properties!
+  * ReactiveProperties for RenderProperties (resolution x,y, scale)
+  * observe by engine and update framebuffer size
+  * listener on window resize; put new size to RenderProperties; persist to file
 * 
 * new type of keyboard input: keypressed (once at release)
 * implement configurable observed keys for event-mapper!
