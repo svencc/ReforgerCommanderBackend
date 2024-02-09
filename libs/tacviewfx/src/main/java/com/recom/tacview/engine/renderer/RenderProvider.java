@@ -1,7 +1,7 @@
 package com.recom.tacview.engine.renderer;
 
 import com.recom.tacview.engine.graphics.IsRenderable;
-import com.recom.tacview.property.EngineProperties;
+import com.recom.tacview.property.IsEngineProperties;
 import com.recom.tacview.service.RendererExecutorProvider;
 import com.recom.tacview.service.argb.ARGBCalculatorProvider;
 import lombok.NonNull;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public final class RenderProvider {
 
     @NonNull
-    private final EngineProperties engineProperties;
+    private final IsEngineProperties engineProperties;
     @NonNull
     private final RendererExecutorProvider rendererExecutorProvider;
     @NonNull

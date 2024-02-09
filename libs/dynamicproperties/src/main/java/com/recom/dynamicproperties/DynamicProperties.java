@@ -19,7 +19,8 @@ public abstract class DynamicProperties {
             "properties",
             "propertiesBasePath",
             "applicationName",
-            "propertyFileName"
+            "propertyFileName",
+            "bufferedSubject"
     );
 
     DynamicPropertySystem<? extends DynamicProperties> dynamicPropertySystem;

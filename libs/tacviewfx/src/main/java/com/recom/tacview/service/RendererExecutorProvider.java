@@ -1,6 +1,6 @@
 package com.recom.tacview.service;
 
-import com.recom.tacview.property.EngineProperties;
+import com.recom.tacview.property.IsEngineProperties;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.Nullable;
@@ -15,7 +15,7 @@ import java.util.concurrent.Executors;
 public class RendererExecutorProvider {
 
     @NonNull
-    private final EngineProperties engineProperties;
+    private final IsEngineProperties engineProperties;
     @Nullable
     private ExecutorService fixedThreadPoolSingletonInstance;
 

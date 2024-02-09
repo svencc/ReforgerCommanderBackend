@@ -10,7 +10,7 @@ import java.time.Duration;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthenticationProperties extends ObservableDynamicUserProperties<AuthenticationProperties> {
+public class DynamicAuthenticationProperties extends ObservableDynamicUserProperties<DynamicAuthenticationProperties> {
 
     @NonNull
     @Override
@@ -26,10 +26,8 @@ public class AuthenticationProperties extends ObservableDynamicUserProperties<Au
 
     @Builder.Default
     private String accountUUID = "<accountUUID>";
-
     @Builder.Default
     private String accessKey = "<accessKey>";
-
     @Builder.Default
     private Duration reAuthenticateInAdvance = Duration.ofMinutes(1);
 

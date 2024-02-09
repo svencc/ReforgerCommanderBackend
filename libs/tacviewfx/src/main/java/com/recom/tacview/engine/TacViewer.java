@@ -8,7 +8,7 @@ import com.recom.tacview.engine.input.mapper.keyboard.JavaFxKeyboardCommandMappe
 import com.recom.tacview.engine.input.mapper.mousebutton.JavaFxMouseButtonCommandMapper;
 import com.recom.tacview.engine.input.mapper.scroll.JavaFxMouseScrollCommandMapper;
 import com.recom.tacview.engine.module.EngineModule;
-import com.recom.tacview.property.EngineProperties;
+import com.recom.tacview.property.IsEngineProperties;
 import com.recom.tacview.service.profiler.ProfilerProvider;
 import com.recom.tacview.strategy.ProfileFPSStrategy;
 import javafx.animation.AnimationTimer;
@@ -25,7 +25,7 @@ import java.util.Optional;
 public class TacViewer extends Canvas {
 
     @NonNull
-    private final EngineProperties engineProperties;
+    private final IsEngineProperties engineProperties;
     @NonNull
     private final TacViewerProfiler profiler;
     @NonNull
@@ -50,7 +50,7 @@ public class TacViewer extends Canvas {
 
 
     public TacViewer(
-            @NonNull final EngineProperties engineProperties,
+            @NonNull final IsEngineProperties engineProperties,
             @NonNull final ProfilerProvider profilerProvider,
             @NonNull final ScreenComposer screenComposer,
             @NonNull final EngineModule engineModule,
@@ -126,9 +126,7 @@ public class TacViewer extends Canvas {
         }
     }
 
-    private void engineLoop(
-            @NonNull final EngineProperties engineProperties
-    ) {
+    private void engineLoop(@NonNull final IsEngineProperties engineProperties) {
         // HANDLE TIME CALCULATIONS
         final long currentNanoTimeOnLoopStart = System.nanoTime();
         final long elapsedEngineNanoTime = (currentNanoTimeOnLoopStart - profiler.previousTickNanoTime);

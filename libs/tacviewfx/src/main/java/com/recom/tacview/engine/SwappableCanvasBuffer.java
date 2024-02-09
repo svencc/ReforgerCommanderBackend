@@ -1,7 +1,9 @@
 package com.recom.tacview.engine;
 
+import com.recom.observer.ReactiveObserver;
 import com.recom.tacview.engine.graphics.ScreenComposer;
-import com.recom.tacview.property.EngineProperties;
+import com.recom.tacview.property.IsEngineProperties;
+import jakarta.annotation.Nullable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.PixelBuffer;
@@ -17,16 +19,22 @@ public class SwappableCanvasBuffer {
     private final Canvas canvas;
     @NonNull
     private final ScreenComposer screenComposer;
+    @NonNull
+    private final PixelFormat<IntBuffer> pixelFormat;
+//    @NonNull
+//    final ReactiveObserver<IsEngineProperties> enginePropertiesReactiveObserver;
+    @Nullable
     private IntBuffer intBuffer = null;
-    private PixelFormat<IntBuffer> pixelFormat = null;
+    @Nullable
     private PixelBuffer<IntBuffer> imagePixelBuffer = null;
+    @Nullable
     private WritableImage img = null;
     public int currentShownBackBufferIndex = -1;
 
 
     public SwappableCanvasBuffer(
             @NonNull final Canvas canvas,
-            @NonNull final EngineProperties engineProperties,
+            @NonNull final IsEngineProperties engineProperties,
             @NonNull final ScreenComposer screenComposer
     ) {
         this.canvas = canvas;
@@ -36,6 +44,27 @@ public class SwappableCanvasBuffer {
         pixelFormat = PixelFormat.getIntArgbPreInstance();
         imagePixelBuffer = new PixelBuffer<>(engineProperties.getRendererWidth(), engineProperties.getRendererHeight(), intBuffer, pixelFormat);
         img = new WritableImage(imagePixelBuffer);
+
+        // die engine muss die loop stoppen, wenn die properties sich ändern
+        // und dann die neuen properties propagieren
+        // framebuffer + composer buffer müssen sich anpassen (ggf auch die einzelnen layer)
+        // die engine muss die loop wieder starten
+        /*
+        enginePropertiesReactiveObserver = ReactiveObserver.reactWith((
+                @NonNull final Subjective<IsEngineProperties> __,
+                @NonNull final Notification<IsEngineProperties> notification
+        ) -> {
+            final IsEngineProperties properties = notification.getPayload();
+            if (properties.getRendererHeight() == 0 || properties.getRendererWidth() == 0) {
+                return;
+            } else {
+                intBuffer = IntBuffer.allocate(properties.getRendererWidth() * properties.getRendererHeight());
+                imagePixelBuffer = new PixelBuffer<>(properties.getRendererWidth(), properties.getRendererHeight(), intBuffer, pixelFormat);
+                img = new WritableImage(imagePixelBuffer);
+            }
+        });
+        enginePropertiesReactiveObserver.observe(engineProperties.getBufferedSubject());
+         */
     }
 
     void swap() {

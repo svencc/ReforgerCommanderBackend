@@ -22,7 +22,7 @@ import com.recom.tacview.engine.ecs.component.PhysicCoreComponent;
 import com.recom.tacview.engine.ecs.component.RenderableComponent;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
 import com.recom.tacview.engine.input.NanoTimedEvent;
-import com.recom.tacview.property.EngineProperties;
+import com.recom.tacview.property.IsEngineProperties;
 import jakarta.annotation.Nullable;
 import javafx.scene.input.ScrollEvent;
 import lombok.NonNull;
@@ -43,7 +43,7 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
     @NonNull
     private final HeightmapRasterizer heightmapRasterizer;
     @NonNull
-    private final EngineProperties engineProperties;
+    private final IsEngineProperties engineProperties;
     @Nullable
     private final ReactiveObserver<MapOverviewDto> mapOverviewReactiveObserver;
     @Nullable
@@ -58,7 +58,7 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
             @NonNull final MapsOverviewService mapsOverviewService,
             @NonNull final MapTopographyDataService mapTopographyDataService,
             @NonNull final HeightmapRasterizer heightmapRasterizer,
-            @NonNull final EngineProperties engineProperties
+            @NonNull final IsEngineProperties engineProperties
     ) {
         super();
         this.mapsOverviewService = mapsOverviewService;

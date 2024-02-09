@@ -1,6 +1,7 @@
 package com.recom.tacview.configuration;
 
 import com.recom.tacview.property.EngineProperties;
+import com.recom.tacview.property.IsEngineProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -14,8 +15,8 @@ import org.springframework.context.annotation.ComponentScan;
 public class TacViewAutoConfiguration {
 
     @Bean
-    @ConditionalOnMissingBean(EngineProperties.class)
-    public EngineProperties createEngineProperties() {
+    @ConditionalOnMissingBean(IsEngineProperties.class)
+    public IsEngineProperties createDefaultEngineProperties() {
         return EngineProperties.builder()
                 .rendererWidth(640)
                 .rendererHeight(480)

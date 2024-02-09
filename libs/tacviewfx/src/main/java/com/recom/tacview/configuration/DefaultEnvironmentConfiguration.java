@@ -3,7 +3,7 @@ package com.recom.tacview.configuration;
 import com.recom.tacview.engine.ecs.environment.Environment;
 import com.recom.tacview.engine.module.DefaultEnvironment;
 import com.recom.tacview.engine.renderer.RenderProvider;
-import com.recom.tacview.property.EngineProperties;
+import com.recom.tacview.property.IsEngineProperties;
 import com.recom.tacview.service.RendererExecutorProvider;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Bean;
 public class DefaultEnvironmentConfiguration {
 
     @NonNull
-    private final EngineProperties engineProperties;
+    private final IsEngineProperties engineProperties;
     @NonNull
     private final RenderProvider renderProvider;
     @NonNull

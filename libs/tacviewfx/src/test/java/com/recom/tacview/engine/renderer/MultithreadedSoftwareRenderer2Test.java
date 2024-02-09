@@ -5,6 +5,7 @@ import com.recom.tacview.engine.graphics.IsScanable;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
 import com.recom.tacview.engine.renderables.sprite.SpriteAtlas;
 import com.recom.tacview.property.EngineProperties;
+import com.recom.tacview.property.IsEngineProperties;
 import com.recom.tacview.service.RendererExecutorProvider;
 import com.recom.tacview.service.argb.ARGBCalculatorProvider;
 import lombok.NonNull;
@@ -22,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @RequiredArgsConstructor
 class MultithreadedSoftwareRenderer2Test {
 
-    private EngineProperties engineProperties;
+    private IsEngineProperties engineProperties;
     private RendererExecutorProvider rendererExecutorProvider;
     private ARGBCalculatorProvider argbCalculatorProvider;
     private MultithreadedSoftwareRenderer2 rendererToTest;
