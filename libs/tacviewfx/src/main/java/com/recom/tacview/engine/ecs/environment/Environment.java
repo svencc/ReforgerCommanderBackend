@@ -5,7 +5,7 @@ import com.recom.tacview.engine.ecs.entity.Entity;
 import com.recom.tacview.engine.graphics.renderpipeline.IsRenderPipeline;
 import com.recom.tacview.engine.graphics.renderpipeline.RenderPipeline;
 import com.recom.tacview.engine.renderer.RenderProvider;
-import com.recom.tacview.property.RendererProperties;
+import com.recom.tacview.property.EngineProperties;
 import com.recom.tacview.service.RendererExecutorProvider;
 import lombok.Getter;
 import lombok.NonNull;
@@ -20,7 +20,7 @@ public abstract class Environment {
 
     @Getter
     @NonNull
-    private final RendererProperties rendererProperties;
+    private final EngineProperties engineProperties;
     @Getter
     @NonNull
     private final RenderProvider renderProvider;

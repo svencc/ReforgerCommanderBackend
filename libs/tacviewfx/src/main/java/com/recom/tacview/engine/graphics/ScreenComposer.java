@@ -5,7 +5,7 @@ import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
 import com.recom.tacview.engine.graphics.buffer.PixelRingBuffer;
 import com.recom.tacview.engine.graphics.renderpipeline.IsRenderPipeline;
 import com.recom.tacview.engine.renderables.mergeable.MergeableComponentLayer;
-import com.recom.tacview.property.RendererProperties;
+import com.recom.tacview.property.EngineProperties;
 import com.recom.tacview.service.RendererExecutorProvider;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -25,11 +25,11 @@ public class ScreenComposer implements IsComposable {
 
 
     public ScreenComposer(
-            @NonNull final RendererProperties rendererProperties,
+            @NonNull final EngineProperties engineProperties,
             @NonNull final RendererExecutorProvider rendererExecutorProvider
     ) {
         this.renderExecutorService = rendererExecutorProvider.provideNewExecutor();
-        this.pixelRingBuffer = new PixelRingBuffer(rendererProperties.toRendererDimension(), rendererProperties.getComposer().getBackBufferSize());
+        this.pixelRingBuffer = new PixelRingBuffer(engineProperties.toRendererDimension(), engineProperties.getComposerBackBufferSize());
     }
 
     @Override

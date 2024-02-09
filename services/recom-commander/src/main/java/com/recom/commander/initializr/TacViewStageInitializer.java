@@ -10,8 +10,7 @@ import com.recom.tacview.engine.graphics.ScreenComposer;
 import com.recom.tacview.engine.input.GenericFXInputEventListener;
 import com.recom.tacview.engine.input.InputManager;
 import com.recom.tacview.engine.module.EngineModule;
-import com.recom.tacview.property.RendererProperties;
-import com.recom.tacview.property.TickProperties;
+import com.recom.tacview.property.EngineProperties;
 import com.recom.tacview.service.profiler.ProfilerProvider;
 import com.recom.tacview.strategy.ProfileFPSStrategy;
 import javafx.application.Platform;
@@ -41,9 +40,7 @@ public class TacViewStageInitializer {
     @NonNull
     private final SpringApplicationProperties springApplicationProperties;
     @NonNull
-    private final TickProperties tickProperties;
-    @NonNull
-    private final RendererProperties rendererProperties;
+    private final EngineProperties engineProperties;
     @NonNull
     private final ProfilerProvider profilerProvider;
     @NonNull
@@ -79,8 +76,7 @@ public class TacViewStageInitializer {
         root.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
 
         final TacViewer tacViewer = new TacViewer(
-                rendererProperties,
-                tickProperties,
+                engineProperties,
                 profilerProvider,
                 screenComposer,
                 engineModule,
@@ -92,7 +88,7 @@ public class TacViewStageInitializer {
         maybeTacViewer = Optional.of(tacViewer);
         root.setCenter(maybeTacViewer.get());
 
-        final Scene scene = new Scene(root, rendererProperties.getScaledWindowWidth(), rendererProperties.getScaledWindowHeight());
+        final Scene scene = new Scene(root, engineProperties.getScaledWindowWidth(), engineProperties.getScaledWindowHeight());
         stage.setTitle(springApplicationProperties.getName());
 
 //        final Window window = stage.getOwner();

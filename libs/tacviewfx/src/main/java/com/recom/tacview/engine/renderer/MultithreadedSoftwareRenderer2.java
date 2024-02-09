@@ -2,7 +2,7 @@ package com.recom.tacview.engine.renderer;
 
 import com.recom.tacview.engine.graphics.IsBufferable;
 import com.recom.tacview.engine.graphics.IsScanable;
-import com.recom.tacview.property.RendererProperties;
+import com.recom.tacview.property.EngineProperties;
 import com.recom.tacview.service.RendererExecutorProvider;
 import com.recom.tacview.service.argb.ARGBCalculatorProvider;
 import lombok.NonNull;
@@ -19,16 +19,16 @@ class MultithreadedSoftwareRenderer2 extends RendererTemplate {
     @NonNull
     private final ExecutorService rendererExecutorService;
     @NonNull
-    private final RendererProperties rendererProperties;
+    private final EngineProperties engineProperties;
 
 
     MultithreadedSoftwareRenderer2(
             @NonNull final RendererExecutorProvider rendererExecutorProvider,
             @NonNull final ARGBCalculatorProvider argbCalculatorProvider,
-            @NonNull final RendererProperties rendererProperties
+            @NonNull final EngineProperties engineProperties
     ) {
         super(argbCalculatorProvider);
-        this.rendererProperties = rendererProperties;
+        this.engineProperties = engineProperties;
         this.rendererExecutorService = rendererExecutorProvider.provideNewExecutor();
     }
 

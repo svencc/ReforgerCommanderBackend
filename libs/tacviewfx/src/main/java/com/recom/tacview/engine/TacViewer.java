@@ -1,5 +1,6 @@
 package com.recom.tacview.engine;
 
+import com.recom.commons.units.TimeUnits;
 import com.recom.tacview.engine.graphics.ScreenComposer;
 import com.recom.tacview.engine.input.GenericFXInputEventListener;
 import com.recom.tacview.engine.input.InputManager;
@@ -7,9 +8,7 @@ import com.recom.tacview.engine.input.mapper.keyboard.JavaFxKeyboardCommandMappe
 import com.recom.tacview.engine.input.mapper.mousebutton.JavaFxMouseButtonCommandMapper;
 import com.recom.tacview.engine.input.mapper.scroll.JavaFxMouseScrollCommandMapper;
 import com.recom.tacview.engine.module.EngineModule;
-import com.recom.commons.units.TimeUnits;
-import com.recom.tacview.property.RendererProperties;
-import com.recom.tacview.property.TickProperties;
+import com.recom.tacview.property.EngineProperties;
 import com.recom.tacview.service.profiler.ProfilerProvider;
 import com.recom.tacview.strategy.ProfileFPSStrategy;
 import javafx.animation.AnimationTimer;
@@ -26,9 +25,7 @@ import java.util.Optional;
 public class TacViewer extends Canvas {
 
     @NonNull
-    private final RendererProperties rendererProperties;
-    @NonNull
-    private final TickProperties tickProperties;
+    private final EngineProperties engineProperties;
     @NonNull
     private final TacViewerProfiler profiler;
     @NonNull
@@ -53,8 +50,7 @@ public class TacViewer extends Canvas {
 
 
     public TacViewer(
-            @NonNull final RendererProperties rendererProperties,
-            @NonNull final TickProperties tickProperties,
+            @NonNull final EngineProperties engineProperties,
             @NonNull final ProfilerProvider profilerProvider,
             @NonNull final ScreenComposer screenComposer,
             @NonNull final EngineModule engineModule,
@@ -62,16 +58,15 @@ public class TacViewer extends Canvas {
             @NonNull final InputManager inputManager,
             @NonNull final Thread.UncaughtExceptionHandler globalExceptionHandler
     ) {
-        super(rendererProperties.getScaledWindowWidth(), rendererProperties.getScaledWindowHeight());
-        this.rendererProperties = rendererProperties;
-        this.tickProperties = tickProperties;
+        super(engineProperties.getScaledWindowWidth(), engineProperties.getScaledWindowHeight());
+        this.engineProperties = engineProperties;
         this.screenComposer = screenComposer;
         this.engineModule = engineModule;
         this.genericFXInputEventListener = genericFXInputEventListener;
         this.inputManager = inputManager;
         this.globalExceptionHandler = globalExceptionHandler;
 
-        this.canvasBuffer = new SwappableCanvasBuffer(this, rendererProperties, screenComposer);
+        this.canvasBuffer = new SwappableCanvasBuffer(this, engineProperties, screenComposer);
         this.profiler = new TacViewerProfiler(profilerProvider);
         this.profiler.startProfiling();
 
@@ -106,7 +101,7 @@ public class TacViewer extends Canvas {
             Thread.setDefaultUncaughtExceptionHandler(globalExceptionHandler);
 
             while (!Thread.currentThread().isInterrupted()) {
-                engineLoop(tickProperties, rendererProperties);
+                engineLoop(engineProperties);
                 profiler.getLoopCounter().countLoop();
             }
         });
@@ -132,15 +127,14 @@ public class TacViewer extends Canvas {
     }
 
     private void engineLoop(
-            @NonNull final TickProperties tickProperties,
-            @NonNull final RendererProperties rendererProperties
+            @NonNull final EngineProperties engineProperties
     ) {
         // HANDLE TIME CALCULATIONS
         final long currentNanoTimeOnLoopStart = System.nanoTime();
         final long elapsedEngineNanoTime = (currentNanoTimeOnLoopStart - profiler.previousTickNanoTime);
         final long deltaTickNanoTime = currentNanoTimeOnLoopStart - profiler.previousTickNanoTime;
         final long deltaFrameNanoTime = currentNanoTimeOnLoopStart - profiler.previousFrameNanoTime;
-        final long targetNanosOfLoops = Math.max(tickProperties.getTickThresholdNanoTime(), rendererProperties.getFrameThresholdNanoTime());
+        final long targetNanosOfLoops = Math.max(engineProperties.getTickThresholdNanoTime(), engineProperties.getFrameThresholdNanoTime());
 
         // HANDLE INPUT
         final long inputHandlingStart = System.nanoTime();
@@ -149,14 +143,14 @@ public class TacViewer extends Canvas {
         profiler.inputHandlingNanoTime = System.nanoTime() - inputHandlingStart;
 
         // HANDLE UPDATE
-        if (deltaTickNanoTime >= tickProperties.getTickThresholdNanoTime()) {
+        if (deltaTickNanoTime >= engineProperties.getTickThresholdNanoTime()) {
             profiler.previousTickNanoTime = System.nanoTime();
             engineModule.update(elapsedEngineNanoTime);
             profiler.getTpsCounter().countTick();
         }
 
         // HANDLE RENDER
-        if (deltaFrameNanoTime >= rendererProperties.getFrameThresholdNanoTime()) {
+        if (deltaFrameNanoTime >= engineProperties.getFrameThresholdNanoTime()) {
             profiler.previousFrameNanoTime = System.nanoTime();
             screenComposer.compose(engineModule.getEnvironment());
             profiler.getFpsCounter().countFrame();

@@ -2,6 +2,7 @@ package com.recom.commander.factory;
 
 import com.recom.commander.exception.exceptions.ApplicationStartupException;
 import com.recom.commander.property.user.AuthenticationProperties;
+import com.recom.commander.property.user.EngineProperties;
 import com.recom.commander.property.user.HostProperties;
 import com.recom.commander.service.property.RECOMPropertyBinderService;
 import lombok.NonNull;
@@ -20,16 +21,23 @@ public class PropertiesFactory {
     @NonNull
     private final RECOMPropertyBinderService RECOMPropertyBinderService;
 
+
     @Bean
     @SneakyThrows(ApplicationStartupException.class)
-    public HostProperties hostProperties() {
+    public HostProperties createHostProperties() {
         return RECOMPropertyBinderService.bind(new HostProperties());
     }
 
     @Bean
     @SneakyThrows(ApplicationStartupException.class)
-    public AuthenticationProperties authenticationProperties() {
+    public AuthenticationProperties createAuthenticationProperties() {
         return RECOMPropertyBinderService.bind(new AuthenticationProperties());
+    }
+
+    @Bean
+    @SneakyThrows(ApplicationStartupException.class)
+    public EngineProperties createEngineProperties() {
+        return RECOMPropertyBinderService.bind(new EngineProperties());
     }
 
 }

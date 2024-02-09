@@ -1,7 +1,7 @@
 package com.recom.tacview.engine;
 
 import com.recom.tacview.engine.graphics.ScreenComposer;
-import com.recom.tacview.property.RendererProperties;
+import com.recom.tacview.property.EngineProperties;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.PixelBuffer;
@@ -26,15 +26,15 @@ public class SwappableCanvasBuffer {
 
     public SwappableCanvasBuffer(
             @NonNull final Canvas canvas,
-            @NonNull final RendererProperties rendererProperties,
+            @NonNull final EngineProperties engineProperties,
             @NonNull final ScreenComposer screenComposer
     ) {
         this.canvas = canvas;
         this.screenComposer = screenComposer;
 
-        intBuffer = IntBuffer.allocate(rendererProperties.getWidth() * rendererProperties.getHeight());
+        intBuffer = IntBuffer.allocate(engineProperties.getRendererWidth() * engineProperties.getRendererHeight());
         pixelFormat = PixelFormat.getIntArgbPreInstance();
-        imagePixelBuffer = new PixelBuffer<>(rendererProperties.getWidth(), rendererProperties.getHeight(), intBuffer, pixelFormat);
+        imagePixelBuffer = new PixelBuffer<>(engineProperties.getRendererWidth(), engineProperties.getRendererHeight(), intBuffer, pixelFormat);
         img = new WritableImage(imagePixelBuffer);
     }
 

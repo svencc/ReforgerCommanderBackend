@@ -22,7 +22,7 @@ import com.recom.tacview.engine.ecs.component.PhysicCoreComponent;
 import com.recom.tacview.engine.ecs.component.RenderableComponent;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
 import com.recom.tacview.engine.input.NanoTimedEvent;
-import com.recom.tacview.property.RendererProperties;
+import com.recom.tacview.property.EngineProperties;
 import jakarta.annotation.Nullable;
 import javafx.scene.input.ScrollEvent;
 import lombok.NonNull;
@@ -43,7 +43,7 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
     @NonNull
     private final HeightmapRasterizer heightmapRasterizer;
     @NonNull
-    private final RendererProperties rendererProperties;
+    private final EngineProperties engineProperties;
     @Nullable
     private final ReactiveObserver<MapOverviewDto> mapOverviewReactiveObserver;
     @Nullable
@@ -58,13 +58,13 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
             @NonNull final MapsOverviewService mapsOverviewService,
             @NonNull final MapTopographyDataService mapTopographyDataService,
             @NonNull final HeightmapRasterizer heightmapRasterizer,
-            @NonNull final RendererProperties rendererProperties
+            @NonNull final EngineProperties engineProperties
     ) {
         super();
         this.mapsOverviewService = mapsOverviewService;
         this.mapTopographyDataService = mapTopographyDataService;
         this.heightmapRasterizer = heightmapRasterizer;
-        this.rendererProperties = rendererProperties;
+        this.engineProperties = engineProperties;
         this.setZIndex(0);
 
         mapOverviewReactiveObserver = ReactiveObserver.reactWith(onReloadMapOverviewReaction());
@@ -141,10 +141,10 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
     ) {
         if (maybeHeightMapDescriptor.isPresent()) {
             final PixelCoordinate mouseCoordinateOnCanvas = PixelCoordinate.of(
-                    MapCalculator.applyRenderScale(nanoTimedEvent.getEvent().getSceneX(), rendererProperties),
-                    MapCalculator.applyRenderScale(nanoTimedEvent.getEvent().getSceneY(), rendererProperties)
+                    MapCalculator.applyRenderScale(nanoTimedEvent.getEvent().getSceneX(), engineProperties),
+                    MapCalculator.applyRenderScale(nanoTimedEvent.getEvent().getSceneY(), engineProperties)
             );
-            final PixelCoordinate normalizedCoordinateOnMap = MapCalculator.getCoordinateOfMouseOnMap(nanoTimedEvent, physicsCoreComponent, mapScale, rendererProperties);
+            final PixelCoordinate normalizedCoordinateOnMap = MapCalculator.getCoordinateOfMouseOnMap(nanoTimedEvent, physicsCoreComponent, mapScale, engineProperties);
 
             mapScale.zoomIn();
             if (mapScale.getScaleFactor() == 1) {
@@ -183,10 +183,10 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
     ) {
         if (maybeHeightMapDescriptor.isPresent()) {
             final PixelCoordinate mouseCoordinateOnCanvas = PixelCoordinate.of(
-                    MapCalculator.applyRenderScale(nanoTimedEvent.getEvent().getSceneX(), rendererProperties),
-                    MapCalculator.applyRenderScale(nanoTimedEvent.getEvent().getSceneY(), rendererProperties)
+                    MapCalculator.applyRenderScale(nanoTimedEvent.getEvent().getSceneX(), engineProperties),
+                    MapCalculator.applyRenderScale(nanoTimedEvent.getEvent().getSceneY(), engineProperties)
             );
-            final PixelCoordinate normalizedCoordinateOnMap = MapCalculator.getCoordinateOfMouseOnMap(nanoTimedEvent, physicsCoreComponent, mapScale, rendererProperties);
+            final PixelCoordinate normalizedCoordinateOnMap = MapCalculator.getCoordinateOfMouseOnMap(nanoTimedEvent, physicsCoreComponent, mapScale, engineProperties);
 
             mapScale.zoomOut();
 
