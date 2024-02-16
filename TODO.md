@@ -4,11 +4,15 @@
 * dynamic changeable render properties!
   * React to engine.properties file changes!
   * (re-)test DEFAULT engineModule!
+* nicer color scheme for the map
+* add plus minus keys / events / handler for zooming (new keypress on release listener ....)
+  * new type of keyboard input: keypressed (once at release)
+  * implement configurable observed keys for event-mapper!
+* prebuffering of zoom levels (for faster zooming) or find out what is the bottleneck
 * 
-* new type of keyboard input: keypressed (once at release)
-* implement configurable observed keys for event-mapper!
-* add pre-click-event (preclick, click, doublecklic) events
-* 
+* (add pre-click-event (preclick, click, doublecklic) events)
+
+
 * UI/MAP:
   * add scale bar
   * add measurement tool
