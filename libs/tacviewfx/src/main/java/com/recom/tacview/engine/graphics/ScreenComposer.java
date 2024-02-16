@@ -1,5 +1,6 @@
 package com.recom.tacview.engine.graphics;
 
+import com.recom.commons.units.ResizeCommand;
 import com.recom.tacview.engine.ecs.environment.Environment;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
 import com.recom.tacview.engine.graphics.buffer.PixelRingBuffer;
@@ -84,6 +85,10 @@ public class ScreenComposer implements IsComposable {
     @NonNull
     public int getPreviouslyFinishedBufferIndex() {
         return pixelRingBuffer.getPreviouslyFinishedBufferIndex();
+    }
+
+    public void resizeBuffer(@NonNull final ResizeCommand resizeCommand) {
+        pixelRingBuffer.resizeBuffer(resizeCommand);
     }
 
 }

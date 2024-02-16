@@ -49,7 +49,7 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
     @Nullable
     private final ReactiveObserver<HeightMapDescriptorDto> mapTopographyDataReactiveObserver;
     @NonNull
-    private final ScaleFactor mapScale = new ScaleFactor(-5, 5);
+    private final ScaleFactor mapScale = new ScaleFactor(-5, 10);
     @NonNull
     private Optional<HeightMapDescriptor> maybeHeightMapDescriptor = Optional.empty();
 

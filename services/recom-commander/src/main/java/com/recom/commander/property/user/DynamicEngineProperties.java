@@ -61,13 +61,22 @@ public class DynamicEngineProperties extends ObservableDynamicUserProperties<Dyn
     @Builder.Default
     private Integer targetTps = 66;
 
+    public void setRendererWidth(final int rendererWidth) {
+        this.rendererWidth = Math.max(640, rendererWidth);
+        DynamicEngineProperties.cachedSingletonPixelDimension = null;
+    }
+
+    public void setRendererHeight(final int rendererHeight) {
+        this.rendererHeight = Math.max(480, rendererHeight);
+        DynamicEngineProperties.cachedSingletonPixelDimension = null;
+    }
 
     public int getRendererWidth() {
-        return rendererWidth;
+        return Math.max(640, rendererWidth);
     }
 
     public int getRendererHeight() {
-        return rendererHeight;
+        return Math.max(480, rendererHeight);
     }
 
     public int getRendererScale() {

@@ -78,7 +78,7 @@ public class TacViewStageInitializer {
 
     private void populateTacViewStage(@NonNull final Stage stage) {
         final BorderPane root = new BorderPane();
-        root.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
+        root.setBackground(new Background(new BackgroundFill(Color.YELLOWGREEN, null, null)));
 
         final TacViewer tacViewer = new TacViewer(
                 engineProperties,
@@ -111,16 +111,15 @@ public class TacViewStageInitializer {
 //        final Window window = stage.getOwner();
 //        stage.initStyle(StageStyle.UNDECORATED); // BORDERLESS -> NEED to make movable on your own!
 
-        final ChangeListener<Number> provideWindowSizeListener = getProvideWindowSizeListener(stage);
-        stage.widthProperty().addListener(provideWindowSizeListener);
-        stage.heightProperty().addListener(provideWindowSizeListener);
+        final ChangeListener<Number> windowSizeListener = provideWindowSizeListener(stage);
+        stage.widthProperty().addListener(windowSizeListener);
+        stage.heightProperty().addListener(windowSizeListener);
 
-        final ProfileFPSStrategy profileFPSStrategy = provideFpsStrategy(stage.titleProperty());
-        tacViewer.setMaybeProfileFPSStrategy(Optional.of(profileFPSStrategy));
+        tacViewer.setMaybeProfileFPSStrategy(Optional.of(provideFpsStrategy(stage.titleProperty())));
     }
 
     @NonNull
-    private ChangeListener<Number> getProvideWindowSizeListener(@NonNull final Stage stage) {
+    private ChangeListener<Number> provideWindowSizeListener(@NonNull final Stage stage) {
         return new ChangeListener<Number>() {
             @Override
             public void changed(
@@ -128,8 +127,8 @@ public class TacViewStageInitializer {
                     @NonNull final Number oldSize,
                     @NonNull final Number newSize
             ) {
-                dynamicEngineProperties.setRendererWidth(stage.widthProperty().intValue());
-                dynamicEngineProperties.setRendererHeight(stage.heightProperty().intValue());
+                dynamicEngineProperties.setRendererWidth((int) stage.getWidth());
+                dynamicEngineProperties.setRendererHeight((int) stage.getHeight());
                 dynamicEngineProperties.persist();
             }
         };

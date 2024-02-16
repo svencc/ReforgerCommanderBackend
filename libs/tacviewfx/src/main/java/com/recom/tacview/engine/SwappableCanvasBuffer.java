@@ -1,6 +1,6 @@
 package com.recom.tacview.engine;
 
-import com.recom.observer.ReactiveObserver;
+import com.recom.commons.units.ResizeCommand;
 import com.recom.tacview.engine.graphics.ScreenComposer;
 import com.recom.tacview.property.IsEngineProperties;
 import jakarta.annotation.Nullable;
@@ -21,8 +21,6 @@ public class SwappableCanvasBuffer {
     private final ScreenComposer screenComposer;
     @NonNull
     private final PixelFormat<IntBuffer> pixelFormat;
-//    @NonNull
-//    final ReactiveObserver<IsEngineProperties> enginePropertiesReactiveObserver;
     @Nullable
     private IntBuffer intBuffer = null;
     @Nullable
@@ -40,31 +38,10 @@ public class SwappableCanvasBuffer {
         this.canvas = canvas;
         this.screenComposer = screenComposer;
 
-        intBuffer = IntBuffer.allocate(engineProperties.getRendererWidth() * engineProperties.getRendererHeight());
         pixelFormat = PixelFormat.getIntArgbPreInstance();
+        intBuffer = IntBuffer.allocate(engineProperties.getRendererWidth() * engineProperties.getRendererHeight());
         imagePixelBuffer = new PixelBuffer<>(engineProperties.getRendererWidth(), engineProperties.getRendererHeight(), intBuffer, pixelFormat);
         img = new WritableImage(imagePixelBuffer);
-
-        // die engine muss die loop stoppen, wenn die properties sich ändern
-        // und dann die neuen properties propagieren
-        // framebuffer + composer buffer müssen sich anpassen (ggf auch die einzelnen layer)
-        // die engine muss die loop wieder starten
-        /*
-        enginePropertiesReactiveObserver = ReactiveObserver.reactWith((
-                @NonNull final Subjective<IsEngineProperties> __,
-                @NonNull final Notification<IsEngineProperties> notification
-        ) -> {
-            final IsEngineProperties properties = notification.getPayload();
-            if (properties.getRendererHeight() == 0 || properties.getRendererWidth() == 0) {
-                return;
-            } else {
-                intBuffer = IntBuffer.allocate(properties.getRendererWidth() * properties.getRendererHeight());
-                imagePixelBuffer = new PixelBuffer<>(properties.getRendererWidth(), properties.getRendererHeight(), intBuffer, pixelFormat);
-                img = new WritableImage(imagePixelBuffer);
-            }
-        });
-        enginePropertiesReactiveObserver.observe(engineProperties.getBufferedSubject());
-         */
     }
 
     void swap() {
@@ -82,6 +59,12 @@ public class SwappableCanvasBuffer {
             final GraphicsContext graphicsContext2D = canvas.getGraphicsContext2D();
             graphicsContext2D.drawImage(img, 0, 0, canvas.getWidth(), canvas.getHeight());
         }
+    }
+
+    public void resizeBuffer(final ResizeCommand resizeCommand) {
+        intBuffer = IntBuffer.allocate(resizeCommand.getScaledPixelDimension().getWidthX() * resizeCommand.getScaledPixelDimension().getHeightY());
+        imagePixelBuffer = new PixelBuffer<>(resizeCommand.getScaledPixelDimension().getWidthX(), resizeCommand.getScaledPixelDimension().getHeightY(), intBuffer, pixelFormat);
+        img = new WritableImage(imagePixelBuffer);
     }
 
 }
