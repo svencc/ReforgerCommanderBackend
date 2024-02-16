@@ -29,7 +29,7 @@ public class DefaultEngineModule extends EngineModule {
     public void init() {
         final Entity scanableNoiseEntity = new Entity();
         final ScanableNoiseComponent scanableNoiseComponent = new ScanableNoiseComponent(
-                getEnvironment().getRendererProperties().toRendererDimension(),
+                getEnvironment().getEngineProperties().toRendererDimension(),
                 getEnvironment().getRenderProvider(),
                 randomProvider
         );

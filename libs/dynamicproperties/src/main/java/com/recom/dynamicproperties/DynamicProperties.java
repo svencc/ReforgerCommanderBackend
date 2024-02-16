@@ -3,7 +3,9 @@ package com.recom.dynamicproperties;
 import org.springframework.lang.NonNull;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
@@ -17,7 +19,8 @@ public abstract class DynamicProperties {
             "properties",
             "propertiesBasePath",
             "applicationName",
-            "propertyFileName"
+            "propertyFileName",
+            "bufferedSubject"
     );
 
     DynamicPropertySystem<? extends DynamicProperties> dynamicPropertySystem;
@@ -36,8 +39,8 @@ public abstract class DynamicProperties {
 
     @NonNull
     List<Field> listDynamicProperties() {
-        final List<Field> fields = Arrays.asList(getClass().getDeclaredFields());
-        fields.removeIf(field -> EXCLUDED_FIELDS.contains(field.getName()));
+        final List<Field> fields = new ArrayList<>(Arrays.asList(getClass().getDeclaredFields()));
+        fields.removeIf(field -> EXCLUDED_FIELDS.contains(field.getName()) || Modifier.isStatic(field.getModifiers()));
 
         return fields;
     }

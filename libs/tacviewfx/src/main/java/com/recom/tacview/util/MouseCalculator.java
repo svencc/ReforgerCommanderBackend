@@ -7,7 +7,7 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class MouseCalculator {
 
-    public static double calculateRadiantBetweenMouseEvents(
+    public double calculateRadiantBetweenMouseEvents(
             @NonNull final MouseEvent dragSource,
             @NonNull final MouseEvent event
     ) {
@@ -19,7 +19,7 @@ public class MouseCalculator {
         );
     }
 
-    public static double calculateDistanceBetweenMouseEvents(
+    public double calculateDistanceBetweenMouseEvents(
             @NonNull final MouseEvent dragSource,
             @NonNull final MouseEvent event
     ) {

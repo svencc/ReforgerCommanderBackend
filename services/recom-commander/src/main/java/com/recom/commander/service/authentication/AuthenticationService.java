@@ -1,7 +1,7 @@
 package com.recom.commander.service.authentication;
 
 import com.recom.commander.exception.exceptions.http.HttpErrorException;
-import com.recom.commander.property.user.AuthenticationProperties;
+import com.recom.commander.property.user.DynamicAuthenticationProperties;
 import com.recom.commander.service.Scheduler;
 import com.recom.dto.authentication.AuthenticationRequestDto;
 import com.recom.dto.authentication.AuthenticationResponseDto;
@@ -23,22 +23,22 @@ public class AuthenticationService extends ObserverTemplate<AuthenticationRespon
     @NonNull
     private final AuthenticationGateway authenticationGateway;
     @NonNull
-    private final AuthenticationProperties authenticationProperties;
+    private final DynamicAuthenticationProperties dynamicAuthenticationProperties;
     @NonNull
     private final BufferedSubject<AuthenticationResponseDto> subject;
 
     @Nullable
-    private ReactiveObserver<AuthenticationProperties> authenticationPropertiesReactiveObserver;
+    private ReactiveObserver<DynamicAuthenticationProperties> authenticationPropertiesReactiveObserver;
 
 
     public AuthenticationService(
             @NonNull final Scheduler scheduler,
             @NonNull final AuthenticationGateway authenticationGateway,
-            @NonNull final AuthenticationProperties authenticationProperties
+            @NonNull final DynamicAuthenticationProperties dynamicAuthenticationProperties
     ) {
         this.scheduler = scheduler;
         this.authenticationGateway = authenticationGateway;
-        this.authenticationProperties = authenticationProperties;
+        this.dynamicAuthenticationProperties = dynamicAuthenticationProperties;
         subject = new BufferedSubject<>();
         subject.beObservedBy(this);
         init();
@@ -49,13 +49,13 @@ public class AuthenticationService extends ObserverTemplate<AuthenticationRespon
             log.info("AuthenticationProperties changed. Trigger re-authentication.");
             authenticate();
         });
-        authenticationPropertiesReactiveObserver.observe(authenticationProperties.getSubject());
+        authenticationPropertiesReactiveObserver.observe(dynamicAuthenticationProperties.getSubject());
     }
 
     public void authenticate() throws HttpErrorException {
         final AuthenticationRequestDto authenticationRequest = AuthenticationRequestDto.builder()
-                .accountUUID(authenticationProperties.getAccountUUID())
-                .accessKey(authenticationProperties.getAccessKey())
+                .accountUUID(dynamicAuthenticationProperties.getAccountUUID())
+                .accessKey(dynamicAuthenticationProperties.getAccessKey())
                 .build();
         final AuthenticationResponseDto authentication = authenticationGateway.authenticate(authenticationRequest);
         subject.notifyObserversWith(Notification.of(authentication));
@@ -88,7 +88,7 @@ public class AuthenticationService extends ObserverTemplate<AuthenticationRespon
             @NonNull final Notification<AuthenticationResponseDto> notification
     ) {
         final Duration expiresIn = Duration.ofSeconds(notification.getPayload().getExpiresInSeconds());
-        final Duration delayToReauthenticate = expiresIn.minus(authenticationProperties.getReAuthenticateInAdvance());
+        final Duration delayToReauthenticate = expiresIn.minus(dynamicAuthenticationProperties.getReAuthenticateInAdvance());
         scheduler.schedule(this::authenticate, delayToReauthenticate);
     }
 

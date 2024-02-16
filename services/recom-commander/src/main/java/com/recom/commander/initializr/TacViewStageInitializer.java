@@ -4,18 +4,20 @@ import com.recom.commander.event.InitializeStageEvent;
 import com.recom.commander.event.ShutdownEvent;
 import com.recom.commander.exception.GlobalExceptionHandler;
 import com.recom.commander.property.SpringApplicationProperties;
+import com.recom.commander.property.user.DynamicEngineProperties;
 import com.recom.commander.util.LoggerUtil;
 import com.recom.tacview.engine.TacViewer;
 import com.recom.tacview.engine.graphics.ScreenComposer;
 import com.recom.tacview.engine.input.GenericFXInputEventListener;
 import com.recom.tacview.engine.input.InputManager;
 import com.recom.tacview.engine.module.EngineModule;
-import com.recom.tacview.property.RendererProperties;
-import com.recom.tacview.property.TickProperties;
+import com.recom.tacview.property.IsEngineProperties;
 import com.recom.tacview.service.profiler.ProfilerProvider;
 import com.recom.tacview.strategy.ProfileFPSStrategy;
 import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -41,9 +43,7 @@ public class TacViewStageInitializer {
     @NonNull
     private final SpringApplicationProperties springApplicationProperties;
     @NonNull
-    private final TickProperties tickProperties;
-    @NonNull
-    private final RendererProperties rendererProperties;
+    private final IsEngineProperties engineProperties;
     @NonNull
     private final ProfilerProvider profilerProvider;
     @NonNull
@@ -54,6 +54,8 @@ public class TacViewStageInitializer {
     private final GenericFXInputEventListener genericFXInputEventListener;
     @NonNull
     private final InputManager inputManager;
+    @NonNull
+    private final DynamicEngineProperties dynamicEngineProperties;
     @NonNull
     private Optional<TacViewer> maybeTacViewer = Optional.empty();
 
@@ -76,11 +78,10 @@ public class TacViewStageInitializer {
 
     private void populateTacViewStage(@NonNull final Stage stage) {
         final BorderPane root = new BorderPane();
-        root.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
+        root.setBackground(new Background(new BackgroundFill(Color.YELLOWGREEN, null, null)));
 
         final TacViewer tacViewer = new TacViewer(
-                rendererProperties,
-                tickProperties,
+                engineProperties,
                 profilerProvider,
                 screenComposer,
                 engineModule,
@@ -92,22 +93,52 @@ public class TacViewStageInitializer {
         maybeTacViewer = Optional.of(tacViewer);
         root.setCenter(maybeTacViewer.get());
 
-        final Scene scene = new Scene(root, rendererProperties.getScaledWindowWidth(), rendererProperties.getScaledWindowHeight());
+        final Scene scene = new Scene(root, engineProperties.getScaledWindowWidth(), engineProperties.getScaledWindowHeight());
         stage.setTitle(springApplicationProperties.getName());
 
-//        final Window window = stage.getOwner();
-//        stage.initStyle(StageStyle.UNDECORATED); // BORDERLESS -> NEED to make movable on your own!
+        configureStage(stage, tacViewer);
 
-        final StringProperty titleProperty = stage.titleProperty();
-
-        final ProfileFPSStrategy profileFPSStrategy = new ProfileFPSStrategy((@NonNull final String profiled) -> {
-            Platform.runLater(() -> titleProperty.setValue(profiled));
-        });
-        tacViewer.setMaybeProfileFPSStrategy(Optional.of(profileFPSStrategy));
         tacViewer.start();
 
         stage.setResizable(true);
         stage.setScene(scene);
+    }
+
+    private void configureStage(
+            @NonNull final Stage stage,
+            @NonNull final TacViewer tacViewer
+    ) {
+//        final Window window = stage.getOwner();
+//        stage.initStyle(StageStyle.UNDECORATED); // BORDERLESS -> NEED to make movable on your own!
+
+        final ChangeListener<Number> windowSizeListener = provideWindowSizeListener(stage);
+        stage.widthProperty().addListener(windowSizeListener);
+        stage.heightProperty().addListener(windowSizeListener);
+
+        tacViewer.setMaybeProfileFPSStrategy(Optional.of(provideFpsStrategy(stage.titleProperty())));
+    }
+
+    @NonNull
+    private ChangeListener<Number> provideWindowSizeListener(@NonNull final Stage stage) {
+        return new ChangeListener<Number>() {
+            @Override
+            public void changed(
+                    @NonNull final ObservableValue<? extends Number> observableValue,
+                    @NonNull final Number oldSize,
+                    @NonNull final Number newSize
+            ) {
+                dynamicEngineProperties.setRendererWidth((int) stage.getWidth());
+                dynamicEngineProperties.setRendererHeight((int) stage.getHeight());
+                dynamicEngineProperties.persist();
+            }
+        };
+    }
+
+    @NonNull
+    private ProfileFPSStrategy provideFpsStrategy(@NonNull final StringProperty titleProperty) {
+        return new ProfileFPSStrategy((@NonNull final String profiled) -> {
+            Platform.runLater(() -> titleProperty.setValue(profiled));
+        });
     }
 
     @EventListener(classes = ShutdownEvent.class)

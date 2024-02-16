@@ -1,11 +1,12 @@
 package com.recom.tacview.engine.graphics;
 
+import com.recom.commons.units.ResizeCommand;
 import com.recom.tacview.engine.ecs.environment.Environment;
 import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
 import com.recom.tacview.engine.graphics.buffer.PixelRingBuffer;
 import com.recom.tacview.engine.graphics.renderpipeline.IsRenderPipeline;
 import com.recom.tacview.engine.renderables.mergeable.MergeableComponentLayer;
-import com.recom.tacview.property.RendererProperties;
+import com.recom.tacview.property.IsEngineProperties;
 import com.recom.tacview.service.RendererExecutorProvider;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -25,11 +26,11 @@ public class ScreenComposer implements IsComposable {
 
 
     public ScreenComposer(
-            @NonNull final RendererProperties rendererProperties,
+            @NonNull final IsEngineProperties engineProperties,
             @NonNull final RendererExecutorProvider rendererExecutorProvider
     ) {
         this.renderExecutorService = rendererExecutorProvider.provideNewExecutor();
-        this.pixelRingBuffer = new PixelRingBuffer(rendererProperties.toRendererDimension(), rendererProperties.getComposer().getBackBufferSize());
+        this.pixelRingBuffer = new PixelRingBuffer(engineProperties.toRendererDimension(), engineProperties.getComposerBackBufferSize());
     }
 
     @Override
@@ -84,6 +85,10 @@ public class ScreenComposer implements IsComposable {
     @NonNull
     public int getPreviouslyFinishedBufferIndex() {
         return pixelRingBuffer.getPreviouslyFinishedBufferIndex();
+    }
+
+    public void resizeBuffer(@NonNull final ResizeCommand resizeCommand) {
+        pixelRingBuffer.resizeBuffer(resizeCommand);
     }
 
 }

@@ -1,5 +1,10 @@
 package com.recom.tacview.engine;
 
+import com.recom.commons.units.ResizeCommand;
+import com.recom.commons.units.TimeUnits;
+import com.recom.observer.Notification;
+import com.recom.observer.ReactiveObserver;
+import com.recom.observer.Subjective;
 import com.recom.tacview.engine.graphics.ScreenComposer;
 import com.recom.tacview.engine.input.GenericFXInputEventListener;
 import com.recom.tacview.engine.input.InputManager;
@@ -7,14 +12,14 @@ import com.recom.tacview.engine.input.mapper.keyboard.JavaFxKeyboardCommandMappe
 import com.recom.tacview.engine.input.mapper.mousebutton.JavaFxMouseButtonCommandMapper;
 import com.recom.tacview.engine.input.mapper.scroll.JavaFxMouseScrollCommandMapper;
 import com.recom.tacview.engine.module.EngineModule;
-import com.recom.commons.units.TimeUnits;
-import com.recom.tacview.property.RendererProperties;
-import com.recom.tacview.property.TickProperties;
+import com.recom.tacview.property.IsEngineProperties;
 import com.recom.tacview.service.profiler.ProfilerProvider;
 import com.recom.tacview.strategy.ProfileFPSStrategy;
+import com.recom.tacview.util.ResizeCommandFactory;
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.InputEvent;
+import javafx.scene.layout.Region;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -26,9 +31,7 @@ import java.util.Optional;
 public class TacViewer extends Canvas {
 
     @NonNull
-    private final RendererProperties rendererProperties;
-    @NonNull
-    private final TickProperties tickProperties;
+    private final IsEngineProperties engineProperties;
     @NonNull
     private final TacViewerProfiler profiler;
     @NonNull
@@ -50,11 +53,13 @@ public class TacViewer extends Canvas {
     @Setter
     @NonNull
     private Optional<ProfileFPSStrategy> maybeProfileFPSStrategy;
+    @NonNull
+    final ReactiveObserver<IsEngineProperties> enginePropertiesReactiveObserver;
+    boolean resizeBuffer = false;
 
 
     public TacViewer(
-            @NonNull final RendererProperties rendererProperties,
-            @NonNull final TickProperties tickProperties,
+            @NonNull final IsEngineProperties engineProperties,
             @NonNull final ProfilerProvider profilerProvider,
             @NonNull final ScreenComposer screenComposer,
             @NonNull final EngineModule engineModule,
@@ -62,16 +67,19 @@ public class TacViewer extends Canvas {
             @NonNull final InputManager inputManager,
             @NonNull final Thread.UncaughtExceptionHandler globalExceptionHandler
     ) {
-        super(rendererProperties.getScaledWindowWidth(), rendererProperties.getScaledWindowHeight());
-        this.rendererProperties = rendererProperties;
-        this.tickProperties = tickProperties;
+        super();
+        prefWidth(Region.USE_COMPUTED_SIZE);    //@TODO: check if this is necessary
+        prefHeight(Region.USE_COMPUTED_SIZE);   //@TODO: check if this is necessary
+        // super(engineProperties.getScaledWindowWidth(), engineProperties.getScaledWindowHeight());
+
+        this.engineProperties = engineProperties;
         this.screenComposer = screenComposer;
         this.engineModule = engineModule;
         this.genericFXInputEventListener = genericFXInputEventListener;
         this.inputManager = inputManager;
         this.globalExceptionHandler = globalExceptionHandler;
 
-        this.canvasBuffer = new SwappableCanvasBuffer(this, rendererProperties, screenComposer);
+        this.canvasBuffer = new SwappableCanvasBuffer(this, engineProperties, screenComposer);
         this.profiler = new TacViewerProfiler(profilerProvider);
         this.profiler.startProfiling();
 
@@ -86,6 +94,27 @@ public class TacViewer extends Canvas {
         this.inputManager.registerCommandMapper(new JavaFxMouseButtonCommandMapper());
         this.inputManager.registerCommandMapper(new JavaFxMouseScrollCommandMapper());
         this.inputManager.registerCommandMapper(new JavaFxKeyboardCommandMapper());
+
+        enginePropertiesReactiveObserver = registerFrameResizeReactiveObserver(engineProperties);
+    }
+
+    @NonNull
+    private ReactiveObserver<IsEngineProperties> registerFrameResizeReactiveObserver(@NonNull final IsEngineProperties engineProperties) {
+        final ReactiveObserver<IsEngineProperties> enginePropertiesReactiveObserver = ReactiveObserver.reactWith((
+                @NonNull final Subjective<IsEngineProperties> __,
+                @NonNull final Notification<IsEngineProperties> notification
+        ) -> {
+            final IsEngineProperties properties = notification.getPayload();
+            if (properties.getRendererHeight() == 0 || properties.getRendererWidth() == 0) {
+                // prevent issues during initialization? test log ...
+                log.error("Renderer width or height is 0, cannot resize canvas buffer");
+            } else {
+                resizeBuffer = true;
+            }
+        });
+        enginePropertiesReactiveObserver.observe(engineProperties.getBufferedSubject());
+
+        return enginePropertiesReactiveObserver;
     }
 
     @NonNull
@@ -106,7 +135,7 @@ public class TacViewer extends Canvas {
             Thread.setDefaultUncaughtExceptionHandler(globalExceptionHandler);
 
             while (!Thread.currentThread().isInterrupted()) {
-                engineLoop(tickProperties, rendererProperties);
+                engineLoop(engineProperties);
                 profiler.getLoopCounter().countLoop();
             }
         });
@@ -131,16 +160,18 @@ public class TacViewer extends Canvas {
         }
     }
 
-    private void engineLoop(
-            @NonNull final TickProperties tickProperties,
-            @NonNull final RendererProperties rendererProperties
-    ) {
+    private void engineLoop(@NonNull final IsEngineProperties engineProperties) {
         // HANDLE TIME CALCULATIONS
         final long currentNanoTimeOnLoopStart = System.nanoTime();
         final long elapsedEngineNanoTime = (currentNanoTimeOnLoopStart - profiler.previousTickNanoTime);
         final long deltaTickNanoTime = currentNanoTimeOnLoopStart - profiler.previousTickNanoTime;
         final long deltaFrameNanoTime = currentNanoTimeOnLoopStart - profiler.previousFrameNanoTime;
-        final long targetNanosOfLoops = Math.max(tickProperties.getTickThresholdNanoTime(), rendererProperties.getFrameThresholdNanoTime());
+        final long targetNanosOfLoops = Math.max(engineProperties.getTickThresholdNanoTime(), engineProperties.getFrameThresholdNanoTime());
+
+        // HANDLE BUFFER RESIZE
+        if (resizeBuffer) {
+            handleResize(engineProperties);
+        }
 
         // HANDLE INPUT
         final long inputHandlingStart = System.nanoTime();
@@ -149,14 +180,14 @@ public class TacViewer extends Canvas {
         profiler.inputHandlingNanoTime = System.nanoTime() - inputHandlingStart;
 
         // HANDLE UPDATE
-        if (deltaTickNanoTime >= tickProperties.getTickThresholdNanoTime()) {
+        if (deltaTickNanoTime >= engineProperties.getTickThresholdNanoTime()) {
             profiler.previousTickNanoTime = System.nanoTime();
             engineModule.update(elapsedEngineNanoTime);
             profiler.getTpsCounter().countTick();
         }
 
         // HANDLE RENDER
-        if (deltaFrameNanoTime >= rendererProperties.getFrameThresholdNanoTime()) {
+        if (deltaFrameNanoTime >= engineProperties.getFrameThresholdNanoTime()) {
             profiler.previousFrameNanoTime = System.nanoTime();
             screenComposer.compose(engineModule.getEnvironment());
             profiler.getFpsCounter().countFrame();
@@ -177,6 +208,23 @@ public class TacViewer extends Canvas {
                 log.warn("Interrupted engineLoop while sleeping");
             }
         }
+    }
+
+    private void handleResize(@NonNull final IsEngineProperties engineProperties) {
+        animationTimerLoop.stop();
+        final ResizeCommand resizeCommand = ResizeCommandFactory.createResizeCommand(this, engineProperties);
+
+        screenComposer.resizeBuffer(resizeCommand);
+        canvasBuffer.resizeBuffer(resizeCommand);
+
+        this.setWidth(resizeCommand.getScaledPixelDimension().getWidthX());
+        this.setHeight(resizeCommand.getScaledPixelDimension().getHeightY());
+
+        engineModule.getEnvironment().getRenderPipeline().updateLayers();
+        engineModule.getEnvironment().getRenderPipeline().setDirty(true); // unnecessary because updateLayers() already sets it to true
+
+        resizeBuffer = false;
+        animationTimerLoop.start();
     }
 
 }

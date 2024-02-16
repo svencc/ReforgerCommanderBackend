@@ -3,7 +3,7 @@ package com.recom.commander.property.restclient;
 import com.recom.commander.event.InitializeComponentsEvent;
 import com.recom.commander.model.Provideable;
 import com.recom.commander.property.RestClientProperties;
-import com.recom.commander.property.user.HostProperties;
+import com.recom.commander.property.user.DynamicHostProperties;
 import com.recom.observer.Notification;
 import com.recom.observer.ObserverTemplate;
 import com.recom.observer.ReactiveObserver;
@@ -20,16 +20,16 @@ import org.springframework.web.client.RestClient;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class RECOMUnauthenticatedRestClientProvider extends ObserverTemplate<HostProperties> implements Provideable<RestClient>, AutoCloseable {
+public class RECOMUnauthenticatedRestClientProvider extends ObserverTemplate<DynamicHostProperties> implements Provideable<RestClient>, AutoCloseable {
 
     @NonNull
     private final RestClientProperties restClientProperties;
     @NonNull
-    private final HostProperties hostProperties;
+    private final DynamicHostProperties dynamicHostProperties;
 
 
     @Nullable
-    private ReactiveObserver<HostProperties> hostPropertiesReactiveObserver;
+    private ReactiveObserver<DynamicHostProperties> hostPropertiesReactiveObserver;
     @Nullable
     private RestClient restClient;
 
@@ -41,7 +41,7 @@ public class RECOMUnauthenticatedRestClientProvider extends ObserverTemplate<Hos
             log.info("HostProperties changed. Update {}.", this.getClass().getSimpleName());
             createNewRestClient();
         });
-        hostPropertiesReactiveObserver.observe(hostProperties.getSubject());
+        hostPropertiesReactiveObserver.observe(dynamicHostProperties.getSubject());
     }
 
     @NonNull
@@ -52,7 +52,7 @@ public class RECOMUnauthenticatedRestClientProvider extends ObserverTemplate<Hos
 
         return RestClient.builder()
                 .requestFactory(requestFactory)
-                .baseUrl(hostProperties.getHostBasePath())
+                .baseUrl(dynamicHostProperties.getHostBasePath())
                 .build();
     }
 
@@ -67,8 +67,8 @@ public class RECOMUnauthenticatedRestClientProvider extends ObserverTemplate<Hos
 
     @Override
     public void takeNotice(
-            @NonNull final Subjective<HostProperties> subject,
-            @NonNull final Notification<HostProperties> notification
+            @NonNull final Subjective<DynamicHostProperties> subject,
+            @NonNull final Notification<DynamicHostProperties> notification
     ) {
         log.info("HostProperties changed. Creating new UnauthenticatedRestClient.");
         restClient = createNewRestClient();

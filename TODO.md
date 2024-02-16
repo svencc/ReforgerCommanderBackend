@@ -2,6 +2,8 @@
 
 # 1
 * dynamic changeable render properties!
+  * React to engine.properties file changes!
+  * (re-)test DEFAULT engineModule!
 * 
 * new type of keyboard input: keypressed (once at release)
 * implement configurable observed keys for event-mapper!

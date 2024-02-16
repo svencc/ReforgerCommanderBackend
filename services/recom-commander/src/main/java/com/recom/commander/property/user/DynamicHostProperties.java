@@ -10,7 +10,7 @@ import java.time.Duration;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class HostProperties extends ObservableDynamicUserProperties<HostProperties> {
+public class DynamicHostProperties extends ObservableDynamicUserProperties<DynamicHostProperties> {
 
     @NonNull
     @Override
@@ -26,13 +26,10 @@ public class HostProperties extends ObservableDynamicUserProperties<HostProperti
 
     @Builder.Default
     private String protocol = "http";
-
     @Builder.Default
     private String hostname = "localhost";
-
     @Builder.Default
     private String port = "8080";
-
     @Builder.Default
     private Duration duration = Duration.ofSeconds(10);
 

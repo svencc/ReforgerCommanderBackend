@@ -3,6 +3,7 @@ package com.recom.dynamicproperties;
 import com.recom.observer.HasSubject;
 import com.recom.observer.Notification;
 import com.recom.observer.Subject;
+import com.recom.observer.Subjective;
 import lombok.Getter;
 import lombok.NonNull;
 
@@ -10,7 +11,7 @@ public abstract class ObservableDynamicUserProperties<T extends ObservableDynami
 
     @Getter
     @NonNull
-    private final Subject<T> subject = new Subject<>();
+    private final Subjective<T> subject = new Subject<>();
 
     @Override
     public void persist() {

@@ -1,7 +1,7 @@
 package com.recom.tacview.engine.graphics.buffer;
 
-import com.recom.tacview.engine.graphics.IsBufferable;
 import com.recom.commons.units.PixelDimension;
+import com.recom.tacview.engine.graphics.IsBufferable;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;

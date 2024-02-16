@@ -31,6 +31,7 @@ public class RenderPipeline implements IsRenderPipeline {
 
 
     public void updateLayers() {
+        layers.clear();
         layers.addAll(createMergeableComponentLayers());
         setDirty(true);
     }

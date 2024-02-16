@@ -36,7 +36,7 @@ public class MergeableComponentLayer extends BufferedMergeableTemplate implement
             @NonNull final Integer renderLayer,
             @NonNull final List<RenderableComponent> components
     ) {
-        super(environment.getRendererProperties().toRendererDimension(), environment.getRenderProvider());
+        super(environment.getEngineProperties().toRendererDimension(), environment.getRenderProvider());
         this.environment = environment;
         this.renderLayer = renderLayer;
         this.components = components;

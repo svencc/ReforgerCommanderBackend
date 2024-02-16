@@ -1,7 +1,8 @@
 package com.recom.tacview.engine.graphics.buffer;
 
-import com.recom.tacview.engine.renderables.HasPixelBuffer;
 import com.recom.commons.units.PixelDimension;
+import com.recom.commons.units.ResizeCommand;
+import com.recom.tacview.engine.renderables.HasPixelBuffer;
 import lombok.Getter;
 import lombok.NonNull;
 
@@ -54,12 +55,10 @@ public class PixelRingBuffer implements HasPixelBuffer {
         return pixelBufferRing[previouslyFinishedBufferIndex];
     }
 
-    // @TODO: >>>> to interface and further implement
-    public void updateDimension(@NonNull final PixelDimension dimension) {
-        this.dimension = dimension;
+    public void resizeBuffer(final ResizeCommand resizeCommand) {
+        this.dimension = resizeCommand.getScaledPixelDimension();
         for (int i = 0; i < pixelBufferRing.length; i++) {
-            pixelBufferRing[i] = new PixelBuffer(dimension);
-            pixelBufferRing[i].setDirty(true);
+            pixelBufferRing[i] = new PixelBuffer(this.dimension);
         }
     }
 

@@ -1,6 +1,6 @@
 package com.recom.tacview.service;
 
-import com.recom.tacview.property.RendererProperties;
+import com.recom.tacview.property.IsEngineProperties;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.Nullable;
@@ -15,18 +15,18 @@ import java.util.concurrent.Executors;
 public class RendererExecutorProvider {
 
     @NonNull
-    private final RendererProperties rendererProperties;
+    private final IsEngineProperties engineProperties;
     @Nullable
     private ExecutorService fixedThreadPoolSingletonInstance;
 
 
     @NonNull
     public ExecutorService provideNewExecutor() {
-        if (rendererProperties.getThreadPoolSize() <= 0) {
+        if (engineProperties.getRendererThreadPoolSize() <= 0) {
             return Executors.newVirtualThreadPerTaskExecutor();
         } else {
             if (fixedThreadPoolSingletonInstance == null) {
-                fixedThreadPoolSingletonInstance = Executors.newFixedThreadPool(rendererProperties.getThreadPoolSize());
+                fixedThreadPoolSingletonInstance = Executors.newFixedThreadPool(engineProperties.getRendererThreadPoolSize());
             }
 
             return fixedThreadPoolSingletonInstance;

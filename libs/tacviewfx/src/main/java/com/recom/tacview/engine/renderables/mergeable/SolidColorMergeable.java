@@ -1,7 +1,7 @@
 package com.recom.tacview.engine.renderables.mergeable;
 
 import com.recom.tacview.engine.renderer.RenderProvider;
-import com.recom.tacview.property.RendererProperties;
+import com.recom.tacview.property.IsEngineProperties;
 import lombok.NonNull;
 
 public class SolidColorMergeable extends BufferedMergeableTemplate {
@@ -9,11 +9,11 @@ public class SolidColorMergeable extends BufferedMergeableTemplate {
     private final int backgroundColor;
 
     public SolidColorMergeable(
-            @NonNull final RendererProperties rendererProperties,
+            @NonNull final IsEngineProperties engineProperties,
             @NonNull final RenderProvider renderProvider,
             final int backgroundColor
     ) {
-        super(rendererProperties.toRendererDimension(), renderProvider);
+        super(engineProperties.toRendererDimension(), renderProvider);
         this.backgroundColor = backgroundColor;
         getPixelBuffer().setDirty(true);
     }
