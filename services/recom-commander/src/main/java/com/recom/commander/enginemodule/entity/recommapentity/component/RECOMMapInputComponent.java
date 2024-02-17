@@ -50,9 +50,9 @@ public class RECOMMapInputComponent extends InputComponent {
                 } else if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.DOWN)) {
                     physicsCoreComponent.addVelocityYComponent(-MOVING_FORCE);
                 } else if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.ADD) && keyboardCommand.isButtonReleased()) {
-                    locateRecomMapComponent().ifPresent((mapComponent) -> mapComponent.zoomInByKey(keyboardCommand.getNanoTimedEvent(), physicsCoreComponent));
+                    locateRecomMapComponent().ifPresent((mapComponent) -> mapComponent.zoomInByKey(physicsCoreComponent));
                 } else if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.SUBTRACT) && keyboardCommand.isButtonReleased()) {
-                    locateRecomMapComponent().ifPresent((mapComponent) -> mapComponent.zoomOutByKey(keyboardCommand.getNanoTimedEvent(), physicsCoreComponent));
+                    locateRecomMapComponent().ifPresent((mapComponent) -> mapComponent.zoomOutByKey(physicsCoreComponent));
                 }
             });
         }
@@ -62,7 +62,7 @@ public class RECOMMapInputComponent extends InputComponent {
         if (this.getMaybeEntity().isPresent()) {
             this.getMaybeEntity().get().<PhysicCoreComponent>locateComponent(ComponentType.PhysicsCoreComponent).ifPresent(physicsCoreComponent -> {
                 if (scrollCommand.getNanoTimedEvent().getEvent().getDeltaY() > 0) {
-                    locateRecomMapComponent().ifPresent((mapComponent) -> mapComponent.zoomByMouseIn(scrollCommand.getNanoTimedEvent(), physicsCoreComponent));
+                    locateRecomMapComponent().ifPresent((mapComponent) -> mapComponent.zoomInByMouse(scrollCommand.getNanoTimedEvent(), physicsCoreComponent));
                 } else if (scrollCommand.getNanoTimedEvent().getEvent().getDeltaY() < 0) {
                     locateRecomMapComponent().ifPresent((mapComponent) -> mapComponent.zoomOutByMouse(scrollCommand.getNanoTimedEvent(), physicsCoreComponent));
                 }

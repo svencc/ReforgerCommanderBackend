@@ -25,11 +25,11 @@ public class MapCalculator {
         final double originX = physicsCoreComponent.getPositionX();
         final double originY = physicsCoreComponent.getPositionY();
 
-        final double mouseOnCanvasX = applyRenderScale(nanoTimedEvent.getEvent().getSceneX(), engineProperties);
-        final double mouseOnCanvasY = applyRenderScale(nanoTimedEvent.getEvent().getSceneY(), engineProperties);
+        final double mouseOnNormalizedCanvasX = applyRenderScale(nanoTimedEvent.getEvent().getSceneX(), engineProperties);
+        final double mouseOnNormalizedCanvasY = applyRenderScale(nanoTimedEvent.getEvent().getSceneY(), engineProperties);
 
-        final int scaledMousePositionOnScaledMapX = (int) (-1 * originX + mouseOnCanvasX);
-        final int scaledMousePositionOnScaledMapY = (int) (-1 * originY + mouseOnCanvasY);
+        final int scaledMousePositionOnScaledMapX = (int) (-1 * originX + mouseOnNormalizedCanvasX);
+        final int scaledMousePositionOnScaledMapY = (int) (-1 * originY + mouseOnNormalizedCanvasY);
 
         final int normalizedMousePositionOnNormalizedMapX = Round.halfUp(ScalingTool.normalizeDimension(scaledMousePositionOnScaledMapX, scaleFactor.getScaleFactor()));
         final int normalizedMousePositionOnNormalizedMapY = Round.halfUp(ScalingTool.normalizeDimension(scaledMousePositionOnScaledMapY, scaleFactor.getScaleFactor()));
@@ -41,17 +41,16 @@ public class MapCalculator {
     public PixelCoordinate getCoordinateOfCenterPositionOnMap(
             @NonNull final PixelCoordinate centerPosition,
             @NonNull final PhysicCoreComponent physicsCoreComponent,
-            @NonNull final ScaleFactor scaleFactor,
-            @NonNull final IsEngineProperties engineProperties
+            @NonNull final ScaleFactor scaleFactor
     ) {
         final double originX = physicsCoreComponent.getPositionX();
         final double originY = physicsCoreComponent.getPositionY();
 
-        final double positionOnCanvasX = applyRenderScale(centerPosition.getX(), engineProperties);
-        final double positionOnCanvasY = applyRenderScale(centerPosition.getY(), engineProperties);
+        final double positionOnNormalizedCanvasX = centerPosition.getX();
+        final double positionOnNormalizedCanvasY = centerPosition.getY();
 
-        final int scaledCenterPositionOnScaledMapX = (int) (-1 * originX + positionOnCanvasX);
-        final int scaledCenterPositionOnScaledMapY = (int) (-1 * originY + positionOnCanvasY);
+        final int scaledCenterPositionOnScaledMapX = (int) (-1 * originX + positionOnNormalizedCanvasX);
+        final int scaledCenterPositionOnScaledMapY = (int) (-1 * originY + positionOnNormalizedCanvasY);
 
         final int normalizedCenterPositionOnNormalizedMapX = Round.halfUp(ScalingTool.normalizeDimension(scaledCenterPositionOnScaledMapX, scaleFactor.getScaleFactor()));
         final int normalizedCenterPositionOnNormalizedMapY = Round.halfUp(ScalingTool.normalizeDimension(scaledCenterPositionOnScaledMapY, scaleFactor.getScaleFactor()));

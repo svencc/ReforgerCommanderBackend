@@ -161,8 +161,8 @@ public class TacViewStageInitializer {
                         @NonNull final Subjective<DynamicEngineProperties> subject,
                         @NonNull final Notification<DynamicEngineProperties> notification
                 ) -> {
-                    stage.setHeight(titleBarHeight + (dynamicEngineProperties.getRendererHeight() * dynamicEngineProperties.getRendererScale()));
                     stage.setWidth(dynamicEngineProperties.getRendererWidth() * dynamicEngineProperties.getRendererScale());
+                    stage.setHeight(titleBarHeight + (dynamicEngineProperties.getRendererHeight() * dynamicEngineProperties.getRendererScale()));
                 },
                 Duration.ofMillis(1000)
         );
@@ -178,7 +178,6 @@ public class TacViewStageInitializer {
                     @NonNull final Number oldSize,
                     @NonNull final Number newSize
             ) {
-                log.debug("Window size changed. Update {}.", stage.getClass().getSimpleName());
                 dynamicEngineProperties.setRendererWidth((int) stage.getWidth() / dynamicEngineProperties.getRendererScale());
                 dynamicEngineProperties.setRendererHeight((int) (stage.getHeight() - titleBarHeight) / dynamicEngineProperties.getRendererScale());
                 dynamicEngineProperties.persist();

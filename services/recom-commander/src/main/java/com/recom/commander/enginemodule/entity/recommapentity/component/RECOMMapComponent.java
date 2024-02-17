@@ -24,7 +24,6 @@ import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
 import com.recom.tacview.engine.input.NanoTimedEvent;
 import com.recom.tacview.property.IsEngineProperties;
 import jakarta.annotation.Nullable;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -136,7 +135,7 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
         }
     }
 
-    public void zoomByMouseIn(
+    public void zoomInByMouse(
             @NonNull final NanoTimedEvent<ScrollEvent> nanoTimedEvent,
             @NonNull final PhysicCoreComponent physicsCoreComponent
     ) {
@@ -160,16 +159,13 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
         }
     }
 
-    public void zoomInByKey(
-            @NonNull final NanoTimedEvent<KeyEvent> nanoTimedEvent,
-            @NonNull final PhysicCoreComponent physicsCoreComponent
-    ) {
+    public void zoomInByKey(@NonNull final PhysicCoreComponent physicsCoreComponent) {
         if (maybeHeightMapDescriptor.isPresent()) {
             final PixelCoordinate centerCoordinateOnCanvas = PixelCoordinate.of(
-                    MapCalculator.applyRenderScale(engineProperties.getRendererHeight() / 2, engineProperties),
-                    MapCalculator.applyRenderScale(engineProperties.getRendererWidth() / 2, engineProperties)
+                    engineProperties.getRendererWidth() / 2,
+                    engineProperties.getRendererHeight() / 2
             );
-            final PixelCoordinate normalizedCoordinateOnMap = MapCalculator.getCoordinateOfCenterPositionOnMap(centerCoordinateOnCanvas, physicsCoreComponent, mapScale, engineProperties);
+            final PixelCoordinate normalizedCoordinateOnMap = MapCalculator.getCoordinateOfCenterPositionOnMap(centerCoordinateOnCanvas, physicsCoreComponent, mapScale);
 
             mapScale.zoomIn();
             if (mapScale.getScaleFactor() == 1) {
@@ -214,7 +210,6 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
             final PixelCoordinate normalizedCoordinateOnMap = MapCalculator.getCoordinateOfMouseOnMap(nanoTimedEvent, physicsCoreComponent, mapScale, engineProperties);
 
             mapScale.zoomOut();
-
             if (mapScale.getScaleFactor() == 1) {
                 setMap(maybeHeightMapDescriptor.get());
             } else {
@@ -227,19 +222,15 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
         }
     }
 
-    public void zoomOutByKey(
-            @NonNull final NanoTimedEvent<KeyEvent> nanoTimedEvent,
-            @NonNull final PhysicCoreComponent physicsCoreComponent
-    ) {
+    public void zoomOutByKey(@NonNull final PhysicCoreComponent physicsCoreComponent) {
         if (maybeHeightMapDescriptor.isPresent()) {
             final PixelCoordinate centerCoordinateOnCanvas = PixelCoordinate.of(
-                    MapCalculator.applyRenderScale(engineProperties.getRendererHeight() / 2, engineProperties),
-                    MapCalculator.applyRenderScale(engineProperties.getRendererWidth() / 2, engineProperties)
+                    engineProperties.getRendererWidth() / 2,
+                    engineProperties.getRendererHeight() / 2
             );
-            final PixelCoordinate normalizedCoordinateOnMap = MapCalculator.getCoordinateOfCenterPositionOnMap(centerCoordinateOnCanvas, physicsCoreComponent, mapScale, engineProperties);
+            final PixelCoordinate normalizedCoordinateOnMap = MapCalculator.getCoordinateOfCenterPositionOnMap(centerCoordinateOnCanvas, physicsCoreComponent, mapScale);
 
             mapScale.zoomOut();
-
             if (mapScale.getScaleFactor() == 1) {
                 setMap(maybeHeightMapDescriptor.get());
             } else {
