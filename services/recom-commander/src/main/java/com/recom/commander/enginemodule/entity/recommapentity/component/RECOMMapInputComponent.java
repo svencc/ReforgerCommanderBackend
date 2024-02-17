@@ -49,6 +49,10 @@ public class RECOMMapInputComponent extends InputComponent {
                     physicsCoreComponent.addVelocityYComponent(MOVING_FORCE);
                 } else if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.DOWN)) {
                     physicsCoreComponent.addVelocityYComponent(-MOVING_FORCE);
+                } else if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.ADD) && keyboardCommand.isButtonReleased()) {
+                    locateRecomMapComponent().ifPresent((mapComponent) -> mapComponent.zoomInByKey(keyboardCommand.getNanoTimedEvent(), physicsCoreComponent));
+                } else if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.SUBTRACT) && keyboardCommand.isButtonReleased()) {
+                    locateRecomMapComponent().ifPresent((mapComponent) -> mapComponent.zoomOutByKey(keyboardCommand.getNanoTimedEvent(), physicsCoreComponent));
                 }
             });
         }
@@ -58,11 +62,9 @@ public class RECOMMapInputComponent extends InputComponent {
         if (this.getMaybeEntity().isPresent()) {
             this.getMaybeEntity().get().<PhysicCoreComponent>locateComponent(ComponentType.PhysicsCoreComponent).ifPresent(physicsCoreComponent -> {
                 if (scrollCommand.getNanoTimedEvent().getEvent().getDeltaY() > 0) {
-                    locateRecomMapComponent().ifPresent((mapComponent) -> mapComponent.zoomIn(scrollCommand.getNanoTimedEvent(), physicsCoreComponent));
-                    // TODO: Re-Reouting Events to entity -> ReDispatch; locate consumer(s), cache and call them with event
+                    locateRecomMapComponent().ifPresent((mapComponent) -> mapComponent.zoomByMouseIn(scrollCommand.getNanoTimedEvent(), physicsCoreComponent));
                 } else if (scrollCommand.getNanoTimedEvent().getEvent().getDeltaY() < 0) {
-                    locateRecomMapComponent().ifPresent((mapComponent) -> mapComponent.zoomOut(scrollCommand.getNanoTimedEvent(), physicsCoreComponent));
-                    // TODO: Re-Reouting Events to entity -> ReDispatch; locate consumer(s), cache and call them with event
+                    locateRecomMapComponent().ifPresent((mapComponent) -> mapComponent.zoomOutByMouse(scrollCommand.getNanoTimedEvent(), physicsCoreComponent));
                 }
             });
         }

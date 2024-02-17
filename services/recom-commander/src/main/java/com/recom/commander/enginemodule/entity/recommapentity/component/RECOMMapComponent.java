@@ -24,6 +24,7 @@ import com.recom.tacview.engine.graphics.buffer.PixelBuffer;
 import com.recom.tacview.engine.input.NanoTimedEvent;
 import com.recom.tacview.property.IsEngineProperties;
 import jakarta.annotation.Nullable;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -135,7 +136,7 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
         }
     }
 
-    public void zoomIn(
+    public void zoomByMouseIn(
             @NonNull final NanoTimedEvent<ScrollEvent> nanoTimedEvent,
             @NonNull final PhysicCoreComponent physicsCoreComponent
     ) {
@@ -159,6 +160,30 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
         }
     }
 
+    public void zoomInByKey(
+            @NonNull final NanoTimedEvent<KeyEvent> nanoTimedEvent,
+            @NonNull final PhysicCoreComponent physicsCoreComponent
+    ) {
+        if (maybeHeightMapDescriptor.isPresent()) {
+            final PixelCoordinate centerCoordinateOnCanvas = PixelCoordinate.of(
+                    MapCalculator.applyRenderScale(engineProperties.getRendererHeight() / 2, engineProperties),
+                    MapCalculator.applyRenderScale(engineProperties.getRendererWidth() / 2, engineProperties)
+            );
+            final PixelCoordinate normalizedCoordinateOnMap = MapCalculator.getCoordinateOfCenterPositionOnMap(centerCoordinateOnCanvas, physicsCoreComponent, mapScale, engineProperties);
+
+            mapScale.zoomIn();
+            if (mapScale.getScaleFactor() == 1) {
+                setMap(maybeHeightMapDescriptor.get());
+            } else {
+                setScaledMap(maybeHeightMapDescriptor.get(), mapScale.getScaleFactor());
+            }
+
+            final PixelCoordinate scaledMapCoordinate = normalizedCoordinateOnMap.scaled(mapScale.getScaleFactor());
+            physicsCoreComponent.setPositionX(-scaledMapCoordinate.getX() + centerCoordinateOnCanvas.getX());
+            physicsCoreComponent.setPositionY(-scaledMapCoordinate.getY() + centerCoordinateOnCanvas.getY());
+        }
+    }
+
     private void setScaledMap(
             @NonNull HeightMapDescriptor heightMapDescriptor,
             final int scaleFactor
@@ -177,7 +202,7 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
         propagateDirtyStateToParent();
     }
 
-    public void zoomOut(
+    public void zoomOutByMouse(
             @NonNull final NanoTimedEvent<ScrollEvent> nanoTimedEvent,
             @NonNull final PhysicCoreComponent physicsCoreComponent
     ) {
@@ -199,6 +224,31 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
             final PixelCoordinate scaledMapCoordinate = normalizedCoordinateOnMap.scaled(mapScale.getScaleFactor());
             physicsCoreComponent.setPositionX(-scaledMapCoordinate.getX() + mouseCoordinateOnCanvas.getX());
             physicsCoreComponent.setPositionY(-scaledMapCoordinate.getY() + mouseCoordinateOnCanvas.getY());
+        }
+    }
+
+    public void zoomOutByKey(
+            @NonNull final NanoTimedEvent<KeyEvent> nanoTimedEvent,
+            @NonNull final PhysicCoreComponent physicsCoreComponent
+    ) {
+        if (maybeHeightMapDescriptor.isPresent()) {
+            final PixelCoordinate centerCoordinateOnCanvas = PixelCoordinate.of(
+                    MapCalculator.applyRenderScale(engineProperties.getRendererHeight() / 2, engineProperties),
+                    MapCalculator.applyRenderScale(engineProperties.getRendererWidth() / 2, engineProperties)
+            );
+            final PixelCoordinate normalizedCoordinateOnMap = MapCalculator.getCoordinateOfCenterPositionOnMap(centerCoordinateOnCanvas, physicsCoreComponent, mapScale, engineProperties);
+
+            mapScale.zoomOut();
+
+            if (mapScale.getScaleFactor() == 1) {
+                setMap(maybeHeightMapDescriptor.get());
+            } else {
+                setScaledMap(maybeHeightMapDescriptor.get(), mapScale.getScaleFactor());
+            }
+
+            final PixelCoordinate scaledMapCoordinate = normalizedCoordinateOnMap.scaled(mapScale.getScaleFactor());
+            physicsCoreComponent.setPositionX(-scaledMapCoordinate.getX() + centerCoordinateOnCanvas.getX());
+            physicsCoreComponent.setPositionY(-scaledMapCoordinate.getY() + centerCoordinateOnCanvas.getY());
         }
     }
 

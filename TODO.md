@@ -1,14 +1,14 @@
 # TODO LIST
 
 # 1
-* add plus minus keys / events / handler for zooming (new keypress on release listener ....)
+* add plus minus keys / events / handler for zooming (new keypress on release listener ....) (<-)
 * nicer color scheme for the map
   * new type of keyboard input: keypressed (once at release)
   * implement configurable observed keys for event-mapper!
 * prebuffering of zoom levels (for faster zooming) or find out what is the bottleneck
 * 
-* fix window stage tacview size setting onload -> issue is that window size + engine size is the same at this moment
 * (add pre-click-event (preclick, click, doublecklic) events)
+* fix window stage tacview size setting onload -> issue is that window size + engine size is the same at this moment
 
 
 * UI/MAP:

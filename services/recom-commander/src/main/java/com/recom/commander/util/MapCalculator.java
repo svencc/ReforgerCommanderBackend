@@ -37,6 +37,28 @@ public class MapCalculator {
         return PixelCoordinate.of(normalizedMousePositionOnNormalizedMapX, normalizedMousePositionOnNormalizedMapY);
     }
 
+    @NonNull
+    public PixelCoordinate getCoordinateOfCenterPositionOnMap(
+            @NonNull final PixelCoordinate centerPosition,
+            @NonNull final PhysicCoreComponent physicsCoreComponent,
+            @NonNull final ScaleFactor scaleFactor,
+            @NonNull final IsEngineProperties engineProperties
+    ) {
+        final double originX = physicsCoreComponent.getPositionX();
+        final double originY = physicsCoreComponent.getPositionY();
+
+        final double positionOnCanvasX = applyRenderScale(centerPosition.getX(), engineProperties);
+        final double positionOnCanvasY = applyRenderScale(centerPosition.getY(), engineProperties);
+
+        final int scaledCenterPositionOnScaledMapX = (int) (-1 * originX + positionOnCanvasX);
+        final int scaledCenterPositionOnScaledMapY = (int) (-1 * originY + positionOnCanvasY);
+
+        final int normalizedCenterPositionOnNormalizedMapX = Round.halfUp(ScalingTool.normalizeDimension(scaledCenterPositionOnScaledMapX, scaleFactor.getScaleFactor()));
+        final int normalizedCenterPositionOnNormalizedMapY = Round.halfUp(ScalingTool.normalizeDimension(scaledCenterPositionOnScaledMapY, scaleFactor.getScaleFactor()));
+
+        return PixelCoordinate.of(normalizedCenterPositionOnNormalizedMapX, normalizedCenterPositionOnNormalizedMapY);
+    }
+
     public double applyRenderScale(
             final int dimension,
             @NonNull final IsEngineProperties engineProperties

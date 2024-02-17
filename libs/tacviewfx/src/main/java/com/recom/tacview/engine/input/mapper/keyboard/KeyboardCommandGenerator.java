@@ -22,11 +22,13 @@ public class KeyboardCommandGenerator {
     @NonNull
     private final HashMap<KeyCode, NanoTimedEvent<KeyEvent>> pressedKeyEventsBuffer = new HashMap<>();
     @NonNull
+    private final HashMap<KeyCode, NanoTimedEvent<KeyEvent>> releasedKeyEventsBuffer = new HashMap<>();
+    @NonNull
     private final LinkedList<KeyboardCommand> bufferedCommands = new LinkedList<>();
     @NonNull
     private final HashSet<KeyCode> ignoredKeyCodes = new HashSet<>();
 
-    
+
     public KeyboardCommandGenerator() {
         ignoredKeyCodes.add(KeyCode.WINDOWS);
     }
@@ -34,6 +36,9 @@ public class KeyboardCommandGenerator {
     public void generate() {
         pressedKeyEventsBuffer.forEach((keyCode, nanoTimedEvent) -> {
             bufferedCommands.add(KeyboardCommand.of(nanoTimedEvent));
+        });
+        releasedKeyEventsBuffer.forEach((keyCode, nanoTimedEvent) -> {
+            bufferedCommands.add(KeyboardCommand.released(nanoTimedEvent));
         });
     }
 
@@ -46,6 +51,7 @@ public class KeyboardCommandGenerator {
             pressedKeyEventsBuffer.put(nextKeyEventNanoTimedKeyEvent.getEvent().getCode(), nextKeyEventNanoTimedKeyEvent);
         } else if (eventType == KEY_RELEASED) {
             pressedKeyEventsBuffer.remove(nextKeyEventNanoTimedKeyEvent.getEvent().getCode());
+            releasedKeyEventsBuffer.put(nextKeyEventNanoTimedKeyEvent.getEvent().getCode(), nextKeyEventNanoTimedKeyEvent);
         }
     }
 
@@ -57,12 +63,14 @@ public class KeyboardCommandGenerator {
     public Stream<KeyboardCommand> popBufferedCommands() {
         final LinkedList<KeyboardCommand> bufferedCommandsCopy = new LinkedList<>(bufferedCommands);
         bufferedCommands.clear();
+        releasedKeyEventsBuffer.clear();
 
         return bufferedCommandsCopy.stream();
     }
 
     public void clear() {
         pressedKeyEventsBuffer.clear();
+        releasedKeyEventsBuffer.clear();
         bufferedCommands.clear();
     }
 
