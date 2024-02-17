@@ -6,6 +6,9 @@ import com.recom.commander.exception.GlobalExceptionHandler;
 import com.recom.commander.property.SpringApplicationProperties;
 import com.recom.commander.property.user.DynamicEngineProperties;
 import com.recom.commander.util.LoggerUtil;
+import com.recom.observer.Notification;
+import com.recom.observer.ReactiveObserver;
+import com.recom.observer.Subjective;
 import com.recom.tacview.engine.TacViewer;
 import com.recom.tacview.engine.graphics.ScreenComposer;
 import com.recom.tacview.engine.input.GenericFXInputEventListener;
@@ -30,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.util.Optional;
 
 
@@ -111,11 +115,28 @@ public class TacViewStageInitializer {
 //        final Window window = stage.getOwner();
 //        stage.initStyle(StageStyle.UNDECORATED); // BORDERLESS -> NEED to make movable on your own!
 
+        // Window size listener
         final ChangeListener<Number> windowSizeListener = provideWindowSizeListener(stage);
         stage.widthProperty().addListener(windowSizeListener);
         stage.heightProperty().addListener(windowSizeListener);
 
+        provideDebouncedEnginePropertyListener(stage);
+
+        // FPS Profile Strategy (displayed in window title)
         tacViewer.setMaybeProfileFPSStrategy(Optional.of(provideFpsStrategy(stage.titleProperty())));
+    }
+
+    private void provideDebouncedEnginePropertyListener(@NonNull final Stage stage) {
+        final ReactiveObserver<DynamicEngineProperties> enginePropertiesReactiveObserver = ReactiveObserver.reactWith((
+                        @NonNull final Subjective<DynamicEngineProperties> subject,
+                        @NonNull final Notification<DynamicEngineProperties> notification
+                ) -> {
+                    stage.setHeight(dynamicEngineProperties.getRendererHeight());
+                    stage.setWidth(dynamicEngineProperties.getRendererWidth());
+                },
+                Duration.ofMillis(1000)
+        );
+        enginePropertiesReactiveObserver.observe(dynamicEngineProperties.getSubject());
     }
 
     @NonNull
@@ -127,6 +148,7 @@ public class TacViewStageInitializer {
                     @NonNull final Number oldSize,
                     @NonNull final Number newSize
             ) {
+                log.debug("Window size changed. Update {}.", stage.getClass().getSimpleName());
                 dynamicEngineProperties.setRendererWidth((int) stage.getWidth());
                 dynamicEngineProperties.setRendererHeight((int) stage.getHeight());
                 dynamicEngineProperties.persist();
@@ -146,5 +168,6 @@ public class TacViewStageInitializer {
         log.warn("Shutdown TacViewer ...");
         maybeTacViewer.ifPresent(TacViewer::stop);
     }
+
 
 }
