@@ -1,7 +1,6 @@
 # TODO LIST
 
 # 1
-* (re-)test DEFAULT engineModule!
 * fix window stage tacview size setting onload
 * nicer color scheme for the map
 * add plus minus keys / events / handler for zooming (new keypress on release listener ....)
