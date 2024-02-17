@@ -68,10 +68,6 @@ public class TacViewer extends Canvas {
             @NonNull final Thread.UncaughtExceptionHandler globalExceptionHandler
     ) {
         super();
-        prefWidth(Region.USE_COMPUTED_SIZE);    //@TODO: check if this is necessary
-        prefHeight(Region.USE_COMPUTED_SIZE);   //@TODO: check if this is necessary
-        // super(engineProperties.getScaledWindowWidth(), engineProperties.getScaledWindowHeight());
-
         this.engineProperties = engineProperties;
         this.screenComposer = screenComposer;
         this.engineModule = engineModule;
@@ -212,13 +208,10 @@ public class TacViewer extends Canvas {
 
     private void handleResize(@NonNull final IsEngineProperties engineProperties) {
         animationTimerLoop.stop();
-        final ResizeCommand resizeCommand = ResizeCommandFactory.createResizeCommand(this, engineProperties);
+        final ResizeCommand resizeCommand = ResizeCommandFactory.createResizeCommand(engineProperties);
 
         screenComposer.resizeBuffer(resizeCommand);
         canvasBuffer.resizeBuffer(resizeCommand);
-
-        this.setWidth(resizeCommand.getScaledPixelDimension().getWidthX());
-        this.setHeight(resizeCommand.getScaledPixelDimension().getHeightY());
 
         engineModule.getEnvironment().getRenderPipeline().updateLayers();
         engineModule.getEnvironment().getRenderPipeline().setDirty(true); // unnecessary because updateLayers() already sets it to true

@@ -56,7 +56,7 @@ public class PixelRingBuffer implements HasPixelBuffer {
     }
 
     public void resizeBuffer(final ResizeCommand resizeCommand) {
-        this.dimension = resizeCommand.getScaledPixelDimension();
+        this.dimension = resizeCommand.getPixelDimension();
         for (int i = 0; i < pixelBufferRing.length; i++) {
             pixelBufferRing[i] = new PixelBuffer(this.dimension);
         }

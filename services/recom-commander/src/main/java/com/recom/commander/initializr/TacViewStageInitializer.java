@@ -62,22 +62,46 @@ public class TacViewStageInitializer {
     private final DynamicEngineProperties dynamicEngineProperties;
     @NonNull
     private Optional<TacViewer> maybeTacViewer = Optional.empty();
+    private int titleBarHeight = 0;
 
 
     @EventListener(classes = InitializeStageEvent.class)
     public void onApplicationEvent(@NonNull final InitializeStageEvent event) {
         try {
             event.logStageInitializationWithMessage(log, TacViewStageInitializer.class, "Starting TacView");
-            final Stage tacViewStage = event.getStage();
-            populateTacViewStage(tacViewStage);
-            tacViewStage.show();
-            tacViewStage.setOnCloseRequest(onCloseEvent -> {
+            final Stage stage = event.getStage();
+
+            populateTacViewStage(stage);
+            stage.show();
+
+            addTitleBarToStageHeight(stage);
+
+            addWindowResizeListener(stage);
+
+            stage.setOnCloseRequest(onCloseEvent -> {
                 System.out.println("\n\n" + LoggerUtil.generateCenteredString("CLOSED"));
                 Platform.exit();
             });
         } catch (final Throwable t) {
             globalExceptionHandler.uncaughtException(Thread.currentThread(), t);
         }
+    }
+
+    private void addWindowResizeListener(@NonNull final Stage stage) {
+        final ChangeListener<Number> windowSizeListener = provideWindowSizeListener(stage);
+        stage.widthProperty().addListener(windowSizeListener);
+        stage.heightProperty().addListener(windowSizeListener);
+    }
+
+    private void addTitleBarToStageHeight(@NonNull final Stage stage) {
+        // Calculate title bar height
+        final Scene scene = stage.getScene();
+        int sceneHeight = (int) scene.getHeight();
+        titleBarHeight = (int) stage.getHeight() - sceneHeight;
+
+        // Correct stage height:
+        // Set stage height to scene height + title bar height (title bar height is not included in scene height and in the engine properties window height)
+        stage.setHeight(sceneHeight + titleBarHeight);
     }
 
     private void populateTacViewStage(@NonNull final Stage stage) {
@@ -94,6 +118,15 @@ public class TacViewStageInitializer {
                 globalExceptionHandler
 
         );
+
+        stage.widthProperty().addListener((obs, oldVal, newVal) -> {
+            tacViewer.setWidth(newVal.doubleValue());
+        });
+        stage.heightProperty().addListener((obs, oldVal, newVal) -> {
+            tacViewer.setHeight(newVal.doubleValue() - titleBarHeight);
+        });
+        provideDebouncedEnginePropertyListener(stage);
+
         maybeTacViewer = Optional.of(tacViewer);
         root.setCenter(maybeTacViewer.get());
 
@@ -112,15 +145,12 @@ public class TacViewStageInitializer {
             @NonNull final Stage stage,
             @NonNull final TacViewer tacViewer
     ) {
+        // Initialize stage size
+        stage.setWidth(engineProperties.getScaledWindowWidth());
+        stage.setHeight(engineProperties.getScaledWindowHeight());
+
 //        final Window window = stage.getOwner();
 //        stage.initStyle(StageStyle.UNDECORATED); // BORDERLESS -> NEED to make movable on your own!
-
-        // Window size listener
-        final ChangeListener<Number> windowSizeListener = provideWindowSizeListener(stage);
-        stage.widthProperty().addListener(windowSizeListener);
-        stage.heightProperty().addListener(windowSizeListener);
-
-        provideDebouncedEnginePropertyListener(stage);
 
         // FPS Profile Strategy (displayed in window title)
         tacViewer.setMaybeProfileFPSStrategy(Optional.of(provideFpsStrategy(stage.titleProperty())));
@@ -131,8 +161,8 @@ public class TacViewStageInitializer {
                         @NonNull final Subjective<DynamicEngineProperties> subject,
                         @NonNull final Notification<DynamicEngineProperties> notification
                 ) -> {
-                    stage.setHeight(dynamicEngineProperties.getRendererHeight());
-                    stage.setWidth(dynamicEngineProperties.getRendererWidth());
+                    stage.setHeight(titleBarHeight + (dynamicEngineProperties.getRendererHeight() * dynamicEngineProperties.getRendererScale()));
+                    stage.setWidth(dynamicEngineProperties.getRendererWidth() * dynamicEngineProperties.getRendererScale());
                 },
                 Duration.ofMillis(1000)
         );
@@ -149,8 +179,8 @@ public class TacViewStageInitializer {
                     @NonNull final Number newSize
             ) {
                 log.debug("Window size changed. Update {}.", stage.getClass().getSimpleName());
-                dynamicEngineProperties.setRendererWidth((int) stage.getWidth());
-                dynamicEngineProperties.setRendererHeight((int) stage.getHeight());
+                dynamicEngineProperties.setRendererWidth((int) stage.getWidth() / dynamicEngineProperties.getRendererScale());
+                dynamicEngineProperties.setRendererHeight((int) (stage.getHeight() - titleBarHeight) / dynamicEngineProperties.getRendererScale());
                 dynamicEngineProperties.persist();
             }
         };
@@ -168,6 +198,5 @@ public class TacViewStageInitializer {
         log.warn("Shutdown TacViewer ...");
         maybeTacViewer.ifPresent(TacViewer::stop);
     }
-
 
 }

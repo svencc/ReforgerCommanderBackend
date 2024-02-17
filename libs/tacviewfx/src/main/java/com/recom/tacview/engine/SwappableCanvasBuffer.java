@@ -57,13 +57,16 @@ public class SwappableCanvasBuffer {
             imagePixelBuffer.updateBuffer(__ -> null);
 
             final GraphicsContext graphicsContext2D = canvas.getGraphicsContext2D();
-            graphicsContext2D.drawImage(img, 0, 0, canvas.getWidth(), canvas.getHeight());
+            graphicsContext2D.drawImage(img,
+                    0, 0, imagePixelBuffer.getWidth(), imagePixelBuffer.getHeight(),
+                    0, 0, canvas.getWidth(), canvas.getHeight()
+            );
         }
     }
 
     public void resizeBuffer(final ResizeCommand resizeCommand) {
-        intBuffer = IntBuffer.allocate(resizeCommand.getScaledPixelDimension().getWidthX() * resizeCommand.getScaledPixelDimension().getHeightY());
-        imagePixelBuffer = new PixelBuffer<>(resizeCommand.getScaledPixelDimension().getWidthX(), resizeCommand.getScaledPixelDimension().getHeightY(), intBuffer, pixelFormat);
+        intBuffer = IntBuffer.allocate(resizeCommand.getPixelDimension().getWidthX() * resizeCommand.getPixelDimension().getHeightY());
+        imagePixelBuffer = new PixelBuffer<>(resizeCommand.getPixelDimension().getWidthX(), resizeCommand.getPixelDimension().getHeightY(), intBuffer, pixelFormat);
         img = new WritableImage(imagePixelBuffer);
     }
 

@@ -9,15 +9,15 @@ import lombok.RequiredArgsConstructor;
 public class ResizeCommand {
 
     @NonNull
-    private final PixelDimension scaledPixelDimension;
+    private final PixelDimension pixelDimension;
     private final int newScale;
 
 
     public static ResizeCommand of(
-            @NonNull final PixelDimension scaledPixelDimension,
-            final int newScale
+            @NonNull final PixelDimension pixelDimension,
+            final int renderScale
     ) {
-        return new ResizeCommand(scaledPixelDimension, newScale);
+        return new ResizeCommand(pixelDimension, renderScale);
     }
 
 }
