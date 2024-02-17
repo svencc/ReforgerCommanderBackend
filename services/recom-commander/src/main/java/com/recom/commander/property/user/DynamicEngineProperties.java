@@ -25,7 +25,6 @@ public class DynamicEngineProperties extends ObservableDynamicUserProperties<Dyn
     private static PixelDimension cachedSingletonPixelDimension = null;
     private static Long cachedFramesThresholdNanoTime = null;
     private static Long cachedTickThresholdNanoTime = null;
-
     @Nullable
     private BufferedSubject<IsEngineProperties> bufferedSubject = null;
 
