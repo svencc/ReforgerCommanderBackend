@@ -1,9 +1,8 @@
 # TODO LIST
 
 # 1
-* dynamic changeable render properties!
-  * React to engine.properties file changes!
-  * (re-)test DEFAULT engineModule!
+* (re-)test DEFAULT engineModule!
+* fix window stage tacview size setting onload
 * nicer color scheme for the map
 * add plus minus keys / events / handler for zooming (new keypress on release listener ....)
   * new type of keyboard input: keypressed (once at release)
