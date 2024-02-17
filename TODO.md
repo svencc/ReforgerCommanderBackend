@@ -1,7 +1,6 @@
 # TODO LIST
 
 # 1
-* add plus minus keys / events / handler for zooming (new keypress on release listener ....) (<-)
 * nicer color scheme for the map
   * new type of keyboard input: keypressed (once at release)
   * implement configurable observed keys for event-mapper!
