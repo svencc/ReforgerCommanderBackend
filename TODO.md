@@ -7,22 +7,25 @@
   * Aspect Map (Hangrichtungskarte)
   * Contour Map (Höhenlinienkarte)
   * Hillshade Map (Schummerungskarte, Schattierungskarte)
-* prebuffering of zoom levels (for faster zooming) or find out what is the bottleneck
-* 
-* (add pre-click-event (preclick, click, doublecklic) events)
-* fix window stage tacview size setting onload -> issue is that window size + engine size is the same at this moment
+
+* known issues or optimizations:
+  * prebuffering of zoom levels (for faster zooming) or find out what is the bottleneck
+  * (add pre-click-event (preclick, click, doublecklic) events)
+  * fix window stage tacview size setting onload -> issue is that window size + engine size is the same at this moment
 
 
+
+# 1.1
 * UI/MAP:
   * add scale bar
   * add measurement tool
   * add menu
-  * improve map colors 
+  * improve map colors (<-)
 * background entity layer?
 
 * add forest heatmap
 * add village heatmap
-  * add names to villages
+* add names to villages
 * add general map names
 
 
