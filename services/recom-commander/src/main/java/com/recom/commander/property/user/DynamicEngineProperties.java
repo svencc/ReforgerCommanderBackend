@@ -62,11 +62,12 @@ public class DynamicEngineProperties extends ObservableDynamicUserProperties<Dyn
 
     public void setRendererWidth(final int rendererWidth) {
         this.rendererWidth = Math.max(320, rendererWidth);
-        DynamicEngineProperties.cachedSingletonPixelDimension = null;
+        this.invalidAllCaches();
     }
 
     public void setRendererHeight(final int rendererHeight) {
         this.rendererHeight = Math.max(240, rendererHeight);
+        this.invalidAllCaches();
         DynamicEngineProperties.cachedSingletonPixelDimension = null;
     }
 
@@ -147,6 +148,7 @@ public class DynamicEngineProperties extends ObservableDynamicUserProperties<Dyn
 
     public void persist() {
         super.persist();
+        invalidAllCaches();
         propagateChanges();
     }
 
@@ -154,6 +156,7 @@ public class DynamicEngineProperties extends ObservableDynamicUserProperties<Dyn
     private BufferedSubject<IsEngineProperties> provideBufferedSubject() {
         if (bufferedSubject == null) {
             bufferedSubject = new BufferedSubject<>();
+            invalidAllCaches();
             bufferedSubject.notifyObserversWith(Notification.of(this)); // initialisation with first value
         }
 
@@ -169,6 +172,12 @@ public class DynamicEngineProperties extends ObservableDynamicUserProperties<Dyn
     @Override
     public String toString() {
         return "DynamicEngineProperties";
+    }
+
+    public void invalidAllCaches() {
+        DynamicEngineProperties.cachedSingletonPixelDimension = null;
+        DynamicEngineProperties.cachedFramesThresholdNanoTime = null;
+        DynamicEngineProperties.cachedTickThresholdNanoTime = null;
     }
 
 }

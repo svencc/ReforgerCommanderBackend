@@ -163,8 +163,9 @@ public class TacViewStageInitializer {
                 ) -> {
                     stage.setWidth(dynamicEngineProperties.getRendererWidth() * dynamicEngineProperties.getRendererScale());
                     stage.setHeight(titleBarHeight + (dynamicEngineProperties.getRendererHeight() * dynamicEngineProperties.getRendererScale()));
+                    dynamicEngineProperties.invalidAllCaches();
                 },
-                Duration.ofMillis(1000)
+                Duration.ofMillis(500)
         );
         enginePropertiesReactiveObserver.observe(dynamicEngineProperties.getSubject());
     }
