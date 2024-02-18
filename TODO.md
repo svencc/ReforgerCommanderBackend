@@ -2,8 +2,6 @@
 
 # 1
 * nicer color scheme for the map
-  * new type of keyboard input: keypressed (once at release)
-  * implement configurable observed keys for event-mapper!
 * prebuffering of zoom levels (for faster zooming) or find out what is the bottleneck
 * 
 * (add pre-click-event (preclick, click, doublecklic) events)
