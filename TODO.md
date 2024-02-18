@@ -2,6 +2,11 @@
 
 # 1
 * nicer color scheme for the map
+  * DEM (Digital Elevation Model) -> Höhenmodell -> Rename old things to DEM
+  * Slope Map (Neigungskarte) (/)
+  * Aspect Map (Hangrichtungskarte)
+  * Contour Map (Höhenlinienkarte)
+  * Hillshade Map (Schummerungskarte, Schattierungskarte)
 * prebuffering of zoom levels (for faster zooming) or find out what is the bottleneck
 * 
 * (add pre-click-event (preclick, click, doublecklic) events)
