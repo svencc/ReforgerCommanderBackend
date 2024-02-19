@@ -18,16 +18,16 @@ public enum Aspect {
 
 
     final int aspectValue;
-    final int aspectAngle;
+    final int angle;
     final boolean isCardinal;
 
     Aspect(
-            final int aspectValue,
-            final int aspectAngle
+            final int enumValue,
+            final int angle
     ) {
-        this.aspectValue = aspectValue;
-        this.aspectAngle = aspectAngle;
-        this.isCardinal = aspectAngle % 90 == 0;
+        this.aspectValue = enumValue;
+        this.angle = angle;
+        this.isCardinal = angle % 90 == 0;
     }
 
     @NonNull

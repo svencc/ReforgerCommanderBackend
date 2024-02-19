@@ -4,10 +4,16 @@ package com.recom.commons.calculator;
 import com.recom.commons.math.Sign;
 import com.recom.commons.model.Aspect;
 import com.recom.commons.model.SlopeAndAspect;
+import com.recom.commons.model.Vector3D;
+import com.recom.commons.rasterizer.mapcolorscheme.MapShadowingScheme;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class D8CalculatorForSlopeAndAspectMaps {
+
+    @NonNull
+    private final ARGBCalculator colorCalculator = new ARGBCalculator();
 
     private final double cellSize;
     // Defines the relative positions of the 8 neighboring cells around a given cell.
@@ -65,7 +71,7 @@ public class D8CalculatorForSlopeAndAspectMaps {
                 final int differenceSign = Sign.of(relativeDifference);
                 final double absoluteDifference = Math.abs(relativeDifference);
                 // Elevation difference to the neighbor.
-                final double distance = (currentAspect.isCardinal()) ? cellSize : diagonalCellSize;                        // Choose the correct distance based on direction.
+                final double distance = (currentAspect.isCardinal()) ? cellSize : diagonalCellSize;                      // Choose the correct distance based on direction.
                 final double slope = absoluteDifference / distance;                                                     // Calculate the slope as elevation difference divided by distance.
 
                 // Update the maximum slope if this slope is steeper.
@@ -87,5 +93,39 @@ public class D8CalculatorForSlopeAndAspectMaps {
                 .build();
     }
 
+    public double[][] calculateShadedMap(
+            @NonNull final SlopeAndAspect[][] slopeAndAspectMap,
+            @NonNull final MapShadowingScheme shadowingScheme
+    ) {
+        final double[][] shadingMap = new double[slopeAndAspectMap.length][slopeAndAspectMap[0].length];
+
+        for (int x = 0; x < slopeAndAspectMap.length; x++) {
+            for (int y = 0; y < slopeAndAspectMap[0].length; y++) {
+                shadingMap[x][y] = calculateShading(slopeAndAspectMap[x][y], shadowingScheme);
+            }
+        }
+
+        return shadingMap;
+    }
+
+    private float calculateShading(
+            @NonNull final SlopeAndAspect slopeAndAspect,
+            @NonNull final MapShadowingScheme shadowingScheme
+    ) {
+        final double slopeRad = Math.atan(slopeAndAspect.getSlope());
+
+        final Vector3D terrainNormal = Vector3D.builder()
+                .x(Math.cos(Math.toRadians(slopeAndAspect.getAspect().getAngle())) * Math.sin(slopeRad))
+                .y(Math.sin(Math.toRadians(slopeAndAspect.getAspect().getAngle())) * Math.sin(slopeRad))
+                .z(Math.cos(slopeRad))
+                .build();
+
+        // Berechnen Sie das Skalarprodukt der Vektoren für die Lichtintensität (wie stark das Licht auf die Zelle trifft; wie stark die beiden Vektoren aufeinander ausgerichtet sind).
+        final Vector3D sunLightVector = shadowingScheme.getSunLightVector();
+        final double dotProduct = VectorCalculator.dotProduct(sunLightVector, terrainNormal);
+        final double brightness = Math.max(0, dotProduct);
+
+        return colorCalculator.shade(shadowingScheme.getBaseColorTerrain(), brightness);
+    }
 
 }

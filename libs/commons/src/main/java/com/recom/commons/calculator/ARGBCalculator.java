@@ -10,13 +10,13 @@ import java.util.Map;
 public class ARGBCalculator {
 
     @NonNull
-    private static final Map<Integer, Integer> colorCache = new HashMap<>();
+    private static final Map<Long, Integer> colorCache = new HashMap<>();
 
 
     public int blend(final int foregroundColor, final int backgroundColour) {
-        int cachedResult = colorCache.getOrDefault(foregroundColor, -1);
-        if (cachedResult != -1) {
-            return cachedResult;
+        final long key = ((long) foregroundColor << 32) | (backgroundColour & 0xFFFFFFFFL);
+        if (colorCache.containsKey(key)) {
+            return colorCache.get(key);
         }
 
         final double alpha = getAlphaComponent(foregroundColor) / 255.0;
@@ -28,7 +28,7 @@ public class ARGBCalculator {
         final int newAlpha = getAlphaComponent(backgroundColour);
 
         int result = compose(newAlpha, (int) newRed, (int) newGreen, (int) newBlue);
-        colorCache.put(foregroundColor, result);
+        colorCache.put(key, result);
 
         return result;
     }
@@ -54,6 +54,15 @@ public class ARGBCalculator {
                 ((red & 0xFF) << 16) |
                 ((green & 0xFF) << 8) |
                 ((blue & 0xFF << 0));
+    }
+
+    public int shade(final int baseColor, double brightness) {
+        return compose(
+                getAlphaComponent(baseColor),
+                (int) (getRedComponent(baseColor) * brightness),
+                (int) (getGreenComponent(baseColor) * brightness),
+                (int) (getBlueComponent(baseColor) * brightness)
+        );
     }
 
 }

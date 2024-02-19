@@ -4,9 +4,9 @@
 * nicer color scheme for the map
   * DEM (Digital Elevation Model) -> Höhenmodell -> Rename old things to DEM
   * Slope Map (Neigungskarte) (/)
-  * Aspect Map (Hangrichtungskarte)
-  * Contour Map (Höhenlinienkarte)
-  * Hillshade Map (Schummerungskarte, Schattierungskarte)
+  * Aspect Map (Hangrichtungskarte) (/)
+  * Contour Map (Höhenlinienkarte)  
+  * Hillshade Map (Schummerungskarte, Schattierungskarte) (<-)
 
 * known issues or optimizations:
   * prebuffering of zoom levels (for faster zooming) or find out what is the bottleneck

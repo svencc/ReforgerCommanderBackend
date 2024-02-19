@@ -86,7 +86,7 @@ public class RECOMMapInputComponent extends InputComponent {
                     }
                 });
             } else {
-                log.info("MouseDragCommand received: {} ({})", inputCommand.getClass().getSimpleName(), mouseDragCommand.getMouseButton());
+                log.debug("MouseDragCommand received: {} ({})", inputCommand.getClass().getSimpleName(), mouseDragCommand.getMouseButton());
             }
         }
     }
@@ -107,15 +107,15 @@ public class RECOMMapInputComponent extends InputComponent {
     private void logInputCommand(@NonNull final IsCommand<?> inputCommand) {
         switch (inputCommand) {
             case MouseButtonCommand mouseButtonCommand ->
-                    log.info("MouseButtonCommand received: {} (doubleClick: {}) - timeBetweenDragStartAndDragStop {} / probableDraggingIntention {}", mouseButtonCommand.getMouseButton(), mouseButtonCommand.isDoubleClick(), mouseButtonCommand.getTimeBetweenDragStartAndDragStop(), mouseButtonCommand.isProbableDraggingIntention());
+                    log.debug("MouseButtonCommand received: {} (doubleClick: {}) - timeBetweenDragStartAndDragStop {} / probableDraggingIntention {}", mouseButtonCommand.getMouseButton(), mouseButtonCommand.isDoubleClick(), mouseButtonCommand.getTimeBetweenDragStartAndDragStop(), mouseButtonCommand.isProbableDraggingIntention());
             case MouseDragCommand mouseDragCommand ->
-                    log.info("MouseDragCommand received: {} ({})", mouseDragCommand.getMouseButton(), inputCommand.getNanoTimedEvent().getEvent().getEventType());
+                    log.debug("MouseDragCommand received: {} ({})", mouseDragCommand.getMouseButton(), inputCommand.getNanoTimedEvent().getEvent().getEventType());
             case ScrollCommand scrollCommand ->
-                    log.info("ScrollCommand received: {} ({})", inputCommand.getClass().getSimpleName(), mapToScrollDirection(scrollCommand.getNanoTimedEvent().getEvent()));
+                    log.debug("ScrollCommand received: {} ({})", inputCommand.getClass().getSimpleName(), mapToScrollDirection(scrollCommand.getNanoTimedEvent().getEvent()));
             case KeyboardCommand keyboardCommand ->
-                    log.info("KeyboardCommand received: {} ({})", keyboardCommand.getNanoTimedEvent().getEvent().getEventType(), keyboardCommand.getNanoTimedEvent().getEvent().getCode());
+                    log.debug("KeyboardCommand received: {} ({})", keyboardCommand.getNanoTimedEvent().getEvent().getEventType(), keyboardCommand.getNanoTimedEvent().getEvent().getCode());
             default ->
-                    log.info("GenericInputCommand received: {} -> {}", inputCommand.getClass().getSimpleName(), inputCommand.getNanoTimedEvent().getEvent().getEventType());
+                    log.debug("GenericInputCommand received: {} -> {}", inputCommand.getClass().getSimpleName(), inputCommand.getNanoTimedEvent().getEvent().getEventType());
         }
     }
 
