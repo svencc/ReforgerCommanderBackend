@@ -4,6 +4,7 @@
 /docker/base-image/id_rsa.pub
 /docs/.obsidian/
 /cached-heightmap.png
+/cached-shademap.png
 
 /libs/sharedlogic/target/
 /libs/sharedmodels/target/
