@@ -2,13 +2,15 @@
 
 # 1
 * nicer color scheme for the map
-  * DEM (Digital Elevation Model) -> Höhenmodell -> Rename old things to DEM
   * Slope Map (Neigungskarte) (/)
   * Aspect Map (Hangrichtungskarte) (/)
-  * Contour Map (Höhenlinienkarte)  
   * Hillshade Map (Schummerungskarte, Schattierungskarte) (/)
-    * Visualise on png 
-
+  * Visualise on png (/)
+  * DEM (Digital Elevation Model) -> Höhenmodell -> Rename old things to DEM (<<<<<<----)
+  * Contour Map (Höhenlinienkarte)  
+  * add layer system
+    * blend layers
+  * add DynamicLayerConfiguration
 
 * interpolate base map to 1pixel = 1meter resolution
   * so 5m scaled map is upscaled to 1m resolution
