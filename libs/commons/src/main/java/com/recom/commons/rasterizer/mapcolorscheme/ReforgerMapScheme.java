@@ -10,6 +10,6 @@ public class ReforgerMapScheme extends MapShadowingScheme {
     private final int baseColorForest = 0xFFA1D2E8;
 
     private final int sunAzimutDeg = 315; // usually 315
-    private final int sunElevationDeg = 45; // usually 30-45
+    private final int sunElevationDeg = 30; // usually 30-45
 
 }

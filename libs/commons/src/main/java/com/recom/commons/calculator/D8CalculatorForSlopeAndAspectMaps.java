@@ -1,6 +1,7 @@
 package com.recom.commons.calculator;
 
 
+import com.recom.commons.math.Round;
 import com.recom.commons.math.Sign;
 import com.recom.commons.model.Aspect;
 import com.recom.commons.model.SlopeAndAspect;
@@ -29,7 +30,7 @@ public class D8CalculatorForSlopeAndAspectMaps {
      * @param dem The digital elevation model (DEM) as a 2D array of elevation values.
      * @return A 2D array representing the slope map of the DEM.
      */
-    public SlopeAndAspect[][] calculateSlopeAndAspectMap(final double[][] dem) {
+    public SlopeAndAspect[][] calculateSlopeAndAspectMap(final float[][] dem) {
         final SlopeAndAspect[][] slopeAndAspects = new SlopeAndAspect[dem.length][dem[0].length];
 
         // Iterate through each cell in the DEM to calculate its slope and aspect.
@@ -52,7 +53,7 @@ public class D8CalculatorForSlopeAndAspectMaps {
      * @return The maximum slope from the given cell.
      */
     private SlopeAndAspect calculateSlopeAndAspect(
-            final double[][] dem,
+            final float[][] dem,
             final int x,
             final int y
     ) {
@@ -93,11 +94,11 @@ public class D8CalculatorForSlopeAndAspectMaps {
                 .build();
     }
 
-    public double[][] calculateShadedMap(
+    public int[][] calculateShadedMap(
             @NonNull final SlopeAndAspect[][] slopeAndAspectMap,
             @NonNull final MapShadowingScheme shadowingScheme
     ) {
-        final double[][] shadingMap = new double[slopeAndAspectMap.length][slopeAndAspectMap[0].length];
+        final int[][] shadingMap = new int[slopeAndAspectMap.length][slopeAndAspectMap[0].length];
 
         for (int x = 0; x < slopeAndAspectMap.length; x++) {
             for (int y = 0; y < slopeAndAspectMap[0].length; y++) {
@@ -108,7 +109,7 @@ public class D8CalculatorForSlopeAndAspectMaps {
         return shadingMap;
     }
 
-    private float calculateShading(
+    private int calculateShading(
             @NonNull final SlopeAndAspect slopeAndAspect,
             @NonNull final MapShadowingScheme shadowingScheme
     ) {

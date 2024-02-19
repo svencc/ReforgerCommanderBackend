@@ -42,9 +42,11 @@ public class TopographyMapDataService {
     public byte[] provideTopographyPNG(@NonNull final MapTopography mapTopography) {
         try {
             final ByteArrayOutputStream outputStream = heightmapGeneratorService.generateHeightmapPNG(mapTopography);
+            final ByteArrayOutputStream outputStreamShade = heightmapGeneratorService.generateShademapPNG(mapTopography);
             final byte[] byteArray = outputStream.toByteArray();
 
             serializationService.writeBytesToFile(Path.of("cached-heightmap.png"), byteArray); // TODO: Remove OR make configurable!
+            serializationService.writeBytesToFile(Path.of("cached-shademap.png"), outputStreamShade.toByteArray()); // TODO: Remove OR make configurable!
 
             return byteArray;
         } catch (IOException e) {

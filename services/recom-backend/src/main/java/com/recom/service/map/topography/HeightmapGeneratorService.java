@@ -82,4 +82,11 @@ public class HeightmapGeneratorService {
                 .build();
     }
 
+    public ByteArrayOutputStream generateShademapPNG(MapTopography mapTopography) {
+        try {
+            return heightmapRasterizer.rasterizeShadeMap(provideHeightmapData(mapTopography));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

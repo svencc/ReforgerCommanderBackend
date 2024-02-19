@@ -1,5 +1,6 @@
 package com.recom.commons.calculator;
 
+import com.recom.commons.math.Round;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
@@ -59,9 +60,9 @@ public class ARGBCalculator {
     public int shade(final int baseColor, double brightness) {
         return compose(
                 getAlphaComponent(baseColor),
-                (int) (getRedComponent(baseColor) * brightness),
-                (int) (getGreenComponent(baseColor) * brightness),
-                (int) (getBlueComponent(baseColor) * brightness)
+                Round.halfUp(getRedComponent(baseColor) * brightness),
+                Round.halfUp(getGreenComponent(baseColor) * brightness),
+                Round.halfUp(getBlueComponent(baseColor) * brightness)
         );
     }
 

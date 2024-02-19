@@ -6,7 +6,18 @@
   * Slope Map (Neigungskarte) (/)
   * Aspect Map (Hangrichtungskarte) (/)
   * Contour Map (Höhenlinienkarte)  
-  * Hillshade Map (Schummerungskarte, Schattierungskarte) (<-)
+  * Hillshade Map (Schummerungskarte, Schattierungskarte) (/)
+    * Visualise on png 
+
+
+* interpolate base map to 1pixel = 1meter resolution
+  * so 5m scaled map is upscaled to 1m resolution
+  * use bilinear interpolation
+* 
+
+MapCalculator
+  getCoordinateOfMouseOnMap + getCoordinateOfCenterPositionOnMap zusammenfassen (es geht einfach die (kalierte) coordinate auf dem canvas rein?)
+  zoomIn + Out by Mouse and Key in Commands auslagern und somit den code aus der Map Komponente rausnehmen
 
 * known issues or optimizations:
   * prebuffering of zoom levels (for faster zooming) or find out what is the bottleneck

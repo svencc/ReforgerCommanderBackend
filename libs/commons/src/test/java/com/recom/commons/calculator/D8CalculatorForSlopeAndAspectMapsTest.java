@@ -23,7 +23,7 @@ class D8CalculatorForSlopeAndAspectMapsTest {
     void calculateSlopeAndAspectMap() {
         // ARRANGE
         final D8CalculatorForSlopeAndAspectMaps algorithm = new D8CalculatorForSlopeAndAspectMaps(1.0);
-        final double[][] dem = {
+        final float[][] dem = {
                 {450, 445, 440},
                 {455, 450, 445},
                 {460, 455, 450}
@@ -51,7 +51,7 @@ class D8CalculatorForSlopeAndAspectMapsTest {
         // ARRANGE
         final ReforgerMapScheme mapScheme = new ReforgerMapScheme();
         final D8CalculatorForSlopeAndAspectMaps algorithm = new D8CalculatorForSlopeAndAspectMaps(1.0);
-        final double[][] dem = {
+        final float[][] dem = {
                 {400, 400, 400, 400, 400},
                 {400, 450, 430, 400, 400},
                 {400, 450, 430, 400, 400},
@@ -61,7 +61,7 @@ class D8CalculatorForSlopeAndAspectMapsTest {
 
         // ACT
         final SlopeAndAspect[][] slopeAndAspects = algorithm.calculateSlopeAndAspectMap(dem);
-        double[][] shadedMapToTest = algorithm.calculateShadedMap(slopeAndAspects, mapScheme);
+        int[][] shadedMapToTest = algorithm.calculateShadedMap(slopeAndAspects, mapScheme);
 
         // ASSERT
         for (int x = 0; x < dem.length; x++) {

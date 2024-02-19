@@ -25,6 +25,8 @@ To create more intelligence from gameMap data the following features are planned
 * Forest detection / forest heatmap
 * Terrain heightmap
   * ![topographic-scanner-example.png](docs%2Fmd-media%2Ftopographic-scanner-example.png)
+* Map shading / lightmap
+  * ![mapshading-preview.png](docs%2Fmd-media%2Fmapshading-preview.png)
 * Mil detection
 * Industrial detection
 * Qualification and prioritization of clusters / targets
