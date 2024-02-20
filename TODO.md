@@ -2,11 +2,12 @@
 
 # 1
 * nicer color scheme for the map
-  * DEM (Digital Elevation Model) -> Höhenmodell -> Rename old things to DEM (<<<<<<---------------------------)
-  * Contour Map (Höhenlinienkarte)  
+  * Contour Map (Höhenlinienkarte)   + visualize
+  * Slope Map (Steigungskarte)       + visualize (for routing)
   * add layer system
     * blend layers
   * add DynamicLayerConfiguration
+  * DEM (Digital Elevation Model) -> Höhenmodell -> Rename old things to DEM (<<<<<<---------------------------)
 
 * interpolate base map to 1pixel = 1meter resolution
   * so 5m scaled map is upscaled to 1m resolution

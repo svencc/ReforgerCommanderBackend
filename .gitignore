@@ -5,6 +5,7 @@
 /docs/.obsidian/
 /cached-heightmap.png
 /cached-shademap.png
+/cached-contourmap.png
 
 /libs/sharedlogic/target/
 /libs/sharedmodels/target/

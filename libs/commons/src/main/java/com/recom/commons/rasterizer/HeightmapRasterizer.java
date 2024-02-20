@@ -83,11 +83,10 @@ public class HeightmapRasterizer {
     }
 
 
-
-
     /*
      * DIRTY HACK TO visualize new shaded map
      */
+    @NonNull
     public ByteArrayOutputStream rasterizeShadeMap(@NonNull final HeightMapDescriptor heightMapDescriptor) {
         final ReforgerMapScheme mapScheme = new ReforgerMapScheme();
         final float[][] dem = heightMapDescriptor.getHeightMap(); // @TODO rename heightMap to dem
@@ -123,16 +122,41 @@ public class HeightmapRasterizer {
         return outputStream;
     }
 
+    /*
+     * DIRTY HACK TO visualize new contour map
+     */
+    @NonNull
+    public ByteArrayOutputStream rasterizeContourMap(@NonNull final HeightMapDescriptor heightMapDescriptor) {
+        final ReforgerMapScheme mapScheme = new ReforgerMapScheme();
+        final D8CalculatorForSlopeAndAspectMaps algorithm = new D8CalculatorForSlopeAndAspectMaps(5.0);
 
-//    public int[] rasterizeHeightMapARGB(@NonNull final HeightMapDescriptor command) {
-//        final int[] rgbPixels = rasterizeHeightMapRGB(command);
-//
-//        // add solid alpha channel xff000000 value to each pixel
-//        for (int i = 0; i < rgbPixels.length; i++) {
-//            rgbPixels[i] = 0xff000000 | rgbPixels[i];
-//        }
-//
-//        return rgbPixels;
-//    }
+        final int[][] contourMap = algorithm.calculateContourMap(heightMapDescriptor, mapScheme);
+
+
+        final int width = heightMapDescriptor.getHeightMap().length;
+        final int height = heightMapDescriptor.getHeightMap()[0].length;
+
+        final int[] pixelBuffer = new int[width * height];
+        for (int x = 0; x < width; x++) {
+            for (int z = 0; z < height; z++) {
+                pixelBuffer[x + z * width] = contourMap[x][z];
+            }
+        }
+
+
+        final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+
+        final int[] imagePixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
+        System.arraycopy(pixelBuffer, 0, imagePixels, 0, pixelBuffer.length);
+
+        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        try {
+            ImageIO.write(image, "png", outputStream);
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return outputStream;
+    }
 
 }
