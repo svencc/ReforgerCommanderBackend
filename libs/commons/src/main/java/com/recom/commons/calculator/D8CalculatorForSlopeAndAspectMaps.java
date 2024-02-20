@@ -193,7 +193,7 @@ public class D8CalculatorForSlopeAndAspectMaps {
         }
 
         if (isContour) {
-            return mapScheme.getBaseColorTerrain();
+            return mapScheme.getBaseColorContourLine();
         } else {
             return colorCalculator.compose(255, 0, 0, 0);
         }
