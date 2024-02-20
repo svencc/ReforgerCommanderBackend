@@ -42,9 +42,12 @@ class TopographyMapDataServiceTest {
         when(mapTopographyPersistenceLayer.findByGameMap(eq(gameMap))).thenReturn(Optional.of(mapTopography));
 
         final ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
+        final ByteArrayOutputStream byteOutputStream2 = new ByteArrayOutputStream();
         final byte[] bytes = {1, 2, 3};
         byteOutputStream.write(bytes);
+        byteOutputStream2.write(bytes);
         when(heightmapGeneratorService.generateHeightmapPNG(eq(mapTopography))).thenReturn(byteOutputStream);
+        when(heightmapGeneratorService.generateShademapPNG(eq(mapTopography))).thenReturn(byteOutputStream2);
 
         // Act
         final byte[] bytesToTest = serviceUnderTest.provideTopographyPNG(gameMap);
@@ -61,9 +64,12 @@ class TopographyMapDataServiceTest {
                 .build();
 
         final ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
+        final ByteArrayOutputStream byteOutputStream2 = new ByteArrayOutputStream();
         final byte[] bytes = {1, 2, 3};
         byteOutputStream.write(bytes);
+        byteOutputStream2.write(bytes);
         when(heightmapGeneratorService.generateHeightmapPNG(eq(mapTopography))).thenReturn(byteOutputStream);
+        when(heightmapGeneratorService.generateShademapPNG(eq(mapTopography))).thenReturn(byteOutputStream2);
 
         // Act
         final byte[] bytesToTest = serviceUnderTest.provideTopographyPNG(mapTopography);

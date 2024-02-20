@@ -2,11 +2,7 @@
 
 # 1
 * nicer color scheme for the map
-  * Slope Map (Neigungskarte) (/)
-  * Aspect Map (Hangrichtungskarte) (/)
-  * Hillshade Map (Schummerungskarte, Schattierungskarte) (/)
-  * Visualise on png (/)
-  * DEM (Digital Elevation Model) -> Höhenmodell -> Rename old things to DEM (<<<<<<----)
+  * DEM (Digital Elevation Model) -> Höhenmodell -> Rename old things to DEM (<<<<<<---------------------------)
   * Contour Map (Höhenlinienkarte)  
   * add layer system
     * blend layers
