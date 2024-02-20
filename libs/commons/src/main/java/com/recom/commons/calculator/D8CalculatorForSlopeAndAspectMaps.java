@@ -1,14 +1,18 @@
 package com.recom.commons.calculator;
 
 
-import com.recom.commons.math.Round;
 import com.recom.commons.math.Sign;
 import com.recom.commons.model.Aspect;
 import com.recom.commons.model.SlopeAndAspect;
 import com.recom.commons.model.Vector3D;
+import com.recom.commons.rasterizer.HeightMapDescriptor;
 import com.recom.commons.rasterizer.mapcolorscheme.MapShadowingScheme;
+import com.recom.commons.rasterizer.mapcolorscheme.ReforgerMapScheme;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 public class D8CalculatorForSlopeAndAspectMaps {
@@ -61,10 +65,10 @@ public class D8CalculatorForSlopeAndAspectMaps {
         double maxSlope = 0;                // Initialize the maximum slope to 0.
         final double diagonalCellSize = Math.sqrt(2) * cellSize;
 
-        for (int i = 0; i < 8; i++) {
-            final Aspect currentAspect = aspects[i];
-            int adjacentNeighborX = x + directionXComponentMatrix[i]; // Calculate the X-coordinate of the adjacent neighbor.
-            int adjacentNeighborY = y + directionYComponentMatrix[i]; // Calculate the Y-coordinate of the adjacent neighbor.
+        for (int direction = 0; direction < 8; direction++) {
+            final Aspect currentAspect = aspects[direction];
+            final int adjacentNeighborX = x + directionXComponentMatrix[direction]; // Calculate the X-coordinate of the adjacent neighbor.
+            final int adjacentNeighborY = y + directionYComponentMatrix[direction]; // Calculate the Y-coordinate of the adjacent neighbor.
 
             // Prüfen, ob der neue Punkt innerhalb der Grenzen liegt
             if (adjacentNeighborX >= 0 && adjacentNeighborY >= 0 && adjacentNeighborX < dem.length && adjacentNeighborY < dem[0].length) {
@@ -127,6 +131,72 @@ public class D8CalculatorForSlopeAndAspectMaps {
         final double brightness = Math.max(0, dotProduct);
 
         return colorCalculator.shade(shadowingScheme.getBaseColorTerrain(), brightness);
+    }
+
+    public int[][] calculateContourMap(
+            @NonNull final HeightMapDescriptor heightMapDescriptor,
+            @NonNull final ReforgerMapScheme mapScheme
+    ) {
+        final float[][] dem = heightMapDescriptor.getHeightMap();
+        final int[][] contourMap = new int[dem.length][dem[0].length];
+
+        for (int x = 0; x < contourMap.length; x++) {
+            for (int y = 0; y < contourMap[0].length; y++) {
+                contourMap[x][y] = calculateContour(heightMapDescriptor, x, y, mapScheme);
+            }
+        }
+
+        return contourMap;
+    }
+
+    private int calculateContour(
+            @NonNull final HeightMapDescriptor heightMapDescriptor,
+            final int x,
+            final int y,
+            @NonNull final ReforgerMapScheme mapScheme
+    ) {
+        final float[][] dem = heightMapDescriptor.getHeightMap();
+        boolean isContour = false;
+
+        // Calculate the contour layers for the terrain.
+        final List<Float> contourLayers = new ArrayList<>();
+        for (float level = heightMapDescriptor.getSeaLevel(); level > heightMapDescriptor.getMaxWaterDepth(); level -= mapScheme.getContourLineStepSize()) {
+            contourLayers.add(level);
+        }
+        for (float level = heightMapDescriptor.getSeaLevel(); level < heightMapDescriptor.getMaxHeight(); level += mapScheme.getContourLineStepSize()) {
+            contourLayers.add(level);
+        }
+
+        for (final float contourLayerHeight : contourLayers) {
+            for (int direction = 0; direction < 4; direction++) {
+                final int adjacentNeighborX = x + directionXComponentMatrix[direction]; // Calculate the X-coordinate of the adjacent neighbor.
+                final int adjacentNeighborY = y + directionYComponentMatrix[direction]; // Calculate the Y-coordinate of the adjacent neighbor.
+                final int adjacentOppositeNeighborX = x + directionXComponentMatrix[direction + 3]; // Calculate the X-coordinate of the adjacent opposite neighbor.
+                final int adjacentOppositeNeighborY = y + directionYComponentMatrix[direction + 3]; // Calculate the Y-coordinate of the adjacent opposite neighbor.
+
+                // Check if the new point is within the bounds
+                if (adjacentNeighborX >= 0 && adjacentNeighborY >= 0 && adjacentNeighborX < dem.length && adjacentNeighborY < dem[0].length
+                        && adjacentOppositeNeighborX >= 0 && adjacentOppositeNeighborY >= 0 && adjacentOppositeNeighborX < dem.length && adjacentOppositeNeighborY < dem[0].length) {
+                    if (dem[adjacentNeighborX][adjacentNeighborY] > contourLayerHeight
+                            && dem[adjacentOppositeNeighborX][adjacentOppositeNeighborY] < contourLayerHeight
+                    ) {
+                        isContour = true;
+                        break;
+                    } else if (dem[adjacentNeighborX][adjacentNeighborY] < contourLayerHeight
+                            && dem[adjacentOppositeNeighborX][adjacentOppositeNeighborY] > contourLayerHeight
+                    ) {
+                        isContour = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (isContour) {
+            return mapScheme.getBaseColorTerrain();
+        } else {
+            return colorCalculator.compose(255, 0, 0, 0);
+        }
     }
 
 }
