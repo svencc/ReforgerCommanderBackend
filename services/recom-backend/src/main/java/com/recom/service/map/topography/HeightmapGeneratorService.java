@@ -1,9 +1,9 @@
 package com.recom.service.map.topography;
 
-import com.recom.entity.map.MapTopography;
-import com.recom.model.map.TopographyData;
 import com.recom.commons.rasterizer.HeightMapDescriptor;
 import com.recom.commons.rasterizer.HeightmapRasterizer;
+import com.recom.entity.map.MapTopography;
+import com.recom.model.map.TopographyData;
 import com.recom.service.SerializationService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -91,10 +91,19 @@ public class HeightmapGeneratorService {
         }
     }
 
-@NonNull
+    @NonNull
     public ByteArrayOutputStream generateContourMapPNG(@NonNull final MapTopography mapTopography) {
         try {
             return heightmapRasterizer.rasterizeContourMap(provideHeightmapData(mapTopography));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @NonNull
+    public ByteArrayOutputStream generateSlopeMapPNG(@NonNull final MapTopography mapTopography) {
+        try {
+            return heightmapRasterizer.rasterizeSlopeMap(provideHeightmapData(mapTopography));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -43,11 +43,14 @@ class TopographyMapDataServiceTest {
 
         final ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
         final ByteArrayOutputStream byteOutputStream2 = new ByteArrayOutputStream();
+        final ByteArrayOutputStream byteOutputStream3 = new ByteArrayOutputStream();
         final byte[] bytes = {1, 2, 3};
         byteOutputStream.write(bytes);
         byteOutputStream2.write(bytes);
+        byteOutputStream3.write(bytes);
         when(heightmapGeneratorService.generateHeightmapPNG(eq(mapTopography))).thenReturn(byteOutputStream);
         when(heightmapGeneratorService.generateShadeMapPNG(eq(mapTopography))).thenReturn(byteOutputStream2);
+        when(heightmapGeneratorService.generateContourMapPNG(eq(mapTopography))).thenReturn(byteOutputStream3);
 
         // Act
         final byte[] bytesToTest = serviceUnderTest.provideTopographyPNG(gameMap);
@@ -65,11 +68,14 @@ class TopographyMapDataServiceTest {
 
         final ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
         final ByteArrayOutputStream byteOutputStream2 = new ByteArrayOutputStream();
+        final ByteArrayOutputStream byteOutputStream3 = new ByteArrayOutputStream();
         final byte[] bytes = {1, 2, 3};
         byteOutputStream.write(bytes);
         byteOutputStream2.write(bytes);
+        byteOutputStream3.write(bytes);
         when(heightmapGeneratorService.generateHeightmapPNG(eq(mapTopography))).thenReturn(byteOutputStream);
         when(heightmapGeneratorService.generateShadeMapPNG(eq(mapTopography))).thenReturn(byteOutputStream2);
+        when(heightmapGeneratorService.generateContourMapPNG(eq(mapTopography))).thenReturn(byteOutputStream3);
 
         // Act
         final byte[] bytesToTest = serviceUnderTest.provideTopographyPNG(mapTopography);

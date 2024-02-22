@@ -18,7 +18,7 @@ public abstract class MapShadowingScheme {
 
     public abstract int getBaseColorContourLine();
     public abstract int getContourLineStepSize();
-    public abstract int getNrOfContourLinesToBig();
+    public abstract int getNrOfContourLinesToBigStep();
 
 
     public abstract int getSunAzimutDeg();

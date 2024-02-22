@@ -2,12 +2,13 @@
 
 # 1
 * nicer color scheme for the map
-  * Contour Map (Höhenlinienkarte)   + visualize
-  * Slope Map (Steigungskarte)       + visualize (for routing)
-  * add layer system
+  * Slope Map (Steigungskarte)       + visualize (for routing) (schwarz = steil, weiß = flach)
+  * add layer system for maps
     * blend layers
-  * add DynamicLayerConfiguration
-  * DEM (Digital Elevation Model) -> Höhenmodell -> Rename old things to DEM (<<<<<<---------------------------)
+    * activate / deactivate layers
+    * use common layer system; or bake layer system into map; so it does not affected performance; zooming build in... other layers are just added on top and support zoom factor; need to extract as separate entity ....
+  * add DynamicLayerProperties (configuration for RecomMapEntity)
+  * DEM (Digital Elevation Model) -> Höhenmodell -> Rename old things to DEM
 
 * interpolate base map to 1pixel = 1meter resolution
   * so 5m scaled map is upscaled to 1m resolution
@@ -15,8 +16,8 @@
 * 
 
 MapCalculator
-  getCoordinateOfMouseOnMap + getCoordinateOfCenterPositionOnMap zusammenfassen (es geht einfach die (kalierte) coordinate auf dem canvas rein?)
-  zoomIn + Out by Mouse and Key in Commands auslagern und somit den code aus der Map Komponente rausnehmen
+  getCoordinateOfMouseOnMap + getCoordinateOfCenterPositionOnMap zusammenfassen (es geht einfach die (skalierte) coordinate auf dem canvas rein?)
+  zoomIn + Out by Mouse and Key in Commands auslagern und somit den code aus der Map Komponente rausnehmen!
 
 * known issues or optimizations:
   * prebuffering of zoom levels (for faster zooming) or find out what is the bottleneck
@@ -27,10 +28,10 @@ MapCalculator
 
 # 1.1
 * UI/MAP:
+  * improve map colors (<-)
   * add scale bar
   * add measurement tool
   * add menu
-  * improve map colors (<-)
 * background entity layer?
 
 * add forest heatmap
