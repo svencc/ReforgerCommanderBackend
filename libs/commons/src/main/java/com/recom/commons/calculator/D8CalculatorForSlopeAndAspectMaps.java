@@ -212,6 +212,7 @@ public class D8CalculatorForSlopeAndAspectMaps {
             @NonNull final SlopeAndAspect slopeAndAspect,
             @NonNull final ReforgerMapScheme mapScheme
     ) {
+        // @TODO: Refactor this method to use the MapScheme !!!
         final double slopePercentage = slopeAndAspect.getSlope() * 100; // Conversion to percentage
         if (slopePercentage > 90) {
             return colorCalculator.compose(255, 75, 0, 130); // Indigo (#4B0082) - Extremely steep
