@@ -26,7 +26,7 @@ To create more intelligence from gameMap data the following features are planned
 * Terrain heightmap
   * ![topographic-scanner-example.png](docs%2Fmd-media%2Ftopographic-scanner-example.png)
 * Map shading / lightmap
-  * ![mapshading-preview.png](docs%2Fmd-media%2Fmapshading-preview.png)
+  * ![mapshading-preview.png](docs%2Fmd-media%2Fmapshading2-preview.png)
 * Contour lines
   * ![contourmap-preview.png](docs%2Fmd-media%2Fcontourmap-preview.png)
 * Visualization of slope map (will be used for pathfinding and movement)
