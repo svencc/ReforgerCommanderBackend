@@ -3,13 +3,12 @@
 # 1
 * nicer color scheme for the map
   * Slope Map (Steigungskarte)       + visualize (for routing) (schwarz = steil, weiß = flach)
-  * Contour Map (Höhenlinienkarte)   + visualize (/)
   * add layer system for maps
     * blend layers
     * activate / deactivate layers
     * use common layer system; or bake layer system into map; so it does not affected performance; zooming build in... other layers are just added on top and support zoom factor; need to extract as separate entity ....
   * add DynamicLayerProperties (configuration for RecomMapEntity)
-  * DEM (Digital Elevation Model) -> Höhenmodell -> Rename old things to DEM (<<<<<<---------------------------)
+  * DEM (Digital Elevation Model) -> Höhenmodell -> Rename old things to DEM
 
 * interpolate base map to 1pixel = 1meter resolution
   * so 5m scaled map is upscaled to 1m resolution

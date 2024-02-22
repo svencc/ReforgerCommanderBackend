@@ -199,4 +199,40 @@ public class D8CalculatorForSlopeAndAspectMaps {
         }
     }
 
+    public int[][] extractSlopeMap(
+            @NonNull final SlopeAndAspect[][] slopeAndAspects,
+            @NonNull final ReforgerMapScheme mapScheme
+    ) {
+        final int[][] slopeMap = new int[slopeAndAspects.length][slopeAndAspects[0].length];
+
+        for (int x = 0; x < slopeAndAspects.length; x++) {
+            for (int y = 0; y < slopeAndAspects[0].length; y++) {
+                slopeMap[x][y] = calculateSlopeColor(slopeAndAspects[x][y], mapScheme);
+            }
+        }
+
+        return slopeMap;
+    }
+
+    private int calculateSlopeColor(
+            @NonNull final SlopeAndAspect slopeAndAspect,
+            @NonNull final ReforgerMapScheme mapScheme
+    ) {
+        final double slope = slopeAndAspect.getSlope();
+        final int slopeColor = colorCalculator.compose(255, 0, 0, 0);
+
+        if (slope > 0.5) {
+            return colorCalculator.compose(255, 255, 0, 0);
+        } else if (slope > 0.4) {
+            return colorCalculator.compose(255, 255, 255, 0);
+        } else if (slope > 0.3) {
+            return colorCalculator.compose(255, 0, 255, 0);
+        } else if (slope > 0.2) {
+            return colorCalculator.compose(255, 0, 255, 255);
+        } else if (slope > 0.1) {
+            return colorCalculator.compose(255, 0, 0, 255);
+        } else {
+            return colorCalculator.compose(255, 255, 0, 255);
+        }
+    }
 }

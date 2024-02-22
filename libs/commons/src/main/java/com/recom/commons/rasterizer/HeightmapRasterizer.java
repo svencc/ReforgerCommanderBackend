@@ -147,7 +147,7 @@ public class HeightmapRasterizer {
         final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
         final int[] imagePixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
-        System.arraycopy(pixelBuffer, 0, imagePixels, 0, pixelBuffer.length);
+//        System.arraycopy(pixelBuffer, 0, imagePixels, 0, pixelBuffer.length);
 
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try {
@@ -159,4 +159,40 @@ public class HeightmapRasterizer {
         return outputStream;
     }
 
+    /*
+     * DIRTY HACK TO visualize new slope map
+     */
+    @NonNull
+    public ByteArrayOutputStream rasterizeSlopeMap(@NonNull final HeightMapDescriptor heightMapDescriptor) {
+        final ReforgerMapScheme mapScheme = new ReforgerMapScheme();
+        final D8CalculatorForSlopeAndAspectMaps algorithm = new D8CalculatorForSlopeAndAspectMaps(5.0);
+
+        final SlopeAndAspect[][] slopeAndAspects = algorithm.calculateSlopeAndAspectMap(heightMapDescriptor.getHeightMap());
+        final int[][] contourMap = algorithm.extractSlopeMap(slopeAndAspects, mapScheme);
+
+        final int width = heightMapDescriptor.getHeightMap().length;
+        final int height = heightMapDescriptor.getHeightMap()[0].length;
+
+        final int[] pixelBuffer = new int[width * height];
+        for (int x = 0; x < width; x++) {
+            for (int z = 0; z < height; z++) {
+                pixelBuffer[x + z * width] = contourMap[x][z];
+            }
+        }
+
+
+        final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+
+        final int[] imagePixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
+        System.arraycopy(pixelBuffer, 0, imagePixels, 0, pixelBuffer.length);
+
+        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        try {
+            ImageIO.write(image, "png", outputStream);
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return outputStream;
+    }
 }

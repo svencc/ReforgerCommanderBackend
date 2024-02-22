@@ -6,6 +6,7 @@
 /cached-heightmap.png
 /cached-shademap.png
 /cached-contourmap.png
+/cached-slopemap.png
 
 /libs/sharedlogic/target/
 /libs/sharedmodels/target/

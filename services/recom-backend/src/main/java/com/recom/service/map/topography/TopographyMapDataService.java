@@ -44,12 +44,14 @@ public class TopographyMapDataService {
             final ByteArrayOutputStream outputStream = heightmapGeneratorService.generateHeightmapPNG(mapTopography);
             final ByteArrayOutputStream outputStreamShade = heightmapGeneratorService.generateShadeMapPNG(mapTopography);
             final ByteArrayOutputStream outputStreamContour = heightmapGeneratorService.generateContourMapPNG(mapTopography);
+            final ByteArrayOutputStream outputStreamSlope = heightmapGeneratorService.generateSlopeMapPNG(mapTopography);
             final byte[] heightmapByteArray = outputStream.toByteArray();
 
             // @TODO This is for debugging purposes only; Dirty Hack to put the generated images into the file system here ...
             serializationService.writeBytesToFile(Path.of("cached-heightmap.png"), heightmapByteArray); // TODO: Remove OR make configurable!
             serializationService.writeBytesToFile(Path.of("cached-shademap.png"), outputStreamShade.toByteArray()); // TODO: Remove OR make configurable!
             serializationService.writeBytesToFile(Path.of("cached-contourmap.png"), outputStreamContour.toByteArray()); // TODO: Remove OR make configurable!
+            serializationService.writeBytesToFile(Path.of("cached-slopemap.png"), outputStreamSlope.toByteArray()); // TODO: Remove OR make configurable!
 
             return heightmapByteArray;
         } catch (IOException e) {
