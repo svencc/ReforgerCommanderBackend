@@ -11,9 +11,9 @@ public class ReforgerMapScheme extends MapShadowingScheme {
     private final int baseColorForest = 0xFFA1D2E8;
 
     // Contour line config
-    private final int baseColorContourLine = 0xFF9B9B64;
-    private final int contourLineStepSize = 25;
-    private final int nrOfContourLinesToBig = 4;
+    private final int baseColorContourLine = 0xFFE3DFBA;
+    private final int contourLineStepSize = 20;
+    private final int nrOfContourLinesToBigStep = 5;
 
     // Sun config (shadowing)
     private final int sunAzimutDeg = 315; // usually 315

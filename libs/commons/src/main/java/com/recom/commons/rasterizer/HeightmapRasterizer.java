@@ -147,7 +147,7 @@ public class HeightmapRasterizer {
         final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
         final int[] imagePixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
-//        System.arraycopy(pixelBuffer, 0, imagePixels, 0, pixelBuffer.length);
+        System.arraycopy(pixelBuffer, 0, imagePixels, 0, pixelBuffer.length);
 
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try {
