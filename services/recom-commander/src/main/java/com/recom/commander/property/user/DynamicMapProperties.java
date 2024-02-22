@@ -10,7 +10,7 @@ import java.time.Duration;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DynamicHostProperties extends ObservableDynamicUserProperties<DynamicHostProperties> {
+public class DynamicMapProperties extends ObservableDynamicUserProperties<DynamicMapProperties> {
 
     @NonNull
     @Override
@@ -21,20 +21,13 @@ public class DynamicHostProperties extends ObservableDynamicUserProperties<Dynam
     @NonNull
     @Override
     public String getPropertyFileName() {
-        return "host";
+        return "map";
     }
 
     @Builder.Default
-    private String protocol = "http";
-    @Builder.Default
-    private String hostname = "localhost";
-    @Builder.Default
-    private String port = "8080";
-//    @Builder.Default
-//    private Duration duration = Duration.ofSeconds(10);
+    private Integer scaleFactor = 1;
 
-    public String getHostBasePath() {
-        return protocol + "://" + hostname + ":" + port;
-    }
+    @Builder.Default
+    private Boolean showLayerX = false;
 
 }

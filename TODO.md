@@ -2,11 +2,13 @@
 
 # 1
 * nicer color scheme for the map
-  * add layer system for mapsup
-    * blend layers
-    * activate / deactivate layers
-    * use common layer system; or bake layer system into map; so it does not affected performance; zooming build in... other layers are just added on top and support zoom factor; need to extract as separate entity ....
-  * add DynamicLayerProperties (configuration for RecomMapEntity)
+  * add layer system for maps
+    * add DynamicLayerProperties (configuration for RecomMapEntity) (/)
+    * blend layers (<-)
+      * add pixelBuffer for each layer
+      * render layer on top of map layer!
+      * blend layers in order
+      * activate / deactivate layers
   * DEM (Digital Elevation Model) -> Höhenmodell -> Rename old things to DEM
 
 * interpolate base map to 1pixel = 1meter resolution
