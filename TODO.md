@@ -7,9 +7,9 @@
     * blend layers (<-)
     * RECOMMapComponent:
       * add pixelBuffer for each layer (<<<---)
-        * MapCalculator
-          * getCoordinateOfMouseOnMap + getCoordinateOfCenterPositionOnMap zusammenfassen (es geht einfach die (skalierte) coordinate auf dem canvas rein?)
-          * zoomIn + Out by Mouse and Key in Commands auslagern und somit den code aus der Map Komponente rausnehmen!
+        * MapCalculator (/)
+          * getCoordinateOfMouseOnMap + getCoordinateOfCenterPositionOnMap zusammenfassen (es geht einfach die (skalierte) coordinate auf dem canvas rein?) (/)
+          * zoomIn + Out by Mouse and Key in Commands auslagern und somit den code aus der Map Komponente rausnehmen! (/)
       * render layer on top of map layer!
       * blend layers in order
       * activate / deactivate layers

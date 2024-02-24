@@ -62,8 +62,10 @@ public class RECOMUICommands {
             @NonNull final PhysicCoreComponent physicsCoreComponent
     ) {
         mapComponent.maybeHeightMapDescriptor.ifPresent(heightMapDescriptor -> {
-            final PixelCoordinate pointerCoordinateOnCanvas = MapUICalculator.getCenterCoordinateOnCanvas(mapComponent.engineProperties);
-            final PixelCoordinate normalizedCoordinateOnMap = MapUICalculator.getCoordinateOfCenterPositionOnMap(pointerCoordinateOnCanvas, physicsCoreComponent, mapComponent.mapScaleFactor);
+//            final PixelCoordinate pointerCoordinateOnCanvas = MapUICalculator.getCenterCoordinateOnCanvas(mapComponent.engineProperties);
+//            final PixelCoordinate normalizedCoordinateOnMap = MapUICalculator.getCoordinateOfCenterPositionOnMap(pointerCoordinateOnCanvas, physicsCoreComponent, mapComponent.mapScaleFactor);
+            final PixelCoordinate pointerCoordinateOnCanvas = MapUICalculator.getNormalizedCoordinateOnCanvas(mapComponent.engineProperties);
+            final PixelCoordinate normalizedCoordinateOnMap = MapUICalculator.getNormalizedMapCoordinate(pointerCoordinateOnCanvas, physicsCoreComponent, mapComponent.mapScaleFactor);
 
             mapComponent.mapScaleFactor.zoomIn();
             updateMap(mapComponent);
@@ -78,8 +80,10 @@ public class RECOMUICommands {
             @NonNull final PhysicCoreComponent physicsCoreComponent
     ) {
         mapComponent.maybeHeightMapDescriptor.ifPresent(heightMapDescriptor -> {
-            final PixelCoordinate pointerCoordinateOnCanvas = MapUICalculator.getMouseCoordinateOnCanvas(nanoTimedEvent, mapComponent.engineProperties);
-            final PixelCoordinate normalizedCoordinateOnMap = MapUICalculator.getCoordinateOfMouseOnMap(nanoTimedEvent, physicsCoreComponent, mapComponent.mapScaleFactor, mapComponent.engineProperties);
+            final PixelCoordinate pointerCoordinateOnCanvas = MapUICalculator.getNormalizedMouseCoordinateOnCanvas(nanoTimedEvent, mapComponent.engineProperties);
+//            final PixelCoordinate normalizedCoordinateOnMap = MapUICalculator.getCoordinateOfMouseOnMap(nanoTimedEvent, physicsCoreComponent, mapComponent.mapScaleFactor, mapComponent.engineProperties);
+            final PixelCoordinate normalizedCoordinateOnMap = MapUICalculator.getNormalizedMapCoordinate(pointerCoordinateOnCanvas, physicsCoreComponent, mapComponent.mapScaleFactor);
+
 
             mapComponent.mapScaleFactor.zoomIn();
             updateMap(mapComponent);
@@ -94,8 +98,10 @@ public class RECOMUICommands {
             @NonNull final PhysicCoreComponent physicsCoreComponent
     ) {
         mapComponent.maybeHeightMapDescriptor.ifPresent(heightMapDescriptor -> {
-            final PixelCoordinate pointerCoordinateOnCanvas = MapUICalculator.getMouseCoordinateOnCanvas(nanoTimedEvent, mapComponent.engineProperties);
-            final PixelCoordinate normalizedCoordinateOnMap = MapUICalculator.getCoordinateOfMouseOnMap(nanoTimedEvent, physicsCoreComponent, mapComponent.mapScaleFactor, mapComponent.engineProperties);
+            final PixelCoordinate pointerCoordinateOnCanvas = MapUICalculator.getNormalizedMouseCoordinateOnCanvas(nanoTimedEvent, mapComponent.engineProperties);
+//            final PixelCoordinate normalizedCoordinateOnMap = MapUICalculator.getCoordinateOfMouseOnMap(nanoTimedEvent, physicsCoreComponent, mapComponent.mapScaleFactor, mapComponent.engineProperties);
+            final PixelCoordinate normalizedCoordinateOnMap = MapUICalculator.getNormalizedMapCoordinate(pointerCoordinateOnCanvas, physicsCoreComponent, mapComponent.mapScaleFactor);
+
 
             mapComponent.mapScaleFactor.zoomOut();
             updateMap(mapComponent);
@@ -109,8 +115,10 @@ public class RECOMUICommands {
             @NonNull final PhysicCoreComponent physicsCoreComponent
     ) {
         mapComponent.maybeHeightMapDescriptor.ifPresent(heightMapDescriptor -> {
-            final PixelCoordinate pointerCoordinateOnCanvas = MapUICalculator.getCenterCoordinateOnCanvas(mapComponent.engineProperties);
-            final PixelCoordinate normalizedCoordinateOnMap = MapUICalculator.getCoordinateOfCenterPositionOnMap(pointerCoordinateOnCanvas, physicsCoreComponent, mapComponent.mapScaleFactor);
+//            final PixelCoordinate pointerCoordinateOnCanvas = MapUICalculator.getCenterCoordinateOnCanvas(mapComponent.engineProperties);
+//            final PixelCoordinate normalizedCoordinateOnMap = MapUICalculator.getCoordinateOfCenterPositionOnMap(pointerCoordinateOnCanvas, physicsCoreComponent, mapComponent.mapScaleFactor);
+            final PixelCoordinate pointerCoordinateOnCanvas = MapUICalculator.getNormalizedCoordinateOnCanvas(mapComponent.engineProperties);
+            final PixelCoordinate normalizedCoordinateOnMap = MapUICalculator.getNormalizedMapCoordinate(pointerCoordinateOnCanvas, physicsCoreComponent, mapComponent.mapScaleFactor);
 
             mapComponent.mapScaleFactor.zoomOut();
             updateMap(mapComponent);
