@@ -13,7 +13,26 @@ import lombok.experimental.UtilityClass;
 
 
 @UtilityClass
-public class MapCalculator {
+public class MapUICalculator {
+
+    @NonNull
+    public PixelCoordinate getMouseCoordinateOnCanvas(
+            @NonNull final NanoTimedEvent<ScrollEvent> nanoTimedEvent,
+            @NonNull final IsEngineProperties engineProperties
+    ) {
+        return PixelCoordinate.of(
+                MapUICalculator.applyRenderScale(nanoTimedEvent.getEvent().getSceneX(), engineProperties),
+                MapUICalculator.applyRenderScale(nanoTimedEvent.getEvent().getSceneY(), engineProperties)
+        );
+    }
+
+    @NonNull
+    public PixelCoordinate getCenterCoordinateOnCanvas(@NonNull final IsEngineProperties engineProperties) {
+        return PixelCoordinate.of(
+                engineProperties.getRendererWidth() / 2,
+                engineProperties.getRendererHeight() / 2
+        );
+    }
 
     @NonNull
     public PixelCoordinate getCoordinateOfMouseOnMap(

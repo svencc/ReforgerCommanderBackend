@@ -4,7 +4,7 @@ import com.recom.commander.event.InitialAuthenticationEvent;
 import com.recom.commander.mapper.HeightMapDescriptorMapper;
 import com.recom.commander.service.map.overview.data.MapsOverviewService;
 import com.recom.commander.service.map.topography.data.MapTopographyDataService;
-import com.recom.commander.util.MapCalculator;
+import com.recom.commander.util.MapUICalculator;
 import com.recom.commons.rasterizer.HeightMapDescriptor;
 import com.recom.commons.rasterizer.HeightmapRasterizer;
 import com.recom.commons.units.PixelCoordinate;
@@ -102,7 +102,7 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
             final HeightMapDescriptor heightMapDescriptor = HeightMapDescriptorMapper.INSTANCE.toModel(heightMapDescriptorDto);
             maybeHeightMapDescriptor = Optional.of(heightMapDescriptor);
 
-            setMap(heightMapDescriptor);
+            setUnscaledMap(heightMapDescriptor);
         };
     }
 
@@ -124,20 +124,20 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
+    // @TODO -> Command
+    private void updateMap(
+            @NonNull HeightMapDescriptor heightMapDescriptor,
+            final int scaleFactor
+    ) {
+        if (mapScale.getScaleFactor() == 1) {
+            setUnscaledMap(maybeHeightMapDescriptor.get());
+        } else {
+            setScaledMap(maybeHeightMapDescriptor.get(), mapScale.getScaleFactor());
+        }
+    }
 
     // @TODO -> Command
-    private void setMap(@NonNull final HeightMapDescriptor heightMapDescriptor) {
+    private void setUnscaledMap(@NonNull final HeightMapDescriptor heightMapDescriptor) {
         final int mapWidth = heightMapDescriptor.getHeightMap().length;
         final int mapHeight = heightMapDescriptor.getHeightMap()[0].length;
 
@@ -155,18 +155,11 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
             @NonNull final PhysicCoreComponent physicsCoreComponent
     ) {
         if (maybeHeightMapDescriptor.isPresent()) {
-            final PixelCoordinate mouseCoordinateOnCanvas = PixelCoordinate.of(
-                    MapCalculator.applyRenderScale(nanoTimedEvent.getEvent().getSceneX(), engineProperties),
-                    MapCalculator.applyRenderScale(nanoTimedEvent.getEvent().getSceneY(), engineProperties)
-            );
-            final PixelCoordinate normalizedCoordinateOnMap = MapCalculator.getCoordinateOfMouseOnMap(nanoTimedEvent, physicsCoreComponent, mapScale, engineProperties);
+            final PixelCoordinate mouseCoordinateOnCanvas = MapUICalculator.getMouseCoordinateOnCanvas(nanoTimedEvent, engineProperties);
+            final PixelCoordinate normalizedCoordinateOnMap = MapUICalculator.getCoordinateOfMouseOnMap(nanoTimedEvent, physicsCoreComponent, mapScale, engineProperties);
 
             mapScale.zoomIn();
-            if (mapScale.getScaleFactor() == 1) {
-                setMap(maybeHeightMapDescriptor.get());
-            } else {
-                setScaledMap(maybeHeightMapDescriptor.get(), mapScale.getScaleFactor());
-            }
+            updateMap(maybeHeightMapDescriptor.get(), mapScale.getScaleFactor());
 
             final PixelCoordinate scaledMapCoordinate = normalizedCoordinateOnMap.scaled(mapScale.getScaleFactor());
             physicsCoreComponent.setPositionX(-scaledMapCoordinate.getX() + mouseCoordinateOnCanvas.getX());
@@ -177,18 +170,11 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
     // @TODO -> Command
     public void zoomInByKey(@NonNull final PhysicCoreComponent physicsCoreComponent) {
         if (maybeHeightMapDescriptor.isPresent()) {
-            final PixelCoordinate centerCoordinateOnCanvas = PixelCoordinate.of(
-                    engineProperties.getRendererWidth() / 2,
-                    engineProperties.getRendererHeight() / 2
-            );
-            final PixelCoordinate normalizedCoordinateOnMap = MapCalculator.getCoordinateOfCenterPositionOnMap(centerCoordinateOnCanvas, physicsCoreComponent, mapScale);
+            final PixelCoordinate centerCoordinateOnCanvas = MapUICalculator.getCenterCoordinateOnCanvas(engineProperties);
+            final PixelCoordinate normalizedCoordinateOnMap = MapUICalculator.getCoordinateOfCenterPositionOnMap(centerCoordinateOnCanvas, physicsCoreComponent, mapScale);
 
             mapScale.zoomIn();
-            if (mapScale.getScaleFactor() == 1) {
-                setMap(maybeHeightMapDescriptor.get());
-            } else {
-                setScaledMap(maybeHeightMapDescriptor.get(), mapScale.getScaleFactor());
-            }
+            updateMap(maybeHeightMapDescriptor.get(), mapScale.getScaleFactor());
 
             final PixelCoordinate scaledMapCoordinate = normalizedCoordinateOnMap.scaled(mapScale.getScaleFactor());
             physicsCoreComponent.setPositionX(-scaledMapCoordinate.getX() + centerCoordinateOnCanvas.getX());
@@ -221,18 +207,11 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
             @NonNull final PhysicCoreComponent physicsCoreComponent
     ) {
         if (maybeHeightMapDescriptor.isPresent()) {
-            final PixelCoordinate mouseCoordinateOnCanvas = PixelCoordinate.of(
-                    MapCalculator.applyRenderScale(nanoTimedEvent.getEvent().getSceneX(), engineProperties),
-                    MapCalculator.applyRenderScale(nanoTimedEvent.getEvent().getSceneY(), engineProperties)
-            );
-            final PixelCoordinate normalizedCoordinateOnMap = MapCalculator.getCoordinateOfMouseOnMap(nanoTimedEvent, physicsCoreComponent, mapScale, engineProperties);
+            final PixelCoordinate mouseCoordinateOnCanvas = MapUICalculator.getMouseCoordinateOnCanvas(nanoTimedEvent, engineProperties);
+            final PixelCoordinate normalizedCoordinateOnMap = MapUICalculator.getCoordinateOfMouseOnMap(nanoTimedEvent, physicsCoreComponent, mapScale, engineProperties);
 
             mapScale.zoomOut();
-            if (mapScale.getScaleFactor() == 1) {
-                setMap(maybeHeightMapDescriptor.get());
-            } else {
-                setScaledMap(maybeHeightMapDescriptor.get(), mapScale.getScaleFactor());
-            }
+            updateMap(maybeHeightMapDescriptor.get(), mapScale.getScaleFactor());
 
             final PixelCoordinate scaledMapCoordinate = normalizedCoordinateOnMap.scaled(mapScale.getScaleFactor());
             physicsCoreComponent.setPositionX(-scaledMapCoordinate.getX() + mouseCoordinateOnCanvas.getX());
@@ -243,18 +222,11 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
     // @TODO -> Command
     public void zoomOutByKey(@NonNull final PhysicCoreComponent physicsCoreComponent) {
         if (maybeHeightMapDescriptor.isPresent()) {
-            final PixelCoordinate centerCoordinateOnCanvas = PixelCoordinate.of(
-                    engineProperties.getRendererWidth() / 2,
-                    engineProperties.getRendererHeight() / 2
-            );
-            final PixelCoordinate normalizedCoordinateOnMap = MapCalculator.getCoordinateOfCenterPositionOnMap(centerCoordinateOnCanvas, physicsCoreComponent, mapScale);
+            final PixelCoordinate centerCoordinateOnCanvas = MapUICalculator.getCenterCoordinateOnCanvas(engineProperties);
+            final PixelCoordinate normalizedCoordinateOnMap = MapUICalculator.getCoordinateOfCenterPositionOnMap(centerCoordinateOnCanvas, physicsCoreComponent, mapScale);
 
             mapScale.zoomOut();
-            if (mapScale.getScaleFactor() == 1) {
-                setMap(maybeHeightMapDescriptor.get());
-            } else {
-                setScaledMap(maybeHeightMapDescriptor.get(), mapScale.getScaleFactor());
-            }
+            updateMap(maybeHeightMapDescriptor.get(), mapScale.getScaleFactor());
 
             final PixelCoordinate scaledMapCoordinate = normalizedCoordinateOnMap.scaled(mapScale.getScaleFactor());
             physicsCoreComponent.setPositionX(-scaledMapCoordinate.getX() + centerCoordinateOnCanvas.getX());
