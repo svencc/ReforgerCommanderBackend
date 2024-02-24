@@ -1,13 +1,15 @@
 # TODO LIST
 
 # 1
-* nicer color scheme for the map
-  * add layer system for maps
+* nicer color scheme for the map (<-)
+  * add layer system for maps (<-)
     * add DynamicLayerProperties (configuration for RecomMapEntity) (/)
     * blend layers (<-)
-      * render layer on top of map layer!
+      * render layers transparently
+      * add function to blend pixel with given alpha modifier?
       * blend layers in order
       * activate / deactivate layers
+    
   * DEM (Digital Elevation Model) -> Höhenmodell -> Rename old things to DEM
 
 * interpolate base map to 1pixel = 1meter resolution
