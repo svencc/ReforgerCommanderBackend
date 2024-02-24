@@ -5,7 +5,7 @@ import com.recom.commons.rasterizer.ContourMapRasterizer;
 import com.recom.commons.rasterizer.HeightMapRasterizer;
 import com.recom.commons.rasterizer.ShadowedMapRasterizer;
 import com.recom.commons.rasterizer.SlopeMapRasterizer;
-import com.recom.commons.rasterizer.mapcolorscheme.ReforgerMapDesignScheme;
+import com.recom.commons.rasterizer.mapdesignscheme.ReforgerMapDesignScheme;
 import com.recom.entity.map.MapTopography;
 import com.recom.model.map.TopographyData;
 import com.recom.service.SerializationService;

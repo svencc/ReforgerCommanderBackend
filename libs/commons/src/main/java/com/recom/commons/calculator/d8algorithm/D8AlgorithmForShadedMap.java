@@ -5,7 +5,7 @@ import com.recom.commons.calculator.ARGBCalculator;
 import com.recom.commons.calculator.VectorCalculator;
 import com.recom.commons.model.SlopeAndAspect;
 import com.recom.commons.model.Vector3D;
-import com.recom.commons.rasterizer.mapcolorscheme.MapDesignScheme;
+import com.recom.commons.rasterizer.mapdesignscheme.MapDesignScheme;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 

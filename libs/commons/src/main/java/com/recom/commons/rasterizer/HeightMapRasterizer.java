@@ -2,7 +2,7 @@ package com.recom.commons.rasterizer;
 
 import com.recom.commons.model.DEMDescriptor;
 import com.recom.commons.model.MapRendererPipelineArtefacts;
-import com.recom.commons.rasterizer.helper.DEMScaler;
+import com.recom.commons.rasterizer.scaler.DEMScaler;
 import com.recom.commons.rasterizer.meta.LayerOrder;
 import com.recom.commons.rasterizer.meta.MapLayerPipelineRenderer;
 import lombok.Getter;

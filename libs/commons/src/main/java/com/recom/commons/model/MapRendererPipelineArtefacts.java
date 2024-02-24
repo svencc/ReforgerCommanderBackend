@@ -1,6 +1,6 @@
 package com.recom.commons.model;
 
-import com.recom.commons.rasterizer.mapcolorscheme.MapDesignScheme;
+import com.recom.commons.rasterizer.mapdesignscheme.MapDesignScheme;
 import lombok.Data;
 import lombok.NonNull;
 import org.springframework.lang.Nullable;

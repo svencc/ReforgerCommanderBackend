@@ -3,7 +3,7 @@ package com.recom.commons.rasterizer;
 import com.recom.commons.calculator.d8algorithm.D8AlgorithmForContourMap;
 import com.recom.commons.model.DEMDescriptor;
 import com.recom.commons.model.MapRendererPipelineArtefacts;
-import com.recom.commons.rasterizer.mapcolorscheme.MapDesignScheme;
+import com.recom.commons.rasterizer.mapdesignscheme.MapDesignScheme;
 import com.recom.commons.rasterizer.meta.LayerOrder;
 import com.recom.commons.rasterizer.meta.MapLayerPipelineRenderer;
 import lombok.Getter;

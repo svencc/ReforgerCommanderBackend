@@ -3,7 +3,7 @@ package com.recom.commons.calculator.d8algorithm;
 
 import com.recom.commons.calculator.ARGBCalculator;
 import com.recom.commons.model.SlopeAndAspect;
-import com.recom.commons.rasterizer.mapcolorscheme.MapDesignScheme;
+import com.recom.commons.rasterizer.mapdesignscheme.MapDesignScheme;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 

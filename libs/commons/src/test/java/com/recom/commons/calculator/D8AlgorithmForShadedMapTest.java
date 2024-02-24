@@ -3,7 +3,7 @@ package com.recom.commons.calculator;
 import com.recom.commons.calculator.d8algorithm.D8AlgorithmForShadedMap;
 import com.recom.commons.calculator.d8algorithm.D8AlgorithmForSlopeAndAspectMap;
 import com.recom.commons.model.SlopeAndAspect;
-import com.recom.commons.rasterizer.mapcolorscheme.ReforgerMapDesignScheme;
+import com.recom.commons.rasterizer.mapdesignscheme.ReforgerMapDesignScheme;
 import org.junit.jupiter.api.Test;
 
 class D8AlgorithmForShadedMapTest {

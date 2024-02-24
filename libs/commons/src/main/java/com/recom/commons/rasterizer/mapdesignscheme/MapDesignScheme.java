@@ -1,4 +1,4 @@
-package com.recom.commons.rasterizer.mapcolorscheme;
+package com.recom.commons.rasterizer.mapdesignscheme;
 
 import com.recom.commons.model.Vector3D;
 
