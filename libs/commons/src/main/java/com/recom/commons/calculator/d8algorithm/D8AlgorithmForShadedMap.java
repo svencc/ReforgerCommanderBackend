@@ -5,7 +5,7 @@ import com.recom.commons.calculator.ARGBCalculator;
 import com.recom.commons.calculator.VectorCalculator;
 import com.recom.commons.model.SlopeAndAspect;
 import com.recom.commons.model.Vector3D;
-import com.recom.commons.rasterizer.mapcolorscheme.MapShadowingScheme;
+import com.recom.commons.rasterizer.mapcolorscheme.MapDesignScheme;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
@@ -18,7 +18,7 @@ public class D8AlgorithmForShadedMap {
 
     public int[][] generateShadedMap(
             @NonNull final SlopeAndAspect[][] slopeAndAspectMap,
-            @NonNull final MapShadowingScheme shadowingScheme
+            @NonNull final MapDesignScheme shadowingScheme
     ) {
         final int[][] shadingMap = new int[slopeAndAspectMap.length][slopeAndAspectMap[0].length];
 
@@ -33,7 +33,7 @@ public class D8AlgorithmForShadedMap {
 
     private int calculateShading(
             @NonNull final SlopeAndAspect slopeAndAspect,
-            @NonNull final MapShadowingScheme shadowingScheme
+            @NonNull final MapDesignScheme shadowingScheme
     ) {
         final double slopeRad = Math.atan(slopeAndAspect.getSlope());
 

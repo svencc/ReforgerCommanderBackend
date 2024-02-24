@@ -6,6 +6,7 @@ import com.recom.commons.model.DEMDescriptor;
 import com.recom.commons.model.MapRendererPipelineArtefacts;
 import com.recom.commons.model.SlopeAndAspect;
 import com.recom.commons.rasterizer.mapcolorscheme.MapDesignScheme;
+import com.recom.commons.rasterizer.mapcolorscheme.ReforgerMapDesignScheme;
 import com.recom.commons.rasterizer.meta.LayerOrder;
 import com.recom.commons.rasterizer.meta.MapLayerPipelineRenderer;
 import lombok.Getter;
@@ -17,15 +18,16 @@ import java.awt.image.DataBufferInt;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-
 @Getter
-public class SlopeMapRasterizer implements MapLayerPipelineRenderer {
-
-    private final LayerOrder layerOrder = LayerOrder.SLOPE_MAP;
-    private final boolean visible = false;
+public class SlopeAndAspectMapRasterizer implements MapLayerPipelineRenderer {
 
     @NonNull
-    public ByteArrayOutputStream rasterizeSlopeMap(
+    private final LayerOrder layerOrder = LayerOrder.SLOPE_AND_ASPECT_MAP;
+    private final boolean visible = true;
+
+
+    @NonNull
+    public ByteArrayOutputStream rasterizeSlopeAndAspectMap(
             @NonNull final DEMDescriptor DEMDescriptor,
             @NonNull final MapDesignScheme mapScheme
     ) {
@@ -60,11 +62,12 @@ public class SlopeMapRasterizer implements MapLayerPipelineRenderer {
         return outputStream;
     }
 
+    @NonNull
     @Override
-    public @NonNull MapRendererPipelineArtefacts render(@NonNull MapRendererPipelineArtefacts pipelineArtefacts) throws IOException {
-        pipelineArtefacts.setRasterizedHeightMap(rasterizeSlopeMap(pipelineArtefacts.getDemDescriptor(), pipelineArtefacts.getMapDesignScheme()));
+    public MapRendererPipelineArtefacts render(@NonNull final MapRendererPipelineArtefacts pipelineArtefacts) throws IOException {
+        pipelineArtefacts.setRasterizedHeightMap(rasterizeSlopeAndAspectMap(pipelineArtefacts.getDemDescriptor(), pipelineArtefacts.getMapDesignScheme()));
 
         return pipelineArtefacts;
     }
-    
+
 }

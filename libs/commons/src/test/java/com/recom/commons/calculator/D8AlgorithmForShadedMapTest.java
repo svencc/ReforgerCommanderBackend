@@ -3,7 +3,7 @@ package com.recom.commons.calculator;
 import com.recom.commons.calculator.d8algorithm.D8AlgorithmForShadedMap;
 import com.recom.commons.calculator.d8algorithm.D8AlgorithmForSlopeAndAspectMap;
 import com.recom.commons.model.SlopeAndAspect;
-import com.recom.commons.rasterizer.mapcolorscheme.ReforgerMapScheme;
+import com.recom.commons.rasterizer.mapcolorscheme.ReforgerMapDesignScheme;
 import org.junit.jupiter.api.Test;
 
 class D8AlgorithmForShadedMapTest {
@@ -11,7 +11,7 @@ class D8AlgorithmForShadedMapTest {
     @Test
     void calculateShadedMap() {
         // ARRANGE
-        final ReforgerMapScheme mapScheme = new ReforgerMapScheme();
+        final ReforgerMapDesignScheme mapScheme = new ReforgerMapDesignScheme();
         final D8AlgorithmForSlopeAndAspectMap slopeAndAspectAlgorithm = new D8AlgorithmForSlopeAndAspectMap(1.0);
         final D8AlgorithmForShadedMap shadedMapAlgorithm = new D8AlgorithmForShadedMap();
         final float[][] dem = {
@@ -24,7 +24,7 @@ class D8AlgorithmForShadedMapTest {
 
         // ACT
         final SlopeAndAspect[][] slopeAndAspectsMap = slopeAndAspectAlgorithm.generateSlopeAndAspectMap(dem);
-        shadedMapAlgorithm.generateShadedMap(slopeAndAspectsMap, new ReforgerMapScheme());
+        shadedMapAlgorithm.generateShadedMap(slopeAndAspectsMap, new ReforgerMapDesignScheme());
         int[][] shadedMapToTest = shadedMapAlgorithm.generateShadedMap(slopeAndAspectsMap, mapScheme);
 
         // ASSERT

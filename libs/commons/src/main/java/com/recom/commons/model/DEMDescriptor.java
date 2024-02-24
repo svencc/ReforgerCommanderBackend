@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class HeightMapDescriptor {
+public class DEMDescriptor {
 
     // meta data
     private Float stepSize;
@@ -20,6 +20,6 @@ public class HeightMapDescriptor {
     private Float seaLevel;
     private Float maxWaterDepth;
     private Float maxHeight;
-    private float[][] heightMap;
+    private float[][] dem;
 
 }

@@ -2,8 +2,8 @@ package com.recom.commons.calculator.d8algorithm;
 
 
 import com.recom.commons.calculator.ARGBCalculator;
-import com.recom.commons.model.HeightMapDescriptor;
-import com.recom.commons.rasterizer.mapcolorscheme.ReforgerMapScheme;
+import com.recom.commons.model.DEMDescriptor;
+import com.recom.commons.rasterizer.mapcolorscheme.MapDesignScheme;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -18,15 +18,15 @@ public class D8AlgorithmForContourMap {
 
 
     public int[][] generateContourMap(
-            @NonNull final HeightMapDescriptor heightMapDescriptor,
-            @NonNull final ReforgerMapScheme mapScheme
+            @NonNull final DEMDescriptor DEMDescriptor,
+            @NonNull final MapDesignScheme mapScheme
     ) {
-        final float[][] dem = heightMapDescriptor.getHeightMap();
+        final float[][] dem = DEMDescriptor.getDem();
         final int[][] contourMap = new int[dem.length][dem[0].length];
 
         for (int x = 0; x < contourMap.length; x++) {
             for (int y = 0; y < contourMap[0].length; y++) {
-                contourMap[x][y] = calculateContour(heightMapDescriptor, x, y, mapScheme);
+                contourMap[x][y] = calculateContour(DEMDescriptor, x, y, mapScheme);
             }
         }
 
@@ -34,19 +34,19 @@ public class D8AlgorithmForContourMap {
     }
 
     private int calculateContour(
-            @NonNull final HeightMapDescriptor heightMapDescriptor,
+            @NonNull final DEMDescriptor DEMDescriptor,
             final int x,
             final int y,
-            @NonNull final ReforgerMapScheme mapScheme
+            @NonNull final MapDesignScheme mapScheme
     ) {
-        final float[][] dem = heightMapDescriptor.getHeightMap();
+        final float[][] dem = DEMDescriptor.getDem();
 
         // Calculate the contour layers for the terrain.
         final List<Float> contourLayers = new ArrayList<>();
-        for (float level = heightMapDescriptor.getSeaLevel(); level > heightMapDescriptor.getMaxWaterDepth(); level -= mapScheme.getContourLineStepSize()) {
+        for (float level = DEMDescriptor.getSeaLevel(); level > DEMDescriptor.getMaxWaterDepth(); level -= mapScheme.getContourLineStepSize()) {
             contourLayers.add(level);
         }
-        for (float level = heightMapDescriptor.getSeaLevel(); level < heightMapDescriptor.getMaxHeight(); level += mapScheme.getContourLineStepSize()) {
+        for (float level = DEMDescriptor.getSeaLevel(); level < DEMDescriptor.getMaxHeight(); level += mapScheme.getContourLineStepSize()) {
             contourLayers.add(level);
         }
 

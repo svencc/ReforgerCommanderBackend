@@ -1,7 +1,7 @@
 package com.recom.commander.enginemodule.entity.recommapentity.component;
 
 import com.recom.commander.util.MapUICalculator;
-import com.recom.commons.model.HeightMapDescriptor;
+import com.recom.commons.model.DEMDescriptor;
 import com.recom.commons.units.PixelCoordinate;
 import com.recom.commons.units.PixelDimension;
 import com.recom.commons.units.ScaleFactor;
@@ -26,11 +26,11 @@ public class RECOMUICommands {
     }
 
     public void setUnscaledMap(@NonNull final RECOMMapComponent mapComponent) {
-        mapComponent.maybeHeightMapDescriptor.ifPresent((final HeightMapDescriptor heightMapDescriptor) -> {
-            final int mapWidth = heightMapDescriptor.getHeightMap().length;
-            final int mapHeight = heightMapDescriptor.getHeightMap()[0].length;
+        mapComponent.maybeHeightMapDescriptor.ifPresent((final DEMDescriptor DEMDescriptor) -> {
+            final int mapWidth = DEMDescriptor.getDem().length;
+            final int mapHeight = DEMDescriptor.getDem()[0].length;
 
-            final int[] pixelBufferArray = mapComponent.heightmapRasterizer.rasterizeHeightMapRGB(heightMapDescriptor);
+            final int[] pixelBufferArray = mapComponent.heightmapRasterizer.rasterizeScaledHeightMapRGB(DEMDescriptor);
 
             final PixelBuffer newPixelBuffer = new PixelBuffer(PixelDimension.of(mapWidth, mapHeight), pixelBufferArray);
             mapComponent.setPixelBuffer(newPixelBuffer);
@@ -40,14 +40,14 @@ public class RECOMUICommands {
     }
 
     public void setScaledMap(@NonNull final RECOMMapComponent mapComponent) {
-        mapComponent.maybeHeightMapDescriptor.ifPresent((final HeightMapDescriptor heightMapDescriptor) -> {
-            final int originalMapHeight = heightMapDescriptor.getHeightMap().length;
-            final int originalMapWidth = heightMapDescriptor.getHeightMap()[0].length;
+        mapComponent.maybeHeightMapDescriptor.ifPresent((final DEMDescriptor DEMDescriptor) -> {
+            final int originalMapHeight = DEMDescriptor.getDem().length;
+            final int originalMapWidth = DEMDescriptor.getDem()[0].length;
 
             final int scaledMapWidth = (int) ScalingTool.scaleDimension(originalMapWidth, mapComponent.mapScaleFactor.getScaleFactor());
             final int scaledMapHeight = (int) ScalingTool.scaleDimension(originalMapHeight, mapComponent.mapScaleFactor.getScaleFactor());
 
-            final int[] newScaledPixelArray = mapComponent.heightmapRasterizer.rasterizeHeightMapRGB(heightMapDescriptor, mapComponent.mapScaleFactor.getScaleFactor());
+            final int[] newScaledPixelArray = mapComponent.heightmapRasterizer.rasterizeScaledHeightMapRGB(DEMDescriptor, mapComponent.mapScaleFactor.getScaleFactor());
 
             final PixelBuffer newScaledPixelBuffer = new PixelBuffer(PixelDimension.of(scaledMapWidth, scaledMapHeight), newScaledPixelArray);
             mapComponent.setPixelBuffer(newScaledPixelBuffer);

@@ -1,9 +1,12 @@
 package com.recom.service.map.topography;
 
+import com.recom.commons.rasterizer.ContourMapRasterizer;
+import com.recom.commons.rasterizer.HeightMapRasterizer;
+import com.recom.commons.rasterizer.ShadowedMapRasterizer;
+import com.recom.commons.rasterizer.SlopeMapRasterizer;
 import com.recom.entity.map.GameMap;
 import com.recom.entity.map.MapTopography;
 import com.recom.model.map.TopographyData;
-import com.recom.commons.rasterizer.HeightMapRasterizer;
 import com.recom.service.SerializationService;
 import com.recom.testhelper.SerializeObjectHelper;
 import org.junit.jupiter.api.Test;
@@ -33,14 +36,23 @@ class MapGeneratorServiceTest {
     private SerializationService serializationService;
     @Mock
     private HeightMapRasterizer heightmapRasterizer;
+    @Mock
+    private ShadowedMapRasterizer shadowedMapRasterizer;
+    @Mock
+    private ContourMapRasterizer contourMapRasterizer;
+    @Mock
+    private SlopeMapRasterizer slopeMapRasterizer;
+
+
     @InjectMocks
     private MapGeneratorService serviceUnderTest;
+
 
     @Test
     void generateHeightmap() throws IOException {
         // Arrange
         when(heightmapRasterizer.rasterizeHeightMapPNG(any())).thenCallRealMethod();
-        when(heightmapRasterizer.rasterizeHeightMapRGB(any())).thenCallRealMethod();
+        when(heightmapRasterizer.rasterizeScaledHeightMapRGB(any())).thenCallRealMethod();
 
         final GameMap gameMap = GameMap.builder()
                 .name("test")

@@ -1,10 +1,10 @@
 package com.recom.service.map.topography;
 
+import com.recom.commons.model.DEMDescriptor;
 import com.recom.entity.map.GameMap;
 import com.recom.entity.map.MapTopography;
 import com.recom.exception.HttpNotFoundException;
 import com.recom.exception.HttpUnprocessableEntityException;
-import com.recom.commons.model.HeightMapDescriptor;
 import com.recom.persistence.map.topography.MapLocatedTopographyPersistenceLayer;
 import com.recom.service.SerializationService;
 import lombok.NonNull;
@@ -21,7 +21,7 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class TopographyMapDataService {
+public class MapService {
 
     @NonNull
     private final MapLocatedTopographyPersistenceLayer mapTopographyPersistenceLayer;
@@ -32,14 +32,13 @@ public class TopographyMapDataService {
 
 
     @Transactional(readOnly = true)
-    public byte[] provideTopographyPNG(@NonNull final GameMap gameMap) {
+    public byte[] provideHeightMapPNG(@NonNull final GameMap gameMap) {
         return mapTopographyPersistenceLayer.findByGameMap(gameMap)
                 .map(this::provideTopographyPNG)
                 .orElseThrow(() -> new HttpNotFoundException("No topography com.recom.dto.map found for com.recom.dto.map with id " + gameMap.getId() + "!"));
     }
 
-    @Transactional(readOnly = true)
-    public byte[] provideTopographyPNG(@NonNull final MapTopography mapTopography) {
+    private byte[] provideTopographyPNG(@NonNull final MapTopography mapTopography) {
         try {
             final ByteArrayOutputStream outputStream = mapGeneratorService.generateHeightmapPNG(mapTopography);
             final ByteArrayOutputStream outputStreamShade = mapGeneratorService.generateShadeMapPNG(mapTopography);
@@ -61,7 +60,7 @@ public class TopographyMapDataService {
 
 
     @NonNull
-    public Optional<HeightMapDescriptor> provideTopographyData(@NonNull final GameMap gameMap) {
+    public Optional<DEMDescriptor> provideTopographyData(@NonNull final GameMap gameMap) {
         return mapTopographyPersistenceLayer.findByGameMap(gameMap)
                 .map(mapTopography -> {
                     try {

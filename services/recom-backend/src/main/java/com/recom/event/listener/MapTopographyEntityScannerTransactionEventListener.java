@@ -14,7 +14,6 @@ import com.recom.persistence.map.GameMapPersistenceLayer;
 import com.recom.persistence.map.topography.MapLocatedTopographyPersistenceLayer;
 import com.recom.service.SerializationService;
 import com.recom.service.map.MapTransactionValidatorService;
-import com.recom.service.map.topography.TopographyMapDataService;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -32,8 +31,6 @@ import java.util.Map;
 public class MapTopographyEntityScannerTransactionEventListener extends TransactionalMapRelatedPackageEventListenerTemplate<TransactionalMapTopographyEntityPackageDto, MapTopography, MapTopographyEntityDto> {
 
     @NonNull
-    private final TopographyMapDataService topographyMapDataService;
-    @NonNull
     private final SerializationService serializationService;
 
     public MapTopographyEntityScannerTransactionEventListener(
@@ -42,12 +39,10 @@ public class MapTopographyEntityScannerTransactionEventListener extends Transact
             @NonNull final MapTransactionValidatorService<MapTopographyEntityDto, TransactionalMapTopographyEntityPackageDto> mapTransactionValidator,
             @NonNull final GameMapPersistenceLayer gameMapPersistenceLayer,
             @NonNull final ApplicationEventPublisher applicationEventPublisher,
-            @NonNull final TopographyMapDataService topographyMapDataService,
             @NonNull final SerializationService serializationService
     ) {
         super(transactionTemplate, entityPersistenceLayer, mapTransactionValidator, gameMapPersistenceLayer, applicationEventPublisher);
 
-        this.topographyMapDataService = topographyMapDataService;
         this.serializationService = serializationService;
     }
 
@@ -106,7 +101,6 @@ public class MapTopographyEntityScannerTransactionEventListener extends Transact
                     .data(serializationService.serializeObject(topograpyModel).toByteArray())
                     .build();
 
-            topographyMapDataService.provideTopographyPNG(mapTopography);
             gameMap.setMapTopography(mapTopography);
 
             return mapTopography;

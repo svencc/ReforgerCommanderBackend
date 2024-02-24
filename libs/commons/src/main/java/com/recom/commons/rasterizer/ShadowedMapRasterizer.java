@@ -2,9 +2,13 @@ package com.recom.commons.rasterizer;
 
 import com.recom.commons.calculator.d8algorithm.D8AlgorithmForShadedMap;
 import com.recom.commons.calculator.d8algorithm.D8AlgorithmForSlopeAndAspectMap;
-import com.recom.commons.model.HeightMapDescriptor;
+import com.recom.commons.model.DEMDescriptor;
+import com.recom.commons.model.MapRendererPipelineArtefacts;
 import com.recom.commons.model.SlopeAndAspect;
-import com.recom.commons.rasterizer.mapcolorscheme.ReforgerMapScheme;
+import com.recom.commons.rasterizer.mapcolorscheme.MapDesignScheme;
+import com.recom.commons.rasterizer.meta.LayerOrder;
+import com.recom.commons.rasterizer.meta.MapLayerPipelineRenderer;
+import lombok.Getter;
 import lombok.NonNull;
 
 import javax.imageio.ImageIO;
@@ -14,23 +18,27 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 
-public class ShadowedMapRasterizer {
+@Getter
+public class ShadowedMapRasterizer implements MapLayerPipelineRenderer {
 
-    /*
-     * DIRTY HACK TO visualize new shaded map
-     */
+    private final LayerOrder layerOrder = LayerOrder.SHADOWED_MAP;
+    private final boolean visible = true;
+
+
     @NonNull
-    public ByteArrayOutputStream rasterizeShadeMap(@NonNull final HeightMapDescriptor heightMapDescriptor) {
-        final ReforgerMapScheme mapScheme = new ReforgerMapScheme();
-        final float[][] dem = heightMapDescriptor.getHeightMap(); // @TODO rename heightMap to dem
+    public ByteArrayOutputStream rasterizeShadowedMap(
+            @NonNull final DEMDescriptor DEMDescriptor,
+            @NonNull final MapDesignScheme mapScheme
+    ) {
+        final float[][] dem = DEMDescriptor.getDem(); // @TODO rename heightMap to dem
         final D8AlgorithmForSlopeAndAspectMap slopeAndAspectAlgorithm = new D8AlgorithmForSlopeAndAspectMap(5.0);
         final D8AlgorithmForShadedMap shadedMapAlgorithm = new D8AlgorithmForShadedMap();
 
         final SlopeAndAspect[][] slopeAndAspects = slopeAndAspectAlgorithm.generateSlopeAndAspectMap(dem);
         final int[][] shadedMap = shadedMapAlgorithm.generateShadedMap(slopeAndAspects, mapScheme);
 
-        final int width = heightMapDescriptor.getHeightMap().length;
-        final int height = heightMapDescriptor.getHeightMap()[0].length;
+        final int width = DEMDescriptor.getDem().length;
+        final int height = DEMDescriptor.getDem()[0].length;
 
         final int[] pixelBuffer = new int[width * height];
         for (int x = 0; x < width; x++) {
@@ -38,7 +46,6 @@ public class ShadowedMapRasterizer {
                 pixelBuffer[x + z * width] = shadedMap[x][z];
             }
         }
-
 
         final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
@@ -53,6 +60,13 @@ public class ShadowedMapRasterizer {
         }
 
         return outputStream;
+    }
+
+    @Override
+    public @NonNull MapRendererPipelineArtefacts render(@NonNull final MapRendererPipelineArtefacts pipelineArtefacts) throws IOException {
+        pipelineArtefacts.setRasterizedHeightMap(rasterizeShadowedMap(pipelineArtefacts.getDemDescriptor(), pipelineArtefacts.getMapDesignScheme()));
+
+        return pipelineArtefacts;
     }
 
 }

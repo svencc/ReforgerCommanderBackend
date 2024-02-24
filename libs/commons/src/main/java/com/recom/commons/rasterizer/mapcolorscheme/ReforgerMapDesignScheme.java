@@ -3,7 +3,7 @@ package com.recom.commons.rasterizer.mapcolorscheme;
 import lombok.Getter;
 
 @Getter
-public class ReforgerMapScheme extends MapShadowingScheme {
+public class ReforgerMapDesignScheme extends MapDesignScheme {
 
     // Base color config
     private final int baseColorTerrain = 0xFFF1F1F3;

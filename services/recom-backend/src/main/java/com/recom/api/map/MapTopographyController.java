@@ -1,16 +1,16 @@
 package com.recom.api.map;
 
 import com.recom.api.commons.HttpCommons;
+import com.recom.commons.model.DEMDescriptor;
 import com.recom.dto.map.topography.HeightMapDescriptorDto;
 import com.recom.dto.map.topography.MapTopographyRequestDto;
 import com.recom.entity.map.GameMap;
 import com.recom.exception.HttpNotFoundException;
 import com.recom.mapper.HeightMapDescriptorMapper;
-import com.recom.commons.model.HeightMapDescriptor;
 import com.recom.security.account.RECOMAccount;
 import com.recom.security.account.RECOMAuthorities;
 import com.recom.service.AssertionService;
-import com.recom.service.map.topography.TopographyMapDataService;
+import com.recom.service.map.topography.MapService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.*;
 public class MapTopographyController {
 
     @NonNull
-    private final TopographyMapDataService topographyMapDataService;
+    private final MapService mapService;
     @NonNull
     private final AssertionService assertionService;
 
@@ -62,7 +62,7 @@ public class MapTopographyController {
             final GameMap gameMap = assertionService.provideMap(mapTopographyRequestDto.getMapName());
             return ResponseEntity.status(HttpStatus.OK)
                     .cacheControl(CacheControl.noCache())
-                    .body(topographyMapDataService.provideTopographyPNG(gameMap));
+                    .body(mapService.provideHeightMapPNG(gameMap));
         } catch (final HttpNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .cacheControl(CacheControl.noCache())
@@ -88,7 +88,7 @@ public class MapTopographyController {
         log.debug("Requested GET /api/v1/com.recom.dto.map/topography/data");
 
         final GameMap gameMap = assertionService.provideMap(mapTopographyRequestDto.getMapName());
-        final HeightMapDescriptor command = topographyMapDataService.provideTopographyData(gameMap)
+        final DEMDescriptor command = mapService.provideTopographyData(gameMap)
                 .orElseThrow(()-> new HttpNotFoundException("No topography com.recom.dto.map found for com.recom.dto.map with id " + gameMap.getId() + "!"));
 
         return ResponseEntity.status(HttpStatus.OK)

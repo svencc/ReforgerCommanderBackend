@@ -4,7 +4,7 @@ import com.recom.commander.event.InitialAuthenticationEvent;
 import com.recom.commander.mapper.HeightMapDescriptorMapper;
 import com.recom.commander.service.map.overview.data.MapsOverviewService;
 import com.recom.commander.service.map.topography.data.MapTopographyDataService;
-import com.recom.commons.model.HeightMapDescriptor;
+import com.recom.commons.model.DEMDescriptor;
 import com.recom.commons.rasterizer.HeightMapRasterizer;
 import com.recom.commons.units.ScaleFactor;
 import com.recom.dto.map.MapOverviewDto;
@@ -43,7 +43,7 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
     @NonNull
     final ScaleFactor mapScaleFactor = new ScaleFactor(-5, 10);
     @NonNull
-    Optional<HeightMapDescriptor> maybeHeightMapDescriptor = Optional.empty();
+    Optional<DEMDescriptor> maybeHeightMapDescriptor = Optional.empty();
 
 
     public RECOMMapComponent(
@@ -91,8 +91,8 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
         ) -> {
             log.debug("Received map topography data");
             final HeightMapDescriptorDto heightMapDescriptorDto = notification.getPayload();
-            final HeightMapDescriptor heightMapDescriptor = HeightMapDescriptorMapper.INSTANCE.toModel(heightMapDescriptorDto);
-            maybeHeightMapDescriptor = Optional.of(heightMapDescriptor);
+            final DEMDescriptor DEMDescriptor = HeightMapDescriptorMapper.INSTANCE.toModel(heightMapDescriptorDto);
+            maybeHeightMapDescriptor = Optional.of(DEMDescriptor);
 
             RECOMUICommands.setUnscaledMap(this);
         };

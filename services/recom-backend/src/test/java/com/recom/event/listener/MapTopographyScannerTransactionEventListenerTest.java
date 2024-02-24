@@ -14,7 +14,6 @@ import com.recom.persistence.map.GameMapPersistenceLayer;
 import com.recom.persistence.map.topography.MapLocatedTopographyPersistenceLayer;
 import com.recom.service.SerializationService;
 import com.recom.service.map.MapTransactionValidatorService;
-import com.recom.service.map.topography.TopographyMapDataService;
 import com.recom.testhelper.SerializeObjectHelper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,8 +48,6 @@ public class MapTopographyScannerTransactionEventListenerTest {
     private MapTransactionValidatorService<MapTopographyEntityDto, TransactionalMapTopographyEntityPackageDto> mapTransactionValidator;
     @Mock
     private GameMapPersistenceLayer gameMapPersistenceLayer;
-    @Mock
-    private TopographyMapDataService topographyMapDataService;
     @Mock
     private SerializationService serializationService;
     @InjectMocks

@@ -19,7 +19,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class TopographyMapDataServiceTest {
+class MapServiceTest {
 
     @Mock
     private MapLocatedTopographyPersistenceLayer mapTopographyPersistenceLayer;
@@ -28,7 +28,7 @@ class TopographyMapDataServiceTest {
     @Mock
     private SerializationService serializationService;
     @InjectMocks
-    private TopographyMapDataService serviceUnderTest;
+    private MapService serviceUnderTest;
 
 
     @Test
@@ -44,44 +44,23 @@ class TopographyMapDataServiceTest {
         final ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
         final ByteArrayOutputStream byteOutputStream2 = new ByteArrayOutputStream();
         final ByteArrayOutputStream byteOutputStream3 = new ByteArrayOutputStream();
+        final ByteArrayOutputStream byteOutputStream4 = new ByteArrayOutputStream();
         final byte[] bytes = {1, 2, 3};
         byteOutputStream.write(bytes);
         byteOutputStream2.write(bytes);
         byteOutputStream3.write(bytes);
+        byteOutputStream4.write(bytes);
         when(mapGeneratorService.generateHeightmapPNG(eq(mapTopography))).thenReturn(byteOutputStream);
         when(mapGeneratorService.generateShadeMapPNG(eq(mapTopography))).thenReturn(byteOutputStream2);
         when(mapGeneratorService.generateContourMapPNG(eq(mapTopography))).thenReturn(byteOutputStream3);
+        when(mapGeneratorService.generateSlopeMapPNG(eq(mapTopography))).thenReturn(byteOutputStream4);
 
         // Act
-        final byte[] bytesToTest = serviceUnderTest.provideTopographyPNG(gameMap);
+        final byte[] bytesToTest = serviceUnderTest.provideHeightMapPNG(gameMap);
 
         // Assert
         assertEquals(new String(bytes), new String(bytesToTest));
     }
 
-    @Test
-    void testProvideTopographyMap() throws IOException {
-        // Arrange
-        final MapTopography mapTopography = MapTopography.builder()
-                .gameMap(GameMap.builder().name("test").build())
-                .build();
-
-        final ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
-        final ByteArrayOutputStream byteOutputStream2 = new ByteArrayOutputStream();
-        final ByteArrayOutputStream byteOutputStream3 = new ByteArrayOutputStream();
-        final byte[] bytes = {1, 2, 3};
-        byteOutputStream.write(bytes);
-        byteOutputStream2.write(bytes);
-        byteOutputStream3.write(bytes);
-        when(mapGeneratorService.generateHeightmapPNG(eq(mapTopography))).thenReturn(byteOutputStream);
-        when(mapGeneratorService.generateShadeMapPNG(eq(mapTopography))).thenReturn(byteOutputStream2);
-        when(mapGeneratorService.generateContourMapPNG(eq(mapTopography))).thenReturn(byteOutputStream3);
-
-        // Act
-        final byte[] bytesToTest = serviceUnderTest.provideTopographyPNG(mapTopography);
-
-        // Assert
-        assertEquals(new String(bytes), new String(bytesToTest));
-    }
 
 }

@@ -1,10 +1,11 @@
 package com.recom.service.map.topography;
 
-import com.recom.commons.model.HeightMapDescriptor;
+import com.recom.commons.model.DEMDescriptor;
 import com.recom.commons.rasterizer.ContourMapRasterizer;
 import com.recom.commons.rasterizer.HeightMapRasterizer;
 import com.recom.commons.rasterizer.ShadowedMapRasterizer;
 import com.recom.commons.rasterizer.SlopeMapRasterizer;
+import com.recom.commons.rasterizer.mapcolorscheme.ReforgerMapDesignScheme;
 import com.recom.entity.map.MapTopography;
 import com.recom.model.map.TopographyData;
 import com.recom.service.SerializationService;
@@ -39,7 +40,7 @@ public class MapGeneratorService {
     }
 
     @NonNull
-    public HeightMapDescriptor provideHeightmapData(@NonNull final MapTopography mapTopography) throws IOException {
+    public DEMDescriptor provideHeightmapData(@NonNull final MapTopography mapTopography) throws IOException {
         final TopographyData topographyModel = serializationService.<TopographyData>deserializeObject(mapTopography.getData())
                 .orElseThrow(() -> new IOException("Unable to deserialize topography data!"));
 
@@ -47,7 +48,7 @@ public class MapGeneratorService {
     }
 
     @NonNull
-    private HeightMapDescriptor invertHeightmapData(@NonNull final TopographyData topograpyModel) {
+    private DEMDescriptor invertHeightmapData(@NonNull final TopographyData topograpyModel) {
         final float[][] heightMap = new float[topograpyModel.getScanIterationsX()][topograpyModel.getScanIterationsZ()];
         float maxHeight = 0;
         float maxWaterDepth = 0;
@@ -80,11 +81,11 @@ public class MapGeneratorService {
             }
         }
 
-        return HeightMapDescriptor.builder()
+        return DEMDescriptor.builder()
                 .stepSize(topograpyModel.getStepSize())
                 .scanIterationsX(topograpyModel.getScanIterationsX())
                 .scanIterationsZ(topograpyModel.getScanIterationsZ())
-                .heightMap(heightMap)
+                .dem(heightMap)
                 .seaLevel(topograpyModel.getOceanBaseHeight())
                 .maxHeight(maxHeight)
                 .maxWaterDepth(maxWaterDepth)
@@ -94,7 +95,7 @@ public class MapGeneratorService {
     @NonNull
     public ByteArrayOutputStream generateShadeMapPNG(@NonNull final MapTopography mapTopography) {
         try {
-            return shadowedMapRasterizer.rasterizeShadeMap(provideHeightmapData(mapTopography));
+            return shadowedMapRasterizer.rasterizeShadowedMap(provideHeightmapData(mapTopography), new ReforgerMapDesignScheme());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -103,7 +104,7 @@ public class MapGeneratorService {
     @NonNull
     public ByteArrayOutputStream generateContourMapPNG(@NonNull final MapTopography mapTopography) {
         try {
-            return contourMapRasterizer.rasterizeContourMap(provideHeightmapData(mapTopography));
+            return contourMapRasterizer.rasterizeContourMap(provideHeightmapData(mapTopography), new ReforgerMapDesignScheme());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -112,7 +113,7 @@ public class MapGeneratorService {
     @NonNull
     public ByteArrayOutputStream generateSlopeMapPNG(@NonNull final MapTopography mapTopography) {
         try {
-            return slopeMapRasterizer.rasterizeSlopeMap(provideHeightmapData(mapTopography));
+            return slopeMapRasterizer.rasterizeSlopeMap(provideHeightmapData(mapTopography), new ReforgerMapDesignScheme());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

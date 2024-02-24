@@ -3,7 +3,7 @@ package com.recom.commons.calculator.d8algorithm;
 
 import com.recom.commons.calculator.ARGBCalculator;
 import com.recom.commons.model.SlopeAndAspect;
-import com.recom.commons.rasterizer.mapcolorscheme.ReforgerMapScheme;
+import com.recom.commons.rasterizer.mapcolorscheme.MapDesignScheme;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -16,7 +16,7 @@ public class D8AlgorithmForSlopeMap {
 
     public int[][] generateSlopeMap(
             @NonNull final SlopeAndAspect[][] slopeAndAspects,
-            @NonNull final ReforgerMapScheme mapScheme
+            @NonNull final MapDesignScheme mapScheme
     ) {
         final int[][] slopeMap = new int[slopeAndAspects.length][slopeAndAspects[0].length];
 
@@ -31,7 +31,7 @@ public class D8AlgorithmForSlopeMap {
 
     private int calculateSlopeColor(
             @NonNull final SlopeAndAspect slopeAndAspect,
-            @NonNull final ReforgerMapScheme mapScheme
+            @NonNull final MapDesignScheme mapScheme
     ) {
         // @TODO: Refactor this method to use the MapScheme !!!
         final double slopePercentage = slopeAndAspect.getSlope() * 100; // Conversion to percentage

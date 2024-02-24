@@ -2,7 +2,7 @@ package com.recom.commons.rasterizer.mapcolorscheme;
 
 import com.recom.commons.model.Vector3D;
 
-public abstract class MapShadowingScheme {
+public abstract class MapDesignScheme {
 
     private Double cachedSunAzimutRad = null;
     private Double cachedSunElevationRad = null;
