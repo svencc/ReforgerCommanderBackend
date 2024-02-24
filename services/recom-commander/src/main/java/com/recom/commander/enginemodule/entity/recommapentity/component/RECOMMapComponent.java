@@ -128,12 +128,12 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
     // @TODO -> Command
     void updateMap(
             @NonNull HeightMapDescriptor heightMapDescriptor,
-            final ScaleFactor scaleFactor
+            @NonNull final ScaleFactor scaleFactor
     ) {
         if (mapScaleFactor.getScaleFactor() == 1) {
             setUnscaledMap(heightMapDescriptor);
         } else {
-            setScaledMap(heightMapDescriptor, scaleFactor.getScaleFactor());
+            setScaledMap(heightMapDescriptor, scaleFactor);
         }
     }
 
@@ -153,15 +153,15 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
     // @TODO -> Command
     private void setScaledMap(
             @NonNull HeightMapDescriptor heightMapDescriptor,
-            final int scaleFactor
+            @NonNull final ScaleFactor scaleFactor
     ) {
         final int originalMapHeight = heightMapDescriptor.getHeightMap().length;
         final int originalMapWidth = heightMapDescriptor.getHeightMap()[0].length;
 
-        final int scaledMapWidth = (int) ScalingTool.scaleDimension(originalMapWidth, scaleFactor);
-        final int scaledMapHeight = (int) ScalingTool.scaleDimension(originalMapHeight, scaleFactor);
+        final int scaledMapWidth = (int) ScalingTool.scaleDimension(originalMapWidth, scaleFactor.getScaleFactor());
+        final int scaledMapHeight = (int) ScalingTool.scaleDimension(originalMapHeight, scaleFactor.getScaleFactor());
 
-        final int[] newScaledPixelArray = heightmapRasterizer.rasterizeHeightMapRGB(heightMapDescriptor, scaleFactor);
+        final int[] newScaledPixelArray = heightmapRasterizer.rasterizeHeightMapRGB(heightMapDescriptor, scaleFactor.getScaleFactor());
 
         final PixelBuffer newScaledPixelBuffer = new PixelBuffer(PixelDimension.of(scaledMapWidth, scaledMapHeight), newScaledPixelArray);
         this.setPixelBuffer(newScaledPixelBuffer);
