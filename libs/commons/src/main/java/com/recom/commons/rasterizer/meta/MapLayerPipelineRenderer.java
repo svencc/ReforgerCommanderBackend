@@ -12,7 +12,6 @@ public interface MapLayerPipelineRenderer {
     @NonNull
     LayerOrder getLayerOrder();
 
-    @NonNull
-    MapRendererPipelineArtefacts render(@NonNull final MapRendererPipelineArtefacts pipelineArtefacts) throws IOException;
+    void render(@NonNull final MapRendererPipelineArtefacts pipelineArtefacts) throws IOException;
 
 }

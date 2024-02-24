@@ -59,10 +59,8 @@ public class ShadowedMapRasterizer implements MapLayerPipelineRenderer {
     }
 
     @Override
-    public @NonNull MapRendererPipelineArtefacts render(@NonNull final MapRendererPipelineArtefacts pipelineArtefacts) throws IOException {
+    public void render(@NonNull final MapRendererPipelineArtefacts pipelineArtefacts) throws IOException {
         pipelineArtefacts.setRasterizedHeightMap(rasterizeShadowedMap(pipelineArtefacts.getDemDescriptor(), pipelineArtefacts.getMapDesignScheme()));
-
-        return pipelineArtefacts;
     }
 
 }

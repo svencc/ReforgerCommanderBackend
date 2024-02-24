@@ -57,12 +57,9 @@ public class SlopeAndAspectMapRasterizer implements MapLayerPipelineRenderer {
         return outputStream;
     }
 
-    @NonNull
     @Override
-    public MapRendererPipelineArtefacts render(@NonNull final MapRendererPipelineArtefacts pipelineArtefacts) throws IOException {
+    public void render(@NonNull final MapRendererPipelineArtefacts pipelineArtefacts) throws IOException {
         pipelineArtefacts.setRasterizedHeightMap(rasterizeSlopeAndAspectMap(pipelineArtefacts.getDemDescriptor(), pipelineArtefacts.getMapDesignScheme()));
-
-        return pipelineArtefacts;
     }
 
 }

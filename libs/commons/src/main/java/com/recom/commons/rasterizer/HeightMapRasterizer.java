@@ -90,12 +90,9 @@ public class HeightMapRasterizer implements MapLayerPipelineRenderer {
         return imageBuffer;
     }
 
-    @NonNull
     @Override
-    public MapRendererPipelineArtefacts render(@NonNull final MapRendererPipelineArtefacts pipelineArtefacts) throws IOException {
+    public void render(@NonNull final MapRendererPipelineArtefacts pipelineArtefacts) throws IOException {
         pipelineArtefacts.setRasterizedHeightMap(rasterizeHeightMapPNG(pipelineArtefacts.getDemDescriptor()));
-
-        return pipelineArtefacts;
     }
 
 }
