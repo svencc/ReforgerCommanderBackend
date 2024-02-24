@@ -1,4 +1,4 @@
-package com.recom.commander.factory;
+package com.recom.commander.configuration;
 
 import com.recom.commander.exception.exceptions.ApplicationStartupException;
 import com.recom.commander.property.user.DynamicAuthenticationProperties;
@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 @Configuration(proxyBeanMethods = false)
 @RequiredArgsConstructor
-public class DynamicPropertiesFactory {
+public class DynamicPropertiesConfiguration {
 
     @NonNull
     private final RECOMPropertyBinderService RECOMPropertyBinderService;

@@ -16,10 +16,8 @@ import com.recom.observer.Subjective;
 import com.recom.observer.TakeNoticeRunnable;
 import com.recom.tacview.engine.ecs.component.PhysicCoreComponent;
 import com.recom.tacview.engine.ecs.component.RenderableComponent;
-import com.recom.tacview.engine.input.NanoTimedEvent;
 import com.recom.tacview.property.IsEngineProperties;
 import jakarta.annotation.Nullable;
-import javafx.scene.input.ScrollEvent;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -36,34 +34,31 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
     @NonNull
     private final MapTopographyDataService mapTopographyDataService;
     @NonNull
-    private final HeightmapRasterizer heightmapRasterizer;
+    final IsEngineProperties engineProperties;
     @NonNull
-    private final IsEngineProperties engineProperties;
+    final HeightmapRasterizer heightmapRasterizer;
     @Nullable
     private final ReactiveObserver<MapOverviewDto> mapOverviewReactiveObserver;
     @Nullable
     private final ReactiveObserver<HeightMapDescriptorDto> mapTopographyDataReactiveObserver;
     @NonNull
-    private final ScaleFactor mapScaleFactor = new ScaleFactor(-5, 10);
+    final ScaleFactor mapScaleFactor = new ScaleFactor(-5, 10);
     @NonNull
-    private final RECOMUICommands recomUICommands;
-    @NonNull
-    private Optional<HeightMapDescriptor> maybeHeightMapDescriptor = Optional.empty();
+    Optional<HeightMapDescriptor> maybeHeightMapDescriptor = Optional.empty();
 
 
     public RECOMMapComponent(
             @NonNull final MapsOverviewService mapsOverviewService,
             @NonNull final MapTopographyDataService mapTopographyDataService,
-            @NonNull final HeightmapRasterizer heightmapRasterizer,
-            @NonNull final IsEngineProperties engineProperties
+            @NonNull final IsEngineProperties engineProperties,
+            @NonNull final HeightmapRasterizer heightmapRasterizer
     ) {
         super();
         this.mapsOverviewService = mapsOverviewService;
         this.mapTopographyDataService = mapTopographyDataService;
-        this.heightmapRasterizer = heightmapRasterizer;
         this.engineProperties = engineProperties;
+        this.heightmapRasterizer = heightmapRasterizer;
         this.setZIndex(0);
-        this.recomUICommands = new RECOMUICommands(this, heightmapRasterizer);
 
         mapOverviewReactiveObserver = ReactiveObserver.reactWith(onReloadMapOverviewReaction());
         mapOverviewReactiveObserver.observe(mapsOverviewService.getBufferedSubject());
@@ -100,7 +95,7 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
             final HeightMapDescriptor heightMapDescriptor = HeightMapDescriptorMapper.INSTANCE.toModel(heightMapDescriptorDto);
             maybeHeightMapDescriptor = Optional.of(heightMapDescriptor);
 
-            recomUICommands.setUnscaledMap(heightMapDescriptor);
+            RECOMUICommands.setUnscaledMap(this);
         };
     }
 
@@ -118,36 +113,6 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
         }
         if (mapTopographyDataReactiveObserver != null) {
             mapTopographyDataReactiveObserver.close();
-        }
-    }
-
-    public void zoomInByMouse(
-            @NonNull final NanoTimedEvent<ScrollEvent> nanoTimedEvent,
-            @NonNull final PhysicCoreComponent physicsCoreComponent
-    ) {
-        if (maybeHeightMapDescriptor.isPresent()) {
-            recomUICommands.zoomInByMouse(maybeHeightMapDescriptor.get(), nanoTimedEvent, physicsCoreComponent, mapScaleFactor, engineProperties);
-        }
-    }
-
-    public void zoomInByKey(@NonNull final PhysicCoreComponent physicsCoreComponent) {
-        if (maybeHeightMapDescriptor.isPresent()) {
-            recomUICommands.zoomInByKey(maybeHeightMapDescriptor.get(), physicsCoreComponent, mapScaleFactor, engineProperties);
-        }
-    }
-
-    public void zoomOutByMouse(
-            @NonNull final NanoTimedEvent<ScrollEvent> nanoTimedEvent,
-            @NonNull final PhysicCoreComponent physicsCoreComponent
-    ) {
-        if (maybeHeightMapDescriptor.isPresent()) {
-            recomUICommands.zoomOutByMouse(maybeHeightMapDescriptor.get(), nanoTimedEvent, physicsCoreComponent, mapScaleFactor, engineProperties);
-        }
-    }
-
-    public void zoomOutByKey(@NonNull final PhysicCoreComponent physicsCoreComponent) {
-        if (maybeHeightMapDescriptor.isPresent()) {
-            recomUICommands.zoomOutByKey(maybeHeightMapDescriptor.get(), physicsCoreComponent, mapScaleFactor, engineProperties);
         }
     }
 

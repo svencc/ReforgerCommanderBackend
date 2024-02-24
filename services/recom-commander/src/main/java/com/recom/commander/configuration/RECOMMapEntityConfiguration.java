@@ -3,6 +3,7 @@ package com.recom.commander.configuration;
 import com.recom.commander.enginemodule.entity.recommapentity.RECOMMapEntity;
 import com.recom.commander.enginemodule.entity.recommapentity.component.RECOMMapComponent;
 import com.recom.commander.enginemodule.entity.recommapentity.component.RECOMMapInputComponent;
+import com.recom.commander.enginemodule.entity.recommapentity.component.RECOMUICommands;
 import com.recom.tacview.engine.ecs.component.PhysicComponent;
 import com.recom.tacview.engine.ecs.component.PhysicCoreComponent;
 import lombok.NonNull;
