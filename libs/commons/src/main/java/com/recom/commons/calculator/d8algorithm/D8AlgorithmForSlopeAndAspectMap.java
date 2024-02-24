@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 public class D8AlgorithmForSlopeAndAspectMap {
 
     private final double cellSize;
-    private final Aspect[] aspects = Aspect.values();
 
 
     /**
@@ -52,7 +51,7 @@ public class D8AlgorithmForSlopeAndAspectMap {
         final double diagonalCellSize = Math.sqrt(2) * cellSize;
 
         for (int direction = 0; direction < 8; direction++) {
-            final Aspect currentAspect = aspects[direction];
+            final Aspect currentAspect = D8AspectMatrix.aspects[direction];
             final int adjacentNeighborX = x + D8AspectMatrix.directionXComponentMatrix[direction]; // Calculate the X-coordinate of the adjacent neighbor.
             final int adjacentNeighborY = y + D8AspectMatrix.directionYComponentMatrix[direction]; // Calculate the Y-coordinate of the adjacent neighbor.
 

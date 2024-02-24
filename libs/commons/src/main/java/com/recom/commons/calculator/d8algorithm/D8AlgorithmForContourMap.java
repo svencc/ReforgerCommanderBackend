@@ -16,6 +16,7 @@ public class D8AlgorithmForContourMap {
     @NonNull
     private final ARGBCalculator colorCalculator = new ARGBCalculator();
 
+
     public int[][] calculateContourMap(
             @NonNull final HeightMapDescriptor heightMapDescriptor,
             @NonNull final ReforgerMapScheme mapScheme
