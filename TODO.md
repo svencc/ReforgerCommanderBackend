@@ -5,11 +5,6 @@
   * add layer system for maps
     * add DynamicLayerProperties (configuration for RecomMapEntity) (/)
     * blend layers (<-)
-    * RECOMMapComponent:
-      * add pixelBuffer for each layer (<<<---)
-        * MapCalculator (/)
-          * getCoordinateOfMouseOnMap + getCoordinateOfCenterPositionOnMap zusammenfassen (es geht einfach die (skalierte) coordinate auf dem canvas rein?) (/)
-          * zoomIn + Out by Mouse and Key in Commands auslagern und somit den code aus der Map Komponente rausnehmen! (/)
       * render layer on top of map layer!
       * blend layers in order
       * activate / deactivate layers
@@ -24,8 +19,9 @@
   * prebuffering of zoom levels (for faster zooming) or find out what is the bottleneck
   * (add pre-click-event (preclick, click, doublecklic) events)
   * fix window stage tacview size setting onload -> issue is that window size + engine size is the same at this moment
-  * Switch map data to eclipse store!
-  * switch all data to eclipse store!
+  * eclipse store
+    * Switch map data to eclipse store!
+    * switch all data to eclipse store!
 
 
 # 1.1
