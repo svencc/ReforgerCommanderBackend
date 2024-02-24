@@ -4,7 +4,7 @@ import com.recom.entity.map.GameMap;
 import com.recom.entity.map.MapTopography;
 import com.recom.exception.HttpNotFoundException;
 import com.recom.exception.HttpUnprocessableEntityException;
-import com.recom.commons.rasterizer.HeightMapDescriptor;
+import com.recom.commons.model.HeightMapDescriptor;
 import com.recom.persistence.map.topography.MapLocatedTopographyPersistenceLayer;
 import com.recom.service.SerializationService;
 import lombok.NonNull;
@@ -26,7 +26,7 @@ public class TopographyMapDataService {
     @NonNull
     private final MapLocatedTopographyPersistenceLayer mapTopographyPersistenceLayer;
     @NonNull
-    private final HeightmapGeneratorService heightmapGeneratorService;
+    private final MapGeneratorService mapGeneratorService;
     @NonNull
     private final SerializationService serializationService;
 
@@ -41,10 +41,10 @@ public class TopographyMapDataService {
     @Transactional(readOnly = true)
     public byte[] provideTopographyPNG(@NonNull final MapTopography mapTopography) {
         try {
-            final ByteArrayOutputStream outputStream = heightmapGeneratorService.generateHeightmapPNG(mapTopography);
-            final ByteArrayOutputStream outputStreamShade = heightmapGeneratorService.generateShadeMapPNG(mapTopography);
-            final ByteArrayOutputStream outputStreamContour = heightmapGeneratorService.generateContourMapPNG(mapTopography);
-            final ByteArrayOutputStream outputStreamSlope = heightmapGeneratorService.generateSlopeMapPNG(mapTopography);
+            final ByteArrayOutputStream outputStream = mapGeneratorService.generateHeightmapPNG(mapTopography);
+            final ByteArrayOutputStream outputStreamShade = mapGeneratorService.generateShadeMapPNG(mapTopography);
+            final ByteArrayOutputStream outputStreamContour = mapGeneratorService.generateContourMapPNG(mapTopography);
+            final ByteArrayOutputStream outputStreamSlope = mapGeneratorService.generateSlopeMapPNG(mapTopography);
             final byte[] heightmapByteArray = outputStream.toByteArray();
 
             // @TODO This is for debugging purposes only; Dirty Hack to put the generated images into the file system here ...
@@ -65,7 +65,7 @@ public class TopographyMapDataService {
         return mapTopographyPersistenceLayer.findByGameMap(gameMap)
                 .map(mapTopography -> {
                     try {
-                        return heightmapGeneratorService.provideHeightmapData(mapTopography);
+                        return mapGeneratorService.provideHeightmapData(mapTopography);
                     } catch (IOException e) {
                         throw new HttpUnprocessableEntityException();
                     }

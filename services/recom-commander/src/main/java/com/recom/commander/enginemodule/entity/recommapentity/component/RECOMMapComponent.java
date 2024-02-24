@@ -4,8 +4,8 @@ import com.recom.commander.event.InitialAuthenticationEvent;
 import com.recom.commander.mapper.HeightMapDescriptorMapper;
 import com.recom.commander.service.map.overview.data.MapsOverviewService;
 import com.recom.commander.service.map.topography.data.MapTopographyDataService;
-import com.recom.commons.rasterizer.HeightMapDescriptor;
-import com.recom.commons.rasterizer.MapRasterizer;
+import com.recom.commons.model.HeightMapDescriptor;
+import com.recom.commons.rasterizer.HeightMapRasterizer;
 import com.recom.commons.units.ScaleFactor;
 import com.recom.dto.map.MapOverviewDto;
 import com.recom.dto.map.topography.HeightMapDescriptorDto;
@@ -35,7 +35,7 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
     @NonNull
     final IsEngineProperties engineProperties;
     @NonNull
-    final MapRasterizer mapRasterizer;
+    final HeightMapRasterizer heightmapRasterizer;
     @Nullable
     private final ReactiveObserver<MapOverviewDto> mapOverviewReactiveObserver;
     @Nullable
@@ -50,13 +50,13 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
             @NonNull final MapsOverviewService mapsOverviewService,
             @NonNull final MapTopographyDataService mapTopographyDataService,
             @NonNull final IsEngineProperties engineProperties,
-            @NonNull final MapRasterizer mapRasterizer
+            @NonNull final HeightMapRasterizer heightmapRasterizer
     ) {
         super();
         this.mapsOverviewService = mapsOverviewService;
         this.mapTopographyDataService = mapTopographyDataService;
         this.engineProperties = engineProperties;
-        this.mapRasterizer = mapRasterizer;
+        this.heightmapRasterizer = heightmapRasterizer;
         this.setZIndex(0);
 
         mapOverviewReactiveObserver = ReactiveObserver.reactWith(onReloadMapOverviewReaction());

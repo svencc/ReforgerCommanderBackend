@@ -1,7 +1,10 @@
 package com.recom.service.map.topography;
 
-import com.recom.commons.rasterizer.HeightMapDescriptor;
-import com.recom.commons.rasterizer.MapRasterizer;
+import com.recom.commons.model.HeightMapDescriptor;
+import com.recom.commons.rasterizer.ContourMapRasterizer;
+import com.recom.commons.rasterizer.HeightMapRasterizer;
+import com.recom.commons.rasterizer.ShadowedMapRasterizer;
+import com.recom.commons.rasterizer.SlopeMapRasterizer;
 import com.recom.entity.map.MapTopography;
 import com.recom.model.map.TopographyData;
 import com.recom.service.SerializationService;
@@ -16,17 +19,23 @@ import java.io.IOException;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class HeightmapGeneratorService {
+public class MapGeneratorService {
 
     @NonNull
     private final SerializationService serializationService;
     @NonNull
-    private final MapRasterizer mapRasterizer;
+    private final HeightMapRasterizer heightMapRasterizer;
+    @NonNull
+    private final ShadowedMapRasterizer shadowedMapRasterizer;
+    @NonNull
+    private final ContourMapRasterizer contourMapRasterizer;
+    @NonNull
+    private final SlopeMapRasterizer slopeMapRasterizer;
 
 
     @NonNull
     public ByteArrayOutputStream generateHeightmapPNG(@NonNull final MapTopography mapTopography) throws IOException {
-        return mapRasterizer.rasterizeHeightMapPNG(provideHeightmapData(mapTopography));
+        return heightMapRasterizer.rasterizeHeightMapPNG(provideHeightmapData(mapTopography));
     }
 
     @NonNull
@@ -85,7 +94,7 @@ public class HeightmapGeneratorService {
     @NonNull
     public ByteArrayOutputStream generateShadeMapPNG(@NonNull final MapTopography mapTopography) {
         try {
-            return mapRasterizer.rasterizeShadeMap(provideHeightmapData(mapTopography));
+            return shadowedMapRasterizer.rasterizeShadeMap(provideHeightmapData(mapTopography));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -94,7 +103,7 @@ public class HeightmapGeneratorService {
     @NonNull
     public ByteArrayOutputStream generateContourMapPNG(@NonNull final MapTopography mapTopography) {
         try {
-            return mapRasterizer.rasterizeContourMap(provideHeightmapData(mapTopography));
+            return contourMapRasterizer.rasterizeContourMap(provideHeightmapData(mapTopography));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -103,7 +112,7 @@ public class HeightmapGeneratorService {
     @NonNull
     public ByteArrayOutputStream generateSlopeMapPNG(@NonNull final MapTopography mapTopography) {
         try {
-            return mapRasterizer.rasterizeSlopeMap(provideHeightmapData(mapTopography));
+            return slopeMapRasterizer.rasterizeSlopeMap(provideHeightmapData(mapTopography));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

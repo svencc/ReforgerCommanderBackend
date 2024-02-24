@@ -2,7 +2,7 @@ package com.recom.commons.calculator.d8algorithm;
 
 
 import com.recom.commons.calculator.ARGBCalculator;
-import com.recom.commons.rasterizer.HeightMapDescriptor;
+import com.recom.commons.model.HeightMapDescriptor;
 import com.recom.commons.rasterizer.mapcolorscheme.ReforgerMapScheme;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

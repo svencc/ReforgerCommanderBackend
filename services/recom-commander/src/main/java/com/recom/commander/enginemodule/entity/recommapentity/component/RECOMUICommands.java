@@ -1,7 +1,7 @@
 package com.recom.commander.enginemodule.entity.recommapentity.component;
 
 import com.recom.commander.util.MapUICalculator;
-import com.recom.commons.rasterizer.HeightMapDescriptor;
+import com.recom.commons.model.HeightMapDescriptor;
 import com.recom.commons.units.PixelCoordinate;
 import com.recom.commons.units.PixelDimension;
 import com.recom.commons.units.ScaleFactor;
@@ -30,7 +30,7 @@ public class RECOMUICommands {
             final int mapWidth = heightMapDescriptor.getHeightMap().length;
             final int mapHeight = heightMapDescriptor.getHeightMap()[0].length;
 
-            final int[] pixelBufferArray = mapComponent.mapRasterizer.rasterizeHeightMapRGB(heightMapDescriptor);
+            final int[] pixelBufferArray = mapComponent.heightmapRasterizer.rasterizeHeightMapRGB(heightMapDescriptor);
 
             final PixelBuffer newPixelBuffer = new PixelBuffer(PixelDimension.of(mapWidth, mapHeight), pixelBufferArray);
             mapComponent.setPixelBuffer(newPixelBuffer);
@@ -47,7 +47,7 @@ public class RECOMUICommands {
             final int scaledMapWidth = (int) ScalingTool.scaleDimension(originalMapWidth, mapComponent.mapScaleFactor.getScaleFactor());
             final int scaledMapHeight = (int) ScalingTool.scaleDimension(originalMapHeight, mapComponent.mapScaleFactor.getScaleFactor());
 
-            final int[] newScaledPixelArray = mapComponent.mapRasterizer.rasterizeHeightMapRGB(heightMapDescriptor, mapComponent.mapScaleFactor.getScaleFactor());
+            final int[] newScaledPixelArray = mapComponent.heightmapRasterizer.rasterizeHeightMapRGB(heightMapDescriptor, mapComponent.mapScaleFactor.getScaleFactor());
 
             final PixelBuffer newScaledPixelBuffer = new PixelBuffer(PixelDimension.of(scaledMapWidth, scaledMapHeight), newScaledPixelArray);
             mapComponent.setPixelBuffer(newScaledPixelBuffer);

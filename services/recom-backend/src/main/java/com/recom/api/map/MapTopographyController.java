@@ -6,7 +6,7 @@ import com.recom.dto.map.topography.MapTopographyRequestDto;
 import com.recom.entity.map.GameMap;
 import com.recom.exception.HttpNotFoundException;
 import com.recom.mapper.HeightMapDescriptorMapper;
-import com.recom.commons.rasterizer.HeightMapDescriptor;
+import com.recom.commons.model.HeightMapDescriptor;
 import com.recom.security.account.RECOMAccount;
 import com.recom.security.account.RECOMAuthorities;
 import com.recom.service.AssertionService;

@@ -1,6 +1,7 @@
 package com.recom.commons.rasterizer;
 
 import com.recom.commons.calculator.ARGBCalculator;
+import com.recom.commons.model.HeightMapDescriptor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 

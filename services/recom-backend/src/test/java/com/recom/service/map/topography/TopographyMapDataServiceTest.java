@@ -24,7 +24,7 @@ class TopographyMapDataServiceTest {
     @Mock
     private MapLocatedTopographyPersistenceLayer mapTopographyPersistenceLayer;
     @Mock
-    private HeightmapGeneratorService heightmapGeneratorService;
+    private MapGeneratorService mapGeneratorService;
     @Mock
     private SerializationService serializationService;
     @InjectMocks
@@ -48,9 +48,9 @@ class TopographyMapDataServiceTest {
         byteOutputStream.write(bytes);
         byteOutputStream2.write(bytes);
         byteOutputStream3.write(bytes);
-        when(heightmapGeneratorService.generateHeightmapPNG(eq(mapTopography))).thenReturn(byteOutputStream);
-        when(heightmapGeneratorService.generateShadeMapPNG(eq(mapTopography))).thenReturn(byteOutputStream2);
-        when(heightmapGeneratorService.generateContourMapPNG(eq(mapTopography))).thenReturn(byteOutputStream3);
+        when(mapGeneratorService.generateHeightmapPNG(eq(mapTopography))).thenReturn(byteOutputStream);
+        when(mapGeneratorService.generateShadeMapPNG(eq(mapTopography))).thenReturn(byteOutputStream2);
+        when(mapGeneratorService.generateContourMapPNG(eq(mapTopography))).thenReturn(byteOutputStream3);
 
         // Act
         final byte[] bytesToTest = serviceUnderTest.provideTopographyPNG(gameMap);
@@ -73,9 +73,9 @@ class TopographyMapDataServiceTest {
         byteOutputStream.write(bytes);
         byteOutputStream2.write(bytes);
         byteOutputStream3.write(bytes);
-        when(heightmapGeneratorService.generateHeightmapPNG(eq(mapTopography))).thenReturn(byteOutputStream);
-        when(heightmapGeneratorService.generateShadeMapPNG(eq(mapTopography))).thenReturn(byteOutputStream2);
-        when(heightmapGeneratorService.generateContourMapPNG(eq(mapTopography))).thenReturn(byteOutputStream3);
+        when(mapGeneratorService.generateHeightmapPNG(eq(mapTopography))).thenReturn(byteOutputStream);
+        when(mapGeneratorService.generateShadeMapPNG(eq(mapTopography))).thenReturn(byteOutputStream2);
+        when(mapGeneratorService.generateContourMapPNG(eq(mapTopography))).thenReturn(byteOutputStream3);
 
         // Act
         final byte[] bytesToTest = serviceUnderTest.provideTopographyPNG(mapTopography);

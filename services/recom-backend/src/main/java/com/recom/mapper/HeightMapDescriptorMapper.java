@@ -1,7 +1,7 @@
 package com.recom.mapper;
 
 import com.recom.dto.map.topography.HeightMapDescriptorDto;
-import com.recom.commons.rasterizer.HeightMapDescriptor;
+import com.recom.commons.model.HeightMapDescriptor;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
