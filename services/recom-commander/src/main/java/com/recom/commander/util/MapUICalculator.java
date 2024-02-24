@@ -27,7 +27,7 @@ public class MapUICalculator {
     }
 
     @NonNull
-    public PixelCoordinate getNormalizedCoordinateOnCanvas(@NonNull final IsEngineProperties engineProperties) {
+    public PixelCoordinate getNormalizedCenterCoordinateOnCanvas(@NonNull final IsEngineProperties engineProperties) {
         return PixelCoordinate.of(
                 MapUICalculator.applyRenderScale(engineProperties.getRendererWidth() / 2, engineProperties),
                 MapUICalculator.applyRenderScale(engineProperties.getRendererHeight() / 2, engineProperties)

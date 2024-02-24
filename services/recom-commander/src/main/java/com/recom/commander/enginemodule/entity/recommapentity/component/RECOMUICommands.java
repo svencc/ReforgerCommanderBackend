@@ -60,7 +60,7 @@ public class RECOMUICommands {
             @NonNull final RECOMMapComponent mapComponent,
             @NonNull final PhysicCoreComponent physicsCoreComponent
     ) {
-        final PixelCoordinate pointerCoordinateOnCanvas = MapUICalculator.getNormalizedCoordinateOnCanvas(mapComponent.engineProperties);
+        final PixelCoordinate pointerCoordinateOnCanvas = MapUICalculator.getNormalizedCenterCoordinateOnCanvas(mapComponent.engineProperties);
         zoomInByCoordinate(pointerCoordinateOnCanvas, mapComponent, physicsCoreComponent);
     }
 
@@ -99,7 +99,7 @@ public class RECOMUICommands {
             @NonNull final RECOMMapComponent mapComponent,
             @NonNull final PhysicCoreComponent physicsCoreComponent
     ) {
-        final PixelCoordinate pointerCoordinateOnCanvas = MapUICalculator.getNormalizedCoordinateOnCanvas(mapComponent.engineProperties);
+        final PixelCoordinate pointerCoordinateOnCanvas = MapUICalculator.getNormalizedCenterCoordinateOnCanvas(mapComponent.engineProperties);
         zoomOutByCoordinate(pointerCoordinateOnCanvas, mapComponent, physicsCoreComponent);
     }
 
