@@ -5,7 +5,7 @@ import com.recom.commander.mapper.HeightMapDescriptorMapper;
 import com.recom.commander.service.map.overview.data.MapsOverviewService;
 import com.recom.commander.service.map.topography.data.MapTopographyDataService;
 import com.recom.commons.rasterizer.HeightMapDescriptor;
-import com.recom.commons.rasterizer.HeightmapRasterizer;
+import com.recom.commons.rasterizer.MapRasterizer;
 import com.recom.commons.units.ScaleFactor;
 import com.recom.dto.map.MapOverviewDto;
 import com.recom.dto.map.topography.HeightMapDescriptorDto;
@@ -14,7 +14,6 @@ import com.recom.observer.Notification;
 import com.recom.observer.ReactiveObserver;
 import com.recom.observer.Subjective;
 import com.recom.observer.TakeNoticeRunnable;
-import com.recom.tacview.engine.ecs.component.PhysicCoreComponent;
 import com.recom.tacview.engine.ecs.component.RenderableComponent;
 import com.recom.tacview.property.IsEngineProperties;
 import jakarta.annotation.Nullable;
@@ -36,7 +35,7 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
     @NonNull
     final IsEngineProperties engineProperties;
     @NonNull
-    final HeightmapRasterizer heightmapRasterizer;
+    final MapRasterizer mapRasterizer;
     @Nullable
     private final ReactiveObserver<MapOverviewDto> mapOverviewReactiveObserver;
     @Nullable
@@ -51,13 +50,13 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
             @NonNull final MapsOverviewService mapsOverviewService,
             @NonNull final MapTopographyDataService mapTopographyDataService,
             @NonNull final IsEngineProperties engineProperties,
-            @NonNull final HeightmapRasterizer heightmapRasterizer
+            @NonNull final MapRasterizer mapRasterizer
     ) {
         super();
         this.mapsOverviewService = mapsOverviewService;
         this.mapTopographyDataService = mapTopographyDataService;
         this.engineProperties = engineProperties;
-        this.heightmapRasterizer = heightmapRasterizer;
+        this.mapRasterizer = mapRasterizer;
         this.setZIndex(0);
 
         mapOverviewReactiveObserver = ReactiveObserver.reactWith(onReloadMapOverviewReaction());

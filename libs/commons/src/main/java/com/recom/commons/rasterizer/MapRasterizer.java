@@ -1,6 +1,9 @@
 package com.recom.commons.rasterizer;
 
-import com.recom.commons.calculator.D8CalculatorForSlopeAndAspectMaps;
+import com.recom.commons.calculator.d8algorithm.D8AlgorithmForContourMap;
+import com.recom.commons.calculator.d8algorithm.D8AlgorithmForShadedMap;
+import com.recom.commons.calculator.d8algorithm.D8AlgorithmForSlopeAndAspectMap;
+import com.recom.commons.calculator.d8algorithm.D8AlgorithmForSlopeMap;
 import com.recom.commons.model.SlopeAndAspect;
 import com.recom.commons.rasterizer.mapcolorscheme.ReforgerMapScheme;
 import lombok.NonNull;
@@ -13,12 +16,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 
-public class HeightmapRasterizer {
+public class MapRasterizer {
 
     @NonNull
     private final HeightmapScaler heightmapScaler;
 
-    public HeightmapRasterizer() {
+
+    public MapRasterizer() {
         heightmapScaler = new HeightmapScaler();
     }
 
@@ -82,7 +86,6 @@ public class HeightmapRasterizer {
         return heightmapScaler.scaleMap(heightMapDescriptor, scale, originalHeightMap);
     }
 
-
     /*
      * DIRTY HACK TO visualize new shaded map
      */
@@ -90,10 +93,11 @@ public class HeightmapRasterizer {
     public ByteArrayOutputStream rasterizeShadeMap(@NonNull final HeightMapDescriptor heightMapDescriptor) {
         final ReforgerMapScheme mapScheme = new ReforgerMapScheme();
         final float[][] dem = heightMapDescriptor.getHeightMap(); // @TODO rename heightMap to dem
-        final D8CalculatorForSlopeAndAspectMaps algorithm = new D8CalculatorForSlopeAndAspectMaps(5.0);
+        final D8AlgorithmForSlopeAndAspectMap slopeAndAspectAlgorithm = new D8AlgorithmForSlopeAndAspectMap(5.0);
+        final D8AlgorithmForShadedMap shadedMapAlgorithm = new D8AlgorithmForShadedMap();
 
-        final SlopeAndAspect[][] slopeAndAspects = algorithm.calculateSlopeAndAspectMap(dem);
-        final int[][] shadedMap = algorithm.calculateShadedMap(slopeAndAspects, mapScheme);
+        final SlopeAndAspect[][] slopeAndAspects = slopeAndAspectAlgorithm.calculateSlopeAndAspectMap(dem);
+        final int[][] shadedMap = shadedMapAlgorithm.calculateShadedMap(slopeAndAspects, mapScheme);
 
 
         final int width = heightMapDescriptor.getHeightMap().length;
@@ -128,10 +132,9 @@ public class HeightmapRasterizer {
     @NonNull
     public ByteArrayOutputStream rasterizeContourMap(@NonNull final HeightMapDescriptor heightMapDescriptor) {
         final ReforgerMapScheme mapScheme = new ReforgerMapScheme();
-        final D8CalculatorForSlopeAndAspectMaps algorithm = new D8CalculatorForSlopeAndAspectMaps(5.0);
+        final D8AlgorithmForContourMap algorithmForContourMap = new D8AlgorithmForContourMap();
 
-        final int[][] contourMap = algorithm.calculateContourMap(heightMapDescriptor, mapScheme);
-
+        final int[][] contourMap = algorithmForContourMap.calculateContourMap(heightMapDescriptor, mapScheme);
 
         final int width = heightMapDescriptor.getHeightMap().length;
         final int height = heightMapDescriptor.getHeightMap()[0].length;
@@ -142,7 +145,6 @@ public class HeightmapRasterizer {
                 pixelBuffer[x + z * width] = contourMap[x][z];
             }
         }
-
 
         final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
@@ -165,10 +167,11 @@ public class HeightmapRasterizer {
     @NonNull
     public ByteArrayOutputStream rasterizeSlopeMap(@NonNull final HeightMapDescriptor heightMapDescriptor) {
         final ReforgerMapScheme mapScheme = new ReforgerMapScheme();
-        final D8CalculatorForSlopeAndAspectMaps algorithm = new D8CalculatorForSlopeAndAspectMaps(5.0);
+        final D8AlgorithmForSlopeAndAspectMap algorithmForSlopeAndAspect = new D8AlgorithmForSlopeAndAspectMap(5.0);
+        final D8AlgorithmForSlopeMap d8AlgorithmForSlopeMap = new D8AlgorithmForSlopeMap();
 
-        final SlopeAndAspect[][] slopeAndAspects = algorithm.calculateSlopeAndAspectMap(heightMapDescriptor.getHeightMap());
-        final int[][] contourMap = algorithm.extractSlopeMap(slopeAndAspects, mapScheme);
+        final SlopeAndAspect[][] slopeAndAspects = algorithmForSlopeAndAspect.calculateSlopeAndAspectMap(heightMapDescriptor.getHeightMap());
+        final int[][] contourMap = d8AlgorithmForSlopeMap.extractSlopeMap(slopeAndAspects, mapScheme);
 
         final int width = heightMapDescriptor.getHeightMap().length;
         final int height = heightMapDescriptor.getHeightMap()[0].length;
@@ -179,7 +182,6 @@ public class HeightmapRasterizer {
                 pixelBuffer[x + z * width] = contourMap[x][z];
             }
         }
-
 
         final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
@@ -195,4 +197,5 @@ public class HeightmapRasterizer {
 
         return outputStream;
     }
+
 }

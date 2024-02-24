@@ -1,7 +1,7 @@
 package com.recom.service.map.topography;
 
 import com.recom.commons.rasterizer.HeightMapDescriptor;
-import com.recom.commons.rasterizer.HeightmapRasterizer;
+import com.recom.commons.rasterizer.MapRasterizer;
 import com.recom.entity.map.MapTopography;
 import com.recom.model.map.TopographyData;
 import com.recom.service.SerializationService;
@@ -21,12 +21,12 @@ public class HeightmapGeneratorService {
     @NonNull
     private final SerializationService serializationService;
     @NonNull
-    private final HeightmapRasterizer heightmapRasterizer;
+    private final MapRasterizer mapRasterizer;
 
 
     @NonNull
     public ByteArrayOutputStream generateHeightmapPNG(@NonNull final MapTopography mapTopography) throws IOException {
-        return heightmapRasterizer.rasterizeHeightMapPNG(provideHeightmapData(mapTopography));
+        return mapRasterizer.rasterizeHeightMapPNG(provideHeightmapData(mapTopography));
     }
 
     @NonNull
@@ -85,7 +85,7 @@ public class HeightmapGeneratorService {
     @NonNull
     public ByteArrayOutputStream generateShadeMapPNG(@NonNull final MapTopography mapTopography) {
         try {
-            return heightmapRasterizer.rasterizeShadeMap(provideHeightmapData(mapTopography));
+            return mapRasterizer.rasterizeShadeMap(provideHeightmapData(mapTopography));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -94,7 +94,7 @@ public class HeightmapGeneratorService {
     @NonNull
     public ByteArrayOutputStream generateContourMapPNG(@NonNull final MapTopography mapTopography) {
         try {
-            return heightmapRasterizer.rasterizeContourMap(provideHeightmapData(mapTopography));
+            return mapRasterizer.rasterizeContourMap(provideHeightmapData(mapTopography));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -103,7 +103,7 @@ public class HeightmapGeneratorService {
     @NonNull
     public ByteArrayOutputStream generateSlopeMapPNG(@NonNull final MapTopography mapTopography) {
         try {
-            return heightmapRasterizer.rasterizeSlopeMap(provideHeightmapData(mapTopography));
+            return mapRasterizer.rasterizeSlopeMap(provideHeightmapData(mapTopography));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

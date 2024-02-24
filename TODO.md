@@ -5,7 +5,7 @@
   * add layer system for maps (<-)
     * add DynamicLayerProperties (configuration for RecomMapEntity) (/)
     * blend layers (<-)
-      * render layers transparently
+      * render layers transparently (<-)
       * add function to blend pixel with given alpha modifier?
       * blend layers in order
       * activate / deactivate layers
