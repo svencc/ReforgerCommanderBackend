@@ -91,4 +91,14 @@ public class MapUICalculator {
         return dimension / (double) engineProperties.getRendererScale();
     }
 
+    public void setNewZoomedMapPosition(
+            @NonNull final PixelCoordinate pointerCoordinateOnCanvas,
+            @NonNull final PixelCoordinate normalizedCoordinateOnMap,
+            @NonNull final ScaleFactor mapScale,
+            @NonNull final PhysicCoreComponent physicsCoreComponent
+    ) {
+        final PixelCoordinate scaledMapCoordinate = normalizedCoordinateOnMap.scaled(mapScale.getScaleFactor());
+        physicsCoreComponent.setPositionX(-scaledMapCoordinate.getX() + pointerCoordinateOnCanvas.getX());
+        physicsCoreComponent.setPositionY(-scaledMapCoordinate.getY() + pointerCoordinateOnCanvas.getY());
+    }
 }
