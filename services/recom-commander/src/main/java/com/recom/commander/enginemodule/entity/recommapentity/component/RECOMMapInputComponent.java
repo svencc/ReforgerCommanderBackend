@@ -12,6 +12,7 @@ import com.recom.tacview.engine.input.command.scroll.ScrollCommand;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.ScrollEvent;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class RECOMMapInputComponent extends InputComponent {
 
     private static final float MOVING_FORCE = 140f;
@@ -50,9 +52,9 @@ public class RECOMMapInputComponent extends InputComponent {
                 } else if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.DOWN)) {
                     physicsCoreComponent.addVelocityYComponent(-MOVING_FORCE);
                 } else if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.ADD) && keyboardCommand.isButtonReleased()) {
-                    locateRecomMapComponent().ifPresent((mapComponent) -> mapComponent.zoomInByKey(physicsCoreComponent));
+                    locateRecomMapComponent().ifPresent((mapComponent) -> RECOMUICommands.zoomInByKey(mapComponent, physicsCoreComponent));
                 } else if (keyboardCommand.getNanoTimedEvent().getEvent().getCode().equals(KeyCode.SUBTRACT) && keyboardCommand.isButtonReleased()) {
-                    locateRecomMapComponent().ifPresent((mapComponent) -> mapComponent.zoomOutByKey(physicsCoreComponent));
+                    locateRecomMapComponent().ifPresent((mapComponent) -> RECOMUICommands.zoomOutByKey(mapComponent, physicsCoreComponent));
                 }
             });
         }
@@ -62,9 +64,9 @@ public class RECOMMapInputComponent extends InputComponent {
         if (this.getMaybeEntity().isPresent()) {
             this.getMaybeEntity().get().<PhysicCoreComponent>locateComponent(ComponentType.PhysicsCoreComponent).ifPresent(physicsCoreComponent -> {
                 if (scrollCommand.getNanoTimedEvent().getEvent().getDeltaY() > 0) {
-                    locateRecomMapComponent().ifPresent((mapComponent) -> mapComponent.zoomInByMouse(scrollCommand.getNanoTimedEvent(), physicsCoreComponent));
+                    locateRecomMapComponent().ifPresent((mapComponent) -> RECOMUICommands.zoomInByMouse(scrollCommand.getNanoTimedEvent(), mapComponent, physicsCoreComponent));
                 } else if (scrollCommand.getNanoTimedEvent().getEvent().getDeltaY() < 0) {
-                    locateRecomMapComponent().ifPresent((mapComponent) -> mapComponent.zoomOutByMouse(scrollCommand.getNanoTimedEvent(), physicsCoreComponent));
+                    locateRecomMapComponent().ifPresent((mapComponent) -> RECOMUICommands.zoomOutByMouse(scrollCommand.getNanoTimedEvent(), mapComponent, physicsCoreComponent));
                 }
             });
         }

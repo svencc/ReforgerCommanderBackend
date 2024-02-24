@@ -30,8 +30,8 @@ public class DynamicHostProperties extends ObservableDynamicUserProperties<Dynam
     private String hostname = "localhost";
     @Builder.Default
     private String port = "8080";
-    @Builder.Default
-    private Duration duration = Duration.ofSeconds(10);
+//    @Builder.Default
+//    private Duration duration = Duration.ofSeconds(10);
 
     public String getHostBasePath() {
         return protocol + "://" + hostname + ":" + port;

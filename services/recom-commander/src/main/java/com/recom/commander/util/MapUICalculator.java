@@ -13,41 +13,38 @@ import lombok.experimental.UtilityClass;
 
 
 @UtilityClass
-public class MapCalculator {
+public class MapUICalculator {
 
     @NonNull
-    public PixelCoordinate getCoordinateOfMouseOnMap(
+    public PixelCoordinate getNormalizedMouseCoordinateOnCanvas(
             @NonNull final NanoTimedEvent<ScrollEvent> nanoTimedEvent,
-            @NonNull final PhysicCoreComponent physicsCoreComponent,
-            @NonNull final ScaleFactor scaleFactor,
             @NonNull final IsEngineProperties engineProperties
     ) {
-        final double originX = physicsCoreComponent.getPositionX();
-        final double originY = physicsCoreComponent.getPositionY();
-
-        final double mouseOnNormalizedCanvasX = applyRenderScale(nanoTimedEvent.getEvent().getSceneX(), engineProperties);
-        final double mouseOnNormalizedCanvasY = applyRenderScale(nanoTimedEvent.getEvent().getSceneY(), engineProperties);
-
-        final int scaledMousePositionOnScaledMapX = (int) (-1 * originX + mouseOnNormalizedCanvasX);
-        final int scaledMousePositionOnScaledMapY = (int) (-1 * originY + mouseOnNormalizedCanvasY);
-
-        final int normalizedMousePositionOnNormalizedMapX = Round.halfUp(ScalingTool.normalizeDimension(scaledMousePositionOnScaledMapX, scaleFactor.getScaleFactor()));
-        final int normalizedMousePositionOnNormalizedMapY = Round.halfUp(ScalingTool.normalizeDimension(scaledMousePositionOnScaledMapY, scaleFactor.getScaleFactor()));
-
-        return PixelCoordinate.of(normalizedMousePositionOnNormalizedMapX, normalizedMousePositionOnNormalizedMapY);
+        return PixelCoordinate.of(
+                MapUICalculator.applyRenderScale(nanoTimedEvent.getEvent().getSceneX(), engineProperties),
+                MapUICalculator.applyRenderScale(nanoTimedEvent.getEvent().getSceneY(), engineProperties)
+        );
     }
 
     @NonNull
-    public PixelCoordinate getCoordinateOfCenterPositionOnMap(
-            @NonNull final PixelCoordinate centerPosition,
+    public PixelCoordinate getNormalizedCenterCoordinateOnCanvas(@NonNull final IsEngineProperties engineProperties) {
+        return PixelCoordinate.of(
+                MapUICalculator.applyRenderScale(engineProperties.getRendererWidth() / 2, engineProperties),
+                MapUICalculator.applyRenderScale(engineProperties.getRendererHeight() / 2, engineProperties)
+        );
+    }
+
+    @NonNull
+    public PixelCoordinate getNormalizedMapCoordinate(
+            @NonNull final PixelCoordinate normalizedPointerPosition,
             @NonNull final PhysicCoreComponent physicsCoreComponent,
             @NonNull final ScaleFactor scaleFactor
     ) {
         final double originX = physicsCoreComponent.getPositionX();
         final double originY = physicsCoreComponent.getPositionY();
 
-        final double positionOnNormalizedCanvasX = centerPosition.getX();
-        final double positionOnNormalizedCanvasY = centerPosition.getY();
+        final double positionOnNormalizedCanvasX = normalizedPointerPosition.getX();
+        final double positionOnNormalizedCanvasY = normalizedPointerPosition.getY();
 
         final int scaledCenterPositionOnScaledMapX = (int) (-1 * originX + positionOnNormalizedCanvasX);
         final int scaledCenterPositionOnScaledMapY = (int) (-1 * originY + positionOnNormalizedCanvasY);
