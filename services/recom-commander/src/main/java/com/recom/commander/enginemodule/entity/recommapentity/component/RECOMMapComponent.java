@@ -106,18 +106,6 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
         };
     }
 
-    private void setMap(@NonNull final HeightMapDescriptor heightMapDescriptor) {
-        final int mapWidth = heightMapDescriptor.getHeightMap().length;
-        final int mapHeight = heightMapDescriptor.getHeightMap()[0].length;
-
-        final int[] pixelBufferArray = heightmapRasterizer.rasterizeHeightMapRGB(heightMapDescriptor);
-
-        final PixelBuffer newPixelBuffer = new PixelBuffer(PixelDimension.of(mapWidth, mapHeight), pixelBufferArray);
-        this.setPixelBuffer(newPixelBuffer);
-
-        propagateDirtyStateToParent();
-    }
-
     @EventListener(InitialAuthenticationEvent.class)
     public void onInitialAuthentication(@NonNull final InitialAuthenticationEvent event) {
         // start chain reaction; begin with loading map overview
@@ -135,6 +123,33 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
         }
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // @TODO -> Command
+    private void setMap(@NonNull final HeightMapDescriptor heightMapDescriptor) {
+        final int mapWidth = heightMapDescriptor.getHeightMap().length;
+        final int mapHeight = heightMapDescriptor.getHeightMap()[0].length;
+
+        final int[] pixelBufferArray = heightmapRasterizer.rasterizeHeightMapRGB(heightMapDescriptor);
+
+        final PixelBuffer newPixelBuffer = new PixelBuffer(PixelDimension.of(mapWidth, mapHeight), pixelBufferArray);
+        this.setPixelBuffer(newPixelBuffer);
+
+        propagateDirtyStateToParent();
+    }
+
+    // @TODO -> Command
     public void zoomInByMouse(
             @NonNull final NanoTimedEvent<ScrollEvent> nanoTimedEvent,
             @NonNull final PhysicCoreComponent physicsCoreComponent
@@ -159,6 +174,7 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
         }
     }
 
+    // @TODO -> Command
     public void zoomInByKey(@NonNull final PhysicCoreComponent physicsCoreComponent) {
         if (maybeHeightMapDescriptor.isPresent()) {
             final PixelCoordinate centerCoordinateOnCanvas = PixelCoordinate.of(
@@ -180,6 +196,7 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
         }
     }
 
+    // @TODO -> Command
     private void setScaledMap(
             @NonNull HeightMapDescriptor heightMapDescriptor,
             final int scaleFactor
@@ -198,6 +215,7 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
         propagateDirtyStateToParent();
     }
 
+    // @TODO -> Command
     public void zoomOutByMouse(
             @NonNull final NanoTimedEvent<ScrollEvent> nanoTimedEvent,
             @NonNull final PhysicCoreComponent physicsCoreComponent
@@ -222,6 +240,7 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
         }
     }
 
+    // @TODO -> Command
     public void zoomOutByKey(@NonNull final PhysicCoreComponent physicsCoreComponent) {
         if (maybeHeightMapDescriptor.isPresent()) {
             final PixelCoordinate centerCoordinateOnCanvas = PixelCoordinate.of(

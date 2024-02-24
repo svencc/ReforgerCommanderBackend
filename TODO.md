@@ -5,7 +5,11 @@
   * add layer system for maps
     * add DynamicLayerProperties (configuration for RecomMapEntity) (/)
     * blend layers (<-)
-      * add pixelBuffer for each layer
+    * RECOMMapComponent:
+      * add pixelBuffer for each layer (<<<---)
+        * MapCalculator
+          * getCoordinateOfMouseOnMap + getCoordinateOfCenterPositionOnMap zusammenfassen (es geht einfach die (skalierte) coordinate auf dem canvas rein?)
+          * zoomIn + Out by Mouse and Key in Commands auslagern und somit den code aus der Map Komponente rausnehmen!
       * render layer on top of map layer!
       * blend layers in order
       * activate / deactivate layers
@@ -14,17 +18,14 @@
 * interpolate base map to 1pixel = 1meter resolution
   * so 5m scaled map is upscaled to 1m resolution
   * use bilinear interpolation
-* 
 
-MapCalculator
-  getCoordinateOfMouseOnMap + getCoordinateOfCenterPositionOnMap zusammenfassen (es geht einfach die (skalierte) coordinate auf dem canvas rein?)
-  zoomIn + Out by Mouse and Key in Commands auslagern und somit den code aus der Map Komponente rausnehmen!
 
 * known issues or optimizations:
   * prebuffering of zoom levels (for faster zooming) or find out what is the bottleneck
   * (add pre-click-event (preclick, click, doublecklic) events)
   * fix window stage tacview size setting onload -> issue is that window size + engine size is the same at this moment
-
+  * Switch map data to eclipse store!
+  * switch all data to eclipse store!
 
 
 # 1.1

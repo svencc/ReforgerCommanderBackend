@@ -4,7 +4,6 @@ import com.recom.commander.RecomCommanderApplication;
 import com.recom.dynamicproperties.ObservableDynamicUserProperties;
 import lombok.*;
 
-import java.time.Duration;
 
 @Data
 @Builder
