@@ -31,8 +31,8 @@ public class ContourMapRasterizer implements MapLayerPipelineRenderer {
 
         final int[][] contourMap = algorithmForContourMap.generateContourMap(DEMDescriptor, mapScheme);
 
-        final int width = DEMDescriptor.getDem().length;
-        final int height = DEMDescriptor.getDem()[0].length;
+        final int width = DEMDescriptor.getDemWidth();
+        final int height = DEMDescriptor.getDemHeight();
 
         final int[] pixelBuffer = new int[width * height];
         for (int x = 0; x < width; x++) {

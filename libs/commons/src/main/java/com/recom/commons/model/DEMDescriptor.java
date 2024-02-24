@@ -22,4 +22,12 @@ public class DEMDescriptor {
     private Float maxHeight;
     private float[][] dem;
 
+    public int getDemWidth() {
+        return dem.length;
+    }
+
+    public int getDemHeight() {
+        return dem[0].length;
+    }
+
 }

@@ -43,8 +43,8 @@ public class HeightMapRasterizer implements MapLayerPipelineRenderer {
     public ByteArrayOutputStream rasterizeHeightMapPNG(@NonNull final DEMDescriptor DEMDescriptor) throws IOException {
         final int[] pixelBuffer = rasterizeScaledHeightMapRGB(DEMDescriptor);
 
-        final int width = DEMDescriptor.getDem().length;
-        final int height = DEMDescriptor.getDem()[0].length;
+        final int width = DEMDescriptor.getDemWidth();
+        final int height = DEMDescriptor.getDemHeight();
         final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
         final int[] imagePixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
