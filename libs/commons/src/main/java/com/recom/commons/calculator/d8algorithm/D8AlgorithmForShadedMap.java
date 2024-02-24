@@ -16,7 +16,7 @@ public class D8AlgorithmForShadedMap {
     private final ARGBCalculator colorCalculator = new ARGBCalculator();
 
 
-    public int[][] calculateShadedMap(
+    public int[][] generateShadedMap(
             @NonNull final SlopeAndAspect[][] slopeAndAspectMap,
             @NonNull final MapShadowingScheme shadowingScheme
     ) {

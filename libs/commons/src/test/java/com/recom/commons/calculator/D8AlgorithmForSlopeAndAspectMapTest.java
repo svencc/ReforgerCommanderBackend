@@ -36,7 +36,7 @@ class D8AlgorithmForSlopeAndAspectMapTest {
         };
 
         // ACT
-        final SlopeAndAspect[][] slopeAndAspectsToTest = algorithm.calculateSlopeAndAspectMap(dem);
+        final SlopeAndAspect[][] slopeAndAspectsToTest = algorithm.generateSlopeAndAspectMap(dem);
 
         // ASSERT
         for (int x = 0; x < dem.length; x++) {

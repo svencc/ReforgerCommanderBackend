@@ -23,9 +23,9 @@ class D8AlgorithmForShadedMapTest {
         };
 
         // ACT
-        final SlopeAndAspect[][] slopeAndAspectsMap = slopeAndAspectAlgorithm.calculateSlopeAndAspectMap(dem);
-        shadedMapAlgorithm.calculateShadedMap(slopeAndAspectsMap, new ReforgerMapScheme());
-        int[][] shadedMapToTest = shadedMapAlgorithm.calculateShadedMap(slopeAndAspectsMap, mapScheme);
+        final SlopeAndAspect[][] slopeAndAspectsMap = slopeAndAspectAlgorithm.generateSlopeAndAspectMap(dem);
+        shadedMapAlgorithm.generateShadedMap(slopeAndAspectsMap, new ReforgerMapScheme());
+        int[][] shadedMapToTest = shadedMapAlgorithm.generateShadedMap(slopeAndAspectsMap, mapScheme);
 
         // ASSERT
         for (int x = 0; x < dem.length; x++) {

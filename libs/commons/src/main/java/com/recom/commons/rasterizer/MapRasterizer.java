@@ -96,8 +96,8 @@ public class MapRasterizer {
         final D8AlgorithmForSlopeAndAspectMap slopeAndAspectAlgorithm = new D8AlgorithmForSlopeAndAspectMap(5.0);
         final D8AlgorithmForShadedMap shadedMapAlgorithm = new D8AlgorithmForShadedMap();
 
-        final SlopeAndAspect[][] slopeAndAspects = slopeAndAspectAlgorithm.calculateSlopeAndAspectMap(dem);
-        final int[][] shadedMap = shadedMapAlgorithm.calculateShadedMap(slopeAndAspects, mapScheme);
+        final SlopeAndAspect[][] slopeAndAspects = slopeAndAspectAlgorithm.generateSlopeAndAspectMap(dem);
+        final int[][] shadedMap = shadedMapAlgorithm.generateShadedMap(slopeAndAspects, mapScheme);
 
 
         final int width = heightMapDescriptor.getHeightMap().length;
@@ -134,7 +134,7 @@ public class MapRasterizer {
         final ReforgerMapScheme mapScheme = new ReforgerMapScheme();
         final D8AlgorithmForContourMap algorithmForContourMap = new D8AlgorithmForContourMap();
 
-        final int[][] contourMap = algorithmForContourMap.calculateContourMap(heightMapDescriptor, mapScheme);
+        final int[][] contourMap = algorithmForContourMap.generateContourMap(heightMapDescriptor, mapScheme);
 
         final int width = heightMapDescriptor.getHeightMap().length;
         final int height = heightMapDescriptor.getHeightMap()[0].length;
@@ -170,8 +170,8 @@ public class MapRasterizer {
         final D8AlgorithmForSlopeAndAspectMap algorithmForSlopeAndAspect = new D8AlgorithmForSlopeAndAspectMap(5.0);
         final D8AlgorithmForSlopeMap d8AlgorithmForSlopeMap = new D8AlgorithmForSlopeMap();
 
-        final SlopeAndAspect[][] slopeAndAspects = algorithmForSlopeAndAspect.calculateSlopeAndAspectMap(heightMapDescriptor.getHeightMap());
-        final int[][] contourMap = d8AlgorithmForSlopeMap.extractSlopeMap(slopeAndAspects, mapScheme);
+        final SlopeAndAspect[][] slopeAndAspects = algorithmForSlopeAndAspect.generateSlopeAndAspectMap(heightMapDescriptor.getHeightMap());
+        final int[][] contourMap = d8AlgorithmForSlopeMap.generateSlopeMap(slopeAndAspects, mapScheme);
 
         final int width = heightMapDescriptor.getHeightMap().length;
         final int height = heightMapDescriptor.getHeightMap()[0].length;

@@ -14,7 +14,7 @@ public class D8AlgorithmForSlopeMap {
     private final ARGBCalculator colorCalculator = new ARGBCalculator();
 
 
-    public int[][] extractSlopeMap(
+    public int[][] generateSlopeMap(
             @NonNull final SlopeAndAspect[][] slopeAndAspects,
             @NonNull final ReforgerMapScheme mapScheme
     ) {
