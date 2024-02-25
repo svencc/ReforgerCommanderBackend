@@ -49,7 +49,7 @@ public class D8AlgorithmForShadedMap {
         final double dotProduct = VectorCalculator.dotProduct(sunLightVector, terrainNormal);
         final double brightness = Math.max(0, dotProduct);
 
-        return colorCalculator.shade(shadowingScheme.getShadowMapAlpha(), brightness);
+        return colorCalculator.modifyBrightness(shadowingScheme.getShadowMapAlpha(), brightness);
     }
 
 }

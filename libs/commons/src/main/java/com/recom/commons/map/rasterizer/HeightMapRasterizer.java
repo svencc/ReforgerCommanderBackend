@@ -29,6 +29,7 @@ public class HeightMapRasterizer implements MapLayerRenderer {
         demScaler = new DEMScaler();
     }
 
+    @NonNull
     public int[] rasterizeScaledHeightMap(
             @NonNull final DEMDescriptor DEMDescriptor,
             final int scale
@@ -38,6 +39,7 @@ public class HeightMapRasterizer implements MapLayerRenderer {
         return demScaler.scaleMap(DEMDescriptor, scale, originalHeightMap);
     }
 
+    @NonNull
     public int[] rasterizeHeightMap(@NonNull final DEMDescriptor demDescriptor) {
         final int width = demDescriptor.getDemWidth();
         final int height = demDescriptor.getDemHeight();

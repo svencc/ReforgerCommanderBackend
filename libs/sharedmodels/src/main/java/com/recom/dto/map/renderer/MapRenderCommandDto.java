@@ -44,7 +44,7 @@ public class MapRenderCommandDto implements Serializable {
 
     @Schema
     @JsonProperty()
-    private Long color;  // all clusters have color = xxx (from database config)
+    private Integer color;  // all clusters have color = xxx (from database config)
 
     @Schema
     @JsonProperty()

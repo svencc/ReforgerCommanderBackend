@@ -57,7 +57,7 @@ public class ARGBCalculator {
                 ((blue & 0xFF << 0));
     }
 
-    public int shade(final int baseColor, double brightness) {
+    public int modifyBrightness(final int baseColor, double brightness) {
         return compose(
                 getAlphaComponent(baseColor),
                 Round.halfUp(getRedComponent(baseColor) * brightness),

@@ -7,12 +7,19 @@ public class ReforgerMapDesignScheme extends MapDesignScheme {
 
     // Base color config
     private final int baseColorTerrain = 0xFFF1F1F3;
-    private final int baseColorWater = 0xFFA1D2E8;
+    private final int baseColorWater = 0xFFAEE4FF;
+    /*
+    // #AEE4FF
+    // #A0D2EB (<-)
+    // #7396A8
+     */
     private final int baseColorForest = 0xFFA1D2E8;
 
     // Contour line config
     private final int baseColorContourBackground = 0x00000000;
-    private final int baseColorContourLine = 0x55E2A750;
+    private final int baseColorContourLineTerrain = 0x55E2A750;
+//    private final int baseColorContourLineWater = 0x667396A8; // #7396A8, #506975
+    private final int baseColorContourLineWater = 0x33506975; // #7396A8, #506975
     private final int contourLineStepSize = 20;
 
     // Sun config (shadowing)

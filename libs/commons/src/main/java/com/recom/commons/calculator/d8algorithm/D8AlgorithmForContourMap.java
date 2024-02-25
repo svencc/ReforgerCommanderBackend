@@ -59,11 +59,19 @@ public class D8AlgorithmForContourMap {
                     if (dem[adjacentNeighborX][adjacentNeighborY] > contourLayerHeight
                             && dem[adjacentOppositeNeighborX][adjacentOppositeNeighborY] < contourLayerHeight
                     ) {
-                        return mapScheme.getBaseColorContourLine();
+                        if (contourLayerHeight <= 0) {
+                            return mapScheme.getBaseColorContourLineWater();
+                        } else {
+                            return mapScheme.getBaseColorContourLineTerrain();
+                        }
                     } else if (dem[adjacentNeighborX][adjacentNeighborY] < contourLayerHeight
                             && dem[adjacentOppositeNeighborX][adjacentOppositeNeighborY] > contourLayerHeight
                     ) {
-                        return mapScheme.getBaseColorContourLine();
+                        if (contourLayerHeight <= 0) {
+                            return mapScheme.getBaseColorContourLineWater();
+                        } else {
+                            return mapScheme.getBaseColorContourLineTerrain();
+                        }
                     }
                 }
             }
