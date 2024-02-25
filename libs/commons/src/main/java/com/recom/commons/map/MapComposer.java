@@ -51,15 +51,15 @@ public class MapComposer {
     public void execute(@NonNull final MapComposerWorkPackage workPackage) throws MissingRequiredPropertiesException {
         applyConfigurationToRenderer(workPackage);
 
-        final MapComposerWorkPackage completedCoreDataWorkPackage = renderCoreDataInSequence(workPackage);
-        final MapComposerWorkPackage completedWorkPackage = renderDataInParallel(workPackage);
+        renderCoreDataInSequence(workPackage);
+        renderDataInParallel(workPackage);
 
         handleException(workPackage);
     }
 
     @NonNull
-    private MapComposerWorkPackage renderDataInParallel(@NonNull final MapComposerWorkPackage workPackage) {
-        return mapLayerRendererPipeline.values().stream()
+    private void renderDataInParallel(@NonNull final MapComposerWorkPackage workPackage) {
+        mapLayerRendererPipeline.values().stream()
                 .sorted(Comparator.comparingInt((final MapLayerRenderer mapLayerRenderer) -> mapLayerRenderer.getMapLayerRendererConfiguration().getLayerOrder().getOrder()))
                 .filter((final MapLayerRenderer renderer) -> renderer.getMapLayerRendererConfiguration().isEnabled())
                 .filter((final MapLayerRenderer renderer) -> !renderer.getMapLayerRendererConfiguration().isSequentialCoreData())
@@ -78,8 +78,8 @@ public class MapComposer {
     }
 
     @NonNull
-    private MapComposerWorkPackage renderCoreDataInSequence(@NonNull final MapComposerWorkPackage workPackage) {
-        return mapLayerRendererPipeline.values().stream()
+    private void renderCoreDataInSequence(@NonNull final MapComposerWorkPackage workPackage) {
+        mapLayerRendererPipeline.values().stream()
                 .sorted(Comparator.comparingInt((final MapLayerRenderer mapLayerRenderer) -> mapLayerRenderer.getMapLayerRendererConfiguration().getLayerOrder().getOrder()))
                 .filter((final MapLayerRenderer renderer) -> renderer.getMapLayerRendererConfiguration().isEnabled())
                 .filter((final MapLayerRenderer renderer) -> renderer.getMapLayerRendererConfiguration().isSequentialCoreData())
@@ -98,6 +98,7 @@ public class MapComposer {
             workPackage.getReport().getMessages().stream()
                     .map(PipelineLogMessage::toString)
                     .forEach((log::error));
+
             throw new MissingRequiredPropertiesException();
         }
     }
@@ -119,7 +120,7 @@ public class MapComposer {
         final int width = workPackage.getMapComposerConfiguration().getDemDescriptor().getDemWidth();
         final int height = workPackage.getMapComposerConfiguration().getDemDescriptor().getDemHeight();
         final int[] pixelBuffer = new int[width * height];
-        Arrays.fill(pixelBuffer, 0xff000000); // black
+        Arrays.fill(pixelBuffer, 0xff000000); // prefill with black
 
         return merge(workPackage, pixelBuffer);
     }
@@ -134,17 +135,15 @@ public class MapComposer {
                 .sorted(Comparator.comparingInt((entry) -> entry.getValue().getCreator().getMapLayerRendererConfiguration().getLayerOrder().getOrder()))
                 .filter(entry -> {
                     final MapLayerRenderer artifactCreator = entry.getValue().getCreator();
-                    return artifactCreator.getMapLayerRendererConfiguration().isEnabled() && artifactCreator.getMapLayerRendererConfiguration().isVisible();
+                    return artifactCreator.getMapLayerRendererConfiguration().isEnabled()
+                            && artifactCreator.getMapLayerRendererConfiguration().isVisible();
                 })
                 .map(entry -> {
-                    final Class<? extends MapLayerRenderer> rendererClass = entry.getKey();
-                    final MapLayerRenderer artifactCreator = entry.getValue().getCreator();
                     final Object artifactRawData = entry.getValue().getData();
-
                     if (artifactRawData instanceof int[] artifact) {
                         return artifact;
                     } else {
-                        log.error("Artifact of type {} is not supported", artifactRawData.getClass().getSimpleName());
+                        log.debug("Artifact of type {} is not supported", artifactRawData.getClass().getSimpleName());
                         return null;
                     }
                 })
