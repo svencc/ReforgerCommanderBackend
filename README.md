@@ -23,6 +23,8 @@ What works and what you can see in the example images:
 
 To create more intelligence from gameMap data the following features are planned:
 * Forest detection / forest heatmap
+* Visual Map Generation
+  * ![mergedmap-preview.png](docs%2Fmd-media%2Fmergedmap-preview.png) 
 * Terrain heightmap
   * ![topographic-scanner-example.png](docs%2Fmd-media%2Ftopographic-scanner-example.png)
 * Map shading / lightmap
