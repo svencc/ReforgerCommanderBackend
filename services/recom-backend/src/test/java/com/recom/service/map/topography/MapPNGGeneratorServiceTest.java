@@ -53,6 +53,7 @@ class MapPNGGeneratorServiceTest {
     @Test
     @Disabled // does not work anymore after refactoring; but will be useless in future I guess
     void generateHeightmap() throws IOException {
+        /*
         // Arrange
         when(heightmapRasterizer.rasterizeHeightMap(any())).thenCallRealMethod();
 
@@ -95,6 +96,7 @@ class MapPNGGeneratorServiceTest {
 
         // Verify interactions
         verify(serializationService).deserializeObject(any());
+         */
     }
 
 }
