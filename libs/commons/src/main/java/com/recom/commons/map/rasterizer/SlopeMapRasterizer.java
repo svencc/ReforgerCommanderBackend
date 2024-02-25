@@ -1,15 +1,17 @@
-package com.recom.commons.rasterizer;
+package com.recom.commons.map.rasterizer;
 
 import com.recom.commons.calculator.d8algorithm.D8AlgorithmForSlopeAndAspectMap;
 import com.recom.commons.calculator.d8algorithm.D8AlgorithmForSlopeMap;
+import com.recom.commons.map.rasterizer.configuration.LayerOrder;
+import com.recom.commons.map.rasterizer.configuration.MapLayerRenderer;
+import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
 import com.recom.commons.model.DEMDescriptor;
-import com.recom.commons.model.MapRendererPipelineArtefacts;
 import com.recom.commons.model.SlopeAndAspect;
-import com.recom.commons.rasterizer.mapdesignscheme.MapDesignScheme;
-import com.recom.commons.rasterizer.meta.LayerOrder;
-import com.recom.commons.rasterizer.meta.MapLayerPipelineRenderer;
+import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
+import com.recom.commons.model.maprendererpipeline.MapLayerRendererConfiguration;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -17,16 +19,19 @@ import java.awt.image.DataBufferInt;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+
 @Getter
-public class SlopeAndAspectMapRasterizer implements MapLayerPipelineRenderer {
+@Setter
+public class SlopeMapRasterizer implements MapLayerRenderer {
 
     @NonNull
-    private final LayerOrder layerOrder = LayerOrder.SLOPE_AND_ASPECT_MAP;
-    private final boolean visible = true;
+    private MapLayerRendererConfiguration mapLayerRendererConfiguration = MapLayerRendererConfiguration.builder()
+            .layerOrder(LayerOrder.HEIGHT_MAP)
+            .build();
 
 
     @NonNull
-    public ByteArrayOutputStream rasterizeSlopeAndAspectMap(
+    public ByteArrayOutputStream rasterizeSlopeMap(
             @NonNull final DEMDescriptor DEMDescriptor,
             @NonNull final MapDesignScheme mapScheme
     ) throws IOException {
@@ -58,8 +63,8 @@ public class SlopeAndAspectMapRasterizer implements MapLayerPipelineRenderer {
     }
 
     @Override
-    public void render(@NonNull final MapRendererPipelineArtefacts pipelineArtefacts) throws IOException {
-        pipelineArtefacts.setRasterizedHeightMap(rasterizeSlopeAndAspectMap(pipelineArtefacts.getDemDescriptor(), pipelineArtefacts.getMapDesignScheme()));
+    public void render(@NonNull MapComposerWorkPackage pipelineArtefacts) throws IOException {
+        pipelineArtefacts.setRasterizedHeightMap(rasterizeSlopeMap(pipelineArtefacts.getDemDescriptor(), pipelineArtefacts.getMapDesignScheme()));
     }
 
 }

@@ -5,7 +5,7 @@ import com.recom.commander.mapper.HeightMapDescriptorMapper;
 import com.recom.commander.service.map.overview.data.MapsOverviewService;
 import com.recom.commander.service.map.topography.data.MapTopographyDataService;
 import com.recom.commons.model.DEMDescriptor;
-import com.recom.commons.rasterizer.HeightMapRasterizer;
+import com.recom.commons.map.rasterizer.HeightMapRasterizer;
 import com.recom.commons.units.ScaleFactor;
 import com.recom.dto.map.MapOverviewDto;
 import com.recom.dto.map.topography.HeightMapDescriptorDto;

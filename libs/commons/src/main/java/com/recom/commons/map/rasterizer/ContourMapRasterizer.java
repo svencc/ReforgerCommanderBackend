@@ -1,11 +1,12 @@
-package com.recom.commons.rasterizer;
+package com.recom.commons.map.rasterizer;
 
 import com.recom.commons.calculator.d8algorithm.D8AlgorithmForContourMap;
+import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
+import com.recom.commons.map.rasterizer.configuration.LayerOrder;
+import com.recom.commons.map.rasterizer.configuration.MapLayerRenderer;
 import com.recom.commons.model.DEMDescriptor;
-import com.recom.commons.model.MapRendererPipelineArtefacts;
-import com.recom.commons.rasterizer.mapdesignscheme.MapDesignScheme;
-import com.recom.commons.rasterizer.meta.LayerOrder;
-import com.recom.commons.rasterizer.meta.MapLayerPipelineRenderer;
+import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
+import com.recom.commons.model.maprendererpipeline.MapLayerRendererConfiguration;
 import lombok.Getter;
 import lombok.NonNull;
 
@@ -17,10 +18,13 @@ import java.io.IOException;
 
 
 @Getter
-public class ContourMapRasterizer implements MapLayerPipelineRenderer {
+public class ContourMapRasterizer implements MapLayerRenderer {
 
-    private final LayerOrder layerOrder = LayerOrder.HEIGHT_MAP;
-    private final boolean visible = true;
+    @NonNull
+    private MapLayerRendererConfiguration mapLayerRendererConfiguration = MapLayerRendererConfiguration.builder()
+            .layerOrder(LayerOrder.CONTOUR_MAP)
+            .build();
+
 
     @NonNull
     public ByteArrayOutputStream rasterizeContourMap(
@@ -53,7 +57,7 @@ public class ContourMapRasterizer implements MapLayerPipelineRenderer {
     }
 
     @Override
-    public void render(@NonNull final MapRendererPipelineArtefacts pipelineArtefacts) throws IOException {
+    public void render(@NonNull final MapComposerWorkPackage pipelineArtefacts) throws IOException {
         pipelineArtefacts.setRasterizedContourMap(rasterizeContourMap(pipelineArtefacts.getDemDescriptor(), pipelineArtefacts.getMapDesignScheme()));
     }
 

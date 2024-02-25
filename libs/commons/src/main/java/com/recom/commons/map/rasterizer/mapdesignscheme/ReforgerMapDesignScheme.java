@@ -1,4 +1,4 @@
-package com.recom.commons.rasterizer.mapdesignscheme;
+package com.recom.commons.map.rasterizer.mapdesignscheme;
 
 import lombok.Getter;
 

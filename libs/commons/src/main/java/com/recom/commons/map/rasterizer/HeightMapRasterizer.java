@@ -1,10 +1,11 @@
-package com.recom.commons.rasterizer;
+package com.recom.commons.map.rasterizer;
 
+import com.recom.commons.map.rasterizer.configuration.LayerOrder;
+import com.recom.commons.map.rasterizer.configuration.MapLayerRenderer;
+import com.recom.commons.map.rasterizer.scaler.DEMScaler;
 import com.recom.commons.model.DEMDescriptor;
-import com.recom.commons.model.MapRendererPipelineArtefacts;
-import com.recom.commons.rasterizer.scaler.DEMScaler;
-import com.recom.commons.rasterizer.meta.LayerOrder;
-import com.recom.commons.rasterizer.meta.MapLayerPipelineRenderer;
+import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
+import com.recom.commons.model.maprendererpipeline.MapLayerRendererConfiguration;
 import lombok.Getter;
 import lombok.NonNull;
 
@@ -16,14 +17,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 
-public class HeightMapRasterizer implements MapLayerPipelineRenderer {
+public class HeightMapRasterizer implements MapLayerRenderer {
 
+    @Getter
+    @NonNull
+    private MapLayerRendererConfiguration mapLayerRendererConfiguration = MapLayerRendererConfiguration.builder()
+            .layerOrder(LayerOrder.HEIGHT_MAP)
+            .build();
     @NonNull
     private final DEMScaler demScaler;
-    @Getter
-    private final LayerOrder layerOrder = LayerOrder.HEIGHT_MAP;
-    @Getter
-    private final boolean visible = true;
 
 
     public HeightMapRasterizer() {
@@ -91,7 +93,7 @@ public class HeightMapRasterizer implements MapLayerPipelineRenderer {
     }
 
     @Override
-    public void render(@NonNull final MapRendererPipelineArtefacts pipelineArtefacts) throws IOException {
+    public void render(@NonNull final MapComposerWorkPackage pipelineArtefacts) throws IOException {
         pipelineArtefacts.setRasterizedHeightMap(rasterizeHeightMapPNG(pipelineArtefacts.getDemDescriptor()));
     }
 

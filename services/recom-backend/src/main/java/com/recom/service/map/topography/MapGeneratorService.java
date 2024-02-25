@@ -1,11 +1,11 @@
 package com.recom.service.map.topography;
 
 import com.recom.commons.model.DEMDescriptor;
-import com.recom.commons.rasterizer.ContourMapRasterizer;
-import com.recom.commons.rasterizer.HeightMapRasterizer;
-import com.recom.commons.rasterizer.ShadowedMapRasterizer;
-import com.recom.commons.rasterizer.SlopeMapRasterizer;
-import com.recom.commons.rasterizer.mapdesignscheme.ReforgerMapDesignScheme;
+import com.recom.commons.map.rasterizer.ContourMapRasterizer;
+import com.recom.commons.map.rasterizer.HeightMapRasterizer;
+import com.recom.commons.map.rasterizer.ShadowedMapRasterizer;
+import com.recom.commons.map.rasterizer.SlopeMapRasterizer;
+import com.recom.commons.map.rasterizer.mapdesignscheme.ReforgerMapDesignScheme;
 import com.recom.entity.map.MapTopography;
 import com.recom.model.map.TopographyData;
 import com.recom.service.SerializationService;

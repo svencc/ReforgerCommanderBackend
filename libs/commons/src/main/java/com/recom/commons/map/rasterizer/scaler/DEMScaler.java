@@ -1,4 +1,4 @@
-package com.recom.commons.rasterizer.scaler;
+package com.recom.commons.map.rasterizer.scaler;
 
 import com.recom.commons.calculator.ARGBCalculator;
 import com.recom.commons.model.DEMDescriptor;
