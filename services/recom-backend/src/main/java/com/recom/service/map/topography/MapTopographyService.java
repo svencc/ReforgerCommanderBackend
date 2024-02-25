@@ -1,6 +1,12 @@
 package com.recom.service.map.topography;
 
+import com.recom.commons.map.MapComposer;
+import com.recom.commons.map.PixelBufferMapperUtil;
+import com.recom.commons.map.rasterizer.HeightMapRasterizer;
+import com.recom.commons.map.rasterizer.mapdesignscheme.ReforgerMapDesignScheme;
 import com.recom.commons.model.DEMDescriptor;
+import com.recom.commons.model.maprendererpipeline.MapComposerConfiguration;
+import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
 import com.recom.entity.map.GameMap;
 import com.recom.entity.map.MapTopography;
 import com.recom.exception.HttpNotFoundException;
@@ -15,13 +21,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.Optional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class MapService {
+public class MapTopographyService {
 
     @NonNull
     private final MapLocatedTopographyPersistenceLayer mapTopographyPersistenceLayer;
@@ -31,6 +36,8 @@ public class MapService {
     private final SerializationService serializationService;
     @NonNull
     private final DEMService demService;
+    @NonNull
+    private final MapComposer mapComposer;
 
 
     @Transactional(readOnly = true)
@@ -40,12 +47,40 @@ public class MapService {
                 .orElseThrow(() -> new HttpNotFoundException("No topography com.recom.dto.map found for com.recom.dto.map with id " + gameMap.getId() + "!"));
     }
 
+    @NonNull
     private byte[] provideTopographyPNG(@NonNull final MapTopography mapTopography) {
         try {
-            final ByteArrayOutputStream outputStream = mapPNGGeneratorService.generateHeightmapPNG(mapTopography);
-            final ByteArrayOutputStream outputStreamShade = mapPNGGeneratorService.generateShadeMapPNG(mapTopography);
-            final ByteArrayOutputStream outputStreamContour = mapPNGGeneratorService.generateContourMapPNG(mapTopography);
-            final ByteArrayOutputStream outputStreamSlope = mapPNGGeneratorService.generateSlopeMapPNG(mapTopography);
+            final DEMDescriptor demDescriptor = demService.deserializeToDEM(mapTopography);
+            final MapComposerWorkPackage workPackage = MapComposerWorkPackage.builder()
+                    .mapComposerConfiguration(
+                            MapComposerConfiguration.builder()
+                                    .demDescriptor(demDescriptor)
+                                    .mapDesignScheme(new ReforgerMapDesignScheme())
+                                    .build()
+                    )
+                    .build();
+
+            mapComposer.compose(workPackage);
+
+            if (!workPackage.getReport().isSuccess()) {
+                throw new HttpUnprocessableEntityException();
+            } else if (workPackage.getPipelineArtifacts().getArtifactFrom(HeightMapRasterizer.class).isPresent()) {
+                final int[] heightMapRasterizerArtifact = workPackage.getPipelineArtifacts().getArtifactFrom(HeightMapRasterizer.class).get().getData();
+                final ByteArrayOutputStream outputStream = PixelBufferMapperUtil.map(demDescriptor, heightMapRasterizerArtifact);
+                return outputStream.toByteArray();
+            } else {
+                throw new HttpUnprocessableEntityException();
+            }
+
+
+
+
+
+            /*
+            final ByteArrayOutputStream outputStream = mapPNGGeneratorService.generateHeightmapPNG(demDescriptor);
+            final ByteArrayOutputStream outputStreamShade = mapPNGGeneratorService.generateShadeMapPNG(demDescriptor);
+            final ByteArrayOutputStream outputStreamContour = mapPNGGeneratorService.generateContourMapPNG(demDescriptor);
+            final ByteArrayOutputStream outputStreamSlope = mapPNGGeneratorService.generateSlopeMapPNG(demDescriptor);
             final byte[] heightmapByteArray = outputStream.toByteArray();
 
             // @TODO This is for debugging purposes only; Dirty Hack to put the generated images into the file system here ...
@@ -53,8 +88,8 @@ public class MapService {
             serializationService.writeBytesToFile(Path.of("cached-shademap.png"), outputStreamShade.toByteArray()); // TODO: Remove OR make configurable!
             serializationService.writeBytesToFile(Path.of("cached-contourmap.png"), outputStreamContour.toByteArray()); // TODO: Remove OR make configurable!
             serializationService.writeBytesToFile(Path.of("cached-slopemap.png"), outputStreamSlope.toByteArray()); // TODO: Remove OR make configurable!
-
             return heightmapByteArray;
+            */
         } catch (IOException e) {
             throw new HttpUnprocessableEntityException();
         }
@@ -66,7 +101,7 @@ public class MapService {
         return mapTopographyPersistenceLayer.findByGameMap(gameMap)
                 .map(mapTopography -> {
                     try {
-                        return demService.provideDEM(mapTopography);
+                        return demService.deserializeToDEM(mapTopography);
                     } catch (IOException e) {
                         throw new HttpUnprocessableEntityException();
                     }

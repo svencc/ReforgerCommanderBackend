@@ -14,18 +14,23 @@ import java.util.Optional;
 public class MapRendererPipelineArtifacts {
 
     @NonNull
-    private final Map<MapLayerRenderer, Object> artifacts = new HashMap<>();
+    private final Map<Class<? extends MapLayerRenderer>, CreatedArtifact> artifacts = new HashMap<>();
+
 
     public void addArtifact(
-            @NonNull final MapLayerRenderer renderer,
+            @NonNull final MapLayerRenderer creator,
             @NonNull final Object artifact
     ) {
-        artifacts.put(renderer, artifact);
+        final CreatedArtifact createdArtifact = CreatedArtifact.builder()
+                .creator(creator)
+                .data(artifact)
+                .build();
+
+        artifacts.put(creator.getClass(), createdArtifact);
     }
 
-    @SuppressWarnings("unchecked")
-    public <T> Optional<T> getArtifact(@NonNull final MapLayerRenderer renderer) {
-        return Optional.ofNullable((T) artifacts.get(renderer));
+    public <T> Optional<CreatedArtifact> getArtifactFrom(@NonNull final Class<? extends MapLayerRenderer> rendererName) {
+        return Optional.ofNullable(artifacts.get(rendererName));
     }
 
 }

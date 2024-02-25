@@ -21,7 +21,7 @@ public class DEMService {
 
 
     @NonNull
-    public DEMDescriptor provideDEM(@NonNull final MapTopography mapTopography) throws IOException {
+    public DEMDescriptor deserializeToDEM(@NonNull final MapTopography mapTopography) throws IOException {
         final TopographyData topographyModel = serializationService.<TopographyData>deserializeObject(mapTopography.getData())
                 .orElseThrow(() -> new IOException("Unable to deserialize topography data!"));
 

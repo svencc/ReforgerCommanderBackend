@@ -10,7 +10,7 @@ import com.recom.mapper.HeightMapDescriptorMapper;
 import com.recom.security.account.RECOMAccount;
 import com.recom.security.account.RECOMAuthorities;
 import com.recom.service.AssertionService;
-import com.recom.service.map.topography.MapService;
+import com.recom.service.map.topography.MapTopographyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.*;
 public class MapTopographyController {
 
     @NonNull
-    private final MapService mapService;
+    private final MapTopographyService mapTopographyService;
     @NonNull
     private final AssertionService assertionService;
 
@@ -62,7 +62,7 @@ public class MapTopographyController {
             final GameMap gameMap = assertionService.provideMap(mapTopographyRequestDto.getMapName());
             return ResponseEntity.status(HttpStatus.OK)
                     .cacheControl(CacheControl.noCache())
-                    .body(mapService.provideHeightMapPNG(gameMap));
+                    .body(mapTopographyService.provideHeightMapPNG(gameMap));
         } catch (final HttpNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .cacheControl(CacheControl.noCache())
@@ -88,12 +88,12 @@ public class MapTopographyController {
         log.debug("Requested GET /api/v1/com.recom.dto.map/topography/data");
 
         final GameMap gameMap = assertionService.provideMap(mapTopographyRequestDto.getMapName());
-        final DEMDescriptor command = mapService.provideDEMDescriptor(gameMap)
+        final DEMDescriptor demDescriptor = mapTopographyService.provideDEMDescriptor(gameMap)
                 .orElseThrow(()-> new HttpNotFoundException("No topography com.recom.dto.map found for com.recom.dto.map with id " + gameMap.getId() + "!"));
 
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
-                .body(HeightMapDescriptorMapper.INSTANCE.toDto(command, gameMap.getName()));
+                .body(HeightMapDescriptorMapper.INSTANCE.toDto(demDescriptor, gameMap.getName()));
     }
 
 }

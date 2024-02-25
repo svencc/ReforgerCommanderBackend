@@ -16,10 +16,12 @@ public class MapComposerWorkPackage {
 
 
     @NonNull
-    private final MapRendererPipelineArtifacts pipelineArtifacts;
+    @Builder.Default
+    private final MapRendererPipelineArtifacts pipelineArtifacts = new MapRendererPipelineArtifacts();
 
 
     @NonNull
+    @Builder.Default
     private final RendererReport report = new RendererReport();
 
 }

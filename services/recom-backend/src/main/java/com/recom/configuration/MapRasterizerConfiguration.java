@@ -1,5 +1,6 @@
 package com.recom.configuration;
 
+import com.recom.commons.map.MapComposer;
 import com.recom.commons.map.rasterizer.ContourMapRasterizer;
 import com.recom.commons.map.rasterizer.HeightMapRasterizer;
 import com.recom.commons.map.rasterizer.ShadowedMapRasterizer;
@@ -30,6 +31,11 @@ public class MapRasterizerConfiguration {
     @Bean()
     public SlopeMapRasterizer slopeMapRasterizer() {
         return new SlopeMapRasterizer();
+    }
+
+    @Bean()
+    public MapComposer mapComposer() {
+        return MapComposer.withDefaultConfiguration();
     }
 
 }

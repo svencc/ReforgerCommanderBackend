@@ -7,7 +7,6 @@ import com.recom.commons.map.rasterizer.ShadowedMapRasterizer;
 import com.recom.commons.map.rasterizer.SlopeMapRasterizer;
 import com.recom.commons.map.rasterizer.mapdesignscheme.ReforgerMapDesignScheme;
 import com.recom.commons.model.DEMDescriptor;
-import com.recom.entity.map.MapTopography;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +21,6 @@ import java.io.IOException;
 public class MapPNGGeneratorService {
 
     @NonNull
-    private final DEMService demService;
-    @NonNull
     private final HeightMapRasterizer heightMapRasterizer;
     @NonNull
     private final ShadowedMapRasterizer shadowedMapRasterizer;
@@ -34,9 +31,8 @@ public class MapPNGGeneratorService {
 
 
     @NonNull
-    public ByteArrayOutputStream generateHeightmapPNG(@NonNull final MapTopography mapTopography) throws IOException {
+    public ByteArrayOutputStream generateHeightmapPNG(@NonNull final DEMDescriptor demDescriptor) throws IOException {
         try {
-            final DEMDescriptor demDescriptor = demService.provideDEM(mapTopography);
             final int[] pixelBuffer = heightMapRasterizer.rasterizeHeightMap(demDescriptor);
 
             return PixelBufferMapperUtil.map(demDescriptor, pixelBuffer);
@@ -46,9 +42,8 @@ public class MapPNGGeneratorService {
     }
 
     @NonNull
-    public ByteArrayOutputStream generateShadeMapPNG(@NonNull final MapTopography mapTopography) {
+    public ByteArrayOutputStream generateShadeMapPNG(@NonNull final DEMDescriptor demDescriptor) {
         try {
-            final DEMDescriptor demDescriptor = demService.provideDEM(mapTopography);
             final int[] pixelBuffer = shadowedMapRasterizer.rasterizeShadowedMap(demDescriptor, new ReforgerMapDesignScheme());
 
             return PixelBufferMapperUtil.map(demDescriptor, pixelBuffer);
@@ -58,9 +53,8 @@ public class MapPNGGeneratorService {
     }
 
     @NonNull
-    public ByteArrayOutputStream generateContourMapPNG(@NonNull final MapTopography mapTopography) {
+    public ByteArrayOutputStream generateContourMapPNG(@NonNull final DEMDescriptor demDescriptor) {
         try {
-            final DEMDescriptor demDescriptor = demService.provideDEM(mapTopography);
             final int[] pixelBuffer = contourMapRasterizer.rasterizeContourMap(demDescriptor, new ReforgerMapDesignScheme());
 
             return PixelBufferMapperUtil.map(demDescriptor, pixelBuffer);
@@ -70,9 +64,8 @@ public class MapPNGGeneratorService {
     }
 
     @NonNull
-    public ByteArrayOutputStream generateSlopeMapPNG(@NonNull final MapTopography mapTopography) {
+    public ByteArrayOutputStream generateSlopeMapPNG(@NonNull final DEMDescriptor demDescriptor) {
         try {
-            final DEMDescriptor demDescriptor = demService.provideDEM(mapTopography);
             final int[] pixelBuffer = slopeMapRasterizer.rasterizeSlopeMap(demDescriptor, new ReforgerMapDesignScheme());
 
             return PixelBufferMapperUtil.map(demDescriptor, pixelBuffer);

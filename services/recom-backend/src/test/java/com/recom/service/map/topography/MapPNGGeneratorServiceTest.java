@@ -35,8 +35,6 @@ import static org.mockito.Mockito.when;
 class MapPNGGeneratorServiceTest {
 
     @Mock
-    private DEMService demService;
-    @Mock
     private SerializationService serializationService;
     @Mock
     private HeightMapRasterizer heightmapRasterizer;
