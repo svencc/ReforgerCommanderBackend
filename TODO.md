@@ -2,15 +2,7 @@
 
 # 1
 * nicer color scheme for the map (<-)
-  * add layer system for maps (<-)
-    * add DynamicLayerProperties (configuration for RecomMapEntity) (/)
-    * blend layers (<-)
-      * render layers transparently (<-)
-      * add function to blend pixel with given alpha modifier?
-      * blend layers in order
-      * activate / deactivate layers
-    
-  * DEM (Digital Elevation Model) -> Höhenmodell -> Rename old things to DEM
+* add DynamicLayerProperties (configuration for RecomMapEntity) (/)
 
 * interpolate base map to 1pixel = 1meter resolution
   * so 5m scaled map is upscaled to 1m resolution
