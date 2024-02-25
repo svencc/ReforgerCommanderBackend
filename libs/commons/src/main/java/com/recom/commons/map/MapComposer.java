@@ -1,5 +1,6 @@
 package com.recom.commons.map;
 
+import com.recom.commons.calculator.ARGBCalculator;
 import com.recom.commons.map.rasterizer.*;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRenderer;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
@@ -10,14 +11,8 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.MissingRequiredPropertiesException;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferInt;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -31,7 +26,8 @@ public class MapComposer {
     private final Map<String, MapLayerRenderer> mapLayerRendererPipeline = new HashMap<>();
     @NonNull
     private final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
-
+    @NonNull
+    private final ARGBCalculator argbCalculator = new ARGBCalculator();
 
     @NonNull
     public static MapComposer withDefaultConfiguration() {
@@ -51,7 +47,7 @@ public class MapComposer {
     }
 
     @NonNull
-    public ByteArrayOutputStream execute(@NonNull final MapComposerWorkPackage workPackage) throws MissingRequiredPropertiesException {
+    public void execute(@NonNull final MapComposerWorkPackage workPackage) throws MissingRequiredPropertiesException {
         applyConfigurationToRenderer(workPackage);
 
         final MapComposerWorkPackage completedCoreDataWorkPackage = renderCoreDataInSequence(workPackage);
@@ -59,7 +55,7 @@ public class MapComposer {
 
         handleException(workPackage);
 
-
+        /*
         // @TODO
         // Problem ist jetzt dass ich die buffer; nicht die image ByteStreams brauche; plus in der richtigen reihenfolge!
         // diese infos sind ja im renderer drin, brauche das in der Ergebnissliste auch -> übertragung von renderer zu pipelineArtefacts
@@ -89,6 +85,7 @@ public class MapComposer {
         // ---
 
         return outputStream;
+        */
     }
 
     @NonNull
@@ -148,4 +145,50 @@ public class MapComposer {
                 });
     }
 
+    @NonNull
+    public int[] merge(@NonNull final MapComposerWorkPackage workPackage) {
+        final int width = workPackage.getMapComposerConfiguration().getDemDescriptor().getDemWidth();
+        final int height = workPackage.getMapComposerConfiguration().getDemDescriptor().getDemHeight();
+        final int[] pixelBuffer = new int[width * height];
+        Arrays.fill(pixelBuffer, 0xff000000); // black
+
+        return merge(workPackage, pixelBuffer);
+    }
+
+    @NonNull
+    @SuppressWarnings("unchecked")
+    public int[] merge(
+            @NonNull final MapComposerWorkPackage workPackage,
+            final int[] pixelBuffer
+    ) {
+        return workPackage.getPipelineArtifacts().getArtifacts().entrySet().stream()
+                .sorted(Comparator.comparingInt((entry) -> entry.getValue().getCreator().getMapLayerRendererConfiguration().getLayerOrder().getOrder()))
+                .filter(entry -> {
+                    final MapLayerRenderer artifactCreator = entry.getValue().getCreator();
+                    return artifactCreator.getMapLayerRendererConfiguration().isEnabled() && artifactCreator.getMapLayerRendererConfiguration().isVisible();
+                })
+                .map(entry -> {
+                    final Class<? extends MapLayerRenderer> rendererClass = entry.getKey();
+                    final MapLayerRenderer artifactCreator = entry.getValue().getCreator();
+                    final Object artifactRawData = entry.getValue().getData();
+
+                    if (artifactRawData instanceof int[] artifact) {
+                        return artifact;
+                    } else {
+                        log.error("Artifact of type {} is not supported", artifactRawData.getClass().getSimpleName());
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .reduce(pixelBuffer, (targetBuffer, artifactBuffer) -> {
+                    for (int i = 0; i < targetBuffer.length; i++) {
+                        final int artifactPixel = artifactBuffer[i];
+                        final int pixel = targetBuffer[i];
+
+                        targetBuffer[i] = argbCalculator.blend(artifactPixel, targetBuffer[i]);
+                    }
+                    return targetBuffer;
+                });
+    }
+    
 }

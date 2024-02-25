@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Optional;
 
 @Slf4j
@@ -30,8 +31,8 @@ public class MapTopographyService {
 
     @NonNull
     private final MapLocatedTopographyPersistenceLayer mapTopographyPersistenceLayer;
-    @NonNull
-    private final MapPNGGeneratorService mapPNGGeneratorService;
+    //    @NonNull
+//    private final MapPNGGeneratorService mapPNGGeneratorService;
     @NonNull
     private final SerializationService serializationService;
     @NonNull
@@ -65,6 +66,15 @@ public class MapTopographyService {
             if (workPackage.getReport().isSuccess() && (workPackage.getPipelineArtifacts().getArtifactFrom(HeightMapRasterizer.class).isPresent())) {
                 final int[] heightMapRasterizerArtifact = workPackage.getPipelineArtifacts().getArtifactFrom(HeightMapRasterizer.class).get().getData();
                 final ByteArrayOutputStream outputStream = PixelBufferMapperUtil.map(demDescriptor, heightMapRasterizerArtifact);
+
+
+                // @TODO -> extract to helper function!
+                // write the composed map to the file system ------------- ------------- ------------- ------------- -------------
+                final int[] composedMap = mapComposer.merge(workPackage);
+                final ByteArrayOutputStream composedMapStream = PixelBufferMapperUtil.map(demDescriptor, composedMap);
+                serializationService.writeBytesToFile(Path.of("cached-composed-map.png"), composedMapStream.toByteArray());
+                // ------------- ------------- ------------- ------------- ------------- ------------- ------------- -------------
+
 
                 return outputStream.toByteArray();
             } else {

@@ -5,7 +5,6 @@ import lombok.NonNull;
 
 public interface HasMapLayerRendererConfiguration {
 
-    @NonNull
-    MapLayerRendererConfiguration getMapLayerRendererConfiguration();
+    @NonNull MapLayerRendererConfiguration getMapLayerRendererConfiguration();
 
 }
