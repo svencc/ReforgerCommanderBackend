@@ -16,6 +16,7 @@ public class D8AlgorithmForShadedMap {
     private final ARGBCalculator colorCalculator = new ARGBCalculator();
 
 
+    @NonNull
     public int[][] generateShadedMap(
             @NonNull final SlopeAndAspect[][] slopeAndAspectMap,
             @NonNull final MapDesignScheme shadowingScheme
@@ -48,7 +49,7 @@ public class D8AlgorithmForShadedMap {
         final double dotProduct = VectorCalculator.dotProduct(sunLightVector, terrainNormal);
         final double brightness = Math.max(0, dotProduct);
 
-        return colorCalculator.shade(shadowingScheme.getBaseColorTerrain(), brightness);
+        return colorCalculator.shade(shadowingScheme.getShadowMapAlpha(), brightness);
     }
 
 }

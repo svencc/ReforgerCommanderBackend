@@ -4,6 +4,7 @@ package com.recom.commons.calculator.d8algorithm;
 import com.recom.commons.math.Sign;
 import com.recom.commons.model.Aspect;
 import com.recom.commons.model.SlopeAndAspect;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -19,6 +20,7 @@ public class D8AlgorithmForSlopeAndAspectMap {
      * @param dem The digital elevation model (DEM) as a 2D array of elevation values.
      * @return A 2D array representing the slope map of the DEM.
      */
+    @NonNull
     public SlopeAndAspect[][] generateSlopeAndAspectMap(final float[][] dem) {
         final SlopeAndAspect[][] slopeAndAspects = new SlopeAndAspect[dem.length][dem[0].length];
 
@@ -41,6 +43,7 @@ public class D8AlgorithmForSlopeAndAspectMap {
      * @param y   The Y-coordinate (row) of the cell in the DEM.
      * @return The maximum slope from the given cell.
      */
+    @NonNull
     private SlopeAndAspect calculateSlopeAndAspect(
             final float[][] dem,
             final int x,

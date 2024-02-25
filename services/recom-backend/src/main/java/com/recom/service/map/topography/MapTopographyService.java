@@ -2,7 +2,6 @@ package com.recom.service.map.topography;
 
 import com.recom.commons.map.MapComposer;
 import com.recom.commons.map.PixelBufferMapperUtil;
-import com.recom.commons.map.rasterizer.HeightMapRasterizer;
 import com.recom.commons.map.rasterizer.mapdesignscheme.ReforgerMapDesignScheme;
 import com.recom.commons.model.DEMDescriptor;
 import com.recom.commons.model.maprendererpipeline.MapComposerConfiguration;
@@ -21,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.Optional;
 
 @Slf4j
@@ -63,20 +61,22 @@ public class MapTopographyService {
 
             mapComposer.execute(workPackage);
 
-            if (workPackage.getReport().isSuccess() && (workPackage.getPipelineArtifacts().getArtifactFrom(HeightMapRasterizer.class).isPresent())) {
-                final int[] heightMapRasterizerArtifact = workPackage.getPipelineArtifacts().getArtifactFrom(HeightMapRasterizer.class).get().getData();
-                final ByteArrayOutputStream outputStream = PixelBufferMapperUtil.map(demDescriptor, heightMapRasterizerArtifact);
+            if (workPackage.getReport().isSuccess()) {
+//            if (workPackage.getReport().isSuccess() && (workPackage.getPipelineArtifacts().getArtifactFrom(HeightMapRasterizer.class).isPresent())) {
+//                final int[] heightMapRasterizerArtifact = workPackage.getPipelineArtifacts().getArtifactFrom(HeightMapRasterizer.class).get().getData();
+//                final ByteArrayOutputStream outputStream = PixelBufferMapperUtil.map(demDescriptor, heightMapRasterizerArtifact);
 
 
                 // @TODO -> extract to helper function!
                 // write the composed map to the file system ------------- ------------- ------------- ------------- -------------
                 final int[] composedMap = mapComposer.merge(workPackage);
                 final ByteArrayOutputStream composedMapStream = PixelBufferMapperUtil.map(demDescriptor, composedMap);
-                serializationService.writeBytesToFile(Path.of("cached-composed-map.png"), composedMapStream.toByteArray());
+//                serializationService.writeBytesToFile(Path.of("cached-composed-map.png"), composedMapStream.toByteArray());
                 // ------------- ------------- ------------- ------------- ------------- ------------- ------------- -------------
 
 
-                return outputStream.toByteArray();
+//                return outputStream.toByteArray();
+                return composedMapStream.toByteArray();
             } else {
                 throw new HttpUnprocessableEntityException();
             }
@@ -99,7 +99,7 @@ public class MapTopographyService {
             serializationService.writeBytesToFile(Path.of("cached-slopemap.png"), outputStreamSlope.toByteArray()); // TODO: Remove OR make configurable!
             return heightmapByteArray;
             */
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new HttpUnprocessableEntityException();
         }
     }

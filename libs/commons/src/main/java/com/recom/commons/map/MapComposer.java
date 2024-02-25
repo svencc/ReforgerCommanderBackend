@@ -36,6 +36,7 @@ public class MapComposer {
 
         mapComposer.registerRenderer(new SlopeAndAspectMapRasterizer());
         mapComposer.registerRenderer(new HeightMapRasterizer());
+        mapComposer.registerRenderer(new BaseMapRasterizer());
         mapComposer.registerRenderer(new ShadowedMapRasterizer());
         mapComposer.registerRenderer(new ContourMapRasterizer());
         mapComposer.registerRenderer(new SlopeMapRasterizer());
@@ -66,8 +67,8 @@ public class MapComposer {
                 .map(renderer -> CompletableFuture.supplyAsync(() -> {
                     try {
                         renderer.render(workPackage);
-                    } catch (final IOException e) {
-                        workPackage.getReport().logException(e);
+                    } catch (final Throwable t) {
+                        workPackage.getReport().logException(t);
                     }
 
                     return workPackage;
@@ -129,7 +130,7 @@ public class MapComposer {
     @SuppressWarnings("unchecked")
     public int[] merge(
             @NonNull final MapComposerWorkPackage workPackage,
-            @NonNull final int[] pixelBuffer
+            @NonNull final int[] basePixelBuffer
     ) {
         return workPackage.getPipelineArtifacts().getArtifacts().entrySet().stream()
                 .sorted(Comparator.comparingInt((entry) -> entry.getValue().getCreator().getMapLayerRendererConfiguration().getLayerOrder().getOrder()))
@@ -148,7 +149,7 @@ public class MapComposer {
                     }
                 })
                 .filter(Objects::nonNull)
-                .reduce(pixelBuffer, (targetBuffer, artifactBuffer) -> {
+                .reduce(basePixelBuffer, (targetBuffer, artifactBuffer) -> {
                     for (int i = 0; i < targetBuffer.length; i++) {
                         targetBuffer[i] = argbCalculator.blend(artifactBuffer[i], targetBuffer[i]);
                     }

@@ -2,8 +2,8 @@ package com.recom.commons.calculator.d8algorithm;
 
 
 import com.recom.commons.calculator.ARGBCalculator;
-import com.recom.commons.model.SlopeAndAspect;
 import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
+import com.recom.commons.model.SlopeAndAspect;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -14,6 +14,7 @@ public class D8AlgorithmForSlopeMap {
     private final ARGBCalculator colorCalculator = new ARGBCalculator();
 
 
+    @NonNull
     public int[][] generateSlopeMap(
             @NonNull final SlopeAndAspect[][] slopeAndAspects,
             @NonNull final MapDesignScheme mapScheme

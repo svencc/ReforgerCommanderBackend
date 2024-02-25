@@ -12,20 +12,18 @@ import lombok.NonNull;
 import java.awt.*;
 
 
-public class HeightMapRasterizer implements MapLayerRenderer {
+public class BaseMapRasterizer implements MapLayerRenderer {
 
     @Getter
     @NonNull
     private MapLayerRendererConfiguration mapLayerRendererConfiguration = MapLayerRendererConfiguration.builder()
-            .layerOrder(LayerOrder.HEIGHT_MAP)
-            .visible(false)
-            .enabled(false)
+            .layerOrder(LayerOrder.BASE_MAP)
             .build();
     @NonNull
     private final DEMScaler demScaler;
 
 
-    public HeightMapRasterizer() {
+    public BaseMapRasterizer() {
         demScaler = new DEMScaler();
     }
 

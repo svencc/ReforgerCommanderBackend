@@ -1,29 +1,44 @@
 package com.recom.commons.map.rasterizer.mapdesignscheme;
 
 import com.recom.commons.model.Vector3D;
+import org.springframework.lang.Nullable;
 
 public abstract class MapDesignScheme {
 
+    @Nullable
     private Double cachedSunAzimutRad = null;
+    @Nullable
     private Double cachedSunElevationRad = null;
+    @Nullable
     private Vector3D cachedSunLightVectorX = null;
 
+    // clear all caches
+    public void clearCache() {
+        cachedSunAzimutRad = null;
+        cachedSunElevationRad = null;
+        cachedSunLightVectorX = null;
+    }
 
+
+
+    // Base terrain config
     public abstract int getBaseColorTerrain();
-
     public abstract int getBaseColorWater();
-
     public abstract int getBaseColorForest();
 
 
+
+    // Contour line config
+    public abstract int getBaseColorContourBackground();
     public abstract int getBaseColorContourLine();
     public abstract int getContourLineStepSize();
-    public abstract int getNrOfContourLinesToBigStep();
 
 
+
+    // Sun config (shadowing)
     public abstract int getSunAzimutDeg();
-
     public abstract int getSunElevationDeg();
+    public abstract int getShadowMapAlpha();
 
     public double getSunAzimutRad() {
         if (cachedSunAzimutRad == null) {

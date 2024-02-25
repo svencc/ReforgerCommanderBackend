@@ -22,7 +22,7 @@ import java.io.IOException;
 @Service
 @RequiredArgsConstructor
 public class MapPNGGeneratorService {
-
+/*
     @NonNull
     private final HeightMapRasterizer heightMapRasterizer;
     @NonNull
@@ -80,6 +80,7 @@ public class MapPNGGeneratorService {
             throw new RuntimeException(e);
         }
     }
+ */
 
 }
 // @TODO - REMOVE CLASS

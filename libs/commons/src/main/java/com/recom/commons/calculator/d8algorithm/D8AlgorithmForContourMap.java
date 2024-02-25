@@ -1,9 +1,8 @@
 package com.recom.commons.calculator.d8algorithm;
 
 
-import com.recom.commons.calculator.ARGBCalculator;
-import com.recom.commons.model.DEMDescriptor;
 import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
+import com.recom.commons.model.DEMDescriptor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -14,9 +13,6 @@ import java.util.List;
 public class D8AlgorithmForContourMap {
 
     @NonNull
-    private final ARGBCalculator colorCalculator = new ARGBCalculator();
-
-
     public int[][] generateContourMap(
             @NonNull final DEMDescriptor DEMDescriptor,
             @NonNull final MapDesignScheme mapScheme
@@ -73,8 +69,8 @@ public class D8AlgorithmForContourMap {
             }
         }
 
-        // if no contour line is found, return the base color of the terrain
-        return colorCalculator.compose(255, 0, 0, 0);
+        // if no contour line is found, return the base color of background
+        return mapScheme.getBaseColorContourBackground();
     }
 
 }
