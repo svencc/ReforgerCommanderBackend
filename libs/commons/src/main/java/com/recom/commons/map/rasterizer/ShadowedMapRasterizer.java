@@ -2,9 +2,10 @@ package com.recom.commons.map.rasterizer;
 
 import com.recom.commons.calculator.d8algorithm.D8AlgorithmForShadedMap;
 import com.recom.commons.calculator.d8algorithm.D8AlgorithmForSlopeAndAspectMap;
-import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
+import com.recom.commons.map.PixelBufferMapper;
 import com.recom.commons.map.rasterizer.configuration.LayerOrder;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRenderer;
+import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
 import com.recom.commons.model.DEMDescriptor;
 import com.recom.commons.model.SlopeAndAspect;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
@@ -13,9 +14,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferInt;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
@@ -31,10 +29,20 @@ public class ShadowedMapRasterizer implements MapLayerRenderer {
 
 
     @NonNull
-    public ByteArrayOutputStream rasterizeShadowedMap(
+    public ByteArrayOutputStream rasterizeShadowedMapPNG(
             @NonNull final DEMDescriptor DEMDescriptor,
             @NonNull final MapDesignScheme mapScheme
     ) throws IOException {
+        final int[] pixelBuffer = rasterizeShadowedMapRaw(DEMDescriptor, mapScheme);
+
+        return PixelBufferMapper.map(DEMDescriptor, pixelBuffer);
+    }
+
+    @NonNull
+    public int[] rasterizeShadowedMapRaw(
+            @NonNull final DEMDescriptor DEMDescriptor,
+            @NonNull final MapDesignScheme mapScheme
+    ) {
         final float[][] dem = DEMDescriptor.getDem(); // @TODO rename heightMap to dem
         final D8AlgorithmForSlopeAndAspectMap slopeAndAspectAlgorithm = new D8AlgorithmForSlopeAndAspectMap(5.0);
         final D8AlgorithmForShadedMap shadedMapAlgorithm = new D8AlgorithmForShadedMap();
@@ -52,20 +60,13 @@ public class ShadowedMapRasterizer implements MapLayerRenderer {
             }
         }
 
-        final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-
-        final int[] imagePixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
-        System.arraycopy(pixelBuffer, 0, imagePixels, 0, pixelBuffer.length);
-
-        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        ImageIO.write(image, "png", outputStream);
-
-        return outputStream;
+        return pixelBuffer;
     }
 
     @Override
-    public void render(@NonNull final MapComposerWorkPackage pipelineArtefacts) throws IOException {
-        pipelineArtefacts.setRasterizedHeightMap(rasterizeShadowedMap(pipelineArtefacts.getDemDescriptor(), pipelineArtefacts.getMapDesignScheme()));
+    public void render(@NonNull final MapComposerWorkPackage workPackage) {
+        final int[] rawShadowedMap = rasterizeShadowedMapRaw(workPackage.getMapComposerConfiguration().getDemDescriptor(), workPackage.getMapComposerConfiguration().getMapDesignScheme());
+        workPackage.getPipelineArtifacts().addArtifact(this, rawShadowedMap);
     }
 
 }

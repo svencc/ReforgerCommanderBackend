@@ -7,6 +7,6 @@ import java.io.IOException;
 
 public interface MapLayerRenderer extends HasMapLayerRendererConfiguration {
 
-    void render(@NonNull final MapComposerWorkPackage pipelineArtefacts) throws IOException;
+    void render(@NonNull final MapComposerWorkPackage workPackage) throws IOException;
 
 }

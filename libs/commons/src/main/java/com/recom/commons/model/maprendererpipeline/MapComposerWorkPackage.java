@@ -1,12 +1,14 @@
 package com.recom.commons.model.maprendererpipeline;
 
 import com.recom.commons.model.maprendererpipeline.report.RendererReport;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NonNull;
 
 @Data
 @Builder
 @AllArgsConstructor
-@RequiredArgsConstructor
 public class MapComposerWorkPackage {
 
     @NonNull
@@ -14,7 +16,7 @@ public class MapComposerWorkPackage {
 
 
     @NonNull
-    private final MapRendererPipelineArtifacts artifacts;
+    private final MapRendererPipelineArtifacts pipelineArtifacts;
 
 
     @NonNull

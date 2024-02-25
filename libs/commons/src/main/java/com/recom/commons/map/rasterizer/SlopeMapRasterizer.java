@@ -2,6 +2,7 @@ package com.recom.commons.map.rasterizer;
 
 import com.recom.commons.calculator.d8algorithm.D8AlgorithmForSlopeAndAspectMap;
 import com.recom.commons.calculator.d8algorithm.D8AlgorithmForSlopeMap;
+import com.recom.commons.map.PixelBufferMapper;
 import com.recom.commons.map.rasterizer.configuration.LayerOrder;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRenderer;
 import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
@@ -31,10 +32,34 @@ public class SlopeMapRasterizer implements MapLayerRenderer {
 
 
     @NonNull
-    public ByteArrayOutputStream rasterizeSlopeMap(
+    public ByteArrayOutputStream rasterizeSlopeMapPNG(
             @NonNull final DEMDescriptor DEMDescriptor,
             @NonNull final MapDesignScheme mapScheme
     ) throws IOException {
+        final int[] pixelBuffer = rasterizeSlopeMapRaw(DEMDescriptor, mapScheme);
+
+        return PixelBufferMapper.map(DEMDescriptor, pixelBuffer);
+    }
+
+    public ByteArrayOutputStream magic(
+            @NonNull DEMDescriptor DEMDescriptor,
+            @NonNull int[] pixelBuffer
+    ) throws IOException {
+        final BufferedImage image = new BufferedImage(DEMDescriptor.getDemWidth(), DEMDescriptor.getDemHeight(), BufferedImage.TYPE_INT_RGB);
+        final int[] imagePixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
+        System.arraycopy(pixelBuffer, 0, imagePixels, 0, pixelBuffer.length);
+
+        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        ImageIO.write(image, "png", outputStream);
+
+        return outputStream;
+    }
+
+    @NonNull
+    public int[] rasterizeSlopeMapRaw(
+            @NonNull final DEMDescriptor DEMDescriptor,
+            @NonNull final MapDesignScheme mapScheme
+    ) {
         final D8AlgorithmForSlopeAndAspectMap algorithmForSlopeAndAspect = new D8AlgorithmForSlopeAndAspectMap(5.0);
         final D8AlgorithmForSlopeMap d8AlgorithmForSlopeMap = new D8AlgorithmForSlopeMap();
 
@@ -51,20 +76,13 @@ public class SlopeMapRasterizer implements MapLayerRenderer {
             }
         }
 
-        final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-
-        final int[] imagePixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
-        System.arraycopy(pixelBuffer, 0, imagePixels, 0, pixelBuffer.length);
-
-        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        ImageIO.write(image, "png", outputStream);
-
-        return outputStream;
+        return pixelBuffer;
     }
 
     @Override
-    public void render(@NonNull MapComposerWorkPackage pipelineArtefacts) throws IOException {
-        pipelineArtefacts.setRasterizedHeightMap(rasterizeSlopeMap(pipelineArtefacts.getDemDescriptor(), pipelineArtefacts.getMapDesignScheme()));
+    public void render(@NonNull MapComposerWorkPackage workPackage) {
+        final int[] rawSlopeMap = rasterizeSlopeMapRaw(workPackage.getMapComposerConfiguration().getDemDescriptor(), workPackage.getMapComposerConfiguration().getMapDesignScheme());
+        workPackage.getPipelineArtifacts().addArtifact(this, rawSlopeMap);
     }
 
 }

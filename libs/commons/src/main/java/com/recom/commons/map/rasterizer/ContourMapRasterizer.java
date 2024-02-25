@@ -1,18 +1,16 @@
 package com.recom.commons.map.rasterizer;
 
 import com.recom.commons.calculator.d8algorithm.D8AlgorithmForContourMap;
-import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
+import com.recom.commons.map.PixelBufferMapper;
 import com.recom.commons.map.rasterizer.configuration.LayerOrder;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRenderer;
+import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
 import com.recom.commons.model.DEMDescriptor;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
 import com.recom.commons.model.maprendererpipeline.MapLayerRendererConfiguration;
 import lombok.Getter;
 import lombok.NonNull;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferInt;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
@@ -27,10 +25,10 @@ public class ContourMapRasterizer implements MapLayerRenderer {
 
 
     @NonNull
-    public ByteArrayOutputStream rasterizeContourMap(
+    public int[] rasterizeContourMapRaw(
             @NonNull final DEMDescriptor DEMDescriptor,
             @NonNull final MapDesignScheme mapScheme
-    ) throws IOException {
+    ) {
         final D8AlgorithmForContourMap algorithmForContourMap = new D8AlgorithmForContourMap();
 
         final int[][] contourMap = algorithmForContourMap.generateContourMap(DEMDescriptor, mapScheme);
@@ -45,20 +43,24 @@ public class ContourMapRasterizer implements MapLayerRenderer {
             }
         }
 
-        final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-
-        final int[] imagePixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
-        System.arraycopy(pixelBuffer, 0, imagePixels, 0, pixelBuffer.length);
-
-        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        ImageIO.write(image, "png", outputStream);
-
-        return outputStream;
+        return pixelBuffer;
     }
 
+    @NonNull
+    public ByteArrayOutputStream rasterizeContourPNG(
+            @NonNull final DEMDescriptor DEMDescriptor,
+            @NonNull final MapDesignScheme mapScheme
+    ) throws IOException {
+        final int[] pixelBuffer = rasterizeContourMapRaw(DEMDescriptor, mapScheme);
+
+        return PixelBufferMapper.map(DEMDescriptor, pixelBuffer);
+    }
+
+
     @Override
-    public void render(@NonNull final MapComposerWorkPackage pipelineArtefacts) throws IOException {
-        pipelineArtefacts.setRasterizedContourMap(rasterizeContourMap(pipelineArtefacts.getDemDescriptor(), pipelineArtefacts.getMapDesignScheme()));
+    public void render(@NonNull final MapComposerWorkPackage workPackage) {
+        final int[] rawContourMap = rasterizeContourMapRaw(workPackage.getMapComposerConfiguration().getDemDescriptor(), workPackage.getMapComposerConfiguration().getMapDesignScheme());
+        workPackage.getPipelineArtifacts().addArtifact(this, rawContourMap);
     }
 
 }

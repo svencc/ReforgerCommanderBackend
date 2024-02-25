@@ -4,6 +4,7 @@ import com.recom.commons.map.rasterizer.*;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRenderer;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
 import com.recom.commons.model.maprendererpipeline.MapLayerRendererConfiguration;
+import com.recom.commons.model.maprendererpipeline.report.PipelineLogMessage;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -38,9 +39,9 @@ public class MapComposer {
 
         mapComposer.registerRenderer(new SlopeAndAspectMapRasterizer());
         mapComposer.registerRenderer(new HeightMapRasterizer());
+        mapComposer.registerRenderer(new ShadowedMapRasterizer());
         mapComposer.registerRenderer(new ContourMapRasterizer());
         mapComposer.registerRenderer(new SlopeMapRasterizer());
-        mapComposer.registerRenderer(new ShadowedMapRasterizer());
 
         return mapComposer;
     }
@@ -128,7 +129,9 @@ public class MapComposer {
 
     private void handleException(@NonNull final MapComposerWorkPackage workPackage) throws MissingRequiredPropertiesException {
         if (!workPackage.getReport().isSuccess()) {
-            workPackage.getReport().getMessages().forEach(log::error);
+            workPackage.getReport().getMessages().stream()
+                    .map(PipelineLogMessage::toString)
+                    .forEach((log::error));
             throw new MissingRequiredPropertiesException();
         }
     }

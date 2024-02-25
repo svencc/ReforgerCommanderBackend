@@ -95,7 +95,7 @@ public class MapGeneratorService {
     @NonNull
     public ByteArrayOutputStream generateShadeMapPNG(@NonNull final MapTopography mapTopography) {
         try {
-            return shadowedMapRasterizer.rasterizeShadowedMap(provideHeightmapData(mapTopography), new ReforgerMapDesignScheme());
+            return shadowedMapRasterizer.rasterizeShadowedMapPNG(provideHeightmapData(mapTopography), new ReforgerMapDesignScheme());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -104,7 +104,7 @@ public class MapGeneratorService {
     @NonNull
     public ByteArrayOutputStream generateContourMapPNG(@NonNull final MapTopography mapTopography) {
         try {
-            return contourMapRasterizer.rasterizeContourMap(provideHeightmapData(mapTopography), new ReforgerMapDesignScheme());
+            return contourMapRasterizer.rasterizeContourPNG(provideHeightmapData(mapTopography), new ReforgerMapDesignScheme());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -113,7 +113,7 @@ public class MapGeneratorService {
     @NonNull
     public ByteArrayOutputStream generateSlopeMapPNG(@NonNull final MapTopography mapTopography) {
         try {
-            return slopeMapRasterizer.rasterizeSlopeMap(provideHeightmapData(mapTopography), new ReforgerMapDesignScheme());
+            return slopeMapRasterizer.rasterizeSlopeMapPNG(provideHeightmapData(mapTopography), new ReforgerMapDesignScheme());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

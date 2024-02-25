@@ -52,7 +52,7 @@ class MapGeneratorServiceTest {
     void generateHeightmap() throws IOException {
         // Arrange
         when(heightmapRasterizer.rasterizeHeightMapPNG(any())).thenCallRealMethod();
-        when(heightmapRasterizer.rasterizeScaledHeightMapRGB(any())).thenCallRealMethod();
+        when(heightmapRasterizer.rasterizeHeightMapRGB(any())).thenCallRealMethod();
 
         final GameMap gameMap = GameMap.builder()
                 .name("test")

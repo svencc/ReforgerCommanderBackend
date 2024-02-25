@@ -1,5 +1,6 @@
 package com.recom.commons.map.rasterizer;
 
+import com.recom.commons.map.PixelBufferMapper;
 import com.recom.commons.map.rasterizer.configuration.LayerOrder;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRenderer;
 import com.recom.commons.map.rasterizer.scaler.DEMScaler;
@@ -9,10 +10,7 @@ import com.recom.commons.model.maprendererpipeline.MapLayerRendererConfiguration
 import lombok.Getter;
 import lombok.NonNull;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferInt;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
@@ -36,31 +34,21 @@ public class HeightMapRasterizer implements MapLayerRenderer {
             @NonNull final DEMDescriptor DEMDescriptor,
             final int scale
     ) {
-        final int[] originalHeightMap = rasterizeScaledHeightMapRGB(DEMDescriptor);
+        final int[] originalHeightMap = rasterizeHeightMapRGB(DEMDescriptor);
 
         return demScaler.scaleMap(DEMDescriptor, scale, originalHeightMap);
     }
 
     @NonNull
     public ByteArrayOutputStream rasterizeHeightMapPNG(@NonNull final DEMDescriptor DEMDescriptor) throws IOException {
-        final int[] pixelBuffer = rasterizeScaledHeightMapRGB(DEMDescriptor);
+        final int[] pixelBuffer = rasterizeHeightMapRGB(DEMDescriptor);
 
-        final int width = DEMDescriptor.getDemWidth();
-        final int height = DEMDescriptor.getDemHeight();
-        final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-
-        final int[] imagePixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
-        System.arraycopy(pixelBuffer, 0, imagePixels, 0, pixelBuffer.length);
-
-        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        ImageIO.write(image, "png", outputStream);
-
-        return outputStream;
+        return PixelBufferMapper.map(DEMDescriptor, pixelBuffer);
     }
 
-    public int[] rasterizeScaledHeightMapRGB(@NonNull final DEMDescriptor command) {
-        final int width = command.getDem().length;
-        final int height = command.getDem()[0].length;
+    public int[] rasterizeHeightMapRGB(@NonNull final DEMDescriptor command) {
+        final int width = command.getDemWidth();
+        final int height = command.getDemHeight();
         final int[] imageBuffer = new int[width * height];
 
         final float heightRange = command.getMaxHeight() - command.getSeaLevel();
@@ -93,8 +81,9 @@ public class HeightMapRasterizer implements MapLayerRenderer {
     }
 
     @Override
-    public void render(@NonNull final MapComposerWorkPackage pipelineArtefacts) throws IOException {
-        pipelineArtefacts.setRasterizedHeightMap(rasterizeHeightMapPNG(pipelineArtefacts.getDemDescriptor()));
+    public void render(@NonNull final MapComposerWorkPackage workPackage) {
+        final int[] rawHeightMap = rasterizeHeightMapRGB(workPackage.getMapComposerConfiguration().getDemDescriptor());
+        workPackage.getPipelineArtifacts().addArtifact(this, rawHeightMap);
     }
 
 }

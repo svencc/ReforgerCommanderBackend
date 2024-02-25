@@ -30,7 +30,7 @@ public class RECOMUICommands {
             final int mapWidth = DEMDescriptor.getDem().length;
             final int mapHeight = DEMDescriptor.getDem()[0].length;
 
-            final int[] pixelBufferArray = mapComponent.heightmapRasterizer.rasterizeScaledHeightMapRGB(DEMDescriptor);
+            final int[] pixelBufferArray = mapComponent.heightmapRasterizer.rasterizeHeightMapRGB(DEMDescriptor);
 
             final PixelBuffer newPixelBuffer = new PixelBuffer(PixelDimension.of(mapWidth, mapHeight), pixelBufferArray);
             mapComponent.setPixelBuffer(newPixelBuffer);

@@ -13,10 +13,14 @@ public class RendererReport {
     private boolean success = true;
 
     @NonNull
-    private final List<String> messages = new ArrayList<>();
+    private final List<PipelineLogMessage> messages = new ArrayList<>();
 
     public void addMessage(@NonNull final String message) {
-        messages.add(String.format("%1s: %2s", getClass().getSimpleName(), message));
+        PipelineLogMessage entry = PipelineLogMessage.builder()
+                .creator(getClass().getSimpleName())
+                .message(message)
+                .build();
+        messages.add(entry);
     }
 
     public void logException(@NonNull final Throwable throwable) {
