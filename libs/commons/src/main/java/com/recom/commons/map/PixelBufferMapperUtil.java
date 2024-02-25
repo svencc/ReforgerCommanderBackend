@@ -16,7 +16,7 @@ public class PixelBufferMapperUtil {
 
     @NonNull
     public ByteArrayOutputStream map(
-            @NonNull DEMDescriptor demDescriptor,
+            @NonNull final DEMDescriptor demDescriptor,
             @NonNull int[] pixelBuffer
     ) throws IOException {
         return map(pixelBuffer, demDescriptor.getDemWidth(), demDescriptor.getDemHeight());
@@ -24,7 +24,7 @@ public class PixelBufferMapperUtil {
 
     @NonNull
     public ByteArrayOutputStream map(
-            @NonNull int[] pixelBuffer,
+            @NonNull final int[] pixelBuffer,
             final int width,
             final int height
     ) throws IOException {
