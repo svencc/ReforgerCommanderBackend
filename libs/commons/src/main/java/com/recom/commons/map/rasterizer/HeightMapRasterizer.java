@@ -1,6 +1,6 @@
 package com.recom.commons.map.rasterizer;
 
-import com.recom.commons.map.PixelBufferMapper;
+import com.recom.commons.map.PixelBufferMapperUtil;
 import com.recom.commons.map.rasterizer.configuration.LayerOrder;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRenderer;
 import com.recom.commons.map.rasterizer.scaler.DEMScaler;
@@ -43,7 +43,7 @@ public class HeightMapRasterizer implements MapLayerRenderer {
     public ByteArrayOutputStream rasterizeHeightMapPNG(@NonNull final DEMDescriptor DEMDescriptor) throws IOException {
         final int[] pixelBuffer = rasterizeHeightMapRGB(DEMDescriptor);
 
-        return PixelBufferMapper.map(DEMDescriptor, pixelBuffer);
+        return PixelBufferMapperUtil.map(DEMDescriptor, pixelBuffer);
     }
 
     public int[] rasterizeHeightMapRGB(@NonNull final DEMDescriptor command) {

@@ -2,7 +2,7 @@ package com.recom.commons.map.rasterizer;
 
 import com.recom.commons.calculator.d8algorithm.D8AlgorithmForSlopeAndAspectMap;
 import com.recom.commons.calculator.d8algorithm.D8AlgorithmForSlopeMap;
-import com.recom.commons.map.PixelBufferMapper;
+import com.recom.commons.map.PixelBufferMapperUtil;
 import com.recom.commons.map.rasterizer.configuration.LayerOrder;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRenderer;
 import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
@@ -38,7 +38,7 @@ public class SlopeMapRasterizer implements MapLayerRenderer {
     ) throws IOException {
         final int[] pixelBuffer = rasterizeSlopeMapRaw(DEMDescriptor, mapScheme);
 
-        return PixelBufferMapper.map(DEMDescriptor, pixelBuffer);
+        return PixelBufferMapperUtil.map(DEMDescriptor, pixelBuffer);
     }
 
     public ByteArrayOutputStream magic(

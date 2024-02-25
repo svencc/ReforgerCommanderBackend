@@ -1,7 +1,7 @@
 package com.recom.commons.map.rasterizer;
 
 import com.recom.commons.calculator.d8algorithm.D8AlgorithmForContourMap;
-import com.recom.commons.map.PixelBufferMapper;
+import com.recom.commons.map.PixelBufferMapperUtil;
 import com.recom.commons.map.rasterizer.configuration.LayerOrder;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRenderer;
 import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
@@ -53,7 +53,7 @@ public class ContourMapRasterizer implements MapLayerRenderer {
     ) throws IOException {
         final int[] pixelBuffer = rasterizeContourMapRaw(DEMDescriptor, mapScheme);
 
-        return PixelBufferMapper.map(DEMDescriptor, pixelBuffer);
+        return PixelBufferMapperUtil.map(DEMDescriptor, pixelBuffer);
     }
 
 

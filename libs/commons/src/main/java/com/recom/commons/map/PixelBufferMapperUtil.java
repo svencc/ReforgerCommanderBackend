@@ -12,7 +12,7 @@ import java.io.IOException;
 
 
 @UtilityClass
-public class PixelBufferMapper {
+public class PixelBufferMapperUtil {
 
     @NonNull
     public ByteArrayOutputStream map(
