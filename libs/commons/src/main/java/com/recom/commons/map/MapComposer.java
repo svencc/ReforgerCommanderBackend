@@ -29,6 +29,7 @@ public class MapComposer {
     @NonNull
     private final ARGBCalculator argbCalculator = new ARGBCalculator();
 
+
     @NonNull
     public static MapComposer withDefaultConfiguration() {
         final MapComposer mapComposer = new MapComposer();
@@ -54,38 +55,6 @@ public class MapComposer {
         final MapComposerWorkPackage completedWorkPackage = renderDataInParallel(workPackage);
 
         handleException(workPackage);
-
-        /*
-        // @TODO
-        // Problem ist jetzt dass ich die buffer; nicht die image ByteStreams brauche; plus in der richtigen reihenfolge!
-        // diese infos sind ja im renderer drin, brauche das in der Ergebnissliste auch -> übertragung von renderer zu pipelineArtefacts
-
-
-        // -------------------------------------------------------------------------------------------------------------
-        // prepare pixel buffer
-        final int width = completedWorkPackage.getMapComposerConfiguration().getDemDescriptor().getDemWidth();
-        final int height = completedWorkPackage.getMapComposerConfiguration().getDemDescriptor().getDemHeight();
-        final int[] pixelBuffer = new int[width * height];
-        // ---
-
-
-        // @TODO 1. extract to common method to write buffered pixels to image
-        // @TODO 2. extract to common method write image to file
-        // write buffered pixels to image
-        final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        final int[] imagePixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
-        System.arraycopy(pixelBuffer, 0, imagePixels, 0, pixelBuffer.length);
-
-        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        try {
-            ImageIO.write(image, "png", outputStream);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        // ---
-
-        return outputStream;
-        */
     }
 
     @NonNull
@@ -159,7 +128,7 @@ public class MapComposer {
     @SuppressWarnings("unchecked")
     public int[] merge(
             @NonNull final MapComposerWorkPackage workPackage,
-            final int[] pixelBuffer
+            @NonNull final int[] pixelBuffer
     ) {
         return workPackage.getPipelineArtifacts().getArtifacts().entrySet().stream()
                 .sorted(Comparator.comparingInt((entry) -> entry.getValue().getCreator().getMapLayerRendererConfiguration().getLayerOrder().getOrder()))
@@ -182,13 +151,11 @@ public class MapComposer {
                 .filter(Objects::nonNull)
                 .reduce(pixelBuffer, (targetBuffer, artifactBuffer) -> {
                     for (int i = 0; i < targetBuffer.length; i++) {
-                        final int artifactPixel = artifactBuffer[i];
-                        final int pixel = targetBuffer[i];
-
-                        targetBuffer[i] = argbCalculator.blend(artifactPixel, targetBuffer[i]);
+                        targetBuffer[i] = argbCalculator.blend(artifactBuffer[i], targetBuffer[i]);
                     }
+
                     return targetBuffer;
                 });
     }
-    
+
 }
