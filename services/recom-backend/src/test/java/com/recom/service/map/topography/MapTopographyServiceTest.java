@@ -1,7 +1,5 @@
 package com.recom.service.map.topography;
 
-import com.recom.entity.map.GameMap;
-import com.recom.entity.map.MapTopography;
 import com.recom.persistence.map.topography.MapLocatedTopographyPersistenceLayer;
 import com.recom.service.SerializationService;
 import org.junit.jupiter.api.Disabled;
@@ -11,14 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class MapTopographyServiceTest {
@@ -36,8 +27,10 @@ class MapTopographyServiceTest {
 
 
     @Test
-    @Disabled // does not work anymore after refactoring; but will be useless in future I guess
+    @Disabled
+        // does not work anymore after refactoring; but will be useless in future I guess
     void provideTopographyMap() throws IOException {
+        /*
         // Arrange
         final GameMap gameMap = GameMap.builder().name("test").build();
 
@@ -65,6 +58,7 @@ class MapTopographyServiceTest {
 
         // Assert
         assertEquals(new String(bytes), new String(bytesToTest));
+         */
     }
 
 

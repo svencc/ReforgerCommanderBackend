@@ -60,13 +60,12 @@ public class MapTopographyService {
                     )
                     .build();
 
-            mapComposer.compose(workPackage);
+            mapComposer.execute(workPackage);
 
-            if (!workPackage.getReport().isSuccess()) {
-                throw new HttpUnprocessableEntityException();
-            } else if (workPackage.getPipelineArtifacts().getArtifactFrom(HeightMapRasterizer.class).isPresent()) {
+            if (workPackage.getReport().isSuccess() && (workPackage.getPipelineArtifacts().getArtifactFrom(HeightMapRasterizer.class).isPresent())) {
                 final int[] heightMapRasterizerArtifact = workPackage.getPipelineArtifacts().getArtifactFrom(HeightMapRasterizer.class).get().getData();
                 final ByteArrayOutputStream outputStream = PixelBufferMapperUtil.map(demDescriptor, heightMapRasterizerArtifact);
+
                 return outputStream.toByteArray();
             } else {
                 throw new HttpUnprocessableEntityException();
@@ -107,4 +106,5 @@ public class MapTopographyService {
                     }
                 });
     }
+
 }

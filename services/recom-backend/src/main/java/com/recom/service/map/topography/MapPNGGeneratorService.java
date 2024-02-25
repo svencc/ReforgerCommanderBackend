@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+
+// @TODO - REMOVE CLASS
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -30,6 +33,7 @@ public class MapPNGGeneratorService {
     private final SlopeMapRasterizer slopeMapRasterizer;
 
 
+    // @TODO - REMOVE CLASS
     @NonNull
     public ByteArrayOutputStream generateHeightmapPNG(@NonNull final DEMDescriptor demDescriptor) throws IOException {
         try {
@@ -41,6 +45,7 @@ public class MapPNGGeneratorService {
         }
     }
 
+    // @TODO - REMOVE CLASS
     @NonNull
     public ByteArrayOutputStream generateShadeMapPNG(@NonNull final DEMDescriptor demDescriptor) {
         try {
@@ -52,6 +57,7 @@ public class MapPNGGeneratorService {
         }
     }
 
+    // @TODO - REMOVE CLASS
     @NonNull
     public ByteArrayOutputStream generateContourMapPNG(@NonNull final DEMDescriptor demDescriptor) {
         try {
@@ -63,6 +69,7 @@ public class MapPNGGeneratorService {
         }
     }
 
+    // @TODO - REMOVE CLASS
     @NonNull
     public ByteArrayOutputStream generateSlopeMapPNG(@NonNull final DEMDescriptor demDescriptor) {
         try {
@@ -75,3 +82,4 @@ public class MapPNGGeneratorService {
     }
 
 }
+// @TODO - REMOVE CLASS

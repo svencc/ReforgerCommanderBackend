@@ -51,7 +51,7 @@ public class MapComposer {
     }
 
     @NonNull
-    public ByteArrayOutputStream compose(@NonNull final MapComposerWorkPackage workPackage) throws MissingRequiredPropertiesException {
+    public ByteArrayOutputStream execute(@NonNull final MapComposerWorkPackage workPackage) throws MissingRequiredPropertiesException {
         applyConfigurationToRenderer(workPackage);
 
         final MapComposerWorkPackage completedCoreDataWorkPackage = renderCoreDataInSequence(workPackage);
