@@ -2,7 +2,6 @@ package com.recom.commons.map.rasterizer;
 
 import com.recom.commons.calculator.d8algorithm.D8AlgorithmForSlopeAndAspectMap;
 import com.recom.commons.calculator.d8algorithm.D8AlgorithmForSlopeMap;
-import com.recom.commons.map.PixelBufferMapperUtil;
 import com.recom.commons.map.rasterizer.configuration.LayerOrder;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRenderer;
 import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
@@ -13,12 +12,6 @@ import com.recom.commons.model.maprendererpipeline.MapLayerRendererConfiguration
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferInt;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 
 @Getter
@@ -32,31 +25,7 @@ public class SlopeMapRasterizer implements MapLayerRenderer {
 
 
     @NonNull
-    public ByteArrayOutputStream rasterizeSlopeMapPNG(
-            @NonNull final DEMDescriptor DEMDescriptor,
-            @NonNull final MapDesignScheme mapScheme
-    ) throws IOException {
-        final int[] pixelBuffer = rasterizeSlopeMapRaw(DEMDescriptor, mapScheme);
-
-        return PixelBufferMapperUtil.map(DEMDescriptor, pixelBuffer);
-    }
-
-    public ByteArrayOutputStream magic(
-            @NonNull DEMDescriptor DEMDescriptor,
-            @NonNull int[] pixelBuffer
-    ) throws IOException {
-        final BufferedImage image = new BufferedImage(DEMDescriptor.getDemWidth(), DEMDescriptor.getDemHeight(), BufferedImage.TYPE_INT_RGB);
-        final int[] imagePixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
-        System.arraycopy(pixelBuffer, 0, imagePixels, 0, pixelBuffer.length);
-
-        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        ImageIO.write(image, "png", outputStream);
-
-        return outputStream;
-    }
-
-    @NonNull
-    public int[] rasterizeSlopeMapRaw(
+    public int[] rasterizeSlopeMap(
             @NonNull final DEMDescriptor DEMDescriptor,
             @NonNull final MapDesignScheme mapScheme
     ) {
@@ -81,7 +50,7 @@ public class SlopeMapRasterizer implements MapLayerRenderer {
 
     @Override
     public void render(@NonNull MapComposerWorkPackage workPackage) {
-        final int[] rawSlopeMap = rasterizeSlopeMapRaw(workPackage.getMapComposerConfiguration().getDemDescriptor(), workPackage.getMapComposerConfiguration().getMapDesignScheme());
+        final int[] rawSlopeMap = rasterizeSlopeMap(workPackage.getMapComposerConfiguration().getDemDescriptor(), workPackage.getMapComposerConfiguration().getMapDesignScheme());
         workPackage.getPipelineArtifacts().addArtifact(this, rawSlopeMap);
     }
 

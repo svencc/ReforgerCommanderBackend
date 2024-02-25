@@ -21,10 +21,13 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class MapServiceTest {
 
+
+    @Mock
+    private DEMService demService;
     @Mock
     private MapLocatedTopographyPersistenceLayer mapTopographyPersistenceLayer;
     @Mock
-    private MapGeneratorService mapGeneratorService;
+    private MapPNGGeneratorService mapPNGGeneratorService;
     @Mock
     private SerializationService serializationService;
     @InjectMocks
@@ -50,10 +53,10 @@ class MapServiceTest {
         byteOutputStream2.write(bytes);
         byteOutputStream3.write(bytes);
         byteOutputStream4.write(bytes);
-        when(mapGeneratorService.generateHeightmapPNG(eq(mapTopography))).thenReturn(byteOutputStream);
-        when(mapGeneratorService.generateShadeMapPNG(eq(mapTopography))).thenReturn(byteOutputStream2);
-        when(mapGeneratorService.generateContourMapPNG(eq(mapTopography))).thenReturn(byteOutputStream3);
-        when(mapGeneratorService.generateSlopeMapPNG(eq(mapTopography))).thenReturn(byteOutputStream4);
+        when(mapPNGGeneratorService.generateHeightmapPNG(eq(mapTopography))).thenReturn(byteOutputStream);
+        when(mapPNGGeneratorService.generateShadeMapPNG(eq(mapTopography))).thenReturn(byteOutputStream2);
+        when(mapPNGGeneratorService.generateContourMapPNG(eq(mapTopography))).thenReturn(byteOutputStream3);
+        when(mapPNGGeneratorService.generateSlopeMapPNG(eq(mapTopography))).thenReturn(byteOutputStream4);
 
         // Act
         final byte[] bytesToTest = serviceUnderTest.provideHeightMapPNG(gameMap);

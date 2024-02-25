@@ -88,7 +88,7 @@ public class MapTopographyController {
         log.debug("Requested GET /api/v1/com.recom.dto.map/topography/data");
 
         final GameMap gameMap = assertionService.provideMap(mapTopographyRequestDto.getMapName());
-        final DEMDescriptor command = mapService.provideTopographyData(gameMap)
+        final DEMDescriptor command = mapService.provideDEMDescriptor(gameMap)
                 .orElseThrow(()-> new HttpNotFoundException("No topography com.recom.dto.map found for com.recom.dto.map with id " + gameMap.getId() + "!"));
 
         return ResponseEntity.status(HttpStatus.OK)

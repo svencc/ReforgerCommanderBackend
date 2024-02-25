@@ -2,7 +2,6 @@ package com.recom.commons.map.rasterizer;
 
 import com.recom.commons.calculator.d8algorithm.D8AlgorithmForShadedMap;
 import com.recom.commons.calculator.d8algorithm.D8AlgorithmForSlopeAndAspectMap;
-import com.recom.commons.map.PixelBufferMapperUtil;
 import com.recom.commons.map.rasterizer.configuration.LayerOrder;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRenderer;
 import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
@@ -13,9 +12,6 @@ import com.recom.commons.model.maprendererpipeline.MapLayerRendererConfiguration
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 
 @Getter
@@ -29,17 +25,7 @@ public class ShadowedMapRasterizer implements MapLayerRenderer {
 
 
     @NonNull
-    public ByteArrayOutputStream rasterizeShadowedMapPNG(
-            @NonNull final DEMDescriptor DEMDescriptor,
-            @NonNull final MapDesignScheme mapScheme
-    ) throws IOException {
-        final int[] pixelBuffer = rasterizeShadowedMapRaw(DEMDescriptor, mapScheme);
-
-        return PixelBufferMapperUtil.map(DEMDescriptor, pixelBuffer);
-    }
-
-    @NonNull
-    public int[] rasterizeShadowedMapRaw(
+    public int[] rasterizeShadowedMap(
             @NonNull final DEMDescriptor DEMDescriptor,
             @NonNull final MapDesignScheme mapScheme
     ) {
@@ -65,7 +51,7 @@ public class ShadowedMapRasterizer implements MapLayerRenderer {
 
     @Override
     public void render(@NonNull final MapComposerWorkPackage workPackage) {
-        final int[] rawShadowedMap = rasterizeShadowedMapRaw(workPackage.getMapComposerConfiguration().getDemDescriptor(), workPackage.getMapComposerConfiguration().getMapDesignScheme());
+        final int[] rawShadowedMap = rasterizeShadowedMap(workPackage.getMapComposerConfiguration().getDemDescriptor(), workPackage.getMapComposerConfiguration().getMapDesignScheme());
         workPackage.getPipelineArtifacts().addArtifact(this, rawShadowedMap);
     }
 

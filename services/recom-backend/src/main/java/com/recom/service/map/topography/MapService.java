@@ -26,9 +26,11 @@ public class MapService {
     @NonNull
     private final MapLocatedTopographyPersistenceLayer mapTopographyPersistenceLayer;
     @NonNull
-    private final MapGeneratorService mapGeneratorService;
+    private final MapPNGGeneratorService mapPNGGeneratorService;
     @NonNull
     private final SerializationService serializationService;
+    @NonNull
+    private final DEMService demService;
 
 
     @Transactional(readOnly = true)
@@ -40,10 +42,10 @@ public class MapService {
 
     private byte[] provideTopographyPNG(@NonNull final MapTopography mapTopography) {
         try {
-            final ByteArrayOutputStream outputStream = mapGeneratorService.generateHeightmapPNG(mapTopography);
-            final ByteArrayOutputStream outputStreamShade = mapGeneratorService.generateShadeMapPNG(mapTopography);
-            final ByteArrayOutputStream outputStreamContour = mapGeneratorService.generateContourMapPNG(mapTopography);
-            final ByteArrayOutputStream outputStreamSlope = mapGeneratorService.generateSlopeMapPNG(mapTopography);
+            final ByteArrayOutputStream outputStream = mapPNGGeneratorService.generateHeightmapPNG(mapTopography);
+            final ByteArrayOutputStream outputStreamShade = mapPNGGeneratorService.generateShadeMapPNG(mapTopography);
+            final ByteArrayOutputStream outputStreamContour = mapPNGGeneratorService.generateContourMapPNG(mapTopography);
+            final ByteArrayOutputStream outputStreamSlope = mapPNGGeneratorService.generateSlopeMapPNG(mapTopography);
             final byte[] heightmapByteArray = outputStream.toByteArray();
 
             // @TODO This is for debugging purposes only; Dirty Hack to put the generated images into the file system here ...
@@ -60,11 +62,11 @@ public class MapService {
 
 
     @NonNull
-    public Optional<DEMDescriptor> provideTopographyData(@NonNull final GameMap gameMap) {
+    public Optional<DEMDescriptor> provideDEMDescriptor(@NonNull final GameMap gameMap) {
         return mapTopographyPersistenceLayer.findByGameMap(gameMap)
                 .map(mapTopography -> {
                     try {
-                        return mapGeneratorService.provideHeightmapData(mapTopography);
+                        return demService.provideDEM(mapTopography);
                     } catch (IOException e) {
                         throw new HttpUnprocessableEntityException();
                     }

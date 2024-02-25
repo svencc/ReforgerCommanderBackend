@@ -1,7 +1,6 @@
 package com.recom.commons.map.rasterizer;
 
 import com.recom.commons.calculator.d8algorithm.D8AlgorithmForContourMap;
-import com.recom.commons.map.PixelBufferMapperUtil;
 import com.recom.commons.map.rasterizer.configuration.LayerOrder;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRenderer;
 import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
@@ -10,9 +9,6 @@ import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
 import com.recom.commons.model.maprendererpipeline.MapLayerRendererConfiguration;
 import lombok.Getter;
 import lombok.NonNull;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 
 @Getter
@@ -25,7 +21,7 @@ public class ContourMapRasterizer implements MapLayerRenderer {
 
 
     @NonNull
-    public int[] rasterizeContourMapRaw(
+    public int[] rasterizeContourMap(
             @NonNull final DEMDescriptor DEMDescriptor,
             @NonNull final MapDesignScheme mapScheme
     ) {
@@ -46,20 +42,9 @@ public class ContourMapRasterizer implements MapLayerRenderer {
         return pixelBuffer;
     }
 
-    @NonNull
-    public ByteArrayOutputStream rasterizeContourPNG(
-            @NonNull final DEMDescriptor DEMDescriptor,
-            @NonNull final MapDesignScheme mapScheme
-    ) throws IOException {
-        final int[] pixelBuffer = rasterizeContourMapRaw(DEMDescriptor, mapScheme);
-
-        return PixelBufferMapperUtil.map(DEMDescriptor, pixelBuffer);
-    }
-
-
     @Override
     public void render(@NonNull final MapComposerWorkPackage workPackage) {
-        final int[] rawContourMap = rasterizeContourMapRaw(workPackage.getMapComposerConfiguration().getDemDescriptor(), workPackage.getMapComposerConfiguration().getMapDesignScheme());
+        final int[] rawContourMap = rasterizeContourMap(workPackage.getMapComposerConfiguration().getDemDescriptor(), workPackage.getMapComposerConfiguration().getMapDesignScheme());
         workPackage.getPipelineArtifacts().addArtifact(this, rawContourMap);
     }
 
