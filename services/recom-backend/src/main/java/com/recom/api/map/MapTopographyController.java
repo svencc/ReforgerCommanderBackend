@@ -91,9 +91,10 @@ public class MapTopographyController {
         final DEMDescriptor demDescriptor = mapTopographyService.provideDEMDescriptor(gameMap)
                 .orElseThrow(()-> new HttpNotFoundException("No topography com.recom.dto.map found for com.recom.dto.map with id " + gameMap.getId() + "!"));
 
+        HeightMapDescriptorDto dto = HeightMapDescriptorMapper.INSTANCE.toDto(demDescriptor, gameMap.getName());
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
-                .body(HeightMapDescriptorMapper.INSTANCE.toDto(demDescriptor, gameMap.getName()));
+                .body(dto);
     }
 
 }

@@ -29,10 +29,6 @@ public class MapTopographyService {
 
     @NonNull
     private final MapLocatedTopographyPersistenceLayer mapTopographyPersistenceLayer;
-    //    @NonNull
-//    private final MapPNGGeneratorService mapPNGGeneratorService;
-    @NonNull
-    private final SerializationService serializationService;
     @NonNull
     private final DEMService demService;
     @NonNull

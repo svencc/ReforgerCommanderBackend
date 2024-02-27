@@ -49,6 +49,6 @@ public class HeightMapDescriptorDto implements Serializable {
 
     @Schema
     @JsonProperty()
-    private float[][] heightMap;
+    private float[][] dem;
 
 }
