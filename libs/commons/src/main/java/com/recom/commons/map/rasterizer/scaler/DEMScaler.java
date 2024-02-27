@@ -1,34 +1,35 @@
-package com.recom.commons.rasterizer;
+package com.recom.commons.map.rasterizer.scaler;
 
 import com.recom.commons.calculator.ARGBCalculator;
+import com.recom.commons.model.DEMDescriptor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class HeightmapScaler {
+public class DEMScaler {
 
     @NonNull
     private final ARGBCalculator argbCalculator = new ARGBCalculator();
 
 
     public int[] scaleMap(
-            @NonNull final HeightMapDescriptor heightMapDescriptor,
+            @NonNull final DEMDescriptor DEMDescriptor,
             final int scale,
-            final int[] originalHeightMap
+            final int[] originalDEM
     ) {
-        final int originalHeight = heightMapDescriptor.getHeightMap().length;
-        final int originalWidth = heightMapDescriptor.getHeightMap()[0].length;
+        final int originalHeight = DEMDescriptor.getDem().length;
+        final int originalWidth = DEMDescriptor.getDem()[0].length;
 
         if (Math.abs(scale) == 1 || scale == 0) {
-            return originalHeightMap;
+            return originalDEM;
         } else if (scale > 1) {
-            final int scaledHeight = heightMapDescriptor.getHeightMap().length * scale;
-            final int scaledWidth = heightMapDescriptor.getHeightMap()[0].length * scale;
+            final int scaledHeight = DEMDescriptor.getDem().length * scale;
+            final int scaledWidth = DEMDescriptor.getDem()[0].length * scale;
 
             final int[] scaledMap = new int[scaledHeight * scaledWidth];
             for (int x = 0; x < originalHeight; x++) {
                 for (int z = 0; z < originalWidth; z++) {
-                    final int color = originalHeightMap[x + z * originalWidth];
+                    final int color = originalDEM[x + z * originalWidth];
                     for (int scaledPixelX = 0; scaledPixelX < scale; scaledPixelX++) {
                         for (int scaledPixelZ = 0; scaledPixelZ < scale; scaledPixelZ++) {
                             scaledMap[(x * scale + scaledPixelX) + (z * scale + scaledPixelZ) * scaledWidth] = color;
@@ -41,8 +42,8 @@ public class HeightmapScaler {
         } else {
             // Nearest Neighbour Downsampling: https://en.wikipedia.org/wiki/Image_scaling
             final int absScale = Math.abs(scale);
-            final int scaledHeight = heightMapDescriptor.getHeightMap().length / absScale;
-            final int scaledWidth = heightMapDescriptor.getHeightMap()[0].length / absScale;
+            final int scaledHeight = DEMDescriptor.getDem().length / absScale;
+            final int scaledWidth = DEMDescriptor.getDem()[0].length / absScale;
 
             final int[] scaledMap = new int[scaledHeight * scaledWidth];
             for (int x = 0; x < scaledHeight; x++) {
@@ -53,10 +54,10 @@ public class HeightmapScaler {
                     int blueComponentSum = 0;
                     for (int scaledPixelX = 0; scaledPixelX < absScale; scaledPixelX++) {
                         for (int scaledPixelZ = 0; scaledPixelZ < absScale; scaledPixelZ++) {
-                            alphaComponentSum += argbCalculator.getAlphaComponent(originalHeightMap[(x * absScale + scaledPixelX) + (z * absScale + scaledPixelZ) * originalWidth]);
-                            redComponentSum += argbCalculator.getRedComponent(originalHeightMap[(x * absScale + scaledPixelX) + (z * absScale + scaledPixelZ) * originalWidth]);
-                            greenComponentSum += argbCalculator.getGreenComponent(originalHeightMap[(x * absScale + scaledPixelX) + (z * absScale + scaledPixelZ) * originalWidth]);
-                            blueComponentSum += argbCalculator.getBlueComponent(originalHeightMap[(x * absScale + scaledPixelX) + (z * absScale + scaledPixelZ) * originalWidth]);
+                            alphaComponentSum += argbCalculator.getAlphaComponent(originalDEM[(x * absScale + scaledPixelX) + (z * absScale + scaledPixelZ) * originalWidth]);
+                            redComponentSum += argbCalculator.getRedComponent(originalDEM[(x * absScale + scaledPixelX) + (z * absScale + scaledPixelZ) * originalWidth]);
+                            greenComponentSum += argbCalculator.getGreenComponent(originalDEM[(x * absScale + scaledPixelX) + (z * absScale + scaledPixelZ) * originalWidth]);
+                            blueComponentSum += argbCalculator.getBlueComponent(originalDEM[(x * absScale + scaledPixelX) + (z * absScale + scaledPixelZ) * originalWidth]);
                         }
                     }
                     final int scalePow = (int) Math.pow(absScale, 2);

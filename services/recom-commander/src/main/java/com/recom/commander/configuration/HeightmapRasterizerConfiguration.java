@@ -1,6 +1,6 @@
 package com.recom.commander.configuration;
 
-import com.recom.commons.rasterizer.HeightmapRasterizer;
+import com.recom.commons.map.rasterizer.HeightMapRasterizer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,8 +10,8 @@ import org.springframework.context.annotation.Configuration;
 public class HeightmapRasterizerConfiguration {
 
     @Bean()
-    public HeightmapRasterizer getHeightmapRasterizer() {
-        return new HeightmapRasterizer();
+    public HeightMapRasterizer getHeightmapRasterizer() {
+        return new HeightMapRasterizer();
     }
 
 }

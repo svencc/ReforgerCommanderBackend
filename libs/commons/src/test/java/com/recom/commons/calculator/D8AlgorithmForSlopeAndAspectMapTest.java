@@ -1,14 +1,14 @@
 package com.recom.commons.calculator;
 
+import com.recom.commons.calculator.d8algorithm.D8AlgorithmForSlopeAndAspectMap;
 import com.recom.commons.model.Aspect;
 import com.recom.commons.model.SlopeAndAspect;
-import com.recom.commons.rasterizer.mapcolorscheme.ReforgerMapScheme;
 import lombok.NonNull;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class D8CalculatorForSlopeAndAspectMapsTest {
+class D8AlgorithmForSlopeAndAspectMapTest {
 
     @NonNull
     private String getMessageDescription(
@@ -22,7 +22,7 @@ class D8CalculatorForSlopeAndAspectMapsTest {
     @Test
     void calculateSlopeAndAspectMap() {
         // ARRANGE
-        final D8CalculatorForSlopeAndAspectMaps algorithm = new D8CalculatorForSlopeAndAspectMaps(1.0);
+        final D8AlgorithmForSlopeAndAspectMap algorithm = new D8AlgorithmForSlopeAndAspectMap(1.0);
         final float[][] dem = {
                 {450, 445, 440},
                 {455, 450, 445},
@@ -36,41 +36,13 @@ class D8CalculatorForSlopeAndAspectMapsTest {
         };
 
         // ACT
-        final SlopeAndAspect[][] slopeAndAspectsToTest = algorithm.calculateSlopeAndAspectMap(dem);
+        final SlopeAndAspect[][] slopeAndAspectsToTest = algorithm.generateSlopeAndAspectMap(dem);
 
         // ASSERT
         for (int x = 0; x < dem.length; x++) {
             for (int y = 0; y < dem[0].length; y++) {
                 assertTrue((expectedMap[x][y].getSlope() - slopeAndAspectsToTest[x][y].getSlope()) < 0.05 && expectedMap[x][y].getAspect() == slopeAndAspectsToTest[x][y].getAspect(), getMessageDescription(x, y) + " Expected: " + expectedMap[x][y] + " Actual: " + slopeAndAspectsToTest[x][y]);
             }
-        }
-    }
-
-    @Test
-    void calculateShadedMap() {
-        // ARRANGE
-        final ReforgerMapScheme mapScheme = new ReforgerMapScheme();
-        final D8CalculatorForSlopeAndAspectMaps algorithm = new D8CalculatorForSlopeAndAspectMaps(1.0);
-        final float[][] dem = {
-                {400, 400, 400, 400, 400},
-                {400, 450, 430, 400, 400},
-                {400, 450, 430, 400, 400},
-                {400, 400, 400, 400, 400},
-                {400, 400, 400, 400, 400}
-        };
-
-        // ACT
-        final SlopeAndAspect[][] slopeAndAspects = algorithm.calculateSlopeAndAspectMap(dem);
-        int[][] shadedMapToTest = algorithm.calculateShadedMap(slopeAndAspects, mapScheme);
-
-        // ASSERT
-        for (int x = 0; x < dem.length; x++) {
-            System.out.print("{");
-            for (int y = 0; y < dem[0].length; y++) {
-                System.out.print(shadedMapToTest[x][y] + ", ");
-            }
-            System.out.print("}");
-            System.out.println();
         }
     }
 

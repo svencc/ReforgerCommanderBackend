@@ -69,7 +69,7 @@ class MultithreadedSoftwareRenderer3 extends RendererTemplate {
 
                             final int colorValue = source.scanPixelAt(x, y);
                             if (colorValue == 0xFFff00ff) continue;
-                            final int alphaComponent = argbCalculatorProvider.provide().getAlphaComponent(colorValue);
+                            final int alphaComponent = argbCalculatorProvider.provide().getAlphaComponent(colorValue); // @TODO this is a performance bottleneck? values are cached anyway!
                             if (alphaComponent < 0xFF) {
                                 // set color blending (alpha channel)
                                 target.bufferPixelAt(copyToX, copyToY, argbCalculatorProvider.provide().blend(colorValue, target.scanPixelAt(copyToX, copyToY)));

@@ -1,4 +1,4 @@
-package com.recom.commons.rasterizer;
+package com.recom.commons.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class HeightMapDescriptor {
+public class DEMDescriptor {
 
     // meta data
     private Float stepSize;
@@ -20,6 +20,14 @@ public class HeightMapDescriptor {
     private Float seaLevel;
     private Float maxWaterDepth;
     private Float maxHeight;
-    private float[][] heightMap;
+    private float[][] dem;
+
+    public int getDemWidth() {
+        return dem.length;
+    }
+
+    public int getDemHeight() {
+        return dem[0].length;
+    }
 
 }

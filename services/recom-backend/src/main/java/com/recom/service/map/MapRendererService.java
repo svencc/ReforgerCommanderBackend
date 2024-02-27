@@ -23,7 +23,7 @@ public class MapRendererService {
 
     public static final String MAP_RENDERER_CACHE_NAME = "MapRendererService.mapRenderCommands";
     public static final Integer Z_INDEX_GEOMETRY = 1;
-    public static final Long COLOR_GEOMETRY = ARGBColor.ARGB(127, 0, 0, 255);
+    public static final Integer COLOR_GEOMETRY = ARGBColor.ARGB(127, 0, 0, 255);
 
     @NonNull
     private final ClusteringService clusteringService;

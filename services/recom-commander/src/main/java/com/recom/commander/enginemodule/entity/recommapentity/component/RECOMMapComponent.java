@@ -4,8 +4,8 @@ import com.recom.commander.event.InitialAuthenticationEvent;
 import com.recom.commander.mapper.HeightMapDescriptorMapper;
 import com.recom.commander.service.map.overview.data.MapsOverviewService;
 import com.recom.commander.service.map.topography.data.MapTopographyDataService;
-import com.recom.commons.rasterizer.HeightMapDescriptor;
-import com.recom.commons.rasterizer.HeightmapRasterizer;
+import com.recom.commons.model.DEMDescriptor;
+import com.recom.commons.map.rasterizer.HeightMapRasterizer;
 import com.recom.commons.units.ScaleFactor;
 import com.recom.dto.map.MapOverviewDto;
 import com.recom.dto.map.topography.HeightMapDescriptorDto;
@@ -14,7 +14,6 @@ import com.recom.observer.Notification;
 import com.recom.observer.ReactiveObserver;
 import com.recom.observer.Subjective;
 import com.recom.observer.TakeNoticeRunnable;
-import com.recom.tacview.engine.ecs.component.PhysicCoreComponent;
 import com.recom.tacview.engine.ecs.component.RenderableComponent;
 import com.recom.tacview.property.IsEngineProperties;
 import jakarta.annotation.Nullable;
@@ -36,7 +35,7 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
     @NonNull
     final IsEngineProperties engineProperties;
     @NonNull
-    final HeightmapRasterizer heightmapRasterizer;
+    final HeightMapRasterizer heightmapRasterizer;
     @Nullable
     private final ReactiveObserver<MapOverviewDto> mapOverviewReactiveObserver;
     @Nullable
@@ -44,14 +43,14 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
     @NonNull
     final ScaleFactor mapScaleFactor = new ScaleFactor(-5, 10);
     @NonNull
-    Optional<HeightMapDescriptor> maybeHeightMapDescriptor = Optional.empty();
+    Optional<DEMDescriptor> maybeHeightMapDescriptor = Optional.empty();
 
 
     public RECOMMapComponent(
             @NonNull final MapsOverviewService mapsOverviewService,
             @NonNull final MapTopographyDataService mapTopographyDataService,
             @NonNull final IsEngineProperties engineProperties,
-            @NonNull final HeightmapRasterizer heightmapRasterizer
+            @NonNull final HeightMapRasterizer heightmapRasterizer
     ) {
         super();
         this.mapsOverviewService = mapsOverviewService;
@@ -92,8 +91,8 @@ public class RECOMMapComponent extends RenderableComponent implements AutoClosea
         ) -> {
             log.debug("Received map topography data");
             final HeightMapDescriptorDto heightMapDescriptorDto = notification.getPayload();
-            final HeightMapDescriptor heightMapDescriptor = HeightMapDescriptorMapper.INSTANCE.toModel(heightMapDescriptorDto);
-            maybeHeightMapDescriptor = Optional.of(heightMapDescriptor);
+            final DEMDescriptor DEMDescriptor = HeightMapDescriptorMapper.INSTANCE.toModel(heightMapDescriptorDto);
+            maybeHeightMapDescriptor = Optional.of(DEMDescriptor);
 
             RECOMUICommands.setUnscaledMap(this);
         };

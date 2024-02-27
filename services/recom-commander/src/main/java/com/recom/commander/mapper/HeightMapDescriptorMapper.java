@@ -1,7 +1,7 @@
 package com.recom.commander.mapper;
 
+import com.recom.commons.model.DEMDescriptor;
 import com.recom.dto.map.topography.HeightMapDescriptorDto;
-import com.recom.commons.rasterizer.HeightMapDescriptor;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -10,6 +10,6 @@ public interface HeightMapDescriptorMapper {
 
     HeightMapDescriptorMapper INSTANCE = Mappers.getMapper(HeightMapDescriptorMapper.class);
 
-    HeightMapDescriptor toModel(final HeightMapDescriptorDto command);
+    DEMDescriptor toModel(final HeightMapDescriptorDto command);
 
 }

@@ -1,14 +1,9 @@
 # TODO LIST
 
 # 1
-* nicer color scheme for the map
-  * add layer system for maps
-    * add DynamicLayerProperties (configuration for RecomMapEntity) (/)
-    * blend layers (<-)
-      * render layer on top of map layer!
-      * blend layers in order
-      * activate / deactivate layers
-  * DEM (Digital Elevation Model) -> Höhenmodell -> Rename old things to DEM
+* nicer color scheme for the map (<-)
+* add DynamicLayerProperties (configuration for RecomMapEntity) (/)
+* add adjustable properties via json/REST-API /api/v1/map/topography
 
 * interpolate base map to 1pixel = 1meter resolution
   * so 5m scaled map is upscaled to 1m resolution
