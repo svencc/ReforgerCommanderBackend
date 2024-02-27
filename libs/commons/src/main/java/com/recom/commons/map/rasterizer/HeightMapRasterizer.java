@@ -2,7 +2,7 @@ package com.recom.commons.map.rasterizer;
 
 import com.recom.commons.map.rasterizer.configuration.LayerOrder;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRenderer;
-import com.recom.commons.map.rasterizer.scaler.DEMScaler;
+import com.recom.commons.map.rasterizer.scaler.DEMScalerNearestNeighbor;
 import com.recom.commons.model.DEMDescriptor;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
 import com.recom.commons.model.maprendererpipeline.MapLayerRendererConfiguration;
@@ -22,11 +22,11 @@ public class HeightMapRasterizer implements MapLayerRenderer {
             .enabled(false)
             .build();
     @NonNull
-    private final DEMScaler demScaler;
+    private final DEMScalerNearestNeighbor demScaler;
 
 
     public HeightMapRasterizer() {
-        demScaler = new DEMScaler();
+        demScaler = new DEMScalerNearestNeighbor();
     }
 
     @NonNull

@@ -5,7 +5,7 @@ import com.recom.commons.calculator.ARGBColor;
 import com.recom.commons.map.rasterizer.configuration.LayerOrder;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRenderer;
 import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
-import com.recom.commons.map.rasterizer.scaler.DEMScaler;
+import com.recom.commons.map.rasterizer.scaler.DEMScalerNearestNeighbor;
 import com.recom.commons.model.DEMDescriptor;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
 import com.recom.commons.model.maprendererpipeline.MapLayerRendererConfiguration;
@@ -23,12 +23,12 @@ public class BaseMapRasterizer implements MapLayerRenderer {
             .layerOrder(LayerOrder.BASE_MAP)
             .build();
     @NonNull
-    private final DEMScaler demScaler;
+    private final DEMScalerNearestNeighbor demScaler;
 
 
     public BaseMapRasterizer() {
         // @TODO vermutlich hier raus; has to be used outside ...
-        demScaler = new DEMScaler();
+        demScaler = new DEMScalerNearestNeighbor();
     }
 
     @NonNull
