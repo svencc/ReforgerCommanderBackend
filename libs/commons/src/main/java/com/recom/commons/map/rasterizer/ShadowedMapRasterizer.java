@@ -2,7 +2,7 @@ package com.recom.commons.map.rasterizer;
 
 import com.recom.commons.calculator.d8algorithm.D8AlgorithmForShadedMap;
 import com.recom.commons.map.rasterizer.configuration.LayerOrder;
-import com.recom.commons.map.rasterizer.configuration.MapLayerRenderer;
+import com.recom.commons.map.rasterizer.configuration.MapLayerRasterizer;
 import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
 import com.recom.commons.model.DEMDescriptor;
 import com.recom.commons.model.SlopeAndAspectMap;
@@ -16,10 +16,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ShadowedMapRasterizer implements MapLayerRenderer {
+public class ShadowedMapRasterizer implements MapLayerRasterizer {
 
     @NonNull
     private MapLayerRendererConfiguration mapLayerRendererConfiguration = MapLayerRendererConfiguration.builder()
+            .rasterizerName(getClass().getSimpleName())
             .layerOrder(LayerOrder.SHADOWED_MAP)
             .build();
 
@@ -44,6 +45,11 @@ public class ShadowedMapRasterizer implements MapLayerRenderer {
         }
 
         return pixelBuffer;
+    }
+
+    @Override
+    public String getRasterizerName() {
+        return getClass().getSimpleName();
     }
 
     @Override

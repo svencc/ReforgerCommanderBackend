@@ -11,7 +11,6 @@ import com.recom.entity.map.MapTopography;
 import com.recom.exception.HttpNotFoundException;
 import com.recom.exception.HttpUnprocessableEntityException;
 import com.recom.persistence.map.topography.MapLocatedTopographyPersistenceLayer;
-import com.recom.service.SerializationService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

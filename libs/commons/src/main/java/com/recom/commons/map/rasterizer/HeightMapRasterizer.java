@@ -1,7 +1,7 @@
 package com.recom.commons.map.rasterizer;
 
 import com.recom.commons.map.rasterizer.configuration.LayerOrder;
-import com.recom.commons.map.rasterizer.configuration.MapLayerRenderer;
+import com.recom.commons.map.rasterizer.configuration.MapLayerRasterizer;
 import com.recom.commons.map.rasterizer.scaler.DEMScalerNearestNeighbor;
 import com.recom.commons.model.DEMDescriptor;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
@@ -12,11 +12,12 @@ import lombok.NonNull;
 import java.awt.*;
 
 
-public class HeightMapRasterizer implements MapLayerRenderer {
+public class HeightMapRasterizer implements MapLayerRasterizer {
 
     @Getter
     @NonNull
     private MapLayerRendererConfiguration mapLayerRendererConfiguration = MapLayerRendererConfiguration.builder()
+            .rasterizerName(getClass().getSimpleName())
             .layerOrder(LayerOrder.HEIGHT_MAP)
             .visible(false)
             .enabled(false)
@@ -72,6 +73,11 @@ public class HeightMapRasterizer implements MapLayerRenderer {
         }
 
         return imageBuffer;
+    }
+
+    @Override
+    public String getRasterizerName() {
+        return getClass().getSimpleName();
     }
 
     @Override

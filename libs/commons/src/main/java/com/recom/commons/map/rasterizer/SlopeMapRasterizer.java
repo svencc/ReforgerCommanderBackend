@@ -3,7 +3,7 @@ package com.recom.commons.map.rasterizer;
 import com.recom.commons.calculator.d8algorithm.D8AlgorithmForSlopeAndAspectMap;
 import com.recom.commons.calculator.d8algorithm.D8AlgorithmForSlopeMap;
 import com.recom.commons.map.rasterizer.configuration.LayerOrder;
-import com.recom.commons.map.rasterizer.configuration.MapLayerRenderer;
+import com.recom.commons.map.rasterizer.configuration.MapLayerRasterizer;
 import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
 import com.recom.commons.model.DEMDescriptor;
 import com.recom.commons.model.SlopeAndAspect;
@@ -16,10 +16,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SlopeMapRasterizer implements MapLayerRenderer {
+public class SlopeMapRasterizer implements MapLayerRasterizer {
 
     @NonNull
     private MapLayerRendererConfiguration mapLayerRendererConfiguration = MapLayerRendererConfiguration.builder()
+            .rasterizerName(getClass().getSimpleName())
             .layerOrder(LayerOrder.HEIGHT_MAP)
             .visible(false)
             .build();
@@ -47,6 +48,11 @@ public class SlopeMapRasterizer implements MapLayerRenderer {
         }
 
         return pixelBuffer;
+    }
+
+    @Override
+    public String getRasterizerName() {
+        return getClass().getSimpleName();
     }
 
     @Override

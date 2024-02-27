@@ -4,8 +4,8 @@ import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
 import com.recom.commons.model.DEMDescriptor;
 import lombok.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Builder
@@ -19,7 +19,10 @@ public class MapComposerConfiguration {
     @NonNull
     private MapDesignScheme mapDesignScheme;
 
+//    @NonNull
+//    private final Map<String, MapLayerRendererConfiguration> rendererConfiguration = new HashMap<>();
+
     @NonNull
-    private final Map<String, MapLayerRendererConfiguration> rendererConfiguration = new HashMap<>();
+    private final List<MapLayerRendererConfiguration> rendererConfiguration = new ArrayList<>();
 
 }

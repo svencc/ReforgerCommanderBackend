@@ -3,7 +3,7 @@ package com.recom.commons.map.rasterizer;
 import com.recom.commons.calculator.ARGBCalculator;
 import com.recom.commons.calculator.ARGBColor;
 import com.recom.commons.map.rasterizer.configuration.LayerOrder;
-import com.recom.commons.map.rasterizer.configuration.MapLayerRenderer;
+import com.recom.commons.map.rasterizer.configuration.MapLayerRasterizer;
 import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
 import com.recom.commons.map.rasterizer.scaler.DEMScalerNearestNeighbor;
 import com.recom.commons.model.DEMDescriptor;
@@ -13,13 +13,14 @@ import lombok.Getter;
 import lombok.NonNull;
 
 
-public class BaseMapRasterizer implements MapLayerRenderer {
+public class BaseMapRasterizer implements MapLayerRasterizer {
 
     @NonNull
     private final ARGBCalculator argbCalculator = new ARGBCalculator();
     @Getter
     @NonNull
     private MapLayerRendererConfiguration mapLayerRendererConfiguration = MapLayerRendererConfiguration.builder()
+            .rasterizerName(getClass().getSimpleName())
             .layerOrder(LayerOrder.BASE_MAP)
             .build();
     @NonNull
@@ -71,6 +72,11 @@ public class BaseMapRasterizer implements MapLayerRenderer {
         }
 
         return imageBuffer;
+    }
+
+    @Override
+    public String getRasterizerName() {
+        return getClass().getSimpleName();
     }
 
     @Override

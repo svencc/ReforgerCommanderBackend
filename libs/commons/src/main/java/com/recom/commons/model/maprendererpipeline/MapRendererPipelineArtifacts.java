@@ -1,6 +1,6 @@
 package com.recom.commons.model.maprendererpipeline;
 
-import com.recom.commons.map.rasterizer.configuration.MapLayerRenderer;
+import com.recom.commons.map.rasterizer.configuration.MapLayerRasterizer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,11 +16,11 @@ public class MapRendererPipelineArtifacts {
 
     @Getter
     @NonNull
-    private final Map<Class<? extends MapLayerRenderer>, CreatedArtifact> artifacts = new HashMap<>();
+    private final Map<Class<? extends MapLayerRasterizer>, CreatedArtifact> artifacts = new HashMap<>();
 
 
     public void addArtifact(
-            @NonNull final MapLayerRenderer creator,
+            @NonNull final MapLayerRasterizer creator,
             @NonNull final Object artifact
     ) {
         final CreatedArtifact createdArtifact = CreatedArtifact.builder()
@@ -31,7 +31,7 @@ public class MapRendererPipelineArtifacts {
         artifacts.put(creator.getClass(), createdArtifact);
     }
 
-    public <T> Optional<CreatedArtifact> getArtifactFrom(@NonNull final Class<? extends MapLayerRenderer> rendererName) {
+    public <T> Optional<CreatedArtifact> getArtifactFrom(@NonNull final Class<? extends MapLayerRasterizer> rendererName) {
         return Optional.ofNullable(artifacts.get(rendererName));
     }
 

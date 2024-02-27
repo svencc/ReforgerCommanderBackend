@@ -2,9 +2,8 @@ package com.recom.commons.map;
 
 import com.recom.commons.calculator.ARGBCalculator;
 import com.recom.commons.map.rasterizer.*;
-import com.recom.commons.map.rasterizer.configuration.MapLayerRenderer;
+import com.recom.commons.map.rasterizer.configuration.MapLayerRasterizer;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
-import com.recom.commons.model.maprendererpipeline.MapLayerRendererConfiguration;
 import com.recom.commons.model.maprendererpipeline.report.PipelineLogMessage;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -23,7 +22,7 @@ import java.util.concurrent.Executors;
 public class MapComposer {
 
     @NonNull
-    private final Map<String, MapLayerRenderer> mapLayerRendererPipeline = new HashMap<>();
+    private final List<MapLayerRasterizer> mapLayerRasterizerPipeline = new ArrayList<>();
     @NonNull
     private final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
     @NonNull
@@ -44,14 +43,13 @@ public class MapComposer {
         return mapComposer;
     }
 
-    public void registerRenderer(@NonNull final MapLayerRenderer renderer) {
-        mapLayerRendererPipeline.put(renderer.getClass().getSimpleName(), renderer);
+    public void registerRenderer(@NonNull final MapLayerRasterizer rasterizer) {
+        mapLayerRasterizerPipeline.add(rasterizer);
     }
 
     @NonNull
     public void execute(@NonNull final MapComposerWorkPackage workPackage) throws MissingRequiredPropertiesException {
-        applyConfigurationToRenderer(workPackage);
-
+        applyConfigurationToRasterizer(workPackage);
 
         // scale step here or before
         // bilinear interpolation
@@ -64,10 +62,11 @@ public class MapComposer {
 
     @NonNull
     private void renderDataInParallel(@NonNull final MapComposerWorkPackage workPackage) {
-        mapLayerRendererPipeline.values().stream()
-                .sorted(Comparator.comparingInt((final MapLayerRenderer mapLayerRenderer) -> mapLayerRenderer.getMapLayerRendererConfiguration().getLayerOrder().getOrder()))
-                .filter((final MapLayerRenderer renderer) -> renderer.getMapLayerRendererConfiguration().isEnabled())
-                .filter((final MapLayerRenderer renderer) -> !renderer.getMapLayerRendererConfiguration().isSequentialCoreData())
+        mapLayerRasterizerPipeline
+                .stream()
+                .sorted(Comparator.comparingInt((final MapLayerRasterizer mapLayerRasterizer) -> mapLayerRasterizer.getMapLayerRendererConfiguration().getLayerOrder().getOrder()))
+                .filter((final MapLayerRasterizer renderer) -> renderer.getMapLayerRendererConfiguration().isEnabled())
+                .filter((final MapLayerRasterizer renderer) -> !renderer.getMapLayerRendererConfiguration().isSequentialCoreData())
                 .map(renderer -> CompletableFuture.supplyAsync(() -> {
                     try {
                         renderer.render(workPackage);
@@ -84,10 +83,12 @@ public class MapComposer {
 
     @NonNull
     private void renderCoreDataInSequence(@NonNull final MapComposerWorkPackage workPackage) {
-        mapLayerRendererPipeline.values().stream()
-                .sorted(Comparator.comparingInt((final MapLayerRenderer mapLayerRenderer) -> mapLayerRenderer.getMapLayerRendererConfiguration().getLayerOrder().getOrder()))
-                .filter((final MapLayerRenderer renderer) -> renderer.getMapLayerRendererConfiguration().isEnabled())
-                .filter((final MapLayerRenderer renderer) -> renderer.getMapLayerRendererConfiguration().isSequentialCoreData())
+//        mapLayerRendererPipeline.values()
+        mapLayerRasterizerPipeline
+                .stream()
+                .sorted(Comparator.comparingInt((final MapLayerRasterizer mapLayerRasterizer) -> mapLayerRasterizer.getMapLayerRendererConfiguration().getLayerOrder().getOrder()))
+                .filter((final MapLayerRasterizer renderer) -> renderer.getMapLayerRendererConfiguration().isEnabled())
+                .filter((final MapLayerRasterizer renderer) -> renderer.getMapLayerRendererConfiguration().isSequentialCoreData())
                 .peek(renderer -> {
                     try {
                         renderer.render(workPackage);
@@ -108,16 +109,29 @@ public class MapComposer {
         }
     }
 
-    private void applyConfigurationToRenderer(@NonNull final MapComposerWorkPackage workPackage) {
-        workPackage.getMapComposerConfiguration().getRendererConfiguration().entrySet().stream()
-                .filter(entry -> mapLayerRendererPipeline.containsKey(entry.getKey()))
-                .forEach(configurationEntry -> {
-                    final String layerRendererName = configurationEntry.getKey();
-                    final MapLayerRendererConfiguration configuration = configurationEntry.getValue();
+    private void applyConfigurationToRasterizer(@NonNull final MapComposerWorkPackage workPackage) {
+        // @TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+        final Map<String, MapLayerRasterizer> indexedRasterizer = mapLayerRasterizerPipeline.stream()
+                .collect(HashMap::new, (map, rasterizer) -> map.put(rasterizer.getRasterizerName(), rasterizer), HashMap::putAll);
 
-                    final MapLayerRenderer mapLayerRenderer = mapLayerRendererPipeline.get(layerRendererName);
-                    configuration.applyConfiguration(mapLayerRenderer);
+        workPackage.getMapComposerConfiguration().getRendererConfiguration().stream()
+//                .filter(configuration -> mapLayerRasterizerPipeline.containsKey(configuration.getRendererName()))
+                .filter(configuration -> indexedRasterizer.containsKey(configuration.getRasterizerName()))
+                .forEach(configuration -> {
+                    final MapLayerRasterizer mapLayerRasterizer = indexedRasterizer.get(configuration.getRasterizerName());
+                    configuration.applyConfiguration(mapLayerRasterizer);
                 });
+
+        // @TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+//        workPackage.getMapComposerConfiguration().getRendererConfiguration().entrySet().stream()
+//                .filter(entry -> indexedRasterizer.containsKey(entry.getKey()))
+//                .forEach(configurationEntry -> {
+//                    final String layerRendererName = configurationEntry.getKey();
+//                    final MapLayerRendererConfiguration configuration = configurationEntry.getValue();
+//
+//                    final MapLayerRasterizer mapLayerRasterizer = indexedRasterizer.get(layerRendererName);
+//                    configuration.applyConfiguration(mapLayerRasterizer);
+//                });
     }
 
     @NonNull
@@ -139,7 +153,7 @@ public class MapComposer {
         return workPackage.getPipelineArtifacts().getArtifacts().entrySet().stream()
                 .sorted(Comparator.comparingInt((entry) -> entry.getValue().getCreator().getMapLayerRendererConfiguration().getLayerOrder().getOrder()))
                 .filter(entry -> {
-                    final MapLayerRenderer artifactCreator = entry.getValue().getCreator();
+                    final MapLayerRasterizer artifactCreator = entry.getValue().getCreator();
                     return artifactCreator.getMapLayerRendererConfiguration().isEnabled()
                             && artifactCreator.getMapLayerRendererConfiguration().isVisible();
                 })

@@ -5,7 +5,10 @@ import lombok.NonNull;
 
 import java.io.IOException;
 
-public interface MapLayerRenderer extends HasMapLayerRendererConfiguration {
+public interface MapLayerRasterizer extends HasMapLayerRasterizerConfiguration {
+
+    @NonNull
+    String getRasterizerName();
 
     void render(@NonNull final MapComposerWorkPackage workPackage) throws IOException;
 

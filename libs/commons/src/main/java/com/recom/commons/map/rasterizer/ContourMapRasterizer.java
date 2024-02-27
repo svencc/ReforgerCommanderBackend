@@ -2,7 +2,7 @@ package com.recom.commons.map.rasterizer;
 
 import com.recom.commons.calculator.d8algorithm.D8AlgorithmForContourMap;
 import com.recom.commons.map.rasterizer.configuration.LayerOrder;
-import com.recom.commons.map.rasterizer.configuration.MapLayerRenderer;
+import com.recom.commons.map.rasterizer.configuration.MapLayerRasterizer;
 import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
 import com.recom.commons.model.DEMDescriptor;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
@@ -12,10 +12,11 @@ import lombok.NonNull;
 
 
 @Getter
-public class ContourMapRasterizer implements MapLayerRenderer {
+public class ContourMapRasterizer implements MapLayerRasterizer {
 
     @NonNull
     private MapLayerRendererConfiguration mapLayerRendererConfiguration = MapLayerRendererConfiguration.builder()
+            .rasterizerName(getClass().getSimpleName())
             .layerOrder(LayerOrder.CONTOUR_MAP)
             .build();
 
@@ -40,6 +41,11 @@ public class ContourMapRasterizer implements MapLayerRenderer {
         }
 
         return pixelBuffer;
+    }
+
+    @Override
+    public String getRasterizerName() {
+        return getClass().getSimpleName();
     }
 
     @Override

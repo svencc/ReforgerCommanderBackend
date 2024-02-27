@@ -1,6 +1,6 @@
 package com.recom.commons.model.maprendererpipeline;
 
-import com.recom.commons.map.rasterizer.configuration.MapLayerRenderer;
+import com.recom.commons.map.rasterizer.configuration.MapLayerRasterizer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +12,7 @@ public class CreatedArtifact {
 
     @Getter
     @NonNull
-    private final MapLayerRenderer creator;
+    private final MapLayerRasterizer creator;
     @NonNull
     private final Object data;
 
