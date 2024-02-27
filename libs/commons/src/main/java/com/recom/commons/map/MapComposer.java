@@ -64,7 +64,7 @@ public class MapComposer {
     private void renderDataInParallel(@NonNull final MapComposerWorkPackage workPackage) {
         mapLayerRasterizerPipeline
                 .stream()
-                .sorted(Comparator.comparingInt((final MapLayerRasterizer mapLayerRasterizer) -> mapLayerRasterizer.getMapLayerRendererConfiguration().getLayerOrder().getOrder()))
+                .sorted(Comparator.comparingInt((final MapLayerRasterizer mapLayerRasterizer) -> mapLayerRasterizer.getMapLayerRendererConfiguration().getLayerOrder()))
                 .filter((final MapLayerRasterizer renderer) -> renderer.getMapLayerRendererConfiguration().isEnabled())
                 .filter((final MapLayerRasterizer renderer) -> !renderer.getMapLayerRendererConfiguration().isSequentialCoreData())
                 .map(renderer -> CompletableFuture.supplyAsync(() -> {
@@ -85,7 +85,7 @@ public class MapComposer {
     private void renderCoreDataInSequence(@NonNull final MapComposerWorkPackage workPackage) {
         mapLayerRasterizerPipeline
                 .stream()
-                .sorted(Comparator.comparingInt((final MapLayerRasterizer mapLayerRasterizer) -> mapLayerRasterizer.getMapLayerRendererConfiguration().getLayerOrder().getOrder()))
+                .sorted(Comparator.comparingInt((final MapLayerRasterizer mapLayerRasterizer) -> mapLayerRasterizer.getMapLayerRendererConfiguration().getLayerOrder()))
                 .filter((final MapLayerRasterizer renderer) -> renderer.getMapLayerRendererConfiguration().isEnabled())
                 .filter((final MapLayerRasterizer renderer) -> renderer.getMapLayerRendererConfiguration().isSequentialCoreData())
                 .peek(renderer -> {
@@ -137,7 +137,7 @@ public class MapComposer {
             @NonNull final int[] basePixelBuffer
     ) {
         return workPackage.getPipelineArtifacts().getArtifacts().entrySet().stream()
-                .sorted(Comparator.comparingInt((entry) -> entry.getValue().getCreator().getMapLayerRendererConfiguration().getLayerOrder().getOrder()))
+                .sorted(Comparator.comparingInt((entry) -> entry.getValue().getCreator().getMapLayerRendererConfiguration().getLayerOrder()))
                 .filter(entry -> {
                     final MapLayerRasterizer artifactCreator = entry.getValue().getCreator();
                     return artifactCreator.getMapLayerRendererConfiguration().isEnabled()

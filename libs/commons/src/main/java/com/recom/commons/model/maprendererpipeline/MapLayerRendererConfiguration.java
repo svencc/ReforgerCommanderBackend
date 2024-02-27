@@ -21,7 +21,7 @@ public class MapLayerRendererConfiguration {
     @Builder.Default
     private boolean sequentialCoreData = false;
     @NonNull
-    private LayerOrder layerOrder;
+    private int layerOrder;
 
     public void applyConfiguration(@NonNull final MapLayerRasterizer renderer) {
         renderer.getMapLayerRendererConfiguration().setLayerOrder(layerOrder);
