@@ -83,7 +83,6 @@ public class MapComposer {
 
     @NonNull
     private void renderCoreDataInSequence(@NonNull final MapComposerWorkPackage workPackage) {
-//        mapLayerRendererPipeline.values()
         mapLayerRasterizerPipeline
                 .stream()
                 .sorted(Comparator.comparingInt((final MapLayerRasterizer mapLayerRasterizer) -> mapLayerRasterizer.getMapLayerRendererConfiguration().getLayerOrder().getOrder()))
