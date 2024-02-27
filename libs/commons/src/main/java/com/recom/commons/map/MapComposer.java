@@ -110,28 +110,15 @@ public class MapComposer {
     }
 
     private void applyConfigurationToRasterizer(@NonNull final MapComposerWorkPackage workPackage) {
-        // @TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
         final Map<String, MapLayerRasterizer> indexedRasterizer = mapLayerRasterizerPipeline.stream()
                 .collect(HashMap::new, (map, rasterizer) -> map.put(rasterizer.getRasterizerName(), rasterizer), HashMap::putAll);
 
         workPackage.getMapComposerConfiguration().getRendererConfiguration().stream()
-//                .filter(configuration -> mapLayerRasterizerPipeline.containsKey(configuration.getRendererName()))
                 .filter(configuration -> indexedRasterizer.containsKey(configuration.getRasterizerName()))
                 .forEach(configuration -> {
                     final MapLayerRasterizer mapLayerRasterizer = indexedRasterizer.get(configuration.getRasterizerName());
                     configuration.applyConfiguration(mapLayerRasterizer);
                 });
-
-        // @TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-//        workPackage.getMapComposerConfiguration().getRendererConfiguration().entrySet().stream()
-//                .filter(entry -> indexedRasterizer.containsKey(entry.getKey()))
-//                .forEach(configurationEntry -> {
-//                    final String layerRendererName = configurationEntry.getKey();
-//                    final MapLayerRendererConfiguration configuration = configurationEntry.getValue();
-//
-//                    final MapLayerRasterizer mapLayerRasterizer = indexedRasterizer.get(layerRendererName);
-//                    configuration.applyConfiguration(mapLayerRasterizer);
-//                });
     }
 
     @NonNull
