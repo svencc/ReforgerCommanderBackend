@@ -76,7 +76,7 @@ public class MapComposer {
 
                     return workPackage;
                 }, executorService))
-                .toList().stream() // terminate task creation
+                .toList().stream() // terminate task creation before joining
                 .map(CompletableFuture::join)
                 .reduce(workPackage, (wrkPackage, b) -> wrkPackage, (wrkPackage, b) -> wrkPackage);
     }
