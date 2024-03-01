@@ -4,25 +4,24 @@ import com.recom.commons.map.rasterizer.configuration.MapLayerRasterizer;
 import lombok.*;
 
 
-@Getter
-@Setter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class MapLayerRasterizerConfiguration {
 
-    @NonNull
-    private String rasterizerName;
+    @Builder.Default
+    private String rasterizerName = "unknown";
     @Builder.Default
     private boolean enabled = true;
     @Builder.Default
     private boolean visible = true;
     @Builder.Default
     private boolean sequentialCoreData = false;
-    @NonNull
-    private int layerOrder;
+    @Builder.Default
+    private int layerOrder = 0;
 
-    public void applyConfiguration(@NonNull final MapLayerRasterizer renderer) {
+    public void applyTo(@NonNull final MapLayerRasterizer renderer) {
         renderer.getMapLayerRasterizerConfiguration().setLayerOrder(layerOrder);
         renderer.getMapLayerRasterizerConfiguration().setVisible(visible);
         renderer.getMapLayerRasterizerConfiguration().setEnabled(enabled);

@@ -2,6 +2,7 @@ package com.recom.service.map.topography;
 
 import com.recom.commons.map.MapComposer;
 import com.recom.commons.map.PixelBufferMapperUtil;
+import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
 import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignSchemeImplementation;
 import com.recom.commons.map.rasterizer.mapdesignscheme.ReforgerMapDesignScheme;
 import com.recom.commons.model.DEMDescriptor;
@@ -90,11 +91,11 @@ public class MapTopographyService {
     ) {
         // @TODO: Work here ....
         if (mapComposerConfiguration.isPresent()) {
-            final MapDesignSchemeImplementation designScheme = Optional.ofNullable(mapComposerConfiguration.get().getMapDesignScheme())
+            final MapDesignScheme designScheme = Optional.ofNullable(mapComposerConfiguration.get().getMapDesignScheme())
                     .map(MapDesignSchemeMapper.INSTANCE::toDesignScheme)
                     .orElseGet(MapDesignSchemeImplementation::new);
 
-            final List<MapLayerRasterizerConfiguration> rasterConfigs = Optional.ofNullable(mapComposerConfiguration.get().getRendererConfiguration())
+            final List<MapLayerRasterizerConfiguration> layerRasterConfigs = Optional.ofNullable(mapComposerConfiguration.get().getRendererConfiguration())
                     .map((configs) -> configs.stream().map(MapLayerRasterizerConfigurationMapper.INSTANCE::toMapLayerRasterizerConfiguration).toList())
                     .orElse(new ArrayList<>());
 
@@ -103,7 +104,7 @@ public class MapTopographyService {
             final MapComposerConfiguration configuration = MapComposerConfiguration.builder()
                     .demDescriptor(demDescriptor)
                     .mapDesignScheme(designScheme)
-                    .rendererConfiguration(rasterConfigs)
+                    .rendererConfiguration(layerRasterConfigs)
                     .build();
 
             return MapComposerWorkPackage.builder()

@@ -4,6 +4,7 @@ import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignSchemeImplement
 import com.recom.dto.map.mapcomposer.MapDesignSchemeDto;
 import lombok.NonNull;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 @Mapper

@@ -116,7 +116,7 @@ public class MapComposer {
                 .filter(configuration -> indexedRasterizer.containsKey(configuration.getRasterizerName()))
                 .forEach(configuration -> {
                     final MapLayerRasterizer mapLayerRasterizer = indexedRasterizer.get(configuration.getRasterizerName());
-                    configuration.applyConfiguration(mapLayerRasterizer);
+                    configuration.applyTo(mapLayerRasterizer);
                 });
     }
 
