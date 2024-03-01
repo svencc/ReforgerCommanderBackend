@@ -16,6 +16,7 @@ public class AssertionService {
     @NotNull
     private final GameMapService gameMapService;
 
+
     @NotNull
     public GameMap provideMap(@NotNull final String mapName) throws HttpNotFoundException{
         return gameMapService.provideGameMap(mapName).orElseThrow(() -> new HttpNotFoundException(String.format("Map %s does not exist", mapName)));

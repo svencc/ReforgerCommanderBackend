@@ -8,7 +8,7 @@ import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
 import com.recom.commons.map.rasterizer.scaler.DEMScalerNearestNeighbor;
 import com.recom.commons.model.DEMDescriptor;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
-import com.recom.commons.model.maprendererpipeline.MapLayerRendererConfiguration;
+import com.recom.commons.model.maprendererpipeline.MapLayerRasterizerConfiguration;
 import lombok.Getter;
 import lombok.NonNull;
 
@@ -19,7 +19,7 @@ public class BaseMapRasterizer implements MapLayerRasterizer {
     private final ARGBCalculator argbCalculator = new ARGBCalculator();
     @Getter
     @NonNull
-    private MapLayerRendererConfiguration mapLayerRendererConfiguration = MapLayerRendererConfiguration.builder()
+    private MapLayerRasterizerConfiguration mapLayerRasterizerConfiguration = MapLayerRasterizerConfiguration.builder()
             .rasterizerName(getClass().getSimpleName())
             .layerOrder(LayerOrder.BASE_MAP)
             .build();
@@ -59,12 +59,6 @@ public class BaseMapRasterizer implements MapLayerRasterizer {
                     // map depth to water color
                     final float dynamicDepthUnit = (heightValue - demDescriptor.getSeaLevel()) / depthRange;
                     color = argbCalculator.modifyBrightness(mapScheme.getBaseColorWater(), Math.abs(1 - dynamicDepthUnit));
-
-                    // #AEE4FF
-                    // #A0D2EB (<-)
-                    // #7396A8
-
-                    // #1B57A6
                 }
 
                 imageBuffer[x + z * width] = color;

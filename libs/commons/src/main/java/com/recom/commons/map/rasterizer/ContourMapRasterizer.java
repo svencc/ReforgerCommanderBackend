@@ -6,7 +6,7 @@ import com.recom.commons.map.rasterizer.configuration.MapLayerRasterizer;
 import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
 import com.recom.commons.model.DEMDescriptor;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
-import com.recom.commons.model.maprendererpipeline.MapLayerRendererConfiguration;
+import com.recom.commons.model.maprendererpipeline.MapLayerRasterizerConfiguration;
 import lombok.Getter;
 import lombok.NonNull;
 
@@ -15,7 +15,7 @@ import lombok.NonNull;
 public class ContourMapRasterizer implements MapLayerRasterizer {
 
     @NonNull
-    private MapLayerRendererConfiguration mapLayerRendererConfiguration = MapLayerRendererConfiguration.builder()
+    private MapLayerRasterizerConfiguration mapLayerRasterizerConfiguration = MapLayerRasterizerConfiguration.builder()
             .rasterizerName(getClass().getSimpleName())
             .layerOrder(LayerOrder.CONTOUR_MAP)
             .build();

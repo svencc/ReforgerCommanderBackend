@@ -1,6 +1,5 @@
 package com.recom.commons.model.maprendererpipeline;
 
-import com.recom.commons.map.rasterizer.configuration.LayerOrder;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRasterizer;
 import lombok.*;
 
@@ -10,7 +9,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MapLayerRendererConfiguration {
+public class MapLayerRasterizerConfiguration {
 
     @NonNull
     private String rasterizerName;
@@ -24,9 +23,9 @@ public class MapLayerRendererConfiguration {
     private int layerOrder;
 
     public void applyConfiguration(@NonNull final MapLayerRasterizer renderer) {
-        renderer.getMapLayerRendererConfiguration().setLayerOrder(layerOrder);
-        renderer.getMapLayerRendererConfiguration().setVisible(visible);
-        renderer.getMapLayerRendererConfiguration().setEnabled(enabled);
+        renderer.getMapLayerRasterizerConfiguration().setLayerOrder(layerOrder);
+        renderer.getMapLayerRasterizerConfiguration().setVisible(visible);
+        renderer.getMapLayerRasterizerConfiguration().setEnabled(enabled);
     }
 
 }

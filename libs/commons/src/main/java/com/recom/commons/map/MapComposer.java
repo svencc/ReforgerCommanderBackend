@@ -64,9 +64,9 @@ public class MapComposer {
     private void renderDataInParallel(@NonNull final MapComposerWorkPackage workPackage) {
         mapLayerRasterizerPipeline
                 .stream()
-                .sorted(Comparator.comparingInt((final MapLayerRasterizer mapLayerRasterizer) -> mapLayerRasterizer.getMapLayerRendererConfiguration().getLayerOrder()))
-                .filter((final MapLayerRasterizer renderer) -> renderer.getMapLayerRendererConfiguration().isEnabled())
-                .filter((final MapLayerRasterizer renderer) -> !renderer.getMapLayerRendererConfiguration().isSequentialCoreData())
+                .sorted(Comparator.comparingInt((final MapLayerRasterizer mapLayerRasterizer) -> mapLayerRasterizer.getMapLayerRasterizerConfiguration().getLayerOrder()))
+                .filter((final MapLayerRasterizer renderer) -> renderer.getMapLayerRasterizerConfiguration().isEnabled())
+                .filter((final MapLayerRasterizer renderer) -> !renderer.getMapLayerRasterizerConfiguration().isSequentialCoreData())
                 .map(renderer -> CompletableFuture.supplyAsync(() -> {
                     try {
                         renderer.render(workPackage);
@@ -85,9 +85,9 @@ public class MapComposer {
     private void renderCoreDataInSequence(@NonNull final MapComposerWorkPackage workPackage) {
         mapLayerRasterizerPipeline
                 .stream()
-                .sorted(Comparator.comparingInt((final MapLayerRasterizer mapLayerRasterizer) -> mapLayerRasterizer.getMapLayerRendererConfiguration().getLayerOrder()))
-                .filter((final MapLayerRasterizer renderer) -> renderer.getMapLayerRendererConfiguration().isEnabled())
-                .filter((final MapLayerRasterizer renderer) -> renderer.getMapLayerRendererConfiguration().isSequentialCoreData())
+                .sorted(Comparator.comparingInt((final MapLayerRasterizer mapLayerRasterizer) -> mapLayerRasterizer.getMapLayerRasterizerConfiguration().getLayerOrder()))
+                .filter((final MapLayerRasterizer renderer) -> renderer.getMapLayerRasterizerConfiguration().isEnabled())
+                .filter((final MapLayerRasterizer renderer) -> renderer.getMapLayerRasterizerConfiguration().isSequentialCoreData())
                 .peek(renderer -> {
                     try {
                         renderer.render(workPackage);
@@ -137,11 +137,11 @@ public class MapComposer {
             @NonNull final int[] basePixelBuffer
     ) {
         return workPackage.getPipelineArtifacts().getArtifacts().entrySet().stream()
-                .sorted(Comparator.comparingInt((entry) -> entry.getValue().getCreator().getMapLayerRendererConfiguration().getLayerOrder()))
+                .sorted(Comparator.comparingInt((entry) -> entry.getValue().getCreator().getMapLayerRasterizerConfiguration().getLayerOrder()))
                 .filter(entry -> {
                     final MapLayerRasterizer artifactCreator = entry.getValue().getCreator();
-                    return artifactCreator.getMapLayerRendererConfiguration().isEnabled()
-                            && artifactCreator.getMapLayerRendererConfiguration().isVisible();
+                    return artifactCreator.getMapLayerRasterizerConfiguration().isEnabled()
+                            && artifactCreator.getMapLayerRasterizerConfiguration().isVisible();
                 })
                 .map(entry -> {
                     final Object artifactRawData = entry.getValue().getData();

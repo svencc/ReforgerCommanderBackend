@@ -8,7 +8,7 @@ import com.recom.commons.model.DEMDescriptor;
 import com.recom.commons.model.SlopeAndAspectMap;
 import com.recom.commons.model.maprendererpipeline.CreatedArtifact;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
-import com.recom.commons.model.maprendererpipeline.MapLayerRendererConfiguration;
+import com.recom.commons.model.maprendererpipeline.MapLayerRasterizerConfiguration;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -19,7 +19,7 @@ import lombok.Setter;
 public class ShadowedMapRasterizer implements MapLayerRasterizer {
 
     @NonNull
-    private MapLayerRendererConfiguration mapLayerRendererConfiguration = MapLayerRendererConfiguration.builder()
+    private MapLayerRasterizerConfiguration mapLayerRasterizerConfiguration = MapLayerRasterizerConfiguration.builder()
             .rasterizerName(getClass().getSimpleName())
             .layerOrder(LayerOrder.SHADOWED_MAP)
             .build();

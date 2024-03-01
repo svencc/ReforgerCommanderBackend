@@ -28,6 +28,8 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @Slf4j
 @RestController
 @Tag(name = "Maps")
@@ -62,7 +64,7 @@ public class MapTopographyController {
             final GameMap gameMap = assertionService.provideMap(mapTopographyRequestDto.getMapName());
             return ResponseEntity.status(HttpStatus.OK)
                     .cacheControl(CacheControl.noCache())
-                    .body(mapTopographyService.provideHeightMapPNG(gameMap));
+                    .body(mapTopographyService.provideHeightMapPNG(gameMap, Optional.ofNullable(mapTopographyRequestDto.getMapComposerConfiguration())));
         } catch (final HttpNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .cacheControl(CacheControl.noCache())

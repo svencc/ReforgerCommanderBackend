@@ -5,7 +5,7 @@ import com.recom.commons.map.rasterizer.configuration.MapLayerRasterizer;
 import com.recom.commons.map.rasterizer.scaler.DEMScalerNearestNeighbor;
 import com.recom.commons.model.DEMDescriptor;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
-import com.recom.commons.model.maprendererpipeline.MapLayerRendererConfiguration;
+import com.recom.commons.model.maprendererpipeline.MapLayerRasterizerConfiguration;
 import lombok.Getter;
 import lombok.NonNull;
 
@@ -16,7 +16,7 @@ public class HeightMapRasterizer implements MapLayerRasterizer {
 
     @Getter
     @NonNull
-    private MapLayerRendererConfiguration mapLayerRendererConfiguration = MapLayerRendererConfiguration.builder()
+    private MapLayerRasterizerConfiguration mapLayerRasterizerConfiguration = MapLayerRasterizerConfiguration.builder()
             .rasterizerName(getClass().getSimpleName())
             .layerOrder(LayerOrder.HEIGHT_MAP)
             .visible(false)

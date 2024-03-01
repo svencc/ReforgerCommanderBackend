@@ -7,7 +7,7 @@ import com.recom.commons.model.DEMDescriptor;
 import com.recom.commons.model.SlopeAndAspect;
 import com.recom.commons.model.SlopeAndAspectMap;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
-import com.recom.commons.model.maprendererpipeline.MapLayerRendererConfiguration;
+import com.recom.commons.model.maprendererpipeline.MapLayerRasterizerConfiguration;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -18,7 +18,7 @@ public class SlopeAndAspectMapRasterizer implements MapLayerRasterizer {
 
     @Getter
     @NonNull
-    private MapLayerRendererConfiguration mapLayerRendererConfiguration = MapLayerRendererConfiguration.builder()
+    private MapLayerRasterizerConfiguration mapLayerRasterizerConfiguration = MapLayerRasterizerConfiguration.builder()
             .rasterizerName(getClass().getSimpleName())
             .layerOrder(LayerOrder.SLOPE_AND_ASPECT_MAP)
             .sequentialCoreData(true)

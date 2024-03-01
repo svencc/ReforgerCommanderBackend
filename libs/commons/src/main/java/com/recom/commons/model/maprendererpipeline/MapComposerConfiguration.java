@@ -19,10 +19,8 @@ public class MapComposerConfiguration {
     @NonNull
     private MapDesignScheme mapDesignScheme;
 
-//    @NonNull
-//    private final Map<String, MapLayerRendererConfiguration> rendererConfiguration = new HashMap<>();
-
     @NonNull
-    private final List<MapLayerRendererConfiguration> rendererConfiguration = new ArrayList<>();
+    @Builder.Default
+    private List<MapLayerRasterizerConfiguration> rendererConfiguration = new ArrayList<>();
 
 }

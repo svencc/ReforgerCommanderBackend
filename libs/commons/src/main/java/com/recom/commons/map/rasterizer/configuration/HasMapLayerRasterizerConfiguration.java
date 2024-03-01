@@ -1,10 +1,10 @@
 package com.recom.commons.map.rasterizer.configuration;
 
-import com.recom.commons.model.maprendererpipeline.MapLayerRendererConfiguration;
+import com.recom.commons.model.maprendererpipeline.MapLayerRasterizerConfiguration;
 import lombok.NonNull;
 
 public interface HasMapLayerRasterizerConfiguration {
 
-    @NonNull MapLayerRendererConfiguration getMapLayerRendererConfiguration();
+    @NonNull MapLayerRasterizerConfiguration getMapLayerRasterizerConfiguration();
 
 }
