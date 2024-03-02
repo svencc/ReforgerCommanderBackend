@@ -1,14 +1,12 @@
 # TODO LIST
 
 # 1
-* nicer color scheme for the map (<-)
-* add DynamicLayerProperties (configuration for RecomMapEntity) (/)
-* add adjustable properties via json/REST-API /api/v1/map/topography
-
 * interpolate base map to 1pixel = 1meter resolution
   * so 5m scaled map is upscaled to 1m resolution
   * use bilinear interpolation
+  * configurable via REST
 
+* add DynamicLayerProperties (configuration for RecomMapEntity) (/)
 
 * known issues or optimizations:
   * prebuffering of zoom levels (for faster zooming) or find out what is the bottleneck
