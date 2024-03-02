@@ -21,7 +21,7 @@ public class SlopeMapRasterizer implements MapLayerRasterizer {
     @NonNull
     private MapLayerRasterizerConfiguration mapLayerRasterizerConfiguration = MapLayerRasterizerConfiguration.builder()
             .rasterizerName(getClass().getSimpleName())
-            .layerOrder(LayerOrder.HEIGHT_MAP)
+            .layerOrder(LayerOrder.SLOPE_MAP)
             .visible(false)
             .build();
 

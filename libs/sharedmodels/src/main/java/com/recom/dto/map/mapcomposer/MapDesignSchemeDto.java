@@ -21,30 +21,30 @@ public class MapDesignSchemeDto {
     @Nullable
     @Schema
     @JsonProperty()
-    public Integer baseColorTerrain;
+    public String baseColorTerrain;
     @Nullable
     @Schema
     @JsonProperty()
-    public Integer baseColorWater;
+    public String baseColorWater;
     @Nullable
     @Schema
     @JsonProperty()
-    public Integer baseColorForest;
+    public String baseColorForest;
 
 
     // Contour line config
     @Nullable
     @Schema
     @JsonProperty()
-    public Integer baseColorContourBackground;
+    public String baseColorContourBackground;
     @Nullable
     @Schema
     @JsonProperty()
-    public Integer baseColorContourLineTerrain;
+    public String baseColorContourLineTerrain;
     @Nullable
     @Schema
     @JsonProperty()
-    public Integer baseColorContourLineWater;
+    public String baseColorContourLineWater;
     @Nullable
     @Schema
     @JsonProperty()
@@ -63,6 +63,6 @@ public class MapDesignSchemeDto {
     @Nullable
     @Schema
     @JsonProperty()
-    public Integer shadowMapAlpha;
+    public String shadowMapAlpha;
 
 }

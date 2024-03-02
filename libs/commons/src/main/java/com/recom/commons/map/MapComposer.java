@@ -34,11 +34,12 @@ public class MapComposer {
         final MapComposer mapComposer = new MapComposer();
 
         mapComposer.registerRenderer(new SlopeAndAspectMapRasterizer());
+        mapComposer.registerRenderer(new SlopeMapRasterizer()); // optional
+
         mapComposer.registerRenderer(new HeightMapRasterizer());
         mapComposer.registerRenderer(new BaseMapRasterizer());
         mapComposer.registerRenderer(new ShadowedMapRasterizer());
         mapComposer.registerRenderer(new ContourMapRasterizer());
-        mapComposer.registerRenderer(new SlopeMapRasterizer());
 
         return mapComposer;
     }
