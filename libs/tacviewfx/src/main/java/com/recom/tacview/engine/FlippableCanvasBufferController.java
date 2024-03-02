@@ -13,7 +13,7 @@ import lombok.NonNull;
 
 import java.nio.IntBuffer;
 
-public class SwappableCanvasBuffer {
+public class FlippableCanvasBufferController {
 
     @NonNull
     private final Canvas canvas;
@@ -30,7 +30,7 @@ public class SwappableCanvasBuffer {
     public int currentShownBackBufferIndex = -1;
 
 
-    public SwappableCanvasBuffer(
+    public FlippableCanvasBufferController(
             @NonNull final Canvas canvas,
             @NonNull final IsEngineProperties engineProperties,
             @NonNull final ScreenComposer screenComposer
@@ -44,7 +44,7 @@ public class SwappableCanvasBuffer {
         img = new WritableImage(imagePixelBuffer);
     }
 
-    void swap() {
+    void flip() {
         // swap the back buffer, and the front buffer
         int previouslyFinishedBufferIndex = screenComposer.getPreviouslyFinishedBufferIndex();
         if (currentShownBackBufferIndex == previouslyFinishedBufferIndex) {

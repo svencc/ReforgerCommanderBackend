@@ -19,7 +19,6 @@ import com.recom.tacview.util.ResizeCommandFactory;
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.InputEvent;
-import javafx.scene.layout.Region;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +44,7 @@ public class TacViewer extends Canvas {
     @NonNull
     private final Thread.UncaughtExceptionHandler globalExceptionHandler;
     @NonNull
-    private final SwappableCanvasBuffer canvasBuffer;
+    private final FlippableCanvasBufferController canvasBuffer;
     @NonNull
     private final AnimationTimer animationTimerLoop;
     @NonNull
@@ -75,7 +74,7 @@ public class TacViewer extends Canvas {
         this.inputManager = inputManager;
         this.globalExceptionHandler = globalExceptionHandler;
 
-        this.canvasBuffer = new SwappableCanvasBuffer(this, engineProperties, screenComposer);
+        this.canvasBuffer = new FlippableCanvasBufferController(this, engineProperties, screenComposer);
         this.profiler = new TacViewerProfiler(profilerProvider);
         this.profiler.startProfiling();
 
@@ -118,7 +117,7 @@ public class TacViewer extends Canvas {
         return new AnimationTimer() {
             @Override
             public void handle(final long now) {
-                canvasBuffer.swap();
+                canvasBuffer.flip();
             }
         };
     }
