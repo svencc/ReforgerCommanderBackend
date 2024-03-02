@@ -2,7 +2,8 @@ package com.recom.commons.map.rasterizer;
 
 import com.recom.commons.map.rasterizer.configuration.LayerOrder;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRasterizer;
-import com.recom.commons.map.rasterizer.scaler.DEMScalerNearestNeighbor;
+import com.recom.commons.map.rasterizer.interpolation.DEMInterpolationAlgorithm;
+import com.recom.commons.map.rasterizer.interpolation.DEMInterpolationAlgorithmNearestNeighbor;
 import com.recom.commons.model.DEMDescriptor;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
 import com.recom.commons.model.maprendererpipeline.MapLayerRasterizerConfiguration;
@@ -23,11 +24,11 @@ public class HeightMapRasterizer implements MapLayerRasterizer {
             .enabled(false)
             .build();
     @NonNull
-    private final DEMScalerNearestNeighbor demScaler;
+    private final DEMInterpolationAlgorithm demInterpolationAlgorithm;
 
 
     public HeightMapRasterizer() {
-        demScaler = new DEMScalerNearestNeighbor();
+        demInterpolationAlgorithm = new DEMInterpolationAlgorithmNearestNeighbor();
     }
 
     @NonNull
@@ -37,7 +38,7 @@ public class HeightMapRasterizer implements MapLayerRasterizer {
     ) {
         final int[] originalHeightMap = rasterizeHeightMap(DEMDescriptor);
 
-        return demScaler.scaleMap(DEMDescriptor, scale, originalHeightMap);
+        return demInterpolationAlgorithm.scaleMap(DEMDescriptor, scale, originalHeightMap);
     }
 
     @NonNull

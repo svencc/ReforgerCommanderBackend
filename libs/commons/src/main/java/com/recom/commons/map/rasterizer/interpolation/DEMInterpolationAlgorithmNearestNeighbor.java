@@ -1,4 +1,4 @@
-package com.recom.commons.map.rasterizer.scaler;
+package com.recom.commons.map.rasterizer.interpolation;
 
 import com.recom.commons.calculator.ARGBCalculator;
 import com.recom.commons.model.DEMDescriptor;
@@ -6,7 +6,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class DEMScalerNearestNeighbor implements DEMScaler {
+public class DEMInterpolationAlgorithmNearestNeighbor implements DEMInterpolationAlgorithm {
 
     @NonNull
     private final ARGBCalculator argbCalculator = new ARGBCalculator();
