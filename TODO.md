@@ -1,13 +1,8 @@
 # TODO LIST
 
 # 1
-* interpolate base map to 1pixel = 1meter resolution
-  * so 5m scaled map is upscaled to 1m resolution (scaler)
-  * use bilinear interpolation
-  * configurable via REST
-  * so 5m scaled map is upscaled to 10cm resolution 1px = 10xm
-
 * add different color for main contour lines
+* add different color for coast contour lines
 * add DynamicLayerProperties (configuration for RecomMapEntity) (/)
 
 * add forest heatmap
