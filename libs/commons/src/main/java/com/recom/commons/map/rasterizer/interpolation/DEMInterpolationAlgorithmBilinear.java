@@ -1,22 +1,22 @@
 package com.recom.commons.map.rasterizer.interpolation;
 
 import com.recom.commons.model.DEMDescriptor;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
-public class DEMInterpolationAlgorithmLinear implements DEMInterpolationAlgorithm {
+@NoArgsConstructor
+public class DEMInterpolationAlgorithmBilinear implements DEMInterpolationAlgorithm {
 
     @Override
-    public float[][] interpolateDem(
+    public float[][] interpolate(
             @NonNull DEMDescriptor DEMDescriptor,
             final int scaleFactor
     ) {
-        return interpolateDem(DEMDescriptor.getDem(), scaleFactor);
+        return interpolate(DEMDescriptor.getDem(), scaleFactor);
     }
 
     @Override
-    public float[][] interpolateDem(
+    public float[][] interpolate(
             @NonNull float[][] dem,
             final int scaleFactor
     ) {

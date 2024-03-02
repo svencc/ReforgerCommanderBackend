@@ -4,10 +4,7 @@ package com.recom.dto.map.mapcomposer;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.lang.Nullable;
 
 import java.util.ArrayList;
@@ -24,8 +21,11 @@ public class MapComposerConfigurationDto {
     @Nullable
     @Schema
     @JsonProperty()
+    private Integer scaleFactor;
+    @Nullable
+    @Schema
+    @JsonProperty()
     private MapDesignSchemeDto mapDesignScheme;
-
     @Nullable
     @Schema
     @JsonProperty()

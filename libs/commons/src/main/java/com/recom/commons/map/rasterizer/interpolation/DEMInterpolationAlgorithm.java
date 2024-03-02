@@ -5,12 +5,12 @@ import lombok.NonNull;
 
 public interface DEMInterpolationAlgorithm {
 
-    float[][] interpolateDem(
+    float[][] interpolate(
             @NonNull final DEMDescriptor DEMDescriptor,
             final int scale
     );
 
-    float[][] interpolateDem(
+    float[][] interpolate(
             @NonNull float[][] dem,
             final int scale
     );

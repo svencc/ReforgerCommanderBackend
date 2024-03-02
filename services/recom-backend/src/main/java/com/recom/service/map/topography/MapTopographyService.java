@@ -2,6 +2,7 @@ package com.recom.service.map.topography;
 
 import com.recom.commons.map.MapComposer;
 import com.recom.commons.map.PixelBufferMapperUtil;
+import com.recom.commons.map.rasterizer.interpolation.DEMInterpolationAlgorithm;
 import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
 import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignSchemeImplementation;
 import com.recom.commons.map.rasterizer.mapdesignscheme.ReforgerMapDesignScheme;
@@ -44,6 +45,8 @@ public class MapTopographyService {
     private final DEMService demService;
     @NonNull
     private final MapComposer mapComposer;
+    @NonNull
+    private final DEMInterpolationAlgorithm demInterpolationAlgorithm;
 
 
     @Transactional(readOnly = true)
@@ -63,6 +66,13 @@ public class MapTopographyService {
     ) {
         try {
             final DEMDescriptor demDescriptor = demService.deserializeToDEM(mapTopography);
+
+            final int scaleFactor = provideScaleFactor(maybeMapComposerConfiguration);
+            if (scaleFactor > 1) {
+                float[][] interpolatedDem = demInterpolationAlgorithm.interpolate(demDescriptor, scaleFactor);
+                demDescriptor.setDem(interpolatedDem);
+            }
+
             final MapComposerWorkPackage workPackage = provideMapComposerWorkPackage(demDescriptor, maybeMapComposerConfiguration);
 
             mapComposer.execute(workPackage);
@@ -82,6 +92,12 @@ public class MapTopographyService {
             log.error(e.getMessage());
             throw new HttpUnprocessableEntityException();
         }
+    }
+
+    private int provideScaleFactor(@NonNull Optional<MapComposerConfigurationDto> maybeMapComposerConfiguration) {
+        return maybeMapComposerConfiguration
+                .map(MapComposerConfigurationDto::getScaleFactor)
+                .orElse(1);
     }
 
     @NonNull
