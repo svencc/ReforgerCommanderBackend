@@ -2,11 +2,19 @@
 
 # 1
 * interpolate base map to 1pixel = 1meter resolution
-  * so 5m scaled map is upscaled to 1m resolution
+  * so 5m scaled map is upscaled to 1m resolution (scaler)
   * use bilinear interpolation
   * configurable via REST
+  * so 5m scaled map is upscaled to 10cm resolution 1px = 10xm
 
+* add different color for main contour lines
 * add DynamicLayerProperties (configuration for RecomMapEntity) (/)
+
+* add forest heatmap
+* add village heatmap
+* add names to villages
+* add general map names
+
 
 * known issues or optimizations:
   * prebuffering of zoom levels (for faster zooming) or find out what is the bottleneck
@@ -19,16 +27,11 @@
 
 # 1.1
 * UI/MAP:
-  * improve map colors (<-)
   * add scale bar
   * add measurement tool
   * add menu
 * background entity layer?
 
-* add forest heatmap
-* add village heatmap
-* add names to villages
-* add general map names
 
 
 
