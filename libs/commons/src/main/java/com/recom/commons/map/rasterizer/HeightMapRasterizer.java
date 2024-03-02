@@ -3,7 +3,6 @@ package com.recom.commons.map.rasterizer;
 import com.recom.commons.map.rasterizer.configuration.LayerOrder;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRasterizer;
 import com.recom.commons.map.rasterizer.interpolation.DEMInterpolationAlgorithmLinear;
-import com.recom.commons.map.rasterizer.scaler.PixelScaler;
 import com.recom.commons.model.DEMDescriptor;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
 import com.recom.commons.model.maprendererpipeline.MapLayerRasterizerConfiguration;
@@ -15,6 +14,8 @@ import java.awt.*;
 
 public class HeightMapRasterizer implements MapLayerRasterizer {
 
+    @NonNull
+    private final DEMInterpolationAlgorithmLinear interpolator;
     @Getter
     @NonNull
     private MapLayerRasterizerConfiguration mapLayerRasterizerConfiguration = MapLayerRasterizerConfiguration.builder()
@@ -23,14 +24,9 @@ public class HeightMapRasterizer implements MapLayerRasterizer {
             .visible(false)
             .enabled(false)
             .build();
-    @NonNull
-    private final PixelScaler pixelScaler;
-    @NonNull
-    private final DEMInterpolationAlgorithmLinear interpolator;
 
 
     public HeightMapRasterizer() {
-        pixelScaler = new PixelScaler();
         interpolator = new DEMInterpolationAlgorithmLinear();
     }
 

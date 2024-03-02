@@ -5,14 +5,15 @@ import com.recom.commons.calculator.ARGBColor;
 import com.recom.commons.map.rasterizer.configuration.LayerOrder;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRasterizer;
 import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
-import com.recom.commons.map.rasterizer.scaler.PixelScaler;
 import com.recom.commons.model.DEMDescriptor;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
 import com.recom.commons.model.maprendererpipeline.MapLayerRasterizerConfiguration;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 
+@NoArgsConstructor
 public class BaseMapRasterizer implements MapLayerRasterizer {
 
     @NonNull
@@ -23,14 +24,7 @@ public class BaseMapRasterizer implements MapLayerRasterizer {
             .rasterizerName(getClass().getSimpleName())
             .layerOrder(LayerOrder.BASE_MAP)
             .build();
-    @NonNull
-    private final PixelScaler pixelScaler;
 
-
-    public BaseMapRasterizer() {
-        // @TODO vermutlich hier raus; has to be used outside ...
-        pixelScaler = new PixelScaler();
-    }
 
     @NonNull
     public int[] rasterizeBaseMap(
