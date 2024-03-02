@@ -2,8 +2,8 @@ package com.recom.commons.map.rasterizer;
 
 import com.recom.commons.map.rasterizer.configuration.LayerOrder;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRasterizer;
-import com.recom.commons.map.rasterizer.interpolation.DEMInterpolationAlgorithm;
-import com.recom.commons.map.rasterizer.interpolation.DEMInterpolationAlgorithmNearestNeighbor;
+import com.recom.commons.map.rasterizer.interpolation.DEMInterpolationAlgorithmLinear;
+import com.recom.commons.map.rasterizer.scaler.PixelScaler;
 import com.recom.commons.model.DEMDescriptor;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
 import com.recom.commons.model.maprendererpipeline.MapLayerRasterizerConfiguration;
@@ -24,21 +24,26 @@ public class HeightMapRasterizer implements MapLayerRasterizer {
             .enabled(false)
             .build();
     @NonNull
-    private final DEMInterpolationAlgorithm demInterpolationAlgorithm;
+    private final PixelScaler pixelScaler;
+    @NonNull
+    private final DEMInterpolationAlgorithmLinear interpolator;
 
 
     public HeightMapRasterizer() {
-        demInterpolationAlgorithm = new DEMInterpolationAlgorithmNearestNeighbor();
+        pixelScaler = new PixelScaler();
+        interpolator = new DEMInterpolationAlgorithmLinear();
     }
 
     @NonNull
-    public int[] rasterizeScaledHeightMap(
+    public int[] rasterizeHeightMap(
             @NonNull final DEMDescriptor DEMDescriptor,
             final int scale
     ) {
-        final int[] originalHeightMap = rasterizeHeightMap(DEMDescriptor);
+        float[][] interpolatedDem = interpolator.interpolateDem(DEMDescriptor, scale);
+        final DEMDescriptor demDescriptorClone = DEMDescriptor.clone();
+        demDescriptorClone.setDem(interpolatedDem);
 
-        return demInterpolationAlgorithm.scaleMap(DEMDescriptor, scale, originalHeightMap);
+        return rasterizeHeightMap(demDescriptorClone);
     }
 
     @NonNull

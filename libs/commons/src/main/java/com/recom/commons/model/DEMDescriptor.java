@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DEMDescriptor {
+public class DEMDescriptor implements Cloneable {
 
     // meta data
     private Float stepSize;
@@ -28,6 +28,20 @@ public class DEMDescriptor {
 
     public int getDemHeight() {
         return dem[0].length;
+    }
+
+
+    @Override
+    public DEMDescriptor clone() {
+        return DEMDescriptor.builder()
+                .stepSize(stepSize)
+                .scanIterationsX(scanIterationsX)
+                .scanIterationsZ(scanIterationsZ)
+                .seaLevel(seaLevel)
+                .maxWaterDepth(maxWaterDepth)
+                .maxHeight(maxHeight)
+                .dem(dem)
+                .build();
     }
 
 }

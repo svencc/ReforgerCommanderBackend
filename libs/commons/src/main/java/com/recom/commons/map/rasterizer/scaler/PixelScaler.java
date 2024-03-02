@@ -1,4 +1,4 @@
-package com.recom.commons.map.rasterizer.interpolation;
+package com.recom.commons.map.rasterizer.scaler;
 
 import com.recom.commons.calculator.ARGBCalculator;
 import com.recom.commons.model.DEMDescriptor;
@@ -6,24 +6,23 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class DEMInterpolationAlgorithmNearestNeighbor implements DEMInterpolationAlgorithm {
+public class PixelScaler {
 
     @NonNull
     private final ARGBCalculator argbCalculator = new ARGBCalculator();
 
 
     @NonNull
-    @Override
     public int[] scaleMap(
             @NonNull final DEMDescriptor DEMDescriptor,
             final int scale,
-            final int[] originalDEM
+            final int[] rasterizedHeightmap
     ) {
         final int originalHeight = DEMDescriptor.getDem().length;
         final int originalWidth = DEMDescriptor.getDem()[0].length;
 
         if (Math.abs(scale) == 1 || scale == 0) {
-            return originalDEM;
+            return rasterizedHeightmap;
         } else if (scale > 1) {
             final int scaledHeight = DEMDescriptor.getDem().length * scale;
             final int scaledWidth = DEMDescriptor.getDem()[0].length * scale;
@@ -31,7 +30,7 @@ public class DEMInterpolationAlgorithmNearestNeighbor implements DEMInterpolatio
             final int[] scaledMap = new int[scaledHeight * scaledWidth];
             for (int x = 0; x < originalHeight; x++) {
                 for (int z = 0; z < originalWidth; z++) {
-                    final int color = originalDEM[x + z * originalWidth];
+                    final int color = rasterizedHeightmap[x + z * originalWidth];
                     for (int scaledPixelX = 0; scaledPixelX < scale; scaledPixelX++) {
                         for (int scaledPixelZ = 0; scaledPixelZ < scale; scaledPixelZ++) {
                             scaledMap[(x * scale + scaledPixelX) + (z * scale + scaledPixelZ) * scaledWidth] = color;
@@ -56,10 +55,10 @@ public class DEMInterpolationAlgorithmNearestNeighbor implements DEMInterpolatio
                     int blueComponentSum = 0;
                     for (int scaledPixelX = 0; scaledPixelX < absScale; scaledPixelX++) {
                         for (int scaledPixelZ = 0; scaledPixelZ < absScale; scaledPixelZ++) {
-                            alphaComponentSum += argbCalculator.getAlphaComponent(originalDEM[(x * absScale + scaledPixelX) + (z * absScale + scaledPixelZ) * originalWidth]);
-                            redComponentSum += argbCalculator.getRedComponent(originalDEM[(x * absScale + scaledPixelX) + (z * absScale + scaledPixelZ) * originalWidth]);
-                            greenComponentSum += argbCalculator.getGreenComponent(originalDEM[(x * absScale + scaledPixelX) + (z * absScale + scaledPixelZ) * originalWidth]);
-                            blueComponentSum += argbCalculator.getBlueComponent(originalDEM[(x * absScale + scaledPixelX) + (z * absScale + scaledPixelZ) * originalWidth]);
+                            alphaComponentSum += argbCalculator.getAlphaComponent(rasterizedHeightmap[(x * absScale + scaledPixelX) + (z * absScale + scaledPixelZ) * originalWidth]);
+                            redComponentSum += argbCalculator.getRedComponent(rasterizedHeightmap[(x * absScale + scaledPixelX) + (z * absScale + scaledPixelZ) * originalWidth]);
+                            greenComponentSum += argbCalculator.getGreenComponent(rasterizedHeightmap[(x * absScale + scaledPixelX) + (z * absScale + scaledPixelZ) * originalWidth]);
+                            blueComponentSum += argbCalculator.getBlueComponent(rasterizedHeightmap[(x * absScale + scaledPixelX) + (z * absScale + scaledPixelZ) * originalWidth]);
                         }
                     }
                     final int scalePow = (int) Math.pow(absScale, 2);

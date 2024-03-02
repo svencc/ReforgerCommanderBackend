@@ -4,9 +4,8 @@ import com.recom.commons.calculator.ARGBCalculator;
 import com.recom.commons.calculator.ARGBColor;
 import com.recom.commons.map.rasterizer.configuration.LayerOrder;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRasterizer;
-import com.recom.commons.map.rasterizer.interpolation.DEMInterpolationAlgorithm;
 import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
-import com.recom.commons.map.rasterizer.interpolation.DEMInterpolationAlgorithmNearestNeighbor;
+import com.recom.commons.map.rasterizer.scaler.PixelScaler;
 import com.recom.commons.model.DEMDescriptor;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
 import com.recom.commons.model.maprendererpipeline.MapLayerRasterizerConfiguration;
@@ -25,12 +24,12 @@ public class BaseMapRasterizer implements MapLayerRasterizer {
             .layerOrder(LayerOrder.BASE_MAP)
             .build();
     @NonNull
-    private final DEMInterpolationAlgorithm demInterpolatorAlgorithm;
+    private final PixelScaler pixelScaler;
 
 
     public BaseMapRasterizer() {
         // @TODO vermutlich hier raus; has to be used outside ...
-        demInterpolatorAlgorithm = new DEMInterpolationAlgorithmNearestNeighbor();
+        pixelScaler = new PixelScaler();
     }
 
     @NonNull
