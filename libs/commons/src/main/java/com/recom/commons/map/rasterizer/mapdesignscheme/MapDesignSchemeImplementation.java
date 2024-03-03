@@ -30,9 +30,13 @@ public class MapDesignSchemeImplementation extends MapDesignScheme {
     @Builder.Default
     private int baseColorContourLineWater = 0x33506975;
     @Builder.Default
-    private float brightnessModifierPrimaryLines = 1f;
+    private float brightnessModifierPrimaryLinesAboveSeaLevel = 1f;
     @Builder.Default
-    private float brightnessModifierSecondaryLines = 0.5f;
+    private float brightnessModifierSecondaryLinesAboveSeaLevel = 0.5f;
+    @Builder.Default
+    private final float brightnessModifierPrimaryLinesBelowSeaLevel = 1f;
+    @Builder.Default
+    private final float brightnessModifierSecondaryLinesBelowSeaLevel = 0.25f;
     @Builder.Default
     private int contourLineStepSize = 20;
 

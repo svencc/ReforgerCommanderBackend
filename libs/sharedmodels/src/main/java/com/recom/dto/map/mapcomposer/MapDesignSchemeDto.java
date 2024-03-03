@@ -52,11 +52,19 @@ public class MapDesignSchemeDto {
     @Nullable
     @Schema
     @JsonProperty()
-    public Float brightnessModifierPrimaryLines;
+    public Float brightnessModifierPrimaryLinesAboveSeaLevel;
     @Nullable
     @Schema
     @JsonProperty()
-    public Float brightnessModifierSecondaryLines;
+    public Float brightnessModifierSecondaryLinesAboveSeaLevel;
+    @Nullable
+    @Schema
+    @JsonProperty()
+    public Float brightnessModifierPrimaryLinesBelowSeaLevel;
+    @Nullable
+    @Schema
+    @JsonProperty()
+    public Float brightnessModifierSecondaryLinesBelowSeaLevel;
     @Nullable
     @Schema
     @JsonProperty()

@@ -15,8 +15,10 @@ public class ReforgerMapDesignScheme extends MapDesignScheme {
     private final int baseColorContourLineTerrain = 0x55E2A750;
     private final int baseColorContourLineCoast = 0xAA597482;
     private final int baseColorContourLineWater = 0x33506975; // #7396A8, #506975
-    private final float brightnessModifierPrimaryLines = 1f;
-    private final float brightnessModifierSecondaryLines = 0.25f;
+    private final float brightnessModifierPrimaryLinesAboveSeaLevel = 0.25f;
+    private final float brightnessModifierSecondaryLinesAboveSeaLevel = 0.1f;
+    private final float brightnessModifierPrimaryLinesBelowSeaLevel = 1f;
+    private final float brightnessModifierSecondaryLinesBelowSeaLevel = 0.25f;
     private final int contourLineStepSize = 20;
 
     // Sun config (shadowing)

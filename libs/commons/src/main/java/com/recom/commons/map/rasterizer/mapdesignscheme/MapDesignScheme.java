@@ -33,8 +33,10 @@ public abstract class MapDesignScheme {
     public abstract int getBaseColorContourLineTerrain();
     public abstract int getBaseColorContourLineCoast();
     public abstract int getBaseColorContourLineWater();
-    public abstract float getBrightnessModifierPrimaryLines();
-    public abstract float getBrightnessModifierSecondaryLines();
+    public abstract float getBrightnessModifierPrimaryLinesAboveSeaLevel();
+    public abstract float getBrightnessModifierSecondaryLinesAboveSeaLevel();
+    public abstract float getBrightnessModifierPrimaryLinesBelowSeaLevel();
+    public abstract float getBrightnessModifierSecondaryLinesBelowSeaLevel();
     public abstract int getContourLineStepSize();
 
 

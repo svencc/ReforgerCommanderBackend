@@ -138,15 +138,15 @@ public class D8AlgorithmForContourMap {
             if (height != 0) {
                 if (height % 100 == 0) {
                     if (isAboveSeaLevel()) {
-                        return colorCalculator.modifyBrightness(color, mapScheme.getBrightnessModifierPrimaryLines());
+                        return colorCalculator.modifyBrightness(color, mapScheme.getBrightnessModifierPrimaryLinesAboveSeaLevel());
                     } else {
-                        return colorCalculator.modifyBrightness(color, mapScheme.getBrightnessModifierSecondaryLines());
+                        return colorCalculator.modifyBrightness(color, mapScheme.getBrightnessModifierPrimaryLinesBelowSeaLevel());
                     }
                 } else {
                     if (isAboveSeaLevel()) {
-                        return colorCalculator.modifyBrightness(color, mapScheme.getBrightnessModifierSecondaryLines());
+                        return colorCalculator.modifyBrightness(color, mapScheme.getBrightnessModifierSecondaryLinesAboveSeaLevel());
                     } else {
-                        return colorCalculator.modifyBrightness(color, mapScheme.getBrightnessModifierPrimaryLines());
+                        return colorCalculator.modifyBrightness(color, mapScheme.getBrightnessModifierSecondaryLinesBelowSeaLevel());
                     }
                 }
             }
@@ -157,9 +157,9 @@ public class D8AlgorithmForContourMap {
         public int getColor_() {
             if (height != 0) {
                 if (isAboveSeaLevel()) {
-                    return colorCalculator.modifyBrightness(color, mapScheme.getBrightnessModifierPrimaryLines());
+                    return colorCalculator.modifyBrightness(color, mapScheme.getBrightnessModifierPrimaryLinesAboveSeaLevel());
                 } else {
-                    return colorCalculator.modifyBrightness(color, mapScheme.getBrightnessModifierSecondaryLines());
+                    return colorCalculator.modifyBrightness(color, mapScheme.getBrightnessModifierSecondaryLinesAboveSeaLevel());
                 }
             }
 
