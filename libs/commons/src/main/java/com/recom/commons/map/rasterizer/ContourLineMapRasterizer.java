@@ -12,7 +12,7 @@ import lombok.NonNull;
 
 
 @Getter
-public class ContourMapRasterizer implements MapLayerRasterizer {
+public class ContourLineMapRasterizer implements MapLayerRasterizer {
 
     @NonNull
     private MapLayerRasterizerConfiguration mapLayerRasterizerConfiguration = MapLayerRasterizerConfiguration.builder()

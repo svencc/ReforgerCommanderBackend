@@ -39,7 +39,7 @@ public class MapComposer {
         mapComposer.registerRenderer(new HeightMapRasterizer());
         mapComposer.registerRenderer(new BaseMapRasterizer());
         mapComposer.registerRenderer(new ShadowedMapRasterizer());
-        mapComposer.registerRenderer(new ContourMapRasterizer());
+        mapComposer.registerRenderer(new ContourLineMapRasterizer());
 
         return mapComposer;
     }
