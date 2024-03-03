@@ -3,13 +3,14 @@
 # 1
 * add different color for main contour lines
 * add different color for coast contour lines
-* add DynamicLayerProperties (configuration for RecomMapEntity) (/)
 
 * add forest heatmap
 * add village heatmap
 * add names to villages
 * add general map names
 
+* integrate pipeline in commander!
+* add DynamicLayerProperties (configuration for RecomMapEntity) (/)
 
 * known issues or optimizations:
   * prebuffering of zoom levels (for faster zooming) or find out what is the bottleneck
