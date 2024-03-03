@@ -2,7 +2,7 @@
 
 # 1
 * add forest heatmap
-  * define what is a forest-entity
+  * define what is a forest-entity -> ".*Vegetation.*" (/)
   * select forest-entities
   * algorithm discrete forest heatmap
     * need stepSize of scaled map
