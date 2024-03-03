@@ -1,9 +1,6 @@
 # TODO LIST
 
 # 1
-* add different color for main contour lines
-* add different color for coast contour lines
-
 * add forest heatmap
 * add village heatmap
 * add names to villages
