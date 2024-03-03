@@ -26,16 +26,22 @@ public class MapDesignSchemeImplementation extends MapDesignScheme {
     @Builder.Default
     private int baseColorContourLineTerrain = 0x55E2A750;
     @Builder.Default
-    private int baseColorContourLineWater = 0x33506975; // #7396A8, #506975
+    private final int baseColorContourLineCoast = 0xAA597482;
+    @Builder.Default
+    private int baseColorContourLineWater = 0x33506975;
+    @Builder.Default
+    private float brightnessModifierPrimaryLines = 1f;
+    @Builder.Default
+    private float brightnessModifierSecondaryLines = 0.5f;
     @Builder.Default
     private int contourLineStepSize = 20;
 
-    
+
     // Sun config (shadowing)
     @Builder.Default
-    private int sunAzimutDeg = 315; // usually 315
+    private int sunAzimutDeg = 315;
     @Builder.Default
-    private int sunElevationDeg = 30; // usually 30-45
+    private int sunElevationDeg = 35;
     @Builder.Default
     private int shadowMapAlpha = 0x66FFFFFF;
 

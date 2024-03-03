@@ -44,7 +44,19 @@ public class MapDesignSchemeDto {
     @Nullable
     @Schema
     @JsonProperty()
+    public String baseColorContourLineCoast;
+    @Nullable
+    @Schema
+    @JsonProperty()
     public String baseColorContourLineWater;
+    @Nullable
+    @Schema
+    @JsonProperty()
+    public Float brightnessModifierPrimaryLines;
+    @Nullable
+    @Schema
+    @JsonProperty()
+    public Float brightnessModifierSecondaryLines;
     @Nullable
     @Schema
     @JsonProperty()

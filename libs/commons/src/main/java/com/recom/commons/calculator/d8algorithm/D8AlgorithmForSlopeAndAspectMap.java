@@ -21,7 +21,7 @@ public class D8AlgorithmForSlopeAndAspectMap {
      * @return A 2D array representing the slope map of the DEM.
      */
     @NonNull
-    public SlopeAndAspect[][] generateSlopeAndAspectMap(final float[][] dem) {
+    public SlopeAndAspect[][] generateSlopeAndAspectMap(@NonNull final float[][] dem) {
         final SlopeAndAspect[][] slopeAndAspects = new SlopeAndAspect[dem.length][dem[0].length];
 
         // Iterate through each cell in the DEM to calculate its slope and aspect.

@@ -43,12 +43,16 @@ public class BaseMapRasterizer implements MapLayerRasterizer {
                 final float heightValue = demDescriptor.getDem()[x][z];
                 int color;
 
-                if (heightValue >= demDescriptor.getSeaLevel()) {
+                if (heightValue > demDescriptor.getSeaLevel()) {
                     // map height to color
                     final float dynamicHeightUnit = (heightValue - demDescriptor.getSeaLevel()) / heightRange;
-                    int grayValue = (int) (255 * dynamicHeightUnit); // normalize to 0..255
+                    int maxHeightKeyValue = 255; // @TODO <<<< to scheme
+                    int grayValue = (int) (maxHeightKeyValue * dynamicHeightUnit); // normalize to 0..255
                     grayValue = Math.min(Math.max(grayValue, 0), 255); // ensure that the value is in the valid range
-                    color = ARGBColor.ARGB(255, grayValue, grayValue, grayValue);
+
+                    int valueHowTransparentTheHeightmapIs = 32; // @TODO <<<< to scheme
+                    color = ARGBColor.ARGB(valueHowTransparentTheHeightmapIs, grayValue, grayValue, grayValue);
+                    color = argbCalculator.blend(color, mapScheme.getBaseColorTerrain());
                 } else {
                     // map depth to water color
                     final float dynamicDepthUnit = (heightValue - demDescriptor.getSeaLevel()) / depthRange;
