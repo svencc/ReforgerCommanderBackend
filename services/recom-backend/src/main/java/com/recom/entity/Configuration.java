@@ -50,7 +50,11 @@ public class Configuration implements Persistable<Long>, Serializable {
 
     @Nullable
     public String getMapName() {
-        return gameMap.getName();
+        if (gameMap != null) {
+            return gameMap.getName();
+        } else {
+            return null;
+        }
     }
 
     @Override

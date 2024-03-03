@@ -2,9 +2,18 @@
 
 # 1
 * add forest heatmap
+  * define what is a forest-entity
+  * select forest-entities
+  * algorithm discrete forest heatmap
+    * need stepSize of scaled map
+    * run in stepSize entities and put them in spatial grid
+    * render grid to heatmap and count entities in grid; maybe quantify/qualify entities (f.e. size and ability to hide)
+
 * add village heatmap
 * add names to villages
 * add general map names
+
+* Save Aspect in rad value for smoother shading!
 
 * integrate pipeline in commander!
 * add DynamicLayerProperties (configuration for RecomMapEntity) (/)
