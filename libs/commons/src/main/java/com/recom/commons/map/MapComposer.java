@@ -52,9 +52,6 @@ public class MapComposer {
     public void execute(@NonNull final MapComposerWorkPackage workPackage) throws MissingRequiredPropertiesException {
         applyConfigurationToRasterizer(workPackage);
 
-        // scale step here or before
-        // bilinear interpolation
-
         renderCoreDataInSequence(workPackage);
         renderDataInParallel(workPackage);
 

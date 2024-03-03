@@ -71,6 +71,7 @@ public class MapTopographyService {
             if (scaleFactor > 1) {
                 float[][] interpolatedDem = demInterpolationAlgorithm.interpolate(demDescriptor, scaleFactor);
                 demDescriptor.setDem(interpolatedDem);
+                demDescriptor.setStepSize(demDescriptor.getStepSize() / scaleFactor);
             }
 
             final MapComposerWorkPackage workPackage = provideMapComposerWorkPackage(demDescriptor, maybeMapComposerConfiguration);
