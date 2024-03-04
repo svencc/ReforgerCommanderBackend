@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -105,18 +106,21 @@ public class ForestMapRasterizer implements MapLayerRasterizer {
 
             final int demWidth = workPackage.getMapComposerConfiguration().getDemDescriptor().getDemWidth();
             final int demHeight = workPackage.getMapComposerConfiguration().getDemDescriptor().getDemHeight();
+            final float stepSize = workPackage.getMapComposerConfiguration().getDemDescriptor().getStepSize();
 
             final SpacialIndex<ForestItem> spatialIndex = new SpacialIndex<>(demWidth, demHeight);
             forestEntities.forEach(forestItem -> {
-                final int x = Round.halfUp(forestItem.getCoordinateX().doubleValue());
-                final int y = Round.halfUp(forestItem.getCoordinateY().doubleValue());
+                final int x = Round.halfUp(forestItem.getCoordinateX().doubleValue() / stepSize);
+                final int y = Round.halfUp(forestItem.getCoordinateY().doubleValue() / stepSize);
                 if (x >= 0 && x < demWidth && y >= 0 && y < demHeight) {
                     spatialIndex.put(x, y, forestItem);
                 }
             });
 
             final int[] rawForestMap = rasterizeForestMap(spatialIndex, workPackage.getMapComposerConfiguration().getMapDesignScheme());
+
             workPackage.getPipelineArtifacts().addArtifact(this, rawForestMap);
+
         } else {
             log.error("ForestMapRasterizer is not prepared, and prepareAsync was not called in advance!");
             return;
