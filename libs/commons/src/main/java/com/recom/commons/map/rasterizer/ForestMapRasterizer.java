@@ -4,10 +4,11 @@ import com.recom.commons.map.MapComposer;
 import com.recom.commons.map.rasterizer.configuration.LayerOrder;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRasterizer;
 import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
-import com.recom.commons.model.DEMDescriptor;
+import com.recom.commons.math.Round;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
 import com.recom.commons.model.maprendererpipeline.MapLayerRasterizerConfiguration;
 import com.recom.commons.model.maprendererpipeline.dataprovider.forest.ForestItem;
+import com.recom.commons.model.maprendererpipeline.dataprovider.forest.SpacialIndex;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +44,7 @@ public class ForestMapRasterizer implements MapLayerRasterizer {
 
     @NonNull
     public int[] rasterizeForestMap(
-            @NonNull final DEMDescriptor DEMDescriptor,
+            final SpacialIndex<ForestItem> spacialIndex,
             @NonNull final MapDesignScheme mapScheme
     ) {
 //        final D8AlgorithmForSlopeAndAspectMap algorithmForSlopeAndAspect = new D8AlgorithmForSlopeAndAspectMap(5.0);
@@ -54,8 +55,8 @@ public class ForestMapRasterizer implements MapLayerRasterizer {
 //
 // @TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-        final int width = DEMDescriptor.getDemWidth();
-        final int height = DEMDescriptor.getDemHeight();
+        final int width = spacialIndex.getWidth();
+        final int height = spacialIndex.getHeight();
 
         final int[] pixelBuffer = new int[width * height];
 //        for (int x = 0; x < width; x++) {
@@ -101,8 +102,20 @@ public class ForestMapRasterizer implements MapLayerRasterizer {
     public void render(@NonNull MapComposerWorkPackage workPackage) {
         if (maybePreperationTask.isPresent()) {
             final List<ForestItem> forestEntities = maybePreperationTask.get().join();
-// @TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-            final int[] rawForestMap = rasterizeForestMap(workPackage.getMapComposerConfiguration().getDemDescriptor(), workPackage.getMapComposerConfiguration().getMapDesignScheme());
+
+            // create spatial index for forest entities (pixel size)
+            final int demWidth = workPackage.getMapComposerConfiguration().getDemDescriptor().getDemWidth();
+            final int demHeight = workPackage.getMapComposerConfiguration().getDemDescriptor().getDemHeight();
+            final SpacialIndex<ForestItem> spatialIndex = new SpacialIndex<>(demWidth, demHeight);
+            forestEntities.stream().forEach(forestItem -> {
+                final int x = Round.halfUp(forestItem.getCoordinateX().doubleValue());
+                final int y = Round.halfUp(forestItem.getCoordinateY().doubleValue());
+                if (x >= 0 && x < demWidth && y >= 0 && y < demHeight) {
+                    spatialIndex.put(x, y, forestItem);
+                }
+            });
+
+            final int[] rawForestMap = rasterizeForestMap(spatialIndex, workPackage.getMapComposerConfiguration().getMapDesignScheme());
             workPackage.getPipelineArtifacts().addArtifact(this, rawForestMap);
         } else {
             log.error("ForestMapRasterizer is not prepared, and prepareAsync was not called in advance!");
