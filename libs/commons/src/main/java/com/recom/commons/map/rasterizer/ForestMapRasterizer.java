@@ -103,11 +103,11 @@ public class ForestMapRasterizer implements MapLayerRasterizer {
         if (maybePreperationTask.isPresent()) {
             final List<ForestItem> forestEntities = maybePreperationTask.get().join();
 
-            // create spatial index for forest entities (pixel size)
             final int demWidth = workPackage.getMapComposerConfiguration().getDemDescriptor().getDemWidth();
             final int demHeight = workPackage.getMapComposerConfiguration().getDemDescriptor().getDemHeight();
+
             final SpacialIndex<ForestItem> spatialIndex = new SpacialIndex<>(demWidth, demHeight);
-            forestEntities.stream().forEach(forestItem -> {
+            forestEntities.forEach(forestItem -> {
                 final int x = Round.halfUp(forestItem.getCoordinateX().doubleValue());
                 final int y = Round.halfUp(forestItem.getCoordinateY().doubleValue());
                 if (x >= 0 && x < demWidth && y >= 0 && y < demHeight) {
