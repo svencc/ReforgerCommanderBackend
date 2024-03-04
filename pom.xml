@@ -38,7 +38,7 @@
         <ehcache.version>3.10.8</ehcache.version>
 
         <!-- JIB CONTAINER BUILDER -->
-        <jib-maven-plugin.version>3.4.0</jib-maven-plugin.version>
+        <jib-maven-plugin.version>3.4.1</jib-maven-plugin.version>
 
         <!-- JWT -->
         <nimbus-jose-jwt.version>9.37.3</nimbus-jose-jwt.version>
