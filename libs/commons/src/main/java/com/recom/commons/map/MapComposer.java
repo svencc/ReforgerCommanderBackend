@@ -4,7 +4,9 @@ import com.recom.commons.calculator.ARGBCalculator;
 import com.recom.commons.map.rasterizer.*;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRasterizer;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
+import com.recom.commons.model.maprendererpipeline.dataprovider.forest.ForestProvidable;
 import com.recom.commons.model.maprendererpipeline.report.PipelineLogMessage;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +29,14 @@ public class MapComposer {
     private final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
     @NonNull
     private final ARGBCalculator argbCalculator = new ARGBCalculator();
+    @Getter
+    @NonNull
+    private Optional<ForestProvidable> forestProvider = Optional.empty();
 
+
+    public void registerForestProvider(@NonNull final ForestProvidable forestProvider) {
+        this.forestProvider = Optional.of(forestProvider);
+    }
 
     @NonNull
     public static MapComposer withDefaultConfiguration() {
@@ -39,6 +48,7 @@ public class MapComposer {
         mapComposer.registerRenderer(new HeightMapRasterizer());
         mapComposer.registerRenderer(new BaseMapRasterizer());
         mapComposer.registerRenderer(new ShadowedMapRasterizer());
+        mapComposer.registerRenderer(new ForestMapRasterizer(mapComposer));
         mapComposer.registerRenderer(new ContourLineMapRasterizer());
 
         return mapComposer;
@@ -52,10 +62,20 @@ public class MapComposer {
     public void execute(@NonNull final MapComposerWorkPackage workPackage) throws MissingRequiredPropertiesException {
         applyConfigurationToRasterizer(workPackage);
 
+        prepareDataAsync(workPackage);
         renderCoreDataInSequence(workPackage);
         renderDataInParallel(workPackage);
 
         handleException(workPackage);
+    }
+
+    private void prepareDataAsync(@NonNull final MapComposerWorkPackage workPackage) {
+        mapLayerRasterizerPipeline
+                .stream()
+                .sorted(Comparator.comparingInt((final MapLayerRasterizer mapLayerRasterizer) -> mapLayerRasterizer.getMapLayerRasterizerConfiguration().getLayerOrder()))
+                .filter((final MapLayerRasterizer renderer) -> renderer.getMapLayerRasterizerConfiguration().isEnabled())
+                .peek(renderer -> renderer.prepareAsync(workPackage))
+                .toList();
     }
 
     @NonNull

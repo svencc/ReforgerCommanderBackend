@@ -11,10 +11,13 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class MapComposerConfiguration {
 
+
     @Bean()
     public MapComposer mapComposer() {
         return MapComposer.withDefaultConfiguration();
     }
+
+
     @Bean()
     public DEMInterpolationAlgorithm demInterpolationAlgorithm() {
         return new DEMInterpolationAlgorithmBilinear();

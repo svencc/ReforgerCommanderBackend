@@ -72,6 +72,11 @@ public class BaseMapRasterizer implements MapLayerRasterizer {
     }
 
     @Override
+    public void prepareAsync(@NonNull MapComposerWorkPackage workPackage) {
+        return;
+    }
+
+    @Override
     public void render(@NonNull final MapComposerWorkPackage workPackage) {
         final int[] rawBaseMap = rasterizeBaseMap(workPackage.getMapComposerConfiguration().getDemDescriptor(), workPackage.getMapComposerConfiguration().getMapDesignScheme());
         workPackage.getPipelineArtifacts().addArtifact(this, rawBaseMap);

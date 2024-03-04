@@ -49,6 +49,11 @@ public class ContourLineMapRasterizer implements MapLayerRasterizer {
     }
 
     @Override
+    public void prepareAsync(@NonNull MapComposerWorkPackage workPackage) {
+        return;
+    }
+
+    @Override
     public void render(@NonNull final MapComposerWorkPackage workPackage) {
         final int[] rawContourMap = rasterizeContourMap(workPackage.getMapComposerConfiguration().getDemDescriptor(), workPackage.getMapComposerConfiguration().getMapDesignScheme());
         workPackage.getPipelineArtifacts().addArtifact(this, rawContourMap);

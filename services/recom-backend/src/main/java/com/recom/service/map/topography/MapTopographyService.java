@@ -18,6 +18,7 @@ import com.recom.exception.HttpUnprocessableEntityException;
 import com.recom.mapper.mapcomposer.MapDesignSchemeMapper;
 import com.recom.mapper.mapcomposer.MapLayerRasterizerConfigurationMapper;
 import com.recom.persistence.map.topography.MapLocatedTopographyPersistenceLayer;
+import com.recom.service.ForestProviderGenerator;
 import com.recom.service.SerializationService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +48,8 @@ public class MapTopographyService {
     private final MapComposer mapComposer;
     @NonNull
     private final DEMInterpolationAlgorithm demInterpolationAlgorithm;
+    @NonNull
+    private final ForestProviderGenerator forestProviderGenerator;
 
 
     @Transactional(readOnly = true)
@@ -76,6 +79,7 @@ public class MapTopographyService {
 
             final MapComposerWorkPackage workPackage = provideMapComposerWorkPackage(demDescriptor, maybeMapComposerConfiguration);
 
+            mapComposer.registerForestProvider(forestProviderGenerator.generate(mapTopography.getGameMap()));
             mapComposer.execute(workPackage);
 
             if (workPackage.getReport().isSuccess()) {

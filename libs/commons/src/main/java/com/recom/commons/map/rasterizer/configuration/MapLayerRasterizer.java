@@ -10,6 +10,8 @@ public interface MapLayerRasterizer extends HasMapLayerRasterizerConfiguration {
     @NonNull
     String getRasterizerName();
 
+    void prepareAsync(@NonNull final MapComposerWorkPackage workPackage);
+
     void render(@NonNull final MapComposerWorkPackage workPackage) throws IOException;
 
 }

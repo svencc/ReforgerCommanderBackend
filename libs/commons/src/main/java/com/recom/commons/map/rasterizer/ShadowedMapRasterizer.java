@@ -53,6 +53,11 @@ public class ShadowedMapRasterizer implements MapLayerRasterizer {
     }
 
     @Override
+    public void prepareAsync(@NonNull MapComposerWorkPackage workPackage) {
+        return;
+    }
+
+    @Override
     public void render(@NonNull final MapComposerWorkPackage workPackage) {
         workPackage.getPipelineArtifacts().getArtifactFrom(SlopeAndAspectMapRasterizer.class).ifPresent((final CreatedArtifact artifact) -> {
             final Object artifactData = artifact.getData();

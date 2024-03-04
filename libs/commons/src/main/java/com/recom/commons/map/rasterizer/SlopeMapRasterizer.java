@@ -56,6 +56,11 @@ public class SlopeMapRasterizer implements MapLayerRasterizer {
     }
 
     @Override
+    public void prepareAsync(@NonNull MapComposerWorkPackage workPackage) {
+        return;
+    }
+
+    @Override
     public void render(@NonNull MapComposerWorkPackage workPackage) {
         final int[] rawSlopeMap = rasterizeSlopeMap(workPackage.getMapComposerConfiguration().getDemDescriptor(), workPackage.getMapComposerConfiguration().getMapDesignScheme());
         workPackage.getPipelineArtifacts().addArtifact(this, rawSlopeMap);

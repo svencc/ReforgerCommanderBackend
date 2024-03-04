@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 
+
 @Getter
 @Setter
 public class SlopeAndAspectMapRasterizer implements MapLayerRasterizer {
@@ -38,6 +39,11 @@ public class SlopeAndAspectMapRasterizer implements MapLayerRasterizer {
     @Override
     public String getRasterizerName() {
         return getClass().getSimpleName();
+    }
+
+    @Override
+    public void prepareAsync(@NonNull MapComposerWorkPackage workPackage) {
+        return;
     }
 
     @Override

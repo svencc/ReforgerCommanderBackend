@@ -83,6 +83,11 @@ public class HeightMapRasterizer implements MapLayerRasterizer {
     }
 
     @Override
+    public void prepareAsync(@NonNull MapComposerWorkPackage workPackage) {
+        return;
+    }
+
+    @Override
     public void render(@NonNull final MapComposerWorkPackage workPackage) {
         final int[] rawHeightMap = rasterizeHeightMap(workPackage.getMapComposerConfiguration().getDemDescriptor());
         workPackage.getPipelineArtifacts().addArtifact(this, rawHeightMap);
