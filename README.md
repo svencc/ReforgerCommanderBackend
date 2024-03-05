@@ -24,6 +24,7 @@ What works and what you can see in the example images:
 To create more intelligence from gameMap data the following features are planned:
 * Visual Map Generation
   * ![mergedmap-preview.png](docs%2Fmd-media%2Fmergedmap-preview.png) 
+  * ![mergedmap2-preview.png](docs%2Fmd-media%2Fmergedmap2-preview.png) 
 * Forest detection / forest heatmap
   * ![forestmap-preview.png](docs%2Fmd-media%2Fforestmap-preview.png) 
 * Terrain heightmap
