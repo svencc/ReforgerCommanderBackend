@@ -3,9 +3,9 @@ package com.recom.commons.calculator.d8algorithm;
 
 import com.recom.commons.calculator.ARGBCalculator;
 import com.recom.commons.calculator.VectorCalculator;
+import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
 import com.recom.commons.model.SlopeAndAspect;
 import com.recom.commons.model.Vector3D;
-import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
@@ -21,10 +21,12 @@ public class D8AlgorithmForShadedMap {
             @NonNull final SlopeAndAspect[][] slopeAndAspectMap,
             @NonNull final MapDesignScheme shadowingScheme
     ) {
-        final int[][] shadingMap = new int[slopeAndAspectMap.length][slopeAndAspectMap[0].length];
+        final int mapWidth = slopeAndAspectMap.length;
+        final int mapHeight = slopeAndAspectMap[0].length;
+        final int[][] shadingMap = new int[mapWidth][mapHeight];
 
-        for (int x = 0; x < slopeAndAspectMap.length; x++) {
-            for (int y = 0; y < slopeAndAspectMap[0].length; y++) {
+        for (int x = 0; x < mapWidth; x++) {
+            for (int y = 0; y < mapHeight; y++) {
                 shadingMap[x][y] = calculateShading(slopeAndAspectMap[x][y], shadowingScheme);
             }
         }

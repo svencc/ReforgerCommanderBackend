@@ -31,7 +31,7 @@ public class SlopeMapRasterizer implements MapLayerRasterizer {
             @NonNull final DEMDescriptor DEMDescriptor,
             @NonNull final MapDesignScheme mapScheme
     ) {
-        final D8AlgorithmForSlopeAndAspectMap algorithmForSlopeAndAspect = new D8AlgorithmForSlopeAndAspectMap(5.0);
+        final D8AlgorithmForSlopeAndAspectMap algorithmForSlopeAndAspect = new D8AlgorithmForSlopeAndAspectMap(DEMDescriptor.getStepSize());
         final D8AlgorithmForSlopeMap d8AlgorithmForSlopeMap = new D8AlgorithmForSlopeMap();
 
         final SlopeAndAspect[][] slopeAndAspects = algorithmForSlopeAndAspect.generateSlopeAndAspectMap(DEMDescriptor.getDem());

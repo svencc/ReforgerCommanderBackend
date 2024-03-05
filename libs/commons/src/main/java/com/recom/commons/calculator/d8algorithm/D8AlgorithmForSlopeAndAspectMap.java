@@ -22,11 +22,13 @@ public class D8AlgorithmForSlopeAndAspectMap {
      */
     @NonNull
     public SlopeAndAspect[][] generateSlopeAndAspectMap(@NonNull final float[][] dem) {
-        final SlopeAndAspect[][] slopeAndAspects = new SlopeAndAspect[dem.length][dem[0].length];
+        final int demWidth = dem.length;
+        final int demHeight = dem[0].length;
+        final SlopeAndAspect[][] slopeAndAspects = new SlopeAndAspect[demWidth][demHeight];
 
         // Iterate through each cell in the DEM to calculate its slope and aspect.
-        for (int x = 0; x < dem.length; x++) {
-            for (int y = 0; y < dem[0].length; y++) {
+        for (int x = 0; x < demWidth; x++) {
+            for (int y = 0; y < demHeight; y++) {
                 slopeAndAspects[x][y] = calculateSlopeAndAspect(dem, x, y);
             }
         }
@@ -49,6 +51,8 @@ public class D8AlgorithmForSlopeAndAspectMap {
             final int x,
             final int y
     ) {
+        final int demWidth = dem.length;
+        final int demHeight = dem[0].length;
         Aspect aspect = Aspect.NULL_ASPECT; // Initialize the aspect to null.
         double maxSlope = 0;                // Initialize the maximum slope to 0.
         final double diagonalCellSize = Math.sqrt(2) * cellSize;
@@ -59,23 +63,25 @@ public class D8AlgorithmForSlopeAndAspectMap {
             final int adjacentNeighborY = y + D8AspectMatrix.directionYComponentMatrix[direction]; // Calculate the Y-coordinate of the adjacent neighbor.
 
             // Prüfen, ob der neue Punkt innerhalb der Grenzen liegt
-            if (adjacentNeighborX >= 0 && adjacentNeighborY >= 0 && adjacentNeighborX < dem.length && adjacentNeighborY < dem[0].length) {
-                final double relativeDifference = dem[x][y] - dem[adjacentNeighborX][adjacentNeighborY];
-                final int differenceSign = Sign.of(relativeDifference);
-                final double absoluteDifference = Math.abs(relativeDifference);
-                // Elevation difference to the neighbor.
-                final double distance = (currentAspect.isCardinal()) ? cellSize : diagonalCellSize;                      // Choose the correct distance based on direction.
-                final double slope = absoluteDifference / distance;                                                     // Calculate the slope as elevation difference divided by distance.
+            if (adjacentNeighborX >= 0 && adjacentNeighborY >= 0 && adjacentNeighborX < demWidth) {
+                if (adjacentNeighborY < demHeight) {
+                    final double relativeDifference = dem[x][y] - dem[adjacentNeighborX][adjacentNeighborY];
+                    final int differenceSign = Sign.of(relativeDifference);
+                    final double absoluteDifference = Math.abs(relativeDifference);
+                    // Elevation difference to the neighbor.
+                    final double distance = (currentAspect.isCardinal()) ? cellSize : diagonalCellSize;                      // Choose the correct distance based on direction.
+                    final double slope = absoluteDifference / distance;                                                     // Calculate the slope as elevation difference divided by distance.
 
-                // Update the maximum slope if this slope is steeper.
-                // so, if more than one slope is the same, the first one will stay the aspect
-                if (slope > maxSlope) {
-                    aspect = currentAspect;
-                    // If difference is negative, the aspect is the opposite of the current aspect, because the slope is in the descending direction.
-                    if (differenceSign == -1) {
-                        aspect = currentAspect.getOpposite();
+                    // Update the maximum slope if this slope is steeper.
+                    // so, if more than one slope is the same, the first one will stay the aspect
+                    if (slope > maxSlope) {
+                        aspect = currentAspect;
+                        // If difference is negative, the aspect is the opposite of the current aspect, because the slope is in the descending direction.
+                        if (differenceSign == -1) {
+                            aspect = currentAspect.getOpposite();
+                        }
+                        maxSlope = slope;
                     }
-                    maxSlope = slope;
                 }
             }
         }

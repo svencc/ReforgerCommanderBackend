@@ -19,10 +19,12 @@ public class D8AlgorithmForSlopeMap {
             @NonNull final SlopeAndAspect[][] slopeAndAspects,
             @NonNull final MapDesignScheme mapScheme
     ) {
-        final int[][] slopeMap = new int[slopeAndAspects.length][slopeAndAspects[0].length];
+        final int mapWidth = slopeAndAspects.length;
+        final int mapHeight = slopeAndAspects[0].length;
+        final int[][] slopeMap = new int[mapWidth][mapHeight];
 
-        for (int x = 0; x < slopeAndAspects.length; x++) {
-            for (int y = 0; y < slopeAndAspects[0].length; y++) {
+        for (int x = 0; x < mapWidth; x++) {
+            for (int y = 0; y < mapHeight; y++) {
                 slopeMap[x][y] = calculateSlopeColor(slopeAndAspects[x][y], mapScheme);
             }
         }

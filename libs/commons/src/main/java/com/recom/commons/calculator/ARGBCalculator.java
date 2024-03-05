@@ -57,12 +57,27 @@ public class ARGBCalculator {
                 ((blue & 0xFF << 0));
     }
 
-    public int modifyBrightness(final int baseColor, double brightness) {
+    public int modifyBrightness(
+            final int baseColor,
+            final double brightness
+    ) {
         return compose(
                 getAlphaComponent(baseColor),
                 Round.halfUp(getRedComponent(baseColor) * brightness),
                 Round.halfUp(getGreenComponent(baseColor) * brightness),
                 Round.halfUp(getBlueComponent(baseColor) * brightness)
+        );
+    }
+
+    public int modifyTransparency(
+            final int baseColor,
+            final double alphaFactor
+    ) {
+        return compose(
+                Round.halfUp(getAlphaComponent(baseColor) * alphaFactor),
+                getRedComponent(baseColor),
+                getGreenComponent(baseColor),
+                getBlueComponent(baseColor)
         );
     }
 

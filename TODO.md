@@ -19,13 +19,15 @@
 * add DynamicLayerProperties (configuration for RecomMapEntity) (/)
 
 * known issues or optimizations:
+  * TODO >>> extract to 3d-2d converter (_3dZTo2dY ....)
   * /api/v1/configuration/map-tools/resources/forest?mapName= tooks way too long; does it already make use of the resource_name, class_name and prefab_name tables?   
+  * cache forest and/or spatialForestMap
   * prebuffering of zoom levels (for faster zooming) or find out what is the bottleneck
   * (add pre-click-event (preclick, click, doublecklic) events)
   * fix window stage tacview size setting onload -> issue is that window size + engine size is the same at this moment
   * eclipse store
-    * Switch map data to eclipse store!
-    * switch all data to eclipse store!
+   * Switch map data to eclipse store!
+   * switch all data to eclipse store!
 
 
 # 1.1

@@ -1,10 +1,12 @@
 package com.recom.commons.map.rasterizer;
 
+import com.recom.commons.calculator.d8algorithm.D8AlgorithmForForestMap;
 import com.recom.commons.map.MapComposer;
 import com.recom.commons.map.rasterizer.configuration.LayerOrder;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRasterizer;
 import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
 import com.recom.commons.math.Round;
+import com.recom.commons.model.DEMDescriptor;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
 import com.recom.commons.model.maprendererpipeline.MapLayerRasterizerConfiguration;
 import com.recom.commons.model.maprendererpipeline.dataprovider.forest.ForestItem;
@@ -15,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -45,26 +46,22 @@ public class ForestMapRasterizer implements MapLayerRasterizer {
 
     @NonNull
     public int[] rasterizeForestMap(
-            final SpacialIndex<ForestItem> spacialIndex,
+            @NonNull final DEMDescriptor demDescriptor,
+            @NonNull final SpacialIndex<ForestItem> spacialIndex,
             @NonNull final MapDesignScheme mapScheme
     ) {
-//        final D8AlgorithmForSlopeAndAspectMap algorithmForSlopeAndAspect = new D8AlgorithmForSlopeAndAspectMap(5.0);
-//        final D8AlgorithmForSlopeMap d8AlgorithmForSlopeMap = new D8AlgorithmForSlopeMap();
-//
-//        final SlopeAndAspect[][] slopeAndAspects = algorithmForSlopeAndAspect.generateSlopeAndAspectMap(DEMDescriptor.getDem());
-//        final int[][] contourMap = d8AlgorithmForSlopeMap.generateSlopeMap(slopeAndAspects, mapScheme);
-//
-// @TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+        final D8AlgorithmForForestMap d8AlgorithmForForestMap = new D8AlgorithmForForestMap(5.0);
+
+        final int[][] forestMap = d8AlgorithmForForestMap.generateForestMap(demDescriptor, spacialIndex, mapScheme);
 
         final int width = spacialIndex.getWidth();
         final int height = spacialIndex.getHeight();
-
         final int[] pixelBuffer = new int[width * height];
-//        for (int x = 0; x < width; x++) {
-//            for (int z = 0; z < height; z++) {
-//                pixelBuffer[x + z * width] = contourMap[x][z];
-//            }
-//        }
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                pixelBuffer[x + y * width] = forestMap[x][y];
+            }
+        }
 
         return pixelBuffer;
     }
@@ -111,20 +108,34 @@ public class ForestMapRasterizer implements MapLayerRasterizer {
             final SpacialIndex<ForestItem> spatialIndex = new SpacialIndex<>(demWidth, demHeight);
             forestEntities.forEach(forestItem -> {
                 final int x = Round.halfUp(forestItem.getCoordinateX().doubleValue() / stepSize);
-                final int y = Round.halfUp(forestItem.getCoordinateY().doubleValue() / stepSize);
+
+                final double normalizedYCoordinate = _3dZTo2dY(forestItem.getCoordinateY().doubleValue(), demHeight, stepSize);
+                final int y = Round.halfUp(normalizedYCoordinate / stepSize);
+
                 if (x >= 0 && x < demWidth && y >= 0 && y < demHeight) {
                     spatialIndex.put(x, y, forestItem);
                 }
             });
 
-            final int[] rawForestMap = rasterizeForestMap(spatialIndex, workPackage.getMapComposerConfiguration().getMapDesignScheme());
-
+            final int[] rawForestMap = rasterizeForestMap(workPackage.getMapComposerConfiguration().getDemDescriptor(), spatialIndex, workPackage.getMapComposerConfiguration().getMapDesignScheme());
             workPackage.getPipelineArtifacts().addArtifact(this, rawForestMap);
-
         } else {
             log.error("ForestMapRasterizer is not prepared, and prepareAsync was not called in advance!");
             return;
         }
+    }
+
+
+
+
+
+    // TODO >>> extract to 3d-2d converter
+    public double _3dXTo2dX(final double x,final int demWidth, final double stepSize) {
+        return demWidth * stepSize - x;
+    }
+
+    public double _3dZTo2dY(final double y, final int demHeight, final double stepSize) {
+        return demHeight * stepSize - y;
     }
 
 }

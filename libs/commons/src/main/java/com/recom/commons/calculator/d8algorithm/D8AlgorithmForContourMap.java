@@ -40,6 +40,8 @@ public class D8AlgorithmForContourMap {
             @NonNull final MapDesignScheme mapScheme
     ) {
         final float[][] dem = demDescriptor.getDem();
+        final int demWidth = demDescriptor.getDemWidth();
+        final int demHeigth = demDescriptor.getDemHeight();
         final List<ContourLineLayer> contourLayers = generateContourLineLayers(demDescriptor, mapScheme);
 
         for (final ContourLineLayer layer : contourLayers) {
@@ -50,8 +52,8 @@ public class D8AlgorithmForContourMap {
                 final int adjacentOppositeNeighborY = y + D8AspectMatrix.directionYComponentMatrix[direction + 3]; // Calculate the Y-coordinate of the adjacent opposite neighbor.
 
                 // Check if the new point is within the bounds
-                if (adjacentNeighborX >= 0 && adjacentNeighborY >= 0 && adjacentNeighborX < dem.length && adjacentNeighborY < dem[0].length
-                        && adjacentOppositeNeighborX >= 0 && adjacentOppositeNeighborY >= 0 && adjacentOppositeNeighborX < dem.length && adjacentOppositeNeighborY < dem[0].length) {
+                if (adjacentNeighborX >= 0 && adjacentNeighborY >= 0 && adjacentNeighborX < demWidth && adjacentNeighborY < demHeigth
+                        && adjacentOppositeNeighborX >= 0 && adjacentOppositeNeighborY >= 0 && adjacentOppositeNeighborX < demWidth && adjacentOppositeNeighborY < demHeigth) {
                     if (dem[adjacentNeighborX][adjacentNeighborY] > layer.getHeight()
                             && dem[adjacentOppositeNeighborX][adjacentOppositeNeighborY] < layer.getHeight()
                     ) {
