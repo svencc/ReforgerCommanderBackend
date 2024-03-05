@@ -2,12 +2,7 @@
 
 # 1
 * add forest heatmap
-  * define what is a forest-entity -> ".*Vegetation.*" (/)
-  * select forest-entities
-  * algorithm discrete forest heatmap
-    * need stepSize of scaled map
-    * run in stepSize entities and put them in spatial grid
-    * render grid to heatmap and count entities in grid; maybe quantify/qualify entities (f.e. size and ability to hide)
+  * support scaling!
 
 * add village heatmap
 * add names to villages
