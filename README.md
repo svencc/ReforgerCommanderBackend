@@ -22,9 +22,10 @@ What works and what you can see in the example images:
 ![cluster-example-3.png](docs%2Fmd-media%2Fcluster-example-3.png)
 
 To create more intelligence from gameMap data the following features are planned:
-* Forest detection / forest heatmap
 * Visual Map Generation
   * ![mergedmap-preview.png](docs%2Fmd-media%2Fmergedmap-preview.png) 
+* Forest detection / forest heatmap
+  * ![forestmap-preview.png](docs%2Fmd-media%2Fforestmap-preview.png) 
 * Terrain heightmap
   * ![topographic-scanner-example.png](docs%2Fmd-media%2Ftopographic-scanner-example.png)
 * Map shading / lightmap
