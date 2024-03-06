@@ -73,10 +73,4 @@ public class DEMService {
                 .build();
     }
 
-    // warum muss ich das machen? die daten kommen aus einer 3d engine; die koordinaten muss hich hier quasi invertieren
-    // in der 3d engine ist unten links 0,0, ich brauche aber ein 0,0 oben links (image)
-    // ich muss also die daten um 180° drehen; wie mache ich das?
-    // ich iteriere über die daten und schreibe sie in ein neues array; das neue array ist dann um 180° gedreht
-    // gibts da einen algorithmus?
-
 }

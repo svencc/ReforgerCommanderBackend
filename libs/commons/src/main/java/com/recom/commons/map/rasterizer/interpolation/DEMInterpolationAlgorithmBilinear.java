@@ -9,10 +9,10 @@ public class DEMInterpolationAlgorithmBilinear implements DEMInterpolationAlgori
 
     @Override
     public float[][] interpolate(
-            @NonNull DEMDescriptor DEMDescriptor,
+            @NonNull DEMDescriptor demDescriptor,
             final int scaleFactor
     ) {
-        return interpolate(DEMDescriptor.getDem(), scaleFactor);
+        return interpolate(demDescriptor.getDem(), scaleFactor);
     }
 
     @Override

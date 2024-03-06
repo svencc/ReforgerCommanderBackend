@@ -68,10 +68,9 @@ public class D8AlgorithmForForestMap {
                     surroundingForestNeighbourSpaces++;
                 }
             }
-
         }
 
-        int baseColorForest = mapScheme.getBaseColorForest();
+        final int baseColorForest = mapScheme.getBaseColorForest();
 
         if (treeDensity < forestDensityThreshold) {
             return mapScheme.getBaseColorContourBackground(); // @TODO extract to new variable baseColorOfForestBackground!!!

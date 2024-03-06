@@ -53,7 +53,7 @@ public class ForestMapRasterizer implements MapLayerRasterizer {
             @NonNull final SpacialIndex<ForestItem> spacialIndex,
             @NonNull final MapDesignScheme mapScheme
     ) {
-        final D8AlgorithmForForestMap d8AlgorithmForForestMap = new D8AlgorithmForForestMap(5.0);
+        final D8AlgorithmForForestMap d8AlgorithmForForestMap = new D8AlgorithmForForestMap(demDescriptor.getStepSize());
 
         final int[][] forestMap = d8AlgorithmForForestMap.generateForestMap(demDescriptor, spacialIndex, mapScheme);
 
