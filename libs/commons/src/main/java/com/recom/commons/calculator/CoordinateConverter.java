@@ -10,7 +10,7 @@ public class CoordinateConverter {
             final int demHeight,
             final double stepSize
     ) {
-        return demHeight * stepSize - y;
+        return (demHeight * stepSize) - y;
     }
 
 }
