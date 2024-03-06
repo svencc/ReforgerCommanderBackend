@@ -31,7 +31,7 @@ import java.util.concurrent.Executors;
 public class ForestMapRasterizer implements MapLayerRasterizer {
 
     @NonNull
-    private final CoordinateConverter coordinateConverter;
+    private final CoordinateConverter coordinateConverter = new CoordinateConverter();
     @NonNull
     private final MapComposer mapComposer;
     @NonNull
