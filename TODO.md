@@ -3,7 +3,7 @@
 # 1
 * add forest heatmap
   * support scaling!
-  * TODO >>> extract to 3d-2d converter (_3dZTo2dY ....)
+  * extract forest colors to MapScheme
   * /api/v1/configuration/map-tools/resources/forest?mapName= tooks way too long; does it already make use of the resource_name, class_name and prefab_name tables?   
   * cache forest and/or spatialForestMap
 

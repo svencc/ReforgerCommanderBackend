@@ -1,5 +1,6 @@
 package com.recom.commons.map.rasterizer;
 
+import com.recom.commons.calculator.CoordinateConverter;
 import com.recom.commons.calculator.d8algorithm.D8AlgorithmForForestMap;
 import com.recom.commons.map.MapComposer;
 import com.recom.commons.map.rasterizer.configuration.LayerOrder;
@@ -29,6 +30,8 @@ import java.util.concurrent.Executors;
 @RequiredArgsConstructor
 public class ForestMapRasterizer implements MapLayerRasterizer {
 
+    @NonNull
+    private final CoordinateConverter coordinateConverter;
     @NonNull
     private final MapComposer mapComposer;
     @NonNull
@@ -109,7 +112,7 @@ public class ForestMapRasterizer implements MapLayerRasterizer {
             forestEntities.forEach(forestItem -> {
                 final int x = Round.halfUp(forestItem.getCoordinateX().doubleValue() / stepSize);
 
-                final double normalizedYCoordinate = _3dZTo2dY(forestItem.getCoordinateY().doubleValue(), demHeight, stepSize);
+                final double normalizedYCoordinate = coordinateConverter.threeDeeZToTwoDeeY(forestItem.getCoordinateY().doubleValue(), demHeight, stepSize);
                 final int y = Round.halfUp(normalizedYCoordinate / stepSize);
 
                 if (x >= 0 && x < demWidth && y >= 0 && y < demHeight) {
@@ -123,19 +126,6 @@ public class ForestMapRasterizer implements MapLayerRasterizer {
             log.error("ForestMapRasterizer is not prepared, and prepareAsync was not called in advance!");
             return;
         }
-    }
-
-
-
-
-
-    // TODO >>> extract to 3d-2d converter
-    public double _3dXTo2dX(final double x,final int demWidth, final double stepSize) {
-        return demWidth * stepSize - x;
-    }
-
-    public double _3dZTo2dY(final double y, final int demHeight, final double stepSize) {
-        return demHeight * stepSize - y;
     }
 
 }
