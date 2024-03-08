@@ -2,12 +2,13 @@
 
 # 1
 * add forest heatmap
-  * SpacialIndex is needed for this
-    * SpacialIndex is constructed with grid size and gameMap size
-    * put method takes SpacialEntity; and puts it into the grid list
-    * SpatialEntity has a position x,y
-    * get method takes a position x,y, selects the grid and returns the list of entities in this grid
-  * forestRaster runs through every pixel and checks if it is a forest (asks the spacial index, spacial index decides if this pixel is a forest)
+  * SpacialIndex is needed for this (/)
+    * SpacialIndex is constructed with grid size and gameMap size (/)
+    * put method takes SpacialEntity; and puts it into the grid list (/)
+    * SpatialEntity has a position x,y  (x)
+    * get method takes a position x,y, selects the grid and returns the list of entities in this grid (/)
+  * forestEntity loader puts all forest entities into the spacial index (/)
+  * forestRaster runs through every pixel and checks if it is a forest (asks the spacial index, spacial index decides if this pixel is a forest) (<-))
   * this way we get "grids" of forest cells
   * abstract this; same can be done with other entity types (villages, cities, etc.) 
   * then scaling is supported automatically and we can use this for heatmaps

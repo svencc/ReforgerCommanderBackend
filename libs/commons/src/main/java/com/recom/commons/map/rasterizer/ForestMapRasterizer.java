@@ -57,8 +57,8 @@ public class ForestMapRasterizer implements MapLayerRasterizer {
 
         final int[][] forestMap = d8AlgorithmForForestMap.generateForestMap(demDescriptor, spacialIndex, mapScheme);
 
-        final int width = spacialIndex.getWidth();
-        final int height = spacialIndex.getHeight();
+        final int width = spacialIndex.getMapWidth();
+        final int height = spacialIndex.getMapHeight();
         final int[] pixelBuffer = new int[width * height];
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
@@ -107,17 +107,39 @@ public class ForestMapRasterizer implements MapLayerRasterizer {
             final int demWidth = workPackage.getMapComposerConfiguration().getDemDescriptor().getDemWidth();
             final int demHeight = workPackage.getMapComposerConfiguration().getDemDescriptor().getDemHeight();
             final float stepSize = workPackage.getMapComposerConfiguration().getDemDescriptor().getStepSize();
+            final int forestCellSize = 10;
 
-            final SpacialIndex<ForestItem> spatialIndex = new SpacialIndex<>(demWidth, demHeight);
+/*
+            final int forestCellSizeSquared = forestCellSize * forestCellSize;
+
+
+            // muss restlos sein!
+            if (stepSize % forestCellSize != 0) {
+                log.error("ForestMapRasterizer: stepSize is not a multiple of forestCellSize!");
+                throw new IllegalArgumentException("stepSize is not a multiple of forestCellSize!");
+            }
+            final int scaleDownDivisor = (int) (stepSize / forestCellSizeSquared);
+            final int spacialWidth = demWidth / scaleDownDivisor;
+            final int spacialHeight = demHeight / scaleDownDivisor;
+
+            // wenn stepsize 5, dann muss der spacial index immer noch 1440 statt 2880 sein!
+            // wenn stepsize 10, dann muss der spacial index 1440 sein!
+
+            // forestCellSize = 10; stepSize = 10 -> 1      SpacialIndex = 1440/1 = 1440        scaleDownFactor = 1
+            // forestCellSize = 10; stepSize = 5  -> 2      SpacialIndex = 2880/2 = 1440        scaleDownFactor = 2
+
+//            final SpacialIndex<ForestItem> spatialIndex = new SpacialIndex<>(demWidth, demHeight);
+*/
+//            final SpacialIndex<ForestItem> spatialIndex = new SpacialIndex<>(spacialWidth, spacialHeight, forestCellSize);
+
+            final SpacialIndex<ForestItem> spatialIndex = new SpacialIndex<>(demWidth, demHeight, forestCellSize);
             forestEntities.forEach(forestItem -> {
-                final int x = Round.halfUp(forestItem.getCoordinateX().doubleValue() / stepSize);
+                final int x = Round.halfUp(forestItem.getCoordinateX().doubleValue());
 
                 final double normalizedYCoordinate = coordinateConverter.threeDeeZToTwoDeeY(forestItem.getCoordinateY().doubleValue(), demHeight, stepSize);
-                final int y = Round.halfUp(normalizedYCoordinate / stepSize);
+                final int y = Round.halfUp(normalizedYCoordinate);
 
-                if (x >= 0 && x < demWidth && y >= 0 && y < demHeight) {
-                    spatialIndex.put(x, y, forestItem);
-                }
+                spatialIndex.put(x, y, forestItem);
             });
 
             final int[] rawForestMap = rasterizeForestMap(workPackage.getMapComposerConfiguration().getDemDescriptor(), spatialIndex, workPackage.getMapComposerConfiguration().getMapDesignScheme());
