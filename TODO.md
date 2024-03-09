@@ -1,22 +1,17 @@
 # TODO LIST
 
 # 1
-* add forest heatmap
-  * SpacialIndex is needed for this (/)
-    * SpacialIndex is constructed with grid size and gameMap size (/)
-    * put method takes SpacialEntity; and puts it into the grid list (/)
-    * SpatialEntity has a position x,y  (x)
-    * get method takes a position x,y, selects the grid and returns the list of entities in this grid (/)
-  * forestEntity loader puts all forest entities into the spacial index (/)
-  * forestRaster runs through every pixel and checks if it is a forest (asks the spacial index, spacial index decides if this pixel is a forest) (<-------------------------------------------------------------------------------)
-  * this way we get "grids" of forest cells
+* forestCellSizeInMeter extract
+  * extract forest colors to MapScheme
+  * 
+  * make step size an int (minimum 1 meter); so no float and rounding will be used anymore in code
+  * rename x to demX and y to demY
+  * 
   * abstract this; same can be done with other entity types (villages, cities, etc.) 
   * then scaling is supported automatically and we can use this for heatmaps
   * 
-  * extract forest colors to MapScheme
   * /api/v1/configuration/map-tools/resources/forest?mapName= tooks way too long; does it already make use of the resource_name, class_name and prefab_name tables?   
   * cache forest and/or spatialForestMap
-
   * Round.halUp -> Math.ceil
 
 

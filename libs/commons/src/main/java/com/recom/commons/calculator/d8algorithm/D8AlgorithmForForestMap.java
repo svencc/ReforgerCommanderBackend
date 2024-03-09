@@ -16,11 +16,7 @@ public class D8AlgorithmForForestMap {
 
     @NonNull
     private final ARGBCalculator colorCalculator = new ARGBCalculator();
-    private final int forestCellSize;
-
-    // @TODO extract to conf
-    // 10 Trees per 100m²
-    private final float forestDensityThreshold = 0.01F / 10F * 10F;
+    private final int forestCellSizeInMeter;
 
 
     @NonNull
@@ -31,14 +27,11 @@ public class D8AlgorithmForForestMap {
     ) {
         final int demWidth = demDescriptor.getDemWidth();
         final int demHeight = demDescriptor.getDemHeight();
-        final float stepSizeInMeter = demDescriptor.getStepSize();
 
         final int[][] forestMap = new int[demWidth][demHeight];
-        for (int x = 0; x < demWidth; x++) {
-            for (int y = 0; y < demHeight; y++) {
-                final int xx = (int) Math.ceil(x * stepSizeInMeter);
-                final int yy = (int) Math.ceil(y * stepSizeInMeter);
-                forestMap[x][y] = calculateForestFragment(demDescriptor, spacialIndex, mapScheme, xx, yy);
+        for (int demX = 0; demX < demWidth; demX++) {
+            for (int demY = 0; demY < demHeight; demY++) {
+                forestMap[demX][demY] = calculateForestFragment(demDescriptor, spacialIndex, mapScheme, demX, demY);
             }
         }
 
@@ -50,25 +43,37 @@ public class D8AlgorithmForForestMap {
             @NonNull final DEMDescriptor demDescriptor,
             @NonNull final SpacialIndex<ForestItem> spacialIndex,
             @NonNull final MapDesignScheme mapScheme,
-            final int x,
-            final int y
+            final int demX,
+            final int demY
     ) {
-        final List<ForestItem> forestItemsInSpace = spacialIndex.getInSpace(x, y);
-        final int forestCellSizeSquared = forestCellSize * forestCellSize;
+        // 10 Trees per 100m²= // @TODO extract to conf
+        final int forestCellSizeSquared = forestCellSizeInMeter * forestCellSizeInMeter;
+        double forestDensityThreshold = 1F / 100; // @TODO extract to conf
+
+        final int spacialX = (int) Math.ceil(demX * demDescriptor.getStepSize());
+        final int spacialY = (int) Math.ceil(demY * demDescriptor.getStepSize());
+
+        final List<ForestItem> forestItemsInSpace = spacialIndex.getInSpace(spacialX, spacialY);
         final double treeDensity = forestItemsInSpace.size() / (double) forestCellSizeSquared;
+
         int surroundingForestNeighbourSpaces = 0;
-
-        final int demWidth = demDescriptor.getDemWidth();
-        final int demHeight = demDescriptor.getDemHeight();
-
         for (int direction = 0; direction < 8; direction++) {
-            final int adjacentNeighborCellX = x + D8AspectMatrix.directionXComponentMatrix[direction]; // Calculate the X-coordinate of the adjacent neighbor.
-            final int adjacentNeighborCellY = y + D8AspectMatrix.directionYComponentMatrix[direction]; // Calculate the Y-coordinate of the adjacent neighbor.
+            final double adjacentNeighborSpatialX = spacialX + (D8AspectMatrix.directionXComponentMatrix[direction] * demDescriptor.getStepSize()); // Calculate the X-coordinate of the adjacent neighbor.
+            final double adjacentNeighborSpatialY = spacialY + (D8AspectMatrix.directionYComponentMatrix[direction] * demDescriptor.getStepSize()); // Calculate the Y-coordinate of the adjacent neighbor.
 
-            if (adjacentNeighborCellX >= 0 && adjacentNeighborCellY >= 0 && adjacentNeighborCellX < demWidth && adjacentNeighborCellY < demHeight) {
-                final List<ForestItem> forestItemsInNeighborCell = spacialIndex.getInSpace(adjacentNeighborCellX, adjacentNeighborCellY);
-                final double neighbourForestDensity = forestItemsInNeighborCell.size() / (double) forestCellSizeSquared;
-                if (neighbourForestDensity > forestDensityThreshold) {
+            if (adjacentNeighborSpatialX < 0 || adjacentNeighborSpatialX > demDescriptor.getMapWidthInMeter() || adjacentNeighborSpatialY < 0 || adjacentNeighborSpatialY > demDescriptor.getMapHeightInMeter()) {
+                continue;
+            } else {
+                final List<ForestItem> forestItemsInNeighborCell = spacialIndex.getInSpace(adjacentNeighborSpatialX, adjacentNeighborSpatialY);
+
+                double neighbourForestDensity;
+                if (!forestItemsInNeighborCell.isEmpty()) {
+                    neighbourForestDensity = forestItemsInNeighborCell.size() / (double) forestCellSizeSquared;
+                } else {
+                    neighbourForestDensity = 0;
+                }
+
+                if (neighbourForestDensity >= forestDensityThreshold) {
                     surroundingForestNeighbourSpaces++;
                 }
             }
@@ -78,7 +83,7 @@ public class D8AlgorithmForForestMap {
 
         if (treeDensity < forestDensityThreshold) {
             return mapScheme.getBaseColorContourBackground(); // @TODO extract to new variable baseColorOfForestBackground!!!
-        } else if (treeDensity > forestDensityThreshold && surroundingForestNeighbourSpaces >= 5) {
+        } else if (treeDensity >= forestDensityThreshold && surroundingForestNeighbourSpaces >= 5) {
             return baseColorForest;
         } else {
             return colorCalculator.modifyTransparency(baseColorForest, 0.5);
