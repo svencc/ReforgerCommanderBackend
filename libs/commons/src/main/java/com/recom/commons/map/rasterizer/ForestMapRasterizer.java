@@ -59,9 +59,9 @@ public class ForestMapRasterizer implements MapLayerRasterizer {
         final int width = demDescriptor.getDemWidth();
         final int height = demDescriptor.getDemHeight();
         final int[] pixelBuffer = new int[width * height];
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                pixelBuffer[x + y * width] = forestMap[x][y];
+        for (int demX = 0; demX < width; demX++) {
+            for (int demY = 0; demY < height; demY++) {
+                pixelBuffer[demX + demY * width] = forestMap[demX][demY];
             }
         }
 

@@ -27,9 +27,9 @@ public class D8AlgorithmForSlopeAndAspectMap {
         final SlopeAndAspect[][] slopeAndAspects = new SlopeAndAspect[demWidth][demHeight];
 
         // Iterate through each cell in the DEM to calculate its slope and aspect.
-        for (int x = 0; x < demWidth; x++) {
-            for (int y = 0; y < demHeight; y++) {
-                slopeAndAspects[x][y] = calculateSlopeAndAspect(dem, x, y);
+        for (int demX = 0; demX < demWidth; demX++) {
+            for (int demY = 0; demY < demHeight; demY++) {
+                slopeAndAspects[demX][demY] = calculateSlopeAndAspect(dem, demX, demY);
             }
         }
 
@@ -41,15 +41,15 @@ public class D8AlgorithmForSlopeAndAspectMap {
      * It identifies the steepest slope among the 8 possible descent directions.
      *
      * @param dem The digital elevation model (DEM) as a 2D array of elevation values.
-     * @param x   The X-coordinate (column) of the cell in the DEM.
-     * @param y   The Y-coordinate (row) of the cell in the DEM.
+     * @param demX   The X-coordinate (column) of the cell in the DEM.
+     * @param demY   The Y-coordinate (row) of the cell in the DEM.
      * @return The maximum slope from the given cell.
      */
     @NonNull
     private SlopeAndAspect calculateSlopeAndAspect(
             final float[][] dem,
-            final int x,
-            final int y
+            final int demX,
+            final int demY
     ) {
         final int demWidth = dem.length;
         final int demHeight = dem[0].length;
@@ -59,13 +59,13 @@ public class D8AlgorithmForSlopeAndAspectMap {
 
         for (int direction = 0; direction < 8; direction++) {
             final Aspect currentAspect = D8AspectMatrix.aspects[direction];
-            final int adjacentNeighborX = x + D8AspectMatrix.directionXComponentMatrix[direction]; // Calculate the X-coordinate of the adjacent neighbor.
-            final int adjacentNeighborY = y + D8AspectMatrix.directionYComponentMatrix[direction]; // Calculate the Y-coordinate of the adjacent neighbor.
+            final int adjacentNeighborX = demX + D8AspectMatrix.directionXComponentMatrix[direction]; // Calculate the X-coordinate of the adjacent neighbor.
+            final int adjacentNeighborY = demY + D8AspectMatrix.directionYComponentMatrix[direction]; // Calculate the Y-coordinate of the adjacent neighbor.
 
             // Prüfen, ob der neue Punkt innerhalb der Grenzen liegt
             if (adjacentNeighborX >= 0 && adjacentNeighborY >= 0 && adjacentNeighborX < demWidth) {
                 if (adjacentNeighborY < demHeight) {
-                    final double relativeDifference = dem[x][y] - dem[adjacentNeighborX][adjacentNeighborY];
+                    final double relativeDifference = dem[demX][demY] - dem[adjacentNeighborX][adjacentNeighborY];
                     final int differenceSign = Sign.of(relativeDifference);
                     final double absoluteDifference = Math.abs(relativeDifference);
                     // Elevation difference to the neighbor.

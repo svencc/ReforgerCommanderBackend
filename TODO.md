@@ -1,21 +1,21 @@
 # TODO LIST
 
 # 1
-* forestCellSizeInMeter extract
-  * extract forest colors to MapScheme
-  * 
   * make step size an int (minimum 1 meter); so no float and rounding will be used anymore in code
   * rename x to demX and y to demY
   * 
+  * forestCellSizeInMeter extract
+  * extract forest colors to MapScheme
+  * 
   * abstract this; same can be done with other entity types (villages, cities, etc.) 
-  * then scaling is supported automatically and we can use this for heatmaps
   * 
   * /api/v1/configuration/map-tools/resources/forest?mapName= tooks way too long; does it already make use of the resource_name, class_name and prefab_name tables?   
-  * cache forest and/or spatialForestMap
-  * Round.halUp -> Math.ceil
 
 
 * add village heatmap
+* cache forest and/or spatialForestMap > eclipseStore
+
+
 * add names to villages
 * add general map names
 

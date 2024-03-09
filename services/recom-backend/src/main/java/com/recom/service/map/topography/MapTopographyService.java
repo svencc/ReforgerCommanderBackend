@@ -74,7 +74,7 @@ public class MapTopographyService {
             if (scaleFactor > 1) {
                 float[][] interpolatedDem = demInterpolationAlgorithm.interpolate(demDescriptor, scaleFactor);
                 demDescriptor.setDem(interpolatedDem);
-                demDescriptor.setStepSize(demDescriptor.getStepSize() / scaleFactor);
+                demDescriptor.setStepSize(calculateStepSize(demDescriptor, (float) scaleFactor));
             }
 
             final MapComposerWorkPackage workPackage = provideMapComposerWorkPackage(demDescriptor, maybeMapComposerConfiguration);
@@ -96,6 +96,17 @@ public class MapTopographyService {
         } catch (Exception e) {
             log.error(e.getMessage());
             throw new HttpUnprocessableEntityException();
+        }
+    }
+
+    private int calculateStepSize(
+            @NonNull final DEMDescriptor demDescriptor,
+            float scaleFactor
+    ) {
+        if (demDescriptor.getStepSize() % scaleFactor != 0) {
+            throw new IllegalArgumentException("The provided scale factor does not fit the step size of the dem!");
+        } else {
+            return (int) (demDescriptor.getStepSize() / scaleFactor);
         }
     }
 

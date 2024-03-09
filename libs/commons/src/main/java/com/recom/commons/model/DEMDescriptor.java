@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class DEMDescriptor implements Cloneable {
 
     // meta data
-    private Float stepSize;
+    private Integer stepSize;
     private Integer scanIterationsX;
     private Integer scanIterationsZ;
 
@@ -37,6 +37,10 @@ public class DEMDescriptor implements Cloneable {
 
     public int getMapHeightInMeter() {
         return Round.halfUp(getDemHeight() * stepSize);
+    }
+
+    public Integer getStepSize() {
+        return stepSize.intValue();
     }
 
     @Override
