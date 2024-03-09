@@ -89,6 +89,7 @@ public class MapComposer {
                     try {
                         renderer.render(workPackage);
                     } catch (final Throwable t) {
+                        log.error("Failed to render data!", t);
                         workPackage.getReport().logException(t);
                     }
 
@@ -110,6 +111,7 @@ public class MapComposer {
                     try {
                         renderer.render(workPackage);
                     } catch (final IOException e) {
+                        log.error("Failed to render data!", e);
                         workPackage.getReport().logException(e);
                     }
                 })

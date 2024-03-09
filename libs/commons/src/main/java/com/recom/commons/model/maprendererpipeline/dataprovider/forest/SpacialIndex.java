@@ -1,5 +1,6 @@
 package com.recom.commons.model.maprendererpipeline.dataprovider.forest;
 
+import com.recom.commons.math.Round;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +39,7 @@ public class SpacialIndex<T> {
         this.nrCellsWidth = (int) Math.ceil(mapWidth / cellSize);
         this.nrCellsHeight = (int) Math.ceil(mapHeight / cellSize);
 
-        this.index = (List<T>[][]) new List[nrCellsWidth][nrCellsHeight];
+        this.index = (List<T>[][]) new List[nrCellsWidth + 1][nrCellsHeight + 1];
         preInitializeIndex();
     }
 
@@ -51,27 +52,40 @@ public class SpacialIndex<T> {
     }
 
     public void put(
-            final int x,
-            final int y,
+            final double x,
+            final double y,
             @NonNull final T value
     ) {
-        if (x < 0 || x >= mapWidth || y < 0 || y >= mapHeight) {
-            log.warn("Trying to put value outside of map: x={}, y={}\nDiscard value!", x, y);
+        if (x < 0 || x > mapWidth || y < 0 || y > mapHeight) {
+            log.warn("Trying to put value outside of map: x={}, y={} | discard value!", x, y);
             return;
         }
 
-        final int cellX = (int) (x / cellSize);
-        final int cellY = (int) (y / cellSize);
+        final int cellX = Round.halfUp(x / cellSize);
+        final int cellY = Round.halfUp(y / cellSize);
 
         index[cellX][cellY].add(value);
     }
 
     @NonNull
-    public List<T> get(
+    public List<T> getCell(
             final int x,
             final int y
     ) {
-        if (x < 0 || x >= mapWidth || y < 0 || y >= mapHeight) {
+        if (x < 0 || x > nrCellsWidth || y < 0 || y > nrCellsHeight) {
+            return new ArrayList<>();
+        } else {
+            return index[x][y];
+        }
+    }
+
+
+    @NonNull
+    public List<T> getInSpace(
+            final int x,
+            final int y
+    ) {
+        if (x < 0 || x > mapWidth || y < 0 || y > mapHeight) {
             log.warn("Trying to get value outside of map: x={}, y={}\nReturn empty list!", x, y);
             return new ArrayList<>();
         } else {
@@ -80,6 +94,28 @@ public class SpacialIndex<T> {
 
             return index[cellX][cellY];
         }
+    }
+
+    @NonNull
+    public List<T> getInSpace(
+            final double x,
+            final double y
+    ) {
+        final int cellX = Round.halfUp(x / cellSize);
+        final int cellY = Round.halfUp(y / cellSize);
+
+        return getInSpace(cellX, cellY);
+    }
+
+    public int count() {
+        int count = 0;
+        for (int x = 0; x < nrCellsWidth; x++) {
+            for (int y = 0; y < nrCellsHeight; y++) {
+                count += index[x][y].size();
+            }
+        }
+
+        return count;
     }
 
 }

@@ -6,11 +6,10 @@ import lombok.NoArgsConstructor;
 public class CoordinateConverter {
 
     public double threeDeeZToTwoDeeY(
-            final double y,
-            final int demHeight,
-            final double stepSize
+            final double yCoordinate,
+            final double demHeightInMeter
     ) {
-        return (demHeight * stepSize) - y;
+        return (demHeightInMeter) - yCoordinate;
     }
 
 }
