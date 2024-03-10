@@ -5,6 +5,7 @@ import com.recom.commons.map.rasterizer.*;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRasterizer;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
 import com.recom.commons.model.maprendererpipeline.dataprovider.forest.ForestProvidable;
+import com.recom.commons.model.maprendererpipeline.dataprovider.village.StructureProvidable;
 import com.recom.commons.model.maprendererpipeline.report.PipelineLogMessage;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,10 +33,17 @@ public class MapComposer {
     @Getter
     @NonNull
     private Optional<ForestProvidable> forestProvider = Optional.empty();
+    @Getter
+    @NonNull
+    private Optional<StructureProvidable> structureProvider = Optional.empty();
 
 
     public void registerForestProvider(@NonNull final ForestProvidable forestProvider) {
         this.forestProvider = Optional.of(forestProvider);
+    }
+
+    public void registerVillageProvider(@NonNull final StructureProvidable villageProvider) {
+        this.structureProvider = Optional.of(villageProvider);
     }
 
     @NonNull
@@ -48,6 +56,7 @@ public class MapComposer {
         mapComposer.registerRenderer(new HeightMapRasterizer());
         mapComposer.registerRenderer(new BaseMapRasterizer());
         mapComposer.registerRenderer(new ShadowedMapRasterizer());
+        mapComposer.registerRenderer(new StructureMapRasterizer(mapComposer));
         mapComposer.registerRenderer(new ForestMapRasterizer(mapComposer));
         mapComposer.registerRenderer(new ContourLineMapRasterizer());
 
@@ -89,6 +98,7 @@ public class MapComposer {
                     try {
                         renderer.render(workPackage);
                     } catch (final Throwable t) {
+                        log.error("Failed to render data!", t);
                         workPackage.getReport().logException(t);
                     }
 
@@ -110,6 +120,7 @@ public class MapComposer {
                     try {
                         renderer.render(workPackage);
                     } catch (final IOException e) {
+                        log.error("Failed to render data!", e);
                         workPackage.getReport().logException(e);
                     }
                 })

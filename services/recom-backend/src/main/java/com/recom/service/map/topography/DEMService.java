@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -30,7 +31,7 @@ public class DEMService {
 
     @NonNull
     private DEMDescriptor invertDEM(@NonNull final TopographyData topograpyModel) {
-        final float[][] heightMap = new float[topograpyModel.getScanIterationsX()][topograpyModel.getScanIterationsZ()];
+        @NonNull final float[][] heightMap = new float[topograpyModel.getScanIterationsX()][topograpyModel.getScanIterationsZ()];
         float maxHeight = 0;
         float maxWaterDepth = 0;
 
@@ -63,7 +64,7 @@ public class DEMService {
         }
 
         return DEMDescriptor.builder()
-                .stepSize(topograpyModel.getStepSize())
+                .stepSize(Optional.ofNullable(topograpyModel.getStepSize()).map(Float::intValue).orElseGet(null))
                 .scanIterationsX(topograpyModel.getScanIterationsX())
                 .scanIterationsZ(topograpyModel.getScanIterationsZ())
                 .dem(heightMap)

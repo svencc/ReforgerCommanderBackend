@@ -29,7 +29,19 @@ public class MapDesignSchemeDto {
     @Nullable
     @Schema
     @JsonProperty()
+    public String baseColorForestBackground;
+    @Nullable
+    @Schema
+    @JsonProperty()
     public String baseColorForest;
+    @Nullable
+    @Schema
+    @JsonProperty()
+    public String baseColorStructureBackground;
+    @Nullable
+    @Schema
+    @JsonProperty()
+    public String baseColorStructure;
 
 
     // Contour line config

@@ -20,6 +20,7 @@ import com.recom.mapper.mapcomposer.MapLayerRasterizerConfigurationMapper;
 import com.recom.persistence.map.topography.MapLocatedTopographyPersistenceLayer;
 import com.recom.service.ForestProviderGenerator;
 import com.recom.service.SerializationService;
+import com.recom.service.StructureProviderGenerator;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +51,8 @@ public class MapTopographyService {
     private final DEMInterpolationAlgorithm demInterpolationAlgorithm;
     @NonNull
     private final ForestProviderGenerator forestProviderGenerator;
+    @NonNull
+    private final StructureProviderGenerator structureProviderGenerator;
 
 
     @Transactional(readOnly = true)
@@ -74,12 +77,13 @@ public class MapTopographyService {
             if (scaleFactor > 1) {
                 float[][] interpolatedDem = demInterpolationAlgorithm.interpolate(demDescriptor, scaleFactor);
                 demDescriptor.setDem(interpolatedDem);
-                demDescriptor.setStepSize(demDescriptor.getStepSize() / scaleFactor);
+                demDescriptor.setStepSize(calculateStepSize(demDescriptor, (float) scaleFactor));
             }
 
             final MapComposerWorkPackage workPackage = provideMapComposerWorkPackage(demDescriptor, maybeMapComposerConfiguration);
 
             mapComposer.registerForestProvider(forestProviderGenerator.generate(mapTopography.getGameMap()));
+            mapComposer.registerVillageProvider(structureProviderGenerator.generate(mapTopography.getGameMap()));
             mapComposer.execute(workPackage);
 
             if (workPackage.getReport().isSuccess()) {
@@ -96,6 +100,17 @@ public class MapTopographyService {
         } catch (Exception e) {
             log.error(e.getMessage());
             throw new HttpUnprocessableEntityException();
+        }
+    }
+
+    private int calculateStepSize(
+            @NonNull final DEMDescriptor demDescriptor,
+            float scaleFactor
+    ) {
+        if (demDescriptor.getStepSize() % scaleFactor != 0) {
+            throw new IllegalArgumentException("The provided scale factor does not fit the step size of the dem!");
+        } else {
+            return (int) (demDescriptor.getStepSize() / scaleFactor);
         }
     }
 

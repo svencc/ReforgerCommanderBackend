@@ -1,5 +1,6 @@
 package com.recom.commons.model;
 
+import com.recom.commons.math.Round;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class DEMDescriptor implements Cloneable {
 
     // meta data
-    private Float stepSize;
+    private Integer stepSize;
     private Integer scanIterationsX;
     private Integer scanIterationsZ;
 
@@ -30,6 +31,17 @@ public class DEMDescriptor implements Cloneable {
         return dem[0].length;
     }
 
+    public int getMapWidthInMeter() {
+        return Round.halfUp(getDemWidth() * stepSize);
+    }
+
+    public int getMapHeightInMeter() {
+        return Round.halfUp(getDemHeight() * stepSize);
+    }
+
+    public Integer getStepSize() {
+        return stepSize.intValue();
+    }
 
     @Override
     public DEMDescriptor clone() {

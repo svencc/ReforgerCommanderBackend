@@ -1,7 +1,7 @@
 package com.recom.commons.map.rasterizer;
 
 import com.recom.commons.calculator.CoordinateConverter;
-import com.recom.commons.calculator.d8algorithm.D8AlgorithmForForestMap;
+import com.recom.commons.calculator.d8algorithm.D8AlgorithmForStructureMap;
 import com.recom.commons.map.MapComposer;
 import com.recom.commons.map.rasterizer.configuration.LayerOrder;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRasterizer;
@@ -9,8 +9,8 @@ import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
 import com.recom.commons.model.DEMDescriptor;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
 import com.recom.commons.model.maprendererpipeline.MapLayerRasterizerConfiguration;
-import com.recom.commons.model.maprendererpipeline.dataprovider.forest.ForestItem;
 import com.recom.commons.model.maprendererpipeline.dataprovider.SpacialIndex;
+import com.recom.commons.model.maprendererpipeline.dataprovider.village.StructureItem;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ import java.util.concurrent.Executors;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class ForestMapRasterizer implements MapLayerRasterizer {
+public class StructureMapRasterizer implements MapLayerRasterizer {
 
     @NonNull
     private final CoordinateConverter coordinateConverter = new CoordinateConverter();
@@ -36,32 +36,32 @@ public class ForestMapRasterizer implements MapLayerRasterizer {
     @NonNull
     private final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
     @NonNull
-    private Optional<CompletableFuture<List<ForestItem>>> maybePreperationTask = Optional.empty();
+    private Optional<CompletableFuture<List<StructureItem>>> maybePreperationTask = Optional.empty();
 
 
     @NonNull
     private MapLayerRasterizerConfiguration mapLayerRasterizerConfiguration = MapLayerRasterizerConfiguration.builder()
             .rasterizerName(getClass().getSimpleName())
-            .layerOrder(LayerOrder.FOREST_MAP)
+            .layerOrder(LayerOrder.STRUCTURE_MAP)
             .visible(false)
             .build();
 
     @NonNull
-    public int[] rasterizeForestMap(
+    public int[] rasterizeStructureMap(
             @NonNull final DEMDescriptor demDescriptor,
-            final int forestCellSize,
-            @NonNull final SpacialIndex<ForestItem> spacialIndex,
+            final int structureCellSize,
+            @NonNull final SpacialIndex<StructureItem> spacialIndex,
             @NonNull final MapDesignScheme mapScheme
     ) {
-        final D8AlgorithmForForestMap d8AlgorithmForForestMap = new D8AlgorithmForForestMap(forestCellSize);
-        final int[][] forestMap = d8AlgorithmForForestMap.generateForestMap(demDescriptor, spacialIndex, mapScheme);
+        final D8AlgorithmForStructureMap d8AlgorithmForStructuretMap = new D8AlgorithmForStructureMap(structureCellSize);
+        final int[][] structureMap = d8AlgorithmForStructuretMap.generateStructureMap(demDescriptor, spacialIndex, mapScheme);
 
         final int width = demDescriptor.getDemWidth();
         final int height = demDescriptor.getDemHeight();
         final int[] pixelBuffer = new int[width * height];
         for (int demX = 0; demX < width; demX++) {
             for (int demY = 0; demY < height; demY++) {
-                pixelBuffer[demX + demY * width] = forestMap[demX][demY];
+                pixelBuffer[demX + demY * width] = structureMap[demX][demY];
             }
         }
 
@@ -76,21 +76,21 @@ public class ForestMapRasterizer implements MapLayerRasterizer {
     @Override
     public void prepareAsync(@NonNull final MapComposerWorkPackage workPackage) {
         maybePreperationTask.ifPresent(listCompletableFuture -> listCompletableFuture.cancel(true));
-        mapComposer.getForestProvider().ifPresentOrElse(
-                forestProvider -> maybePreperationTask = Optional.of(provideForestInFuture(workPackage)),
-                () -> log.error("ForestMapRasterizer cant prepare data, because no forest provider is registered!")
+        mapComposer.getStructureProvider().ifPresentOrElse(
+                structureProvider -> maybePreperationTask = Optional.of(provideStructureInFuture(workPackage)),
+                () -> log.error("StructureMapRasterizer cant prepare data, because no structure provider is registered!")
         );
     }
 
     @NonNull
-    private CompletableFuture<List<ForestItem>> provideForestInFuture(@NonNull final MapComposerWorkPackage workPackage) {
+    private CompletableFuture<List<StructureItem>> provideStructureInFuture(@NonNull final MapComposerWorkPackage workPackage) {
         return CompletableFuture.supplyAsync(() -> {
             try {
-                assert mapComposer.getForestProvider().isPresent();
+                assert mapComposer.getStructureProvider().isPresent();
 
-                return mapComposer.getForestProvider().get().provide();
+                return mapComposer.getStructureProvider().get().provide();
             } catch (final Throwable t) {
-                log.error("Failed to prepare forest data!", t);
+                log.error("Failed to prepare structure data!", t);
                 workPackage.getReport().logException(t);
 
                 return List.of();
@@ -101,34 +101,34 @@ public class ForestMapRasterizer implements MapLayerRasterizer {
     @Override
     public void render(@NonNull MapComposerWorkPackage workPackage) {
         if (maybePreperationTask.isPresent()) {
-            final List<ForestItem> forestEntities = maybePreperationTask.get().join();
+            final List<StructureItem> structureEntities = maybePreperationTask.get().join();
 
             final int mapWidthInMeter = workPackage.getMapComposerConfiguration().getDemDescriptor().getMapWidthInMeter();
             final int mapHeightInMeter = workPackage.getMapComposerConfiguration().getDemDescriptor().getMapHeightInMeter();
-            final int forestCellSizeInMeter = 10; // 10 meter? @TODO extract to conf
+            final int structureCellSizeInMeter = 10; // 10 meter? @TODO extract to conf
 
-            final SpacialIndex<ForestItem> spatialIndex = createForestSpacialIndex(mapWidthInMeter, mapHeightInMeter, forestCellSizeInMeter, forestEntities);
+            final SpacialIndex<StructureItem> spatialIndex = createStructureSpacialIndex(mapWidthInMeter, mapHeightInMeter, structureCellSizeInMeter, structureEntities);
 
-            final int[] rawForestMap = rasterizeForestMap(workPackage.getMapComposerConfiguration().getDemDescriptor(), forestCellSizeInMeter, spatialIndex, workPackage.getMapComposerConfiguration().getMapDesignScheme());
-            workPackage.getPipelineArtifacts().addArtifact(this, rawForestMap);
+            final int[] rawStructureMap = rasterizeStructureMap(workPackage.getMapComposerConfiguration().getDemDescriptor(), structureCellSizeInMeter, spatialIndex, workPackage.getMapComposerConfiguration().getMapDesignScheme());
+            workPackage.getPipelineArtifacts().addArtifact(this, rawStructureMap);
         } else {
-            log.error("ForestMapRasterizer is not prepared, and prepareAsync was not called in advance!");
+            log.error("StructureMapRasterizer is not prepared, and prepareAsync was not called in advance!");
             return;
         }
     }
 
     @NonNull
-    private SpacialIndex<ForestItem> createForestSpacialIndex(
+    private SpacialIndex<StructureItem> createStructureSpacialIndex(
             final int mapWidthInMeter,
             final int mapHeightInMeter,
-            final int forestCellSizeInMeter,
-            @NonNull final List<ForestItem> forestEntities
+            final int structureCellSizeInMeter,
+            @NonNull final List<StructureItem> structureEntities
     ) {
-        final SpacialIndex<ForestItem> spatialIndex = new SpacialIndex<>(mapWidthInMeter, mapHeightInMeter, forestCellSizeInMeter);
-        forestEntities.forEach(forestItem -> {
-            final double x = forestItem.getCoordinateX().doubleValue();
-            final double y = coordinateConverter.threeDeeZToTwoDeeY(forestItem.getCoordinateY().doubleValue(), mapHeightInMeter);
-            spatialIndex.put(x, y, forestItem);
+        final SpacialIndex<StructureItem> spatialIndex = new SpacialIndex<>(mapWidthInMeter, mapHeightInMeter, structureCellSizeInMeter);
+        structureEntities.forEach(structureItem -> {
+            final double x = structureItem.getCoordinateX().doubleValue();
+            final double y = coordinateConverter.threeDeeZToTwoDeeY(structureItem.getCoordinateY().doubleValue(), mapHeightInMeter);
+            spatialIndex.put(x, y, structureItem);
         });
 
         return spatialIndex;

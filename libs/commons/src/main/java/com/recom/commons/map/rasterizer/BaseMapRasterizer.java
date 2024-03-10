@@ -38,9 +38,9 @@ public class BaseMapRasterizer implements MapLayerRasterizer {
         final float heightRange = demDescriptor.getMaxHeight() - demDescriptor.getSeaLevel();
         final float depthRange = demDescriptor.getMaxWaterDepth() - demDescriptor.getSeaLevel();
 
-        for (int x = 0; x < width; x++) {
-            for (int z = 0; z < height; z++) {
-                final float heightValue = demDescriptor.getDem()[x][z];
+        for (int demX = 0; demX < width; demX++) {
+            for (int demY = 0; demY < height; demY++) {
+                final float heightValue = demDescriptor.getDem()[demX][demY];
                 int color;
 
                 if (heightValue > demDescriptor.getSeaLevel()) {
@@ -59,7 +59,7 @@ public class BaseMapRasterizer implements MapLayerRasterizer {
                     color = argbCalculator.modifyBrightness(mapScheme.getBaseColorWater(), Math.abs(1 - dynamicDepthUnit));
                 }
 
-                imageBuffer[x + z * width] = color;
+                imageBuffer[demX + demY * width] = color;
             }
         }
 

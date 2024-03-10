@@ -1,21 +1,22 @@
 # TODO LIST
 
 # 1
-* add forest heatmap
-  * support scaling!
-  * extract forest colors to MapScheme
+
+  * extract threshold forest/structure to configuration 
+  * make step size an int (minimum 1 meter); so no float and rounding will be used anymore in code > in client as well
+  * 
   * /api/v1/configuration/map-tools/resources/forest?mapName= tooks way too long; does it already make use of the resource_name, class_name and prefab_name tables?   
-  * cache forest and/or spatialForestMap
+  * cache forest and/or spatialForestMap > eclipseStore
 
 
-* add village heatmap
 * add names to villages
 * add general map names
-
 * Save Aspect in rad value for smoother shading!
+
 
 * integrate pipeline in commander!
 * add DynamicLayerProperties (configuration for RecomMapEntity) (/)
+
 
 * known issues or optimizations:
   * prebuffering of zoom levels (for faster zooming) or find out what is the bottleneck

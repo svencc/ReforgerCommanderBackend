@@ -5,57 +5,57 @@ import com.recom.commons.calculator.ARGBCalculator;
 import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
 import com.recom.commons.model.DEMDescriptor;
 import com.recom.commons.model.maprendererpipeline.dataprovider.SpacialIndex;
-import com.recom.commons.model.maprendererpipeline.dataprovider.forest.ForestItem;
+import com.recom.commons.model.maprendererpipeline.dataprovider.village.StructureItem;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 @RequiredArgsConstructor
-public class D8AlgorithmForForestMap {
+public class D8AlgorithmForStructureMap {
 
     @NonNull
     private final ARGBCalculator colorCalculator = new ARGBCalculator();
-    private final int forestCellSizeInMeter;
+    private final int structureCellSizeInMeter;
 
 
     @NonNull
-    public int[][] generateForestMap(
+    public int[][] generateStructureMap(
             @NonNull final DEMDescriptor demDescriptor,
-            @NonNull final SpacialIndex<ForestItem> spacialIndex,
+            @NonNull final SpacialIndex<StructureItem> spacialIndex,
             @NonNull final MapDesignScheme mapScheme
     ) {
         final int demWidth = demDescriptor.getDemWidth();
         final int demHeight = demDescriptor.getDemHeight();
 
-        final int[][] forestMap = new int[demWidth][demHeight];
+        final int[][] structureMap = new int[demWidth][demHeight];
         for (int demX = 0; demX < demWidth; demX++) {
             for (int demY = 0; demY < demHeight; demY++) {
-                forestMap[demX][demY] = calculateForestFragment(demDescriptor, spacialIndex, mapScheme, demX, demY);
+                structureMap[demX][demY] = calculateStructureFragment(demDescriptor, spacialIndex, mapScheme, demX, demY);
             }
         }
 
-        return forestMap;
+        return structureMap;
     }
 
     @NonNull
-    private int calculateForestFragment(
+    private int calculateStructureFragment(
             @NonNull final DEMDescriptor demDescriptor,
-            @NonNull final SpacialIndex<ForestItem> spacialIndex,
+            @NonNull final SpacialIndex<StructureItem> spacialIndex,
             @NonNull final MapDesignScheme mapScheme,
             final int demX,
             final int demY
     ) {
-        final int forestCellSizeSquared = forestCellSizeInMeter * forestCellSizeInMeter;
-        double forestDensityThreshold = 1F / 100; // @TODO extract to conf
+        final int structureCellSizeSquared = structureCellSizeInMeter * structureCellSizeInMeter;
+        double structureDensityThreshold = 1F / 100; // @TODO extract to conf
 
         final int spacialX = demX * demDescriptor.getStepSize();
         final int spacialY = demY * demDescriptor.getStepSize();
 
-        final List<ForestItem> forestItemsInSpace = spacialIndex.getInSpace(spacialX, spacialY);
-        final double treeDensity = forestItemsInSpace.size() / (double) forestCellSizeSquared;
+        final List<StructureItem> structureItemsInSpace = spacialIndex.getInSpace(spacialX, spacialY);
+        final double StructureDensity = structureItemsInSpace.size() / (double) structureCellSizeSquared;
 
-        int surroundingForestNeighbourSpaces = 0;
+        int surroundingStructureNeighbourSpaces = 0;
         for (int direction = 0; direction < 8; direction++) {
             final double adjacentNeighborSpatialX = spacialX + (D8AspectMatrix.directionXComponentMatrix[direction] * demDescriptor.getStepSize()); // Calculate the X-coordinate of the adjacent neighbor.
             final double adjacentNeighborSpatialY = spacialY + (D8AspectMatrix.directionYComponentMatrix[direction] * demDescriptor.getStepSize()); // Calculate the Y-coordinate of the adjacent neighbor.
@@ -63,27 +63,27 @@ public class D8AlgorithmForForestMap {
             if (adjacentNeighborSpatialX < 0 || adjacentNeighborSpatialX > demDescriptor.getMapWidthInMeter() || adjacentNeighborSpatialY < 0 || adjacentNeighborSpatialY > demDescriptor.getMapHeightInMeter()) {
                 continue;
             } else {
-                final List<ForestItem> forestItemsInNeighborCell = spacialIndex.getInSpace(adjacentNeighborSpatialX, adjacentNeighborSpatialY);
+                final List<StructureItem> structureItemsInNeighborCell = spacialIndex.getInSpace(adjacentNeighborSpatialX, adjacentNeighborSpatialY);
 
-                double neighbourForestDensity;
-                if (!forestItemsInNeighborCell.isEmpty()) {
-                    neighbourForestDensity = forestItemsInNeighborCell.size() / (double) forestCellSizeSquared;
+                double neighbourStructureDensity;
+                if (!structureItemsInNeighborCell.isEmpty()) {
+                    neighbourStructureDensity = structureItemsInNeighborCell.size() / (double) structureCellSizeSquared;
                 } else {
-                    neighbourForestDensity = 0;
+                    neighbourStructureDensity = 0;
                 }
 
-                if (neighbourForestDensity >= forestDensityThreshold) {
-                    surroundingForestNeighbourSpaces++;
+                if (neighbourStructureDensity >= structureDensityThreshold) {
+                    surroundingStructureNeighbourSpaces++;
                 }
             }
         }
 
-        if (treeDensity < forestDensityThreshold) {
-            return mapScheme.getBaseColorForestBackground();
-        } else if (treeDensity >= forestDensityThreshold && surroundingForestNeighbourSpaces >= 5) {
-            return mapScheme.getBaseColorForest();
+        if (StructureDensity < structureDensityThreshold) {
+            return mapScheme.getBaseColorStructureBackground();
+        } else if (StructureDensity >= structureDensityThreshold && surroundingStructureNeighbourSpaces >= 5) {
+            return mapScheme.getBaseColorStructure();
         } else {
-            return colorCalculator.modifyTransparency(mapScheme.getBaseColorForest(), 0.5);
+            return colorCalculator.modifyTransparency(mapScheme.getBaseColorStructure(), 0.5);
         }
     }
 

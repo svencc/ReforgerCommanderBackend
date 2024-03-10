@@ -38,9 +38,9 @@ public class ShadowedMapRasterizer implements MapLayerRasterizer {
         final int height = demDescriptor.getDemHeight();
 
         final int[] pixelBuffer = new int[width * height];
-        for (int x = 0; x < width; x++) {
-            for (int z = 0; z < height; z++) {
-                pixelBuffer[x + z * width] = shadedMap[x][z];
+        for (int demX = 0; demX < width; demX++) {
+            for (int demY = 0; demY < height; demY++) {
+                pixelBuffer[demX + demY * width] = shadedMap[demX][demY];
             }
         }
 
