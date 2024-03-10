@@ -4,9 +4,9 @@ import lombok.NonNull;
 
 import java.util.List;
 
-public interface VillageProvidable {
+public interface StructureProvidable {
 
     @NonNull
-    List<VillageItem> provide();
+    List<StructureItem> provide();
 
 }

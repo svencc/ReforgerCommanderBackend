@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 
 @Getter
 @Builder
-public class VillageItem {
+public class StructureItem {
 
     @NonNull
     private final BigDecimal coordinateX;
