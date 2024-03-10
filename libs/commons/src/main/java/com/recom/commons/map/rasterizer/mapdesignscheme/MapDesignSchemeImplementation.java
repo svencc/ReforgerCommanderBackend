@@ -21,9 +21,13 @@ public class MapDesignSchemeImplementation extends MapDesignScheme {
     @Builder.Default
     private int baseColorForest = 0xFFA1D2E8;
     @Builder.Default
+    private int forestCellSizeInMeter = 10;
+    @Builder.Default
     private int baseColorStructureBackground = 0x00000000;
     @Builder.Default
     private int baseColorStructure = 0xFFB8BCBF;
+    @Builder.Default
+    private int structureCellSizeInMeter = 10;
 
 
     // Contour line config

@@ -26,8 +26,10 @@ public abstract class MapDesignScheme {
     public abstract int getBaseColorWater();
     public abstract int getBaseColorForestBackground();
     public abstract int getBaseColorForest();
+    public abstract int getForestCellSizeInMeter();
     public abstract int getBaseColorStructureBackground();
     public abstract int getBaseColorStructure();
+    public abstract int getStructureCellSizeInMeter();
 
 
 

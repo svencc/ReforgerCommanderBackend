@@ -105,7 +105,7 @@ public class StructureMapRasterizer implements MapLayerRasterizer {
 
             final int mapWidthInMeter = workPackage.getMapComposerConfiguration().getDemDescriptor().getMapWidthInMeter();
             final int mapHeightInMeter = workPackage.getMapComposerConfiguration().getDemDescriptor().getMapHeightInMeter();
-            final int structureCellSizeInMeter = 10; // 10 meter? @TODO extract to conf
+            final int structureCellSizeInMeter = workPackage.getMapComposerConfiguration().getMapDesignScheme().getStructureCellSizeInMeter();
 
             final SpacialIndex<StructureItem> spatialIndex = createStructureSpacialIndex(mapWidthInMeter, mapHeightInMeter, structureCellSizeInMeter, structureEntities);
 

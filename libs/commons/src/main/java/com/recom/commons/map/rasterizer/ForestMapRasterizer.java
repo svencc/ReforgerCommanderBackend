@@ -105,7 +105,7 @@ public class ForestMapRasterizer implements MapLayerRasterizer {
 
             final int mapWidthInMeter = workPackage.getMapComposerConfiguration().getDemDescriptor().getMapWidthInMeter();
             final int mapHeightInMeter = workPackage.getMapComposerConfiguration().getDemDescriptor().getMapHeightInMeter();
-            final int forestCellSizeInMeter = 10; // 10 meter? @TODO extract to conf
+            final int forestCellSizeInMeter = workPackage.getMapComposerConfiguration().getMapDesignScheme().getForestCellSizeInMeter();
 
             final SpacialIndex<ForestItem> spatialIndex = createForestSpacialIndex(mapWidthInMeter, mapHeightInMeter, forestCellSizeInMeter, forestEntities);
 

@@ -26,6 +26,7 @@ public class MapDesignSchemeDto {
     @Schema
     @JsonProperty()
     public String baseColorWater;
+
     @Nullable
     @Schema
     @JsonProperty()
@@ -37,12 +38,20 @@ public class MapDesignSchemeDto {
     @Nullable
     @Schema
     @JsonProperty()
+    public Integer forestCellSizeInMeter;
+
+    @Nullable
+    @Schema
+    @JsonProperty()
     public String baseColorStructureBackground;
     @Nullable
     @Schema
     @JsonProperty()
     public String baseColorStructure;
-
+    @Nullable
+    @Schema
+    @JsonProperty()
+    public Integer structureCellSizeInMeter;
 
     // Contour line config
     @Nullable
