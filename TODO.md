@@ -3,9 +3,10 @@
 # 1
 
 
+  * extract forest colors to MapScheme 
+  * add images to readme.md
   * make step size an int (minimum 1 meter); so no float and rounding will be used anymore in code > in client as well
   * 
-  * extract forest colors to MapScheme
   * /api/v1/configuration/map-tools/resources/forest?mapName= tooks way too long; does it already make use of the resource_name, class_name and prefab_name tables?   
   * cache forest and/or spatialForestMap > eclipseStore
 

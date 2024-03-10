@@ -50,8 +50,8 @@ public class D8AlgorithmForVillageMap {
         final int forestCellSizeSquared = villageCellSizeInMeter * villageCellSizeInMeter;
         double villageDensityThreshold = 1F / 100; // @TODO extract to conf
 
-        final int spacialX = (int) Math.ceil(demX * demDescriptor.getStepSize());
-        final int spacialY = (int) Math.ceil(demY * demDescriptor.getStepSize());
+        final int spacialX = demX * demDescriptor.getStepSize();
+        final int spacialY =demY * demDescriptor.getStepSize();
 
         final List<VillageItem> forestItemsInSpace = spacialIndex.getInSpace(spacialX, spacialY);
         final double villageDensity = forestItemsInSpace.size() / (double) forestCellSizeSquared;

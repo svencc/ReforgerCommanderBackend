@@ -24,7 +24,9 @@ public abstract class MapDesignScheme {
     // Base terrain config
     public abstract int getBaseColorTerrain();
     public abstract int getBaseColorWater();
+    public abstract int getBaseColorForestBackground();
     public abstract int getBaseColorForest();
+    public abstract int getBaseColorVillageBackground();
     public abstract int getBaseColorVillage();
 
 
@@ -39,6 +41,7 @@ public abstract class MapDesignScheme {
     public abstract float getBrightnessModifierPrimaryLinesBelowSeaLevel();
     public abstract float getBrightnessModifierSecondaryLinesBelowSeaLevel();
     public abstract int getContourLineStepSize();
+    public abstract int getMainContourLineStepSize();
 
 
 

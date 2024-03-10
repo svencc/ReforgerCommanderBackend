@@ -17,7 +17,11 @@ public class MapDesignSchemeImplementation extends MapDesignScheme {
     @Builder.Default
     private int baseColorWater = 0xFFAEE4FF;
     @Builder.Default
+    private int baseColorForestBackground = 0x00000000;
+    @Builder.Default
     private int baseColorForest = 0xFFA1D2E8;
+    @Builder.Default
+    private int baseColorVillageBackground = 0x00000000;
     @Builder.Default
     private int baseColorVillage = 0xFFB8BCBF;
 
@@ -41,6 +45,8 @@ public class MapDesignSchemeImplementation extends MapDesignScheme {
     private final float brightnessModifierSecondaryLinesBelowSeaLevel = 1f;
     @Builder.Default
     private int contourLineStepSize = 20;
+    @Builder.Default
+    private int mainContourLineStepSize = 100;
 
 
     // Sun config (shadowing)
