@@ -30,6 +30,7 @@ public interface MapDesignSchemeMapper {
     @Mapping(source = "baseColorContourLineTerrain", target = "baseColorContourLineTerrain", qualifiedByName = "hexStringToInteger")
     @Mapping(source = "baseColorContourLineCoast", target = "baseColorContourLineCoast", qualifiedByName = "hexStringToInteger")
     @Mapping(source = "baseColorContourLineWater", target = "baseColorContourLineWater", qualifiedByName = "hexStringToInteger")
+
     @Mapping(source = "shadowMapAlpha", target = "shadowMapAlpha", qualifiedByName = "hexStringToInteger")
     MapDesignSchemeImplementation toDesignScheme(final MapDesignSchemeDto dto);
 

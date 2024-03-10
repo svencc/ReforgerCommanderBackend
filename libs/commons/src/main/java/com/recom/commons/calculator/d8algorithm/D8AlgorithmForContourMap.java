@@ -57,11 +57,11 @@ public class D8AlgorithmForContourMap {
                     if (dem[adjacentNeighborX][adjacentNeighborY] > layer.getHeight()
                             && dem[adjacentOppositeNeighborX][adjacentOppositeNeighborY] < layer.getHeight()
                     ) {
-                        return layer.getColor();
+                        return layer.getColor(mapScheme);
                     } else if (dem[adjacentNeighborX][adjacentNeighborY] < layer.getHeight()
                             && dem[adjacentOppositeNeighborX][adjacentOppositeNeighborY] > layer.getHeight()
                     ) {
-                        return layer.getColor();
+                        return layer.getColor(mapScheme);
                     }
                 }
             }
@@ -94,13 +94,13 @@ public class D8AlgorithmForContourMap {
     }
 
 
-    @Getter
     @Builder
     @RequiredArgsConstructor
     private static class ContourLineLayer {
 
         @NonNull
         private final MapDesignScheme mapScheme;
+        @Getter
         private final float height;
         private final int color;
 
@@ -136,32 +136,20 @@ public class D8AlgorithmForContourMap {
             return height < 0;
         }
 
-        public int getColor() {
+        public int getColor(@NonNull final MapDesignScheme mapScheme) {
             if (height != 0) {
-                if (height % 100 == 0) {
+                if (height % mapScheme.getMainContourLineStepSize() == 0) {
                     if (isAboveSeaLevel()) {
-                        return colorCalculator.modifyBrightness(color, mapScheme.getBrightnessModifierPrimaryLinesAboveSeaLevel());
+                        return colorCalculator.modifyTransparency(color, mapScheme.getTransparencyModifierPrimaryLinesAboveSeaLevel());
                     } else {
-                        return colorCalculator.modifyBrightness(color, mapScheme.getBrightnessModifierPrimaryLinesBelowSeaLevel());
+                        return colorCalculator.modifyTransparency(color, mapScheme.getTransparencyModifierPrimaryLinesBelowSeaLevel());
                     }
                 } else {
                     if (isAboveSeaLevel()) {
-                        return colorCalculator.modifyBrightness(color, mapScheme.getBrightnessModifierSecondaryLinesAboveSeaLevel());
+                        return colorCalculator.modifyTransparency(color, mapScheme.getTransparencyModifierSecondaryLinesAboveSeaLevel());
                     } else {
-                        return colorCalculator.modifyBrightness(color, mapScheme.getBrightnessModifierSecondaryLinesBelowSeaLevel());
+                        return colorCalculator.modifyTransparency(color, mapScheme.getTransparencyModifierSecondaryLinesBelowSeaLevel());
                     }
-                }
-            }
-
-            return color;
-        }
-
-        public int getColor_() {
-            if (height != 0) {
-                if (isAboveSeaLevel()) {
-                    return colorCalculator.modifyBrightness(color, mapScheme.getBrightnessModifierPrimaryLinesAboveSeaLevel());
-                } else {
-                    return colorCalculator.modifyBrightness(color, mapScheme.getBrightnessModifierSecondaryLinesAboveSeaLevel());
                 }
             }
 

@@ -73,23 +73,27 @@ public class MapDesignSchemeDto {
     @Nullable
     @Schema
     @JsonProperty()
-    public Float brightnessModifierPrimaryLinesAboveSeaLevel;
+    public Float transparencyModifierPrimaryLinesAboveSeaLevel;
     @Nullable
     @Schema
     @JsonProperty()
-    public Float brightnessModifierSecondaryLinesAboveSeaLevel;
+    public Float transparencyModifierSecondaryLinesAboveSeaLevel;
     @Nullable
     @Schema
     @JsonProperty()
-    public Float brightnessModifierPrimaryLinesBelowSeaLevel;
+    public Float transparencyModifierPrimaryLinesBelowSeaLevel;
     @Nullable
     @Schema
     @JsonProperty()
-    public Float brightnessModifierSecondaryLinesBelowSeaLevel;
+    public Float transparencyModifierSecondaryLinesBelowSeaLevel;
     @Nullable
     @Schema
     @JsonProperty()
     public Integer contourLineStepSize;
+    @Nullable
+    @Schema
+    @JsonProperty()
+    public Integer mainContourLineStepSize;
 
 
     // Sun config (shadowing)
