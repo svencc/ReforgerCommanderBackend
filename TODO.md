@@ -1,6 +1,7 @@
 # TODO LIST
 
 # 1
+  * parallelize rasters!
   * make step size an int (minimum 1 meter); so no float and rounding will be used anymore in code > in client as well
   * 
   * /api/v1/configuration/map-tools/resources/forest?mapName= tooks way too long; does it already make use of the resource_name, class_name and prefab_name tables?   
