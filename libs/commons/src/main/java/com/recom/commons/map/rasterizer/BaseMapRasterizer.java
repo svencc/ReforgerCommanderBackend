@@ -12,6 +12,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
+import java.util.stream.IntStream;
+
 
 @NoArgsConstructor
 public class BaseMapRasterizer implements MapLayerRasterizer {
@@ -38,7 +40,7 @@ public class BaseMapRasterizer implements MapLayerRasterizer {
         final float heightRange = demDescriptor.getMaxHeight() - demDescriptor.getSeaLevel();
         final float depthRange = demDescriptor.getMaxWaterDepth() - demDescriptor.getSeaLevel();
 
-        for (int demX = 0; demX < width; demX++) {
+        IntStream.range(0, width).parallel().forEach(demX -> {
             for (int demY = 0; demY < height; demY++) {
                 final float heightValue = demDescriptor.getDem()[demX][demY];
                 int color;
@@ -61,7 +63,7 @@ public class BaseMapRasterizer implements MapLayerRasterizer {
 
                 imageBuffer[demX + demY * width] = color;
             }
-        }
+        });
 
         return imageBuffer;
     }
@@ -72,7 +74,7 @@ public class BaseMapRasterizer implements MapLayerRasterizer {
     }
 
     @Override
-    public void prepareAsync(@NonNull MapComposerWorkPackage workPackage) {
+    public void prepareAsync(@NonNull final MapComposerWorkPackage workPackage) {
         return;
     }
 

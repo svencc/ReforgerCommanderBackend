@@ -10,6 +10,8 @@ import com.recom.commons.model.maprendererpipeline.MapLayerRasterizerConfigurati
 import lombok.Getter;
 import lombok.NonNull;
 
+import java.util.stream.IntStream;
+
 
 @Getter
 public class ContourLineMapRasterizer implements MapLayerRasterizer {
@@ -34,11 +36,11 @@ public class ContourLineMapRasterizer implements MapLayerRasterizer {
         final int height = DEMDescriptor.getDemHeight();
 
         final int[] pixelBuffer = new int[width * height];
-        for (int demX = 0; demX < width; demX++) {
+        IntStream.range(0, width).parallel().forEach(demX -> {
             for (int demY = 0; demY < height; demY++) {
                 pixelBuffer[demX + demY * width] = contourMap[demX][demY];
             }
-        }
+        });
 
         return pixelBuffer;
     }
@@ -49,7 +51,7 @@ public class ContourLineMapRasterizer implements MapLayerRasterizer {
     }
 
     @Override
-    public void prepareAsync(@NonNull MapComposerWorkPackage workPackage) {
+    public void prepareAsync(@NonNull final MapComposerWorkPackage workPackage) {
         return;
     }
 

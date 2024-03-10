@@ -22,6 +22,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.IntStream;
 
 @Slf4j
 @Getter
@@ -59,11 +60,11 @@ public class StructureMapRasterizer implements MapLayerRasterizer {
         final int width = demDescriptor.getDemWidth();
         final int height = demDescriptor.getDemHeight();
         final int[] pixelBuffer = new int[width * height];
-        for (int demX = 0; demX < width; demX++) {
+        IntStream.range(0, width).parallel().forEach(demX -> {
             for (int demY = 0; demY < height; demY++) {
                 pixelBuffer[demX + demY * width] = structureMap[demX][demY];
             }
-        }
+        });
 
         return pixelBuffer;
     }
@@ -99,7 +100,7 @@ public class StructureMapRasterizer implements MapLayerRasterizer {
     }
 
     @Override
-    public void render(@NonNull MapComposerWorkPackage workPackage) {
+    public void render(@NonNull final MapComposerWorkPackage workPackage) {
         if (maybePreperationTask.isPresent()) {
             final List<StructureItem> structureEntities = maybePreperationTask.get().join();
 

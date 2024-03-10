@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NonNull;
 
 import java.awt.*;
+import java.util.stream.IntStream;
 
 
 public class HeightMapRasterizer implements MapLayerRasterizer {
@@ -51,9 +52,9 @@ public class HeightMapRasterizer implements MapLayerRasterizer {
         final float heightRange = demDescriptor.getMaxHeight() - demDescriptor.getSeaLevel();
         final float depthRange = demDescriptor.getMaxWaterDepth() - demDescriptor.getSeaLevel();
 
-        for (int x = 0; x < width; x++) {
-            for (int z = 0; z < height; z++) {
-                final float heightValue = demDescriptor.getDem()[x][z];
+        IntStream.range(0, width).parallel().forEach(demX -> {
+            for (int demY = 0; demY < height; demY++) {
+                final float heightValue = demDescriptor.getDem()[demX][demY];
                 Color color;
 
                 if (heightValue >= demDescriptor.getSeaLevel()) {
@@ -70,9 +71,9 @@ public class HeightMapRasterizer implements MapLayerRasterizer {
                     color = new Color((int) (blueValue * 0.77), (int) (192 * 0.94), blueValue);
                 }
 
-                imageBuffer[x + z * width] = color.getRGB();
+                imageBuffer[demX + demY * width] = color.getRGB();
             }
-        }
+        });
 
         return imageBuffer;
     }
@@ -83,7 +84,7 @@ public class HeightMapRasterizer implements MapLayerRasterizer {
     }
 
     @Override
-    public void prepareAsync(@NonNull MapComposerWorkPackage workPackage) {
+    public void prepareAsync(@NonNull final MapComposerWorkPackage workPackage) {
         return;
     }
 

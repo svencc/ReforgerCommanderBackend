@@ -7,6 +7,8 @@ import com.recom.commons.model.SlopeAndAspect;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
+import java.util.stream.IntStream;
+
 @RequiredArgsConstructor
 public class D8AlgorithmForSlopeAndAspectMap {
 
@@ -27,11 +29,11 @@ public class D8AlgorithmForSlopeAndAspectMap {
         final SlopeAndAspect[][] slopeAndAspects = new SlopeAndAspect[demWidth][demHeight];
 
         // Iterate through each cell in the DEM to calculate its slope and aspect.
-        for (int demX = 0; demX < demWidth; demX++) {
+        IntStream.range(0, demWidth).parallel().forEach(demX -> {
             for (int demY = 0; demY < demHeight; demY++) {
                 slopeAndAspects[demX][demY] = calculateSlopeAndAspect(dem, demX, demY);
             }
-        }
+        });
 
         return slopeAndAspects;
     }
@@ -40,9 +42,9 @@ public class D8AlgorithmForSlopeAndAspectMap {
      * Calculates the maximum slope for a cell in the DEM using its 8 neighboring cells.
      * It identifies the steepest slope among the 8 possible descent directions.
      *
-     * @param dem The digital elevation model (DEM) as a 2D array of elevation values.
-     * @param demX   The X-coordinate (column) of the cell in the DEM.
-     * @param demY   The Y-coordinate (row) of the cell in the DEM.
+     * @param dem  The digital elevation model (DEM) as a 2D array of elevation values.
+     * @param demX The X-coordinate (column) of the cell in the DEM.
+     * @param demY The Y-coordinate (row) of the cell in the DEM.
      * @return The maximum slope from the given cell.
      */
     @NonNull

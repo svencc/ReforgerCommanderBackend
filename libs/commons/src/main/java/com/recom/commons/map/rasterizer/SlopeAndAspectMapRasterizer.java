@@ -42,7 +42,7 @@ public class SlopeAndAspectMapRasterizer implements MapLayerRasterizer {
     }
 
     @Override
-    public void prepareAsync(@NonNull MapComposerWorkPackage workPackage) {
+    public void prepareAsync(@NonNull final MapComposerWorkPackage workPackage) {
         return;
     }
 
