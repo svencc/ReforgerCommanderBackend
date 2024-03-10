@@ -18,6 +18,8 @@ public class MapDesignSchemeImplementation extends MapDesignScheme {
     private int baseColorWater = 0xFFAEE4FF;
     @Builder.Default
     private int baseColorForest = 0xFFA1D2E8;
+    @Builder.Default
+    private int baseColorVillage = 0xFFB8BCBF;
 
 
     // Contour line config

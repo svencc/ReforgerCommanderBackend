@@ -25,6 +25,7 @@ public abstract class MapDesignScheme {
     public abstract int getBaseColorTerrain();
     public abstract int getBaseColorWater();
     public abstract int getBaseColorForest();
+    public abstract int getBaseColorVillage();
 
 
 

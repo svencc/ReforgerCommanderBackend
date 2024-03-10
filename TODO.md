@@ -1,25 +1,18 @@
 # TODO LIST
 
 # 1
-  * make step size an int (minimum 1 meter); so no float and rounding will be used anymore in code
-  * rename x to demX and y to demY
   * 
-  * forestCellSizeInMeter extract
+  * make step size an int (minimum 1 meter); so no float and rounding will be used anymore in code > in client as well
+  * 
   * extract forest colors to MapScheme
-  * 
-  * abstract this; same can be done with other entity types (villages, cities, etc.) 
-  * 
   * /api/v1/configuration/map-tools/resources/forest?mapName= tooks way too long; does it already make use of the resource_name, class_name and prefab_name tables?   
-
-
-* add village heatmap
-* cache forest and/or spatialForestMap > eclipseStore
+  * cache forest and/or spatialForestMap > eclipseStore
 
 
 * add names to villages
 * add general map names
-
 * Save Aspect in rad value for smoother shading!
+
 
 * integrate pipeline in commander!
 * add DynamicLayerProperties (configuration for RecomMapEntity) (/)

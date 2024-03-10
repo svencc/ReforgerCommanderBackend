@@ -1,4 +1,4 @@
-package com.recom.commons.model.maprendererpipeline.dataprovider.forest;
+package com.recom.commons.model.maprendererpipeline.dataprovider;
 
 import com.recom.commons.math.Round;
 import lombok.Getter;

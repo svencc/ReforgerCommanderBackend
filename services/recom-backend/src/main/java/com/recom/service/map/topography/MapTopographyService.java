@@ -20,6 +20,7 @@ import com.recom.mapper.mapcomposer.MapLayerRasterizerConfigurationMapper;
 import com.recom.persistence.map.topography.MapLocatedTopographyPersistenceLayer;
 import com.recom.service.ForestProviderGenerator;
 import com.recom.service.SerializationService;
+import com.recom.service.VillageProviderGenerator;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +51,8 @@ public class MapTopographyService {
     private final DEMInterpolationAlgorithm demInterpolationAlgorithm;
     @NonNull
     private final ForestProviderGenerator forestProviderGenerator;
+    @NonNull
+    private final VillageProviderGenerator villageProviderGenerator;
 
 
     @Transactional(readOnly = true)
@@ -80,6 +83,7 @@ public class MapTopographyService {
             final MapComposerWorkPackage workPackage = provideMapComposerWorkPackage(demDescriptor, maybeMapComposerConfiguration);
 
             mapComposer.registerForestProvider(forestProviderGenerator.generate(mapTopography.getGameMap()));
+            mapComposer.registerVillageProvider(villageProviderGenerator.generate(mapTopography.getGameMap()));
             mapComposer.execute(workPackage);
 
             if (workPackage.getReport().isSuccess()) {
