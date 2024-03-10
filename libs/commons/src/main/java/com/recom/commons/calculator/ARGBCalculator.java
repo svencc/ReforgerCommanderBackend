@@ -4,14 +4,14 @@ import com.recom.commons.math.Round;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @NoArgsConstructor
 public class ARGBCalculator {
 
     @NonNull
-    private static final Map<Long, Integer> colorCache = new HashMap<>();
+    private static final Map<Long, Integer> colorCache = new ConcurrentHashMap<>();
 
 
     public int blend(final int foregroundColor, final int backgroundColour) {
