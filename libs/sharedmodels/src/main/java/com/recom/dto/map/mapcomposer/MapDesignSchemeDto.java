@@ -34,15 +34,14 @@ public class MapDesignSchemeDto {
     @Schema
     @JsonProperty()
     public String baseColorForest;
-
     @Nullable
     @Schema
     @JsonProperty()
-    public String baseColorVillageBackground;
+    public String baseColorStructureBackground;
     @Nullable
     @Schema
     @JsonProperty()
-    public String baseColorVillage;
+    public String baseColorStructure;
 
 
     // Contour line config
