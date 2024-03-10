@@ -29,7 +29,16 @@ public class MapDesignSchemeDto {
     @Nullable
     @Schema
     @JsonProperty()
+    public String baseColorForestBackground;
+    @Nullable
+    @Schema
+    @JsonProperty()
     public String baseColorForest;
+
+    @Nullable
+    @Schema
+    @JsonProperty()
+    public String baseColorVillageBackground;
     @Nullable
     @Schema
     @JsonProperty()

@@ -27,6 +27,8 @@ To create more intelligence from gameMap data the following features are planned
   * ![mergedmap2-preview.png](docs%2Fmd-media%2Fmergedmap2-preview.png) 
 * Forest detection / forest heatmap
   * ![forestmap-preview.png](docs%2Fmd-media%2Fforestmap-preview.png) 
+* Structure detection
+  * ![structuremap-preview.png](docs%2Fmd-media%2Fstructuremap-preview.png)
 * Terrain heightmap
   * ![topographic-scanner-example.png](docs%2Fmd-media%2Ftopographic-scanner-example.png)
 * Map shading / lightmap

@@ -46,7 +46,6 @@ public class D8AlgorithmForVillageMap {
             final int demX,
             final int demY
     ) {
-        // 10 Trees per 100m²= // @TODO extract to conf
         final int forestCellSizeSquared = villageCellSizeInMeter * villageCellSizeInMeter;
         double villageDensityThreshold = 1F / 100; // @TODO extract to conf
 
@@ -79,14 +78,12 @@ public class D8AlgorithmForVillageMap {
             }
         }
 
-        final int baseColorVillage = mapScheme.getBaseColorVillage();
-
         if (villageDensity < villageDensityThreshold) {
-            return mapScheme.getBaseColorContourBackground(); // @TODO extract to new variable baseColorOfForestBackground!!!
+            return mapScheme.getBaseColorVillageBackground();
         } else if (villageDensity >= villageDensityThreshold && surroundingForestNeighbourSpaces >= 5) {
-            return baseColorVillage;
+            return mapScheme.getBaseColorVillage();
         } else {
-            return colorCalculator.modifyTransparency(baseColorVillage, 0.5);
+            return colorCalculator.modifyTransparency(mapScheme.getBaseColorVillage(), 0.5);
         }
     }
 

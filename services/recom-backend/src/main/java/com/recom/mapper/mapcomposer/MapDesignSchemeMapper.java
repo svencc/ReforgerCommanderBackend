@@ -17,7 +17,9 @@ public interface MapDesignSchemeMapper {
     @NonNull
     @Mapping(source = "baseColorTerrain", target = "baseColorTerrain", qualifiedByName = "hexStringToInteger")
     @Mapping(source = "baseColorWater", target = "baseColorWater", qualifiedByName = "hexStringToInteger")
+    @Mapping(source = "baseColorForestBackground", target = "baseColorForestBackground", qualifiedByName = "hexStringToInteger")
     @Mapping(source = "baseColorForest", target = "baseColorForest", qualifiedByName = "hexStringToInteger")
+    @Mapping(source = "baseColorVillageBackground", target = "baseColorVillageBackground", qualifiedByName = "hexStringToInteger")
     @Mapping(source = "baseColorVillage", target = "baseColorVillage", qualifiedByName = "hexStringToInteger")
     @Mapping(source = "baseColorContourBackground", target = "baseColorContourBackground", qualifiedByName = "hexStringToInteger")
     @Mapping(source = "baseColorContourLineTerrain", target = "baseColorContourLineTerrain", qualifiedByName = "hexStringToInteger")

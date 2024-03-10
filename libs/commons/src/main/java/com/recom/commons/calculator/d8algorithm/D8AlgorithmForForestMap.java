@@ -4,8 +4,8 @@ package com.recom.commons.calculator.d8algorithm;
 import com.recom.commons.calculator.ARGBCalculator;
 import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
 import com.recom.commons.model.DEMDescriptor;
-import com.recom.commons.model.maprendererpipeline.dataprovider.forest.ForestItem;
 import com.recom.commons.model.maprendererpipeline.dataprovider.SpacialIndex;
+import com.recom.commons.model.maprendererpipeline.dataprovider.forest.ForestItem;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -46,7 +46,6 @@ public class D8AlgorithmForForestMap {
             final int demX,
             final int demY
     ) {
-        // 10 Trees per 100m²= // @TODO extract to conf
         final int forestCellSizeSquared = forestCellSizeInMeter * forestCellSizeInMeter;
         double forestDensityThreshold = 1F / 100; // @TODO extract to conf
 
@@ -79,14 +78,12 @@ public class D8AlgorithmForForestMap {
             }
         }
 
-        final int baseColorForest = mapScheme.getBaseColorForest();
-
         if (treeDensity < forestDensityThreshold) {
-            return mapScheme.getBaseColorContourBackground(); // @TODO extract to new variable baseColorOfForestBackground!!!
+            return mapScheme.getBaseColorForestBackground();
         } else if (treeDensity >= forestDensityThreshold && surroundingForestNeighbourSpaces >= 5) {
-            return baseColorForest;
+            return mapScheme.getBaseColorForest();
         } else {
-            return colorCalculator.modifyTransparency(baseColorForest, 0.5);
+            return colorCalculator.modifyTransparency(mapScheme.getBaseColorForest(), 0.5);
         }
     }
 
