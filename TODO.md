@@ -1,7 +1,8 @@
 # TODO LIST
 
 # 1
-  * 
+
+
   * make step size an int (minimum 1 meter); so no float and rounding will be used anymore in code > in client as well
   * 
   * extract forest colors to MapScheme
@@ -16,6 +17,7 @@
 
 * integrate pipeline in commander!
 * add DynamicLayerProperties (configuration for RecomMapEntity) (/)
+
 
 * known issues or optimizations:
   * prebuffering of zoom levels (for faster zooming) or find out what is the bottleneck
