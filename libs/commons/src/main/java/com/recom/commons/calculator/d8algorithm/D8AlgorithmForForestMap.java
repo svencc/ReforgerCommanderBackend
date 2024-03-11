@@ -57,8 +57,8 @@ public class D8AlgorithmForForestMap {
 
         int surroundingForestNeighbourSpaces = 0;
         for (int direction = 0; direction < 8; direction++) {
-            final double adjacentNeighborSpatialX = spacialX + (D8AspectMatrix.directionXComponentMatrix[direction] * demDescriptor.getStepSize()); // Calculate the X-coordinate of the adjacent neighbor.
-            final double adjacentNeighborSpatialY = spacialY + (D8AspectMatrix.directionYComponentMatrix[direction] * demDescriptor.getStepSize()); // Calculate the Y-coordinate of the adjacent neighbor.
+            final double adjacentNeighborSpatialX = spacialX + (D8AspectMatrix.directionXComponentMatrix[direction] * spacialIndex.getCellSizeInMeter()); // Calculate the X-coordinate of the adjacent neighbor.
+            final double adjacentNeighborSpatialY = spacialY + (D8AspectMatrix.directionYComponentMatrix[direction] * spacialIndex.getCellSizeInMeter()); // Calculate the Y-coordinate of the adjacent neighbor.
 
             if (adjacentNeighborSpatialX < 0 || adjacentNeighborSpatialX > demDescriptor.getMapWidthInMeter() || adjacentNeighborSpatialY < 0 || adjacentNeighborSpatialY > demDescriptor.getMapHeightInMeter()) {
                 continue;
@@ -83,7 +83,7 @@ public class D8AlgorithmForForestMap {
         } else if (treeDensity >= forestDensityThreshold && surroundingForestNeighbourSpaces >= 5) {
             return mapScheme.getBaseColorForest();
         } else {
-            return colorCalculator.modifyTransparency(mapScheme.getBaseColorForest(), 0.5);
+            return colorCalculator.modifyTransparency(mapScheme.getBaseColorForest(), surroundingForestNeighbourSpaces * 0.1);
         }
     }
 
