@@ -54,6 +54,7 @@ public class MapComposer {
         mapComposer.registerRenderer(new SlopeMapRasterizer()); // optional
 
         mapComposer.registerRenderer(new HeightMapRasterizer());
+        mapComposer.registerRenderer(new LandMapRasterizer());
         mapComposer.registerRenderer(new BaseMapRasterizer());
         mapComposer.registerRenderer(new ShadowedMapRasterizer());
         mapComposer.registerRenderer(new StructureMapRasterizer(mapComposer));
