@@ -10,7 +10,7 @@ import com.recom.commons.model.DEMDescriptor;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
 import com.recom.commons.model.maprendererpipeline.MapLayerRasterizerConfiguration;
 import com.recom.commons.model.maprendererpipeline.dataprovider.SpacialIndex;
-import com.recom.commons.model.maprendererpipeline.dataprovider.village.StructureItem;
+import com.recom.commons.model.maprendererpipeline.dataprovider.structure.StructureItem;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

@@ -49,6 +49,8 @@
 
     <cache alias="MapStructurePersistenceLayer.findAllByMapNameAndResourceNameIn" uses-template="recomDefaultCache">
     </cache>
+    <cache alias="MapStructurePersistenceLayer.projectStructureItemByMapNameAndResourceNameIn" uses-template="recomDefaultCache">
+    </cache>
     <cache alias="MapStructurePersistenceLayer.findAllTownEntities" uses-template="recomDefaultCache">
     </cache>
     <cache alias="MapStructurePersistenceLayer.findAllMapNames" uses-template="recomDefaultCache">

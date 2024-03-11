@@ -1,8 +1,8 @@
-package com.recom.service;
+package com.recom.service.mapentitygenerator;
 
+import com.recom.commons.model.maprendererpipeline.dataprovider.forest.ForestItem;
 import com.recom.commons.model.maprendererpipeline.dataprovider.forest.ForestProvidable;
 import com.recom.entity.map.GameMap;
-import com.recom.mapper.mapcomposer.ForestItemMapper;
 import com.recom.persistence.map.structure.MapStructurePersistenceLayer;
 import com.recom.service.configuration.ConfigurationDescriptorProvider;
 import com.recom.service.configuration.ConfigurationValueProvider;
@@ -14,7 +14,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ForestProviderGenerator {
+public class ForestProviderGenerator implements SpacialItemProviderGenerator<ForestProvidable> {
 
     @NonNull
     private final MapStructurePersistenceLayer mapStructurePersistenceLayer;
@@ -27,8 +27,12 @@ public class ForestProviderGenerator {
         return () -> {
             final List<String> forestResources = configurationValueProvider.queryValue(gameMap, ConfigurationDescriptorProvider.CLUSTERING_FOREST_RESOURCES_LIST);
 
-            return mapStructurePersistenceLayer.findAllByMapNameAndResourceNameIn(gameMap, forestResources).stream()
-                    .map(ForestItemMapper.INSTANCE::toForestItem)
+            return mapStructurePersistenceLayer.projectStructureItemByMapNameAndResourceNameIn(gameMap, forestResources).parallelStream()
+                    .map(structureItem -> ForestItem.builder()
+                            .coordinateX(structureItem.getCoordinateX())
+                            .coordinateY(structureItem.getCoordinateY())
+                            .build()
+                    )
                     .toList();
         };
     }

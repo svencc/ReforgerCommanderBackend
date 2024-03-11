@@ -5,7 +5,7 @@ import com.recom.commons.map.rasterizer.*;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRasterizer;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
 import com.recom.commons.model.maprendererpipeline.dataprovider.forest.ForestProvidable;
-import com.recom.commons.model.maprendererpipeline.dataprovider.village.StructureProvidable;
+import com.recom.commons.model.maprendererpipeline.dataprovider.structure.StructureProvidable;
 import com.recom.commons.model.maprendererpipeline.report.PipelineLogMessage;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

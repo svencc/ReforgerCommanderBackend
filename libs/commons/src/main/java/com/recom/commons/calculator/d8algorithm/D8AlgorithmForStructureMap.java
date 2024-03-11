@@ -5,7 +5,7 @@ import com.recom.commons.calculator.ARGBCalculator;
 import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
 import com.recom.commons.model.DEMDescriptor;
 import com.recom.commons.model.maprendererpipeline.dataprovider.SpacialIndex;
-import com.recom.commons.model.maprendererpipeline.dataprovider.village.StructureItem;
+import com.recom.commons.model.maprendererpipeline.dataprovider.structure.StructureItem;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 

@@ -1,8 +1,8 @@
-package com.recom.service;
+package com.recom.service.mapentitygenerator;
 
-import com.recom.commons.model.maprendererpipeline.dataprovider.village.StructureProvidable;
+import com.recom.commons.model.maprendererpipeline.dataprovider.structure.StructureItem;
+import com.recom.commons.model.maprendererpipeline.dataprovider.structure.StructureProvidable;
 import com.recom.entity.map.GameMap;
-import com.recom.mapper.mapcomposer.VillageItemMapper;
 import com.recom.persistence.map.structure.MapStructurePersistenceLayer;
 import com.recom.service.configuration.ConfigurationDescriptorProvider;
 import com.recom.service.configuration.ConfigurationValueProvider;
@@ -14,7 +14,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class StructureProviderGenerator {
+public class StructureProviderGenerator implements SpacialItemProviderGenerator<StructureProvidable> {
 
     @NonNull
     private final MapStructurePersistenceLayer mapStructurePersistenceLayer;
@@ -27,8 +27,12 @@ public class StructureProviderGenerator {
         return () -> {
             final List<String> structureResources = configurationValueProvider.queryValue(gameMap, ConfigurationDescriptorProvider.CLUSTERING_VILLAGE_RESOURCES_LIST);
 
-            return mapStructurePersistenceLayer.findAllByMapNameAndResourceNameIn(gameMap, structureResources).stream()
-                    .map(VillageItemMapper.INSTANCE::toVillageItem)
+            return mapStructurePersistenceLayer.projectStructureItemByMapNameAndResourceNameIn(gameMap, structureResources).parallelStream()
+                    .map(structureItem -> StructureItem.builder()
+                            .coordinateX(structureItem.getCoordinateX())
+                            .coordinateY(structureItem.getCoordinateY())
+                            .build()
+                    )
                     .toList();
         };
     }

@@ -1,6 +1,6 @@
 package com.recom.mapper.mapcomposer;
 
-import com.recom.commons.model.maprendererpipeline.dataprovider.village.StructureItem;
+import com.recom.commons.model.maprendererpipeline.dataprovider.structure.StructureItem;
 import com.recom.entity.map.structure.MapStructureEntity;
 import lombok.NonNull;
 import org.mapstruct.Mapper;

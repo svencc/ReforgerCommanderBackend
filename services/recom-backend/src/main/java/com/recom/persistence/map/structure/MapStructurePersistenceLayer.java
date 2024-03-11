@@ -1,5 +1,6 @@
 package com.recom.persistence.map.structure;
 
+import com.recom.commons.model.maprendererpipeline.dataprovider.SpacialItem;
 import com.recom.entity.map.GameMap;
 import com.recom.entity.map.structure.*;
 import com.recom.event.listener.generic.generic.MapLocatedEntityPersistable;
@@ -45,6 +46,17 @@ public class MapStructurePersistenceLayer implements MapLocatedEntityPersistable
         return allByGameMapAndResourceNameIn;
     }
 
+    @SuppressWarnings("unchecked")
+    @Cacheable(cacheNames = "MapStructurePersistenceLayer.projectStructureItemByMapNameAndResourceNameIn")
+    public <T extends SpacialItem> List<T> projectStructureItemByMapNameAndResourceNameIn(
+            @NonNull final GameMap gameMap,
+            @NonNull final List<String> resourceNames
+    ) {
+        return mapStructureRepository.projectAllByGameMapAndResourceNameIn(gameMap, resourceNames).stream()
+                .map(entity -> (T) entity)
+                .toList();
+    }
+
     @Cacheable(cacheNames = "MapStructurePersistenceLayer.findAllTownEntities")
     public List<MapStructureEntity> findAllTownEntities(@NonNull final GameMap gameMap) {
         return mapStructureRepository.findAllByGameMapAndMapDescriptorTypeNameIn(gameMap, Stream.of(
@@ -57,7 +69,7 @@ public class MapStructurePersistenceLayer implements MapLocatedEntityPersistable
                 .toList());
     }
 
-    //    @Cacheable(cacheNames = "MapEntityPersistenceLayer.findAllMapNames")
+//    @Cacheable(cacheNames = "MapEntityPersistenceLayer.findAllMapNames")
 //    public List<String> findAllMapNames() {
 //        return mapStructureRepository.projectMapNames();
 //    }

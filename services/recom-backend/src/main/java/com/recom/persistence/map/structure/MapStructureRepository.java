@@ -2,12 +2,14 @@ package com.recom.persistence.map.structure;
 
 import com.recom.entity.map.GameMap;
 import com.recom.entity.map.structure.MapStructureEntity;
+import com.recom.entity.map.structure.SpacialItemProjection;
 import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @Repository
 interface MapStructureRepository extends JpaRepository<MapStructureEntity, Long> {
@@ -86,6 +88,19 @@ interface MapStructureRepository extends JpaRepository<MapStructureEntity, Long>
     List<MapStructureEntity> findAllByGameMapAndResourceNameNameIn(
             @NonNull final GameMap gameMap,
             @NonNull final List<String> names
+    );
+
+    @NonNull
+    @Query(value = """
+            SELECT structure.coordinateX as coordinateX,
+                   structure.coordinateZ as coordinateY
+              FROM MapStructureEntity structure
+             WHERE structure.gameMap = :gameMap
+               AND structure.resourceName.name IN :resourceNames
+             """)
+    List<SpacialItemProjection> projectAllByGameMapAndResourceNameIn(
+            @NonNull final GameMap gameMap,
+            @NonNull final List<String> resourceNames
     );
 
     @NonNull
