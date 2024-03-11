@@ -80,10 +80,10 @@ public class D8AlgorithmForForestMap {
 
         if (treeDensity < forestDensityThreshold) {
             return mapScheme.getBaseColorForestBackground();
-        } else if (treeDensity >= forestDensityThreshold && surroundingForestNeighbourSpaces >= 5) {
+        } else if (treeDensity >= forestDensityThreshold && surroundingForestNeighbourSpaces >= 8) {
             return mapScheme.getBaseColorForest();
         } else {
-            return colorCalculator.modifyTransparency(mapScheme.getBaseColorForest(), surroundingForestNeighbourSpaces * 0.1);
+            return colorCalculator.modifyTransparency(mapScheme.getBaseColorForest(), (surroundingForestNeighbourSpaces + 1) * 0.125);
         }
     }
 

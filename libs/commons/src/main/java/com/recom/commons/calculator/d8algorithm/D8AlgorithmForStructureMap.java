@@ -80,11 +80,20 @@ public class D8AlgorithmForStructureMap {
 
         if (StructureDensity < structureDensityThreshold) {
             return mapScheme.getBaseColorStructureBackground();
-        } else if (StructureDensity >= structureDensityThreshold && surroundingStructureNeighbourSpaces >= 5) {
+        } else if (StructureDensity >= structureDensityThreshold && surroundingStructureNeighbourSpaces >= 8) {
             return mapScheme.getBaseColorStructure();
         } else {
-            return colorCalculator.modifyTransparency(mapScheme.getBaseColorStructure(), surroundingStructureNeighbourSpaces * 0.1);
+            return colorCalculator.modifyTransparency(mapScheme.getBaseColorStructure(), surroundingStructureNeighbourSpaces * 0.125);
         }
+
+//        if (StructureDensity < structureDensityThreshold) {
+//            return mapScheme.getBaseColorStructureBackground();
+//        } else if (StructureDensity >= structureDensityThreshold && surroundingStructureNeighbourSpaces >= 3) {
+//            return mapScheme.getBaseColorStructure();
+//        } else {
+//            int transparencyFactor = 0x04;
+//            return colorCalculator.setTransparency(mapScheme.getBaseColorStructure(), (surroundingStructureNeighbourSpaces + 1) * transparencyFactor);
+//        }
     }
 
 }
