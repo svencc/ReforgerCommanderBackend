@@ -2,17 +2,18 @@
 
 # 1
   * move mysql -> integrated h2 (/)
-    * execute sql on first start / db creation (add authentication)
+    * execute sql on first start / db creation (add authentication) (/)
+    * 
   * disable cache on authentification/ACCOUNT
   * add authentication failed message to CLIENT!!!!!!!!
   * maybe dbCached deserialization is broken?!
 
   * make step size an int (minimum 1 meter); so no float and rounding will be used anymore in code > in client as well
 
-  * add transparency of forest and structure merging
-  * add transparency of merging layers to configuration!
+  * Merge Layer Transparency
+    * add transparency of forest and structure merging
+    * add transparency of merging layers to configuration!
 
-  * 
   * /api/v1/configuration/map-tools/resources/forest?mapName= tooks way too long; does it already make use of the resource_name, class_name and prefab_name tables?   
   * cache forest and/or spatialForestMap > eclipseStore
 
