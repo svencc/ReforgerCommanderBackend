@@ -45,7 +45,8 @@ public class Configuration implements Persistable<Long>, Serializable {
     private ConfigurationType type;
 
     @Lob
-    @Column(insertable = true, updatable = true, nullable = false, columnDefinition = "LONGTEXT")
+    // @Column(insertable = true, updatable = true, nullable = false, columnDefinition = "LONGTEXT") // MARIA DB
+    @Column(name = "conf_value", insertable = true, updatable = true, nullable = false) // H2 CHARACTER LARGE OBJECT
     private String value;
 
     @Nullable

@@ -77,16 +77,21 @@ public class ConfigurationMapToolsService {
                             .toList();
                     final List<String> matchedResourcesByPrefabs = mapStructurePersistenceLayer.findAllByPrefabIn(gameMap, matchedPrefabs).stream()
                             .map(MapStructureEntity::getResourceName)
+                            .filter(Objects::nonNull)
                             .map(ResourceNameEntity::getName)
+                            .filter(Objects::nonNull)
                             .toList();
                     resourcesToAdd.addAll(matchedResourcesByPrefabs);
 
                     final List<String> matchedClasses = gameMapService.provideGameMapMetaData(gameMap).getUtilizedClasses().stream()
                             .filter(utilizedPrefab -> utilizedPrefab.toLowerCase().matches(entityMatcher.toLowerCase()))
                             .toList();
-                    final List<String> matchedResourcesByClasses = mapStructurePersistenceLayer.findAllByClassIn(gameMap, matchedClasses).stream()
+                    List<MapStructureEntity> allByClassIn = mapStructurePersistenceLayer.findAllByClassIn(gameMap, matchedClasses);
+                    final List<String> matchedResourcesByClasses = allByClassIn.stream()
                             .map(MapStructureEntity::getResourceName)
+                            .filter(Objects::nonNull)
                             .map(ResourceNameEntity::getName)
+                            .filter(Objects::nonNull)
                             .toList();
                     resourcesToAdd.addAll(matchedResourcesByClasses);
 
@@ -95,7 +100,9 @@ public class ConfigurationMapToolsService {
                             .toList();
                     final List<String> matchedResourcesByMapDescriptorTypes = mapStructurePersistenceLayer.findAllByMapDescriptorTypeIn(gameMap, matchedMapDescriptorTypes).stream()
                             .map(MapStructureEntity::getResourceName)
+                            .filter(Objects::nonNull)
                             .map(ResourceNameEntity::getName)
+                            .filter(Objects::nonNull)
                             .toList();
                     resourcesToAdd.addAll(matchedResourcesByMapDescriptorTypes);
                 });

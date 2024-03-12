@@ -101,11 +101,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.mariadb.jdbc</groupId>
-            <artifactId>mariadb-java-client</artifactId>
-            <scope>runtime</scope>
-        </dependency>
         <!-- DATA LAYER / DATABASE  -->
 
 
@@ -165,6 +160,44 @@
         <!-- TESTING -->
 
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>h2-dev</id>
+            <properties>
+                <activated.profile>local</activated.profile>
+                <env.spring.datasource.url>jdbc:h2:file:C:/Users/Sven/recomh2;AUTO_SERVER=TRUE;AUTO_SERVER_PORT=8034;USER=username;PASSWORD=password</env.spring.datasource.url>
+                <env.spring.datasource.username>username</env.spring.datasource.username>
+                <env.spring.datasource.password>password</env.spring.datasource.password>
+                <env.spring.h2.console.enabled>true</env.spring.h2.console.enabled>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>com.h2database</groupId>
+                    <artifactId>h2</artifactId>
+                    <scope>runtime</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>mariadb-dev</id>
+            <properties>
+                <activated.profile>local</activated.profile>
+                <env.spring.datasource.url>jdbc:mariadb://127.0.0.1:8033/recom_db</env.spring.datasource.url>
+                <env.spring.datasource.username>root</env.spring.datasource.username>
+                <env.spring.datasource.password>recomRootPwd</env.spring.datasource.password>
+                <env.spring.h2.console.enabled>false</env.spring.h2.console.enabled>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.mariadb.jdbc</groupId>
+                    <artifactId>mariadb-java-client</artifactId>
+                    <scope>runtime</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+
 
     <build>
         <plugins>
