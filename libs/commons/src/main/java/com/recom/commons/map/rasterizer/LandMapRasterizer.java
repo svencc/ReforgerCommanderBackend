@@ -25,6 +25,7 @@ public class LandMapRasterizer implements MapLayerRasterizer {
     private MapLayerRasterizerConfiguration mapLayerRasterizerConfiguration = MapLayerRasterizerConfiguration.builder()
             .rasterizerName(getClass().getSimpleName())
             .layerOrder(LayerOrder.LAND_MAP)
+            .enabled(false)
             .build();
 
 

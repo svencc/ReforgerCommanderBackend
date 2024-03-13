@@ -30,7 +30,8 @@ public class MapTopography implements Persistable<Long>, Serializable, MapRelate
     private GameMap gameMap;
 
     @Lob
-    @Column(insertable = true, updatable = true, nullable = false, columnDefinition = "LONGBLOB")
+    // @Column(insertable = true, updatable = true, nullable = false, columnDefinition = "LONGBLOB")
+    @Column(insertable = true, updatable = true, nullable = false) // H2 BINARY LARGE OBJECT
     private byte[] data;
 
 

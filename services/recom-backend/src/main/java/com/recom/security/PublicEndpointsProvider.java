@@ -42,6 +42,12 @@ public class PublicEndpointsProvider {
     @NonNull
     private static List<RequestMatcher> swaggerEndpoints() {
         return List.of(
+//                AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/favicon.ico"),
+//                AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/h2-console"),
+//                AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/h2-console"),
+//                AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/h2-console/**"),
+//                AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/h2-console/**"),
+
                 AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/swagger-ui.html"),
                 AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/swagger-ui/**"),
                 AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/v3/api-docs/**"),

@@ -27,7 +27,7 @@ import java.util.UUID;
 public class Message implements Persistable<UUID>, Serializable {
 
     @Id
-//    @GeneratedValue(strategy = GenerationType.AUTO)
+    // @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(insertable = true, updatable = false, nullable = false)
     private UUID uuid;
 
@@ -39,7 +39,8 @@ public class Message implements Persistable<UUID>, Serializable {
     private MessageType messageType;
 
     @Lob
-    @Column(insertable = true, updatable = true, nullable = true, columnDefinition = "LONGTEXT")
+    // @Column(insertable = true, updatable = true, nullable = true, columnDefinition = "LONGTEXT") // MARIA DB
+    @Column(insertable = true, updatable = true, nullable = true) // H2 CHARACTER LARGE OBJECT
     private String payload;
 
     @Column(insertable = true, updatable = false, nullable = true, columnDefinition = "DATETIME(6) DEFAULT NOW(6)")

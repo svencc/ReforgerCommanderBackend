@@ -1,9 +1,26 @@
 # TODO LIST
 
 # 1
+  * add authentication failed message to CLIENT!!!!!!!!
+  * make stepSize Integer!!!!!!!! (client + server)
+
+  * topography:
+    * map has to be stored in chunks
+    * if enough data are send, a chunk is stored in db
+    * client asks always for next chunk before it is created.
+    * chunk size 1000x1000
+
+  * dbcache forest and structure provider!!!
+  * call to load/prepare caches for specific map
+
   * make step size an int (minimum 1 meter); so no float and rounding will be used anymore in code > in client as well
-  * move mysql -> integrated h2
-  * 
+
+
+  * dbBache layers (input configuration parameters)
+  * Merge Layer Transparency
+    * add transparency of forest and structure merging
+    * add transparency of merging layers to configuration!
+
   * /api/v1/configuration/map-tools/resources/forest?mapName= tooks way too long; does it already make use of the resource_name, class_name and prefab_name tables?   
   * cache forest and/or spatialForestMap > eclipseStore
 
