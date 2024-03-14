@@ -2,14 +2,22 @@
 
 # 1
   * topography:
-    * map has to be stored in chunks
+    * map topography has to be stored in chunks
+    * map structures have to be stored in chunks
+      * to achieve that, the existing database structure + transaction system has to be reworked
+      * new additional table for chunks
+      * reference to chunk table for map topography and structure tables; simply that
     * if enough data are send, a chunk is stored in db
-    * client asks always for next chunk before it is created.
     * chunk size 1000x1000
     * new table with projected chunks (created with map creation)
       * tracks status of chunk: created, in progress, failed
       * unfinished chunks will time out after x time 5 minutes or so
       * chunk is saved in db with a transaction, together with the updated status
+    * 
+    * client asks always for next chunk before it is created.
+    * we turn the responsibility and let the server ask for the next chunk
+    * server sends event to client with next chunk to scan!
+    * client sends chunk back to server and servers gives next chunk to scan (random selection)
 
 
   * /api/v1/configuration/map-tools/resources/forest?mapName= tooks way too long; does it already make use of the resource_name, class_name and prefab_name tables?   
