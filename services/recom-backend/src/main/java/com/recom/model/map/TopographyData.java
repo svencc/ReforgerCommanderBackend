@@ -10,7 +10,7 @@ import java.io.Serializable;
 public class TopographyData implements Serializable {
 
     // META DATA
-    private final Float stepSize;
+    private final Integer stepSize;
 
     private final Integer scanIterationsX;
 

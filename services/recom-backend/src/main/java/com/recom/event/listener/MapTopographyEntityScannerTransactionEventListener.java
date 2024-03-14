@@ -74,7 +74,7 @@ public class MapTopographyEntityScannerTransactionEventListener extends Transact
             @NonNull final GameMap gameMap,
             @NonNull final List<TransactionalMapTopographyEntityPackageDto> packages
     ) {
-        final Float stepSize = packages.get(0).getEntities().get(0).getStepSize();
+        final Integer stepSize = packages.get(0).getEntities().get(0).getStepSize();
         final Integer scanIterationsX = packages.get(0).getEntities().get(0).getScanIterationsX(); // @TODO: This metadata could be moved to the open-transaction
         final Integer scanIterationsZ = packages.get(0).getEntities().get(0).getScanIterationsZ(); // @TODO: This metadata could be moved to the open-transaction
         final Float oceanBaseHeight = packages.get(0).getEntities().get(0).getOceanBaseHeight();

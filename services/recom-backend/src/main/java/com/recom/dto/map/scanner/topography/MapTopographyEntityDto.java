@@ -23,7 +23,7 @@ public class MapTopographyEntityDto implements MapRelatedDto {
     // META DATA
     @Schema
     @JsonProperty()
-    private Float stepSize;
+    private Integer stepSize;
 
     @Schema
     @JsonProperty()

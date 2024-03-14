@@ -126,7 +126,7 @@ public class MapTopographyScannerTransactionEventListenerTest {
                 .coordinates(List.of(BigDecimal.valueOf(1.0), BigDecimal.valueOf(2.0), BigDecimal.valueOf(3.0)))
                 .scanIterationsX(1)
                 .scanIterationsZ(1)
-                .stepSize(1.0f)
+                .stepSize(1)
                 .oceanBaseHeight(0.0f)
                 .build());
         final TransactionalMapTopographyEntityPackageDto packageDto = TransactionalMapTopographyEntityPackageDto.builder()
@@ -140,7 +140,7 @@ public class MapTopographyScannerTransactionEventListenerTest {
         when(gameMapPersistenceLayer.findByName(eq(session1))).thenReturn(Optional.of(GameMap.builder().name(session1).build()));
 
         final TopographyData topographyData = TopographyData.builder()
-                .stepSize(1.0f)
+                .stepSize(1)
                 .scanIterationsX(0)
                 .scanIterationsZ(0)
                 .oceanBaseHeight(0.0f)

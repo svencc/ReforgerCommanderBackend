@@ -64,7 +64,7 @@ public class DEMService {
         }
 
         return DEMDescriptor.builder()
-                .stepSize(Optional.ofNullable(topograpyModel.getStepSize()).map(Float::intValue).orElseGet(null))
+                .stepSize(Optional.ofNullable(topograpyModel.getStepSize()).orElseGet(null))
                 .scanIterationsX(topograpyModel.getScanIterationsX())
                 .scanIterationsZ(topograpyModel.getScanIterationsZ())
                 .dem(heightMap)
