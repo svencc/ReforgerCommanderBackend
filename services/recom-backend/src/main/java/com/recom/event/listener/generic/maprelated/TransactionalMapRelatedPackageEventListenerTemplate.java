@@ -57,10 +57,10 @@ public abstract class TransactionalMapRelatedPackageEventListenerTemplate<
                 final Optional<GameMap> maybeGameMap = gameMapPersistenceLayer.findByName(sessionIdentifier);
 
                 if (maybeGameMap.isPresent()) {
-                    final ENTITY_TYPE entity = mapTransactionToEntity(maybeGameMap.get(), existingTransaction.getPackages());
+                    final ENTITY_TYPE entity = mapTransactionToEntity(sessionIdentifier, maybeGameMap.get(), existingTransaction.getPackages());
 
                     final Boolean transactionExecuted = transactionTemplate.execute(status -> {
-                        entityPersistenceLayer.deleteMapEntities(maybeGameMap.get());
+//                        entityPersistenceLayer.deleteMapEntities(maybeGameMap.get());
                         entityPersistenceLayer.save(entity);
                         log.info("Transaction named {} persisted!", sessionIdentifier);
 
@@ -80,6 +80,7 @@ public abstract class TransactionalMapRelatedPackageEventListenerTemplate<
 
     @NonNull
     protected abstract ENTITY_TYPE mapTransactionToEntity(
+            @NonNull final String sessionIdentifier,
             @NonNull final GameMap mapMeta,
             @NonNull final List<PACKAGE_TYPE> packages
     );

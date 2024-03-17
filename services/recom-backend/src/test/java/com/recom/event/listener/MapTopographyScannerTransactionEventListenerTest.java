@@ -124,8 +124,8 @@ public class MapTopographyScannerTransactionEventListenerTest {
                 .iterationX(0)
                 .iterationZ(0)
                 .coordinates(List.of(BigDecimal.valueOf(1.0), BigDecimal.valueOf(2.0), BigDecimal.valueOf(3.0)))
-                .scanIterationsX(1)
-                .scanIterationsZ(1)
+                .chunkSizeX(1)
+                .chunkSizeZ(1)
                 .stepSize(1)
                 .oceanBaseHeight(0.0f)
                 .build());

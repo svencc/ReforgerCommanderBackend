@@ -9,7 +9,6 @@ import com.recom.event.event.async.map.commit.CommitMapTopographyTransactionAsyn
 import com.recom.event.event.async.map.open.OpenMapTopographyTransactionAsyncEvent;
 import com.recom.event.listener.generic.maprelated.TransactionalMapRelatedPackageEventListenerTemplate;
 import com.recom.model.map.MapTransaction;
-import com.recom.model.map.TopographyData;
 import com.recom.persistence.map.GameMapPersistenceLayer;
 import com.recom.persistence.map.topography.MapLocatedTopographyPersistenceLayer;
 import com.recom.service.SerializationService;
@@ -71,39 +70,57 @@ public class MapTopographyEntityScannerTransactionEventListener extends Transact
     @NonNull
     @Override
     protected SquareKilometerTopographyChunk mapTransactionToEntity(
+            @NonNull final String sessionIdentifier,
             @NonNull final GameMap gameMap,
             @NonNull final List<TransactionalMapTopographyEntityPackageDto> packages
     ) {
-        final Integer stepSize = packages.get(0).getEntities().get(0).getStepSize();
-//        final Integer scanIterationsX = packages.get(0).getEntities().get(0).getScanIterationsX(); // @TODO: This metadata could be moved to the open-transaction <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-//        final Integer scanIterationsZ = packages.get(0).getEntities().get(0).getScanIterationsZ(); // @TODO: This metadata could be moved to the open-transaction <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-//        final Float oceanBaseHeight = packages.get(0).getEntities().get(0).getOceanBaseHeight();
+        final String[] additionalInformation = sessionIdentifier.split("#####");
+        // assert additionalInformation size 2
 
-        // @TODO; check if metadata exists"
-        final int scanIterationsX = gameMap.getMapMeta().getDimensionX().intValue();
-        final int scanIterationsZ = gameMap.getMapMeta().getDimensionZ().intValue();
-        final Float oceanBaseHeight = gameMap.getMapMeta().getOceanBaseHeight().floatValue();
+        final String mapName = additionalInformation[0];
+        final String chunkXZCoordinate = additionalInformation[1];
 
-        final float[][] surfaceData = new float[scanIterationsX][scanIterationsZ];
+
+        final String[] chunkCoordinates = chunkXZCoordinate.split(",");
+        // assert chunkCoordinates size 2
+        final String chunkCoordinatesX = chunkCoordinates[0];
+        final String chunkCoordinatesZ = chunkCoordinates[1];
+
+        final long chunkX = Integer.parseInt(chunkCoordinatesX);
+        final long chunkZ = Integer.parseInt(chunkCoordinatesZ);
+
+        // assertions mit den Optionals
+        final int dimensionX = packages.stream()
+                .flatMap((entityPackage) -> entityPackage.getEntities().stream())
+                .map(MapTopographyEntityDto::getCoordinates)
+                .mapToInt((coordinates) -> coordinates.get(0).intValue())
+                .max()
+                .orElseThrow(() -> new IllegalArgumentException("No max X found!"));
+
+        final int dimensionZ = packages.stream()
+                .flatMap((entityPackage) -> entityPackage.getEntities().stream())
+                .map(MapTopographyEntityDto::getCoordinates)
+                .mapToInt((coordinates) -> coordinates.get(2).intValue())
+                .max()
+                .orElseThrow(() -> new IllegalArgumentException("No max X found!"));
+
+        final float[][] chunkedDem = new float[dimensionX][dimensionZ];
 
         packages.stream()
                 .flatMap((entityPackage) -> entityPackage.getEntities().stream())
                 .forEach((final MapTopographyEntityDto packageDto) -> {
-                    surfaceData[packageDto.getIterationX()][packageDto.getIterationZ()] = packageDto.getCoordinates().get(1).floatValue();
+                    final int x = packageDto.getCoordinates().get(0).intValue();
+                    final float y = packageDto.getCoordinates().get(1).floatValue();
+                    final int z = packageDto.getCoordinates().get(3).intValue();
+                    chunkedDem[x][z] = y;
                 });
-
-        final TopographyData topograpyModel = TopographyData.builder()
-                .stepSize(stepSize)
-                .scanIterationsX(scanIterationsX)
-                .scanIterationsZ(scanIterationsZ)
-                .oceanBaseHeight(oceanBaseHeight)
-                .surfaceData(surfaceData)
-                .build();
 
         try {
             final SquareKilometerTopographyChunk squareKilometerTopographyChunk = SquareKilometerTopographyChunk.builder()
                     .gameMap(gameMap)
-                    .data(serializationService.serializeObject(topograpyModel).toByteArray())
+                    .squareCoordinateX(chunkX)
+                    .squareCoordinateY(chunkZ)
+                    .data(serializationService.serializeObject(chunkedDem).toByteArray())
                     .build();
 
             gameMap.getTopographyChunks().add(squareKilometerTopographyChunk);

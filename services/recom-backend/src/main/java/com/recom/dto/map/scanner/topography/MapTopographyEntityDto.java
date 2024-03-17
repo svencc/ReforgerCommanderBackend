@@ -20,37 +20,6 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MapTopographyEntityDto implements MapRelatedDto {
 
-    // META DATA
-    @Schema
-    @JsonProperty()
-    private Integer stepSize;
-
-    @Schema
-    @JsonProperty()
-    private Integer scanIterationsX;
-
-    @Schema
-    @JsonProperty()
-    private Integer scanIterationsZ;
-
-    @Schema
-    @JsonProperty()
-    private Float oceanHeight;
-
-    @Schema
-    @JsonProperty()
-    private Float oceanBaseHeight;
-
-
-    // PACKAGE SPECIFIC DATA
-    @Schema
-    @JsonProperty()
-    private Integer iterationX;
-
-    @Schema
-    @JsonProperty()
-    private Integer iterationZ;
-
     @Schema
     @JsonProperty()
     private List<BigDecimal> coordinates;
