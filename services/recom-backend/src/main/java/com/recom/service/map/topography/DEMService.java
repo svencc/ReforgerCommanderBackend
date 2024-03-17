@@ -1,7 +1,7 @@
 package com.recom.service.map.topography;
 
 import com.recom.commons.model.DEMDescriptor;
-import com.recom.entity.map.MapTopography;
+import com.recom.model.map.MapTopography;
 import com.recom.model.map.TopographyData;
 import com.recom.service.SerializationService;
 import lombok.NonNull;
@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -22,11 +23,13 @@ public class DEMService {
 
 
     @NonNull
-    public DEMDescriptor deserializeToDEM(@NonNull final MapTopography mapTopography) throws IOException {
-        final TopographyData topographyModel = serializationService.<TopographyData>deserializeObject(mapTopography.getData())
-                .orElseThrow(() -> new IOException("Unable to deserialize topography data!"));
+    public DEMDescriptor deserializeToDEM(@NonNull final List<MapTopography> mapTopography) throws IOException {
+        return DEMDescriptor.builder().build();
+        // @TODO; muss man aus den Chunks + Meta wieder zusammenbauen!
+//        final TopographyData topographyModel = serializationService.<TopographyData>deserializeObject(mapTopography.getData())
+//                .orElseThrow(() -> new IOException("Unable to deserialize topography data!"));
 
-        return invertDEM(topographyModel);
+//        return invertDEM(topographyModel);
     }
 
     @NonNull

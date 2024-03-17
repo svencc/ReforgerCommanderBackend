@@ -1,8 +1,8 @@
 package com.recom.entity.map;
 
 import com.recom.entity.Configuration;
-import com.recom.entity.map.structure.MapStructureEntity;
 import com.recom.entity.Message;
+import com.recom.entity.map.structure.MapStructureEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Cache;
@@ -36,12 +36,16 @@ public class GameMap implements Persistable<Long>, Serializable {
     @Column(insertable = true, updatable = false, nullable = false, length = 255)
     private String name;
 
+    @OneToOne(mappedBy = "gameMap", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private MapMeta mapMeta;
+
     @Builder.Default
     @OneToMany(mappedBy = "gameMap", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MapStructureEntity> mapStructures = new HashSet<>();
 
-    @OneToOne(mappedBy = "gameMap", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private MapTopography mapTopography;
+    @Builder.Default
+    @OneToMany(mappedBy = "gameMap", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<SquareKilometerTopographyChunk> topographyChunks = new HashSet<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "gameMap", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)

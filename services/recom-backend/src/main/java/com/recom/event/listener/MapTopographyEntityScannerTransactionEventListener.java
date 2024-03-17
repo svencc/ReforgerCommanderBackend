@@ -3,7 +3,7 @@ package com.recom.event.listener;
 import com.recom.dto.map.scanner.topography.MapTopographyEntityDto;
 import com.recom.dto.map.scanner.topography.TransactionalMapTopographyEntityPackageDto;
 import com.recom.entity.map.GameMap;
-import com.recom.entity.map.MapTopography;
+import com.recom.entity.map.SquareKilometerTopographyChunk;
 import com.recom.event.event.async.map.addmappackage.AddMapTopographyPackageAsyncEvent;
 import com.recom.event.event.async.map.commit.CommitMapTopographyTransactionAsyncEvent;
 import com.recom.event.event.async.map.open.OpenMapTopographyTransactionAsyncEvent;
@@ -28,7 +28,7 @@ import java.util.Map;
 
 @Slf4j
 @Component
-public class MapTopographyEntityScannerTransactionEventListener extends TransactionalMapRelatedPackageEventListenerTemplate<TransactionalMapTopographyEntityPackageDto, MapTopography, MapTopographyEntityDto> {
+public class MapTopographyEntityScannerTransactionEventListener extends TransactionalMapRelatedPackageEventListenerTemplate<TransactionalMapTopographyEntityPackageDto, SquareKilometerTopographyChunk, MapTopographyEntityDto> {
 
     @NonNull
     private final SerializationService serializationService;
@@ -70,14 +70,19 @@ public class MapTopographyEntityScannerTransactionEventListener extends Transact
 
     @NonNull
     @Override
-    protected MapTopography mapTransactionToEntity(
+    protected SquareKilometerTopographyChunk mapTransactionToEntity(
             @NonNull final GameMap gameMap,
             @NonNull final List<TransactionalMapTopographyEntityPackageDto> packages
     ) {
         final Integer stepSize = packages.get(0).getEntities().get(0).getStepSize();
-        final Integer scanIterationsX = packages.get(0).getEntities().get(0).getScanIterationsX(); // @TODO: This metadata could be moved to the open-transaction
-        final Integer scanIterationsZ = packages.get(0).getEntities().get(0).getScanIterationsZ(); // @TODO: This metadata could be moved to the open-transaction
-        final Float oceanBaseHeight = packages.get(0).getEntities().get(0).getOceanBaseHeight();
+//        final Integer scanIterationsX = packages.get(0).getEntities().get(0).getScanIterationsX(); // @TODO: This metadata could be moved to the open-transaction <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+//        final Integer scanIterationsZ = packages.get(0).getEntities().get(0).getScanIterationsZ(); // @TODO: This metadata could be moved to the open-transaction <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+//        final Float oceanBaseHeight = packages.get(0).getEntities().get(0).getOceanBaseHeight();
+
+        // @TODO; check if metadata exists"
+        final int scanIterationsX = gameMap.getMapMeta().getDimensionX().intValue();
+        final int scanIterationsZ = gameMap.getMapMeta().getDimensionZ().intValue();
+        final Float oceanBaseHeight = gameMap.getMapMeta().getOceanBaseHeight().floatValue();
 
         final float[][] surfaceData = new float[scanIterationsX][scanIterationsZ];
 
@@ -96,14 +101,14 @@ public class MapTopographyEntityScannerTransactionEventListener extends Transact
                 .build();
 
         try {
-            final MapTopography mapTopography = MapTopography.builder()
+            final SquareKilometerTopographyChunk squareKilometerTopographyChunk = SquareKilometerTopographyChunk.builder()
                     .gameMap(gameMap)
                     .data(serializationService.serializeObject(topograpyModel).toByteArray())
                     .build();
 
-            gameMap.setMapTopography(mapTopography);
+            gameMap.getTopographyChunks().add(squareKilometerTopographyChunk);
 
-            return mapTopography;
+            return squareKilometerTopographyChunk;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

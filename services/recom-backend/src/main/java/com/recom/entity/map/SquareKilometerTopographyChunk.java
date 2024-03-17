@@ -6,8 +6,10 @@ import lombok.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.domain.Persistable;
+import org.springframework.lang.Nullable;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -18,7 +20,7 @@ import java.io.Serializable;
 @Table(indexes = {})
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class MapTopography implements Persistable<Long>, Serializable, MapRelatedEntity {
+public class SquareKilometerTopographyChunk implements Persistable<Long>, Serializable, MapRelatedEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -26,17 +28,33 @@ public class MapTopography implements Persistable<Long>, Serializable, MapRelate
     private Long id;
 
     @NonNull
-    @OneToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(optional = false)
     private GameMap gameMap;
 
+    @NonNull
+    @Column(insertable = true, updatable = false, nullable = false)
+    private Long squareCoordinateX; // Left to Right | 0 ---> ...
+
+    @NonNull
+    @Column(insertable = true, updatable = false, nullable = false)
+    private Long squareCoordinateY; // Down to Up | 0 ---> ...
+
     @Lob
-    @Column(insertable = true, updatable = true, nullable = false)
+    @Column(insertable = true, updatable = true, nullable = true)
     private byte[] data;
+
+    @NonNull
+    @Enumerated(EnumType.STRING)
+    private ChunkStatus status;
+
+    @Nullable
+    @Column(insertable = true, updatable = true, nullable = true)
+    private LocalDateTime lastUpdate;
 
 
     @Override
     public int hashCode() {
-        return MapTopography.class.hashCode();
+        return SquareKilometerTopographyChunk.class.hashCode();
     }
 
     @Override
@@ -48,7 +66,7 @@ public class MapTopography implements Persistable<Long>, Serializable, MapRelate
         } else if (getClass() != obj.getClass()) {
             return false;
         } else {
-            final MapTopography other = (MapTopography) obj;
+            final SquareKilometerTopographyChunk other = (SquareKilometerTopographyChunk) obj;
             if (getId() == null) {
                 return false;
             } else return getId().equals(other.getId());
@@ -63,6 +81,12 @@ public class MapTopography implements Persistable<Long>, Serializable, MapRelate
     @Override
     public boolean isNew() {
         return getId() == null;
+    }
+
+    public static enum ChunkStatus {
+        PENDING,
+        READY,
+        FAILED
     }
 
 }

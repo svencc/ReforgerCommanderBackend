@@ -1,7 +1,6 @@
 package com.recom.service.map.topography;
 
 import com.recom.commons.map.MapComposer;
-import com.recom.commons.map.PixelBufferMapperUtil;
 import com.recom.commons.map.rasterizer.interpolation.DEMInterpolationAlgorithm;
 import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
 import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignSchemeImplementation;
@@ -12,14 +11,12 @@ import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
 import com.recom.commons.model.maprendererpipeline.MapLayerRasterizerConfiguration;
 import com.recom.dto.map.mapcomposer.MapComposerConfigurationDto;
 import com.recom.entity.map.GameMap;
-import com.recom.entity.map.MapTopography;
-import com.recom.exception.HttpNotFoundException;
-import com.recom.exception.HttpUnprocessableEntityException;
 import com.recom.mapper.mapcomposer.MapDesignSchemeMapper;
 import com.recom.mapper.mapcomposer.MapLayerRasterizerConfigurationMapper;
+import com.recom.model.map.MapTopography;
 import com.recom.persistence.map.topography.MapLocatedTopographyPersistenceLayer;
-import com.recom.service.mapentitygenerator.ForestProviderGenerator;
 import com.recom.service.SerializationService;
+import com.recom.service.mapentitygenerator.ForestProviderGenerator;
 import com.recom.service.mapentitygenerator.StructureProviderGenerator;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -27,9 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -60,9 +54,12 @@ public class MapTopographyService {
             @NonNull final GameMap gameMap,
             @NonNull final Optional<MapComposerConfigurationDto> maybeMapComposerConfiguration
     ) {
+        return new byte[0];
+        /*
         return mapTopographyPersistenceLayer.findByGameMap(gameMap)
                 .map(map -> provideTopographyPNG(map, maybeMapComposerConfiguration))
                 .orElseThrow(() -> new HttpNotFoundException("No topography com.recom.dto.map found for com.recom.dto.map with id " + gameMap.getId() + "!"));
+         */
     }
 
     @NonNull
@@ -70,8 +67,11 @@ public class MapTopographyService {
             @NonNull final MapTopography mapTopography,
             @NonNull final Optional<MapComposerConfigurationDto> maybeMapComposerConfiguration
     ) {
+        return new byte[0];
+        /*
         try {
-            final DEMDescriptor demDescriptor = demService.deserializeToDEM(mapTopography);
+//            final DEMDescriptor demDescriptor = demService.deserializeToDEM(mapTopography); // der Deserialisierer muss nun anhand des Kartennaemers die Chunks aus der DB holen und zusammenbauen (jeweils Deserialisieren)
+            final DEMDescriptor demDescriptor = DEMDescriptor.builder().build();
 
             final int scaleFactor = provideScaleFactor(maybeMapComposerConfiguration);
             if (scaleFactor > 1) {
@@ -101,6 +101,7 @@ public class MapTopographyService {
             log.error(e.getMessage());
             throw new HttpUnprocessableEntityException();
         }
+         */
     }
 
     private int calculateStepSize(
@@ -161,14 +162,20 @@ public class MapTopographyService {
 
     @NonNull
     public Optional<DEMDescriptor> provideDEMDescriptor(@NonNull final GameMap gameMap) {
-        return mapTopographyPersistenceLayer.findByGameMap(gameMap)
+
+        /*
+        return Optional.ofNullable(mapTopographyPersistenceLayer.findByGameMap(gameMap).stream()
                 .map(mapTopography -> {
                     try {
                         return demService.deserializeToDEM(mapTopography);
                     } catch (IOException e) {
                         throw new HttpUnprocessableEntityException();
                     }
-                });
+                })
+
+        );
+         */
+        return Optional.empty();
     }
 
 }

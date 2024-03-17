@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Data
 @Schema
@@ -23,6 +24,26 @@ public class MapCreateRequestDto implements Serializable {
     @Schema
     @JsonProperty()
     private String mapName;
+
+    @NotBlank
+    @Schema
+    @JsonProperty()
+    private BigDecimal dimensionXInMeter; // map 2D widthX -> Abrunden auf 1er
+
+    @NotBlank
+    @Schema
+    @JsonProperty()
+    private BigDecimal dimensionYInMeter; // map depthZ -> Abrunden auf 1er
+
+    @NotBlank
+    @Schema
+    @JsonProperty()
+    private BigDecimal dimensionZInMeter; // map 2D heightY -> Abrunden auf 1er
+
+    @NotBlank
+    @Schema
+    @JsonProperty()
+    private BigDecimal oceanBaseHeight;
 
 }
 

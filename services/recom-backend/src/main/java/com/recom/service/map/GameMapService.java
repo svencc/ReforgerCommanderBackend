@@ -1,11 +1,15 @@
 package com.recom.service.map;
 
 import com.recom.dto.map.MapOverviewDto;
+import com.recom.dto.map.create.MapCreateRequestDto;
 import com.recom.dto.map.meta.MapMetaDto;
 import com.recom.entity.map.GameMap;
+import com.recom.entity.map.MapMeta;
 import com.recom.persistence.map.GameMapPersistenceLayer;
+import com.recom.persistence.map.MapMetaPersistenceLayer;
 import com.recom.persistence.map.structure.MapStructurePersistenceLayer;
 import com.recom.service.dbcached.DBCachedService;
+import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +32,8 @@ public class GameMapService {
 
     @NonNull
     private final GameMapPersistenceLayer gameMapPersistenceLayer;
+    @NonNull
+    private final MapMetaPersistenceLayer mapMetaPersistenceLayer;
     @NonNull
     private final MapStructurePersistenceLayer mapStructurePersistenceLayer;
     @NonNull
@@ -88,11 +94,27 @@ public class GameMapService {
         return gameMapPersistenceLayer.findByName(mapName);
     }
 
-    public void create(@NonNull final String mapName) {
-        gameMapPersistenceLayer.save(
-                GameMap.builder()
-                        .name(mapName)
-                        .build()
-        );
+    @NonNull
+    @Transactional
+    public GameMap create(@NonNull final MapCreateRequestDto mapCreateRequestDto) {
+//        final GameMap createdGameMap = gameMapPersistenceLayer.save(
+        final GameMap newGameMap = GameMap.builder()
+                .name(mapCreateRequestDto.getMapName())
+                .build();
+//        );
+
+//        mapMetaPersistenceLayer.save(
+        MapMeta.builder()
+                .gameMap(newGameMap)
+                .dimensionX(mapCreateRequestDto.getDimensionXInMeter().longValue())
+                .dimensionY(mapCreateRequestDto.getDimensionYInMeter().longValue())
+                .dimensionZ(mapCreateRequestDto.getDimensionZInMeter().longValue())
+                .oceanBaseHeight(mapCreateRequestDto.getOceanBaseHeight())
+                .build();
+//        );
+
+        return gameMapPersistenceLayer.save(newGameMap);  // @TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<< TESTEN!
+//        return createdGameMap;
     }
+
 }
