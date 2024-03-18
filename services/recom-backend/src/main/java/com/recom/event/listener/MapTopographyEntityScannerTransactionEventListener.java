@@ -88,7 +88,7 @@ public class MapTopographyEntityScannerTransactionEventListener extends Transact
 
         // @TODO <<<<<<<<<<<<<<<<<<<<<<<< RequestMapChunkService (event.getTransactionIdentifierDto().getSessionIdentifier() mapName) <<<<<<<<<<<<<<<<<<<<<<<<
         final String sessionIdentifier = event.getTransactionIdentifierDto().getSessionIdentifier();
-        final String mapName = sessionIdentifier.split("#####")[0];
+        final String mapName = sessionIdentifier.split("#####")[0]; // @TODO extract to helper!
         gameMapPersistenceLayer.findByName(mapName).ifPresent((final GameMap gameMap) -> {
             // @TODO Nächsten Chunk ermitteln der nicht READY und nicht REQUESTED ist <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             final Random random = new Random();
