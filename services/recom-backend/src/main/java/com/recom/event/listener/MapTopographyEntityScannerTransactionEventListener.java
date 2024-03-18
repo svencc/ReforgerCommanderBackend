@@ -8,6 +8,9 @@ import com.recom.event.event.async.map.addmappackage.AddMapTopographyPackageAsyn
 import com.recom.event.event.async.map.commit.CommitMapTopographyTransactionAsyncEvent;
 import com.recom.event.event.async.map.open.OpenMapTopographyTransactionAsyncEvent;
 import com.recom.event.listener.generic.maprelated.TransactionalMapRelatedPackageEventListenerTemplate;
+import com.recom.event.listener.topography.ChunkCoordinate;
+import com.recom.event.listener.topography.ChunkDimensions;
+import com.recom.event.listener.topography.ChunkHelper;
 import com.recom.model.map.MapTransaction;
 import com.recom.persistence.map.GameMapPersistenceLayer;
 import com.recom.persistence.map.topography.MapLocatedTopographyPersistenceLayer;
@@ -74,52 +77,24 @@ public class MapTopographyEntityScannerTransactionEventListener extends Transact
             @NonNull final GameMap gameMap,
             @NonNull final List<TransactionalMapTopographyEntityPackageDto> packages
     ) {
-        final String[] additionalInformation = sessionIdentifier.split("#####");
-        // assert additionalInformation size 2
+        final ChunkCoordinate chunkCoordinate = ChunkHelper.extractChunkCoordinateFromSessionIdentifier(sessionIdentifier);
+        final ChunkDimensions chunkDimensions = ChunkHelper.determineChunkDimensions(packages);
 
-        final String mapName = additionalInformation[0];
-        final String chunkXZCoordinate = additionalInformation[1];
-
-
-        final String[] chunkCoordinates = chunkXZCoordinate.split(",");
-        // assert chunkCoordinates size 2
-        final String chunkCoordinatesX = chunkCoordinates[0];
-        final String chunkCoordinatesZ = chunkCoordinates[1];
-
-        final long chunkX = Integer.parseInt(chunkCoordinatesX);
-        final long chunkZ = Integer.parseInt(chunkCoordinatesZ);
-
-        // assertions mit den Optionals
-        final int dimensionX = packages.stream()
-                .flatMap((entityPackage) -> entityPackage.getEntities().stream())
-                .map(MapTopographyEntityDto::getCoordinates)
-                .mapToInt((coordinates) -> coordinates.get(0).intValue())
-                .max()
-                .orElseThrow(() -> new IllegalArgumentException("No max X found!"));
-
-        final int dimensionZ = packages.stream()
-                .flatMap((entityPackage) -> entityPackage.getEntities().stream())
-                .map(MapTopographyEntityDto::getCoordinates)
-                .mapToInt((coordinates) -> coordinates.get(2).intValue())
-                .max()
-                .orElseThrow(() -> new IllegalArgumentException("No max X found!"));
-
-        final float[][] chunkedDem = new float[dimensionX][dimensionZ];
-
+        final float[][] chunkedDem = new float[chunkDimensions.x()][chunkDimensions.z()];
         packages.stream()
                 .flatMap((entityPackage) -> entityPackage.getEntities().stream())
                 .forEach((final MapTopographyEntityDto packageDto) -> {
                     final int x = packageDto.getCoordinates().get(0).intValue();
                     final float y = packageDto.getCoordinates().get(1).floatValue();
-                    final int z = packageDto.getCoordinates().get(3).intValue();
+                    final int z = packageDto.getCoordinates().get(2).intValue();
                     chunkedDem[x][z] = y;
                 });
 
         try {
             final SquareKilometerTopographyChunk squareKilometerTopographyChunk = SquareKilometerTopographyChunk.builder()
                     .gameMap(gameMap)
-                    .squareCoordinateX(chunkX)
-                    .squareCoordinateY(chunkZ)
+                    .squareCoordinateX(chunkCoordinate.x())
+                    .squareCoordinateY(chunkCoordinate.z())
                     .data(serializationService.serializeObject(chunkedDem).toByteArray())
                     .build();
 
