@@ -11,7 +11,7 @@ import com.recom.event.event.sync.cache.CacheResetSyncEvent;
 import com.recom.model.map.MapTransaction;
 import com.recom.model.map.TopographyData;
 import com.recom.persistence.map.GameMapPersistenceLayer;
-import com.recom.persistence.map.topography.MapLocatedTopographyPersistenceLayer;
+import com.recom.persistence.map.topography.MapTopographyChunkPersistenceLayer;
 import com.recom.service.SerializationService;
 import com.recom.service.map.MapTransactionValidatorService;
 import com.recom.testhelper.SerializeObjectHelper;
@@ -43,7 +43,7 @@ public class MapTopographyScannerTransactionEventListenerTest {
     @Mock
     private ApplicationEventPublisher applicationEventPublisher;
     @Mock
-    private MapLocatedTopographyPersistenceLayer mapEntityPersistenceLayer;
+    private MapTopographyChunkPersistenceLayer mapEntityPersistenceLayer;
     @Mock
     private MapTransactionValidatorService<MapTopographyEntityDto, TransactionalMapTopographyEntityPackageDto> mapTransactionValidator;
     @Mock

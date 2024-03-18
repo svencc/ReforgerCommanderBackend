@@ -37,6 +37,7 @@ public class MessageBusService implements HasSubject<MessageBusResponseDto> {
     @NonNull
     private final MessagePersistenceLayer messagePersistenceLayer;
 
+
     public <T> void sendMessage(@NonNull final MessageContainer messageContainer) {
         final MessageBusResponseDto response = prepareNotification(messageContainer);
         final List<Message> persistedMessages = persistNotification(messageContainer.getGameMap(), response);

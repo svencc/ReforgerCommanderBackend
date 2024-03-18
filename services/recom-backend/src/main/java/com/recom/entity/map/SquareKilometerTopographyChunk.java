@@ -83,10 +83,4 @@ public class SquareKilometerTopographyChunk implements Persistable<Long>, Serial
         return getId() == null;
     }
 
-    public static enum ChunkStatus {
-        PENDING,
-        READY,
-        FAILED
-    }
-
 }

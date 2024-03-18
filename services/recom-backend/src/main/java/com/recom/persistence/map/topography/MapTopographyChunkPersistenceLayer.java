@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class MapLocatedTopographyPersistenceLayer implements MapRelatedEntityPersistable<SquareKilometerTopographyChunk> {
+public class MapTopographyChunkPersistenceLayer implements MapRelatedEntityPersistable<SquareKilometerTopographyChunk> {
 
     @NonNull
     private final MapTopographyChunkRepository mapTopographyChunkRepository;

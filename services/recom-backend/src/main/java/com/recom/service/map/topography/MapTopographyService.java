@@ -14,7 +14,7 @@ import com.recom.entity.map.GameMap;
 import com.recom.mapper.mapcomposer.MapDesignSchemeMapper;
 import com.recom.mapper.mapcomposer.MapLayerRasterizerConfigurationMapper;
 import com.recom.model.map.MapTopography;
-import com.recom.persistence.map.topography.MapLocatedTopographyPersistenceLayer;
+import com.recom.persistence.map.topography.MapTopographyChunkPersistenceLayer;
 import com.recom.service.SerializationService;
 import com.recom.service.mapentitygenerator.ForestProviderGenerator;
 import com.recom.service.mapentitygenerator.StructureProviderGenerator;
@@ -34,7 +34,7 @@ import java.util.Optional;
 public class MapTopographyService {
 
     @NonNull
-    private final MapLocatedTopographyPersistenceLayer mapTopographyPersistenceLayer;
+    private final MapTopographyChunkPersistenceLayer mapTopographyPersistenceLayer;
     @NonNull
     private final SerializationService serializationService;
     @NonNull
