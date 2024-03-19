@@ -12,6 +12,11 @@ public class ChunkHelper {
 
     @NonNull
     public ChunkCoordinate extractChunkCoordinateFromSessionIdentifier(@NonNull final String sessionIdentifier) {
+        return extractFromSessionIdentifier(sessionIdentifier).chunkCoordinate();
+    }
+
+    @NonNull
+    public MapScanSessionIdentifierData extractFromSessionIdentifier(@NonNull final String sessionIdentifier) {
         final String[] additionalInformation = sessionIdentifier.split("#####");
 
         if (additionalInformation.length < 2) {
@@ -34,7 +39,9 @@ public class ChunkHelper {
         final long chunkX = Integer.parseInt(chunkCoordinatesX);
         final long chunkZ = Integer.parseInt(chunkCoordinatesZ);
 
-        return new ChunkCoordinate(chunkX, chunkZ);
+        final ChunkCoordinate chunkCoordinate = new ChunkCoordinate(chunkX, chunkZ);
+
+        return new MapScanSessionIdentifierData(mapName, chunkCoordinate);
     }
 
     @NonNull
