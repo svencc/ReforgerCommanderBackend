@@ -28,17 +28,17 @@ public class MapCreateRequestDto implements Serializable {
     @NotBlank
     @Schema
     @JsonProperty()
-    private BigDecimal dimensionXInMeter; // map 2D widthX -> Abrunden auf 1er
+    private BigDecimal dimensionXInMeter; // map 2D widthX -> round down
 
     @NotBlank
     @Schema
     @JsonProperty()
-    private BigDecimal dimensionYInMeter; // map depthZ -> Abrunden auf 1er
+    private BigDecimal dimensionYInMeter; // map depthZ -> round down
 
     @NotBlank
     @Schema
     @JsonProperty()
-    private BigDecimal dimensionZInMeter; // map 2D heightY -> Abrunden auf 1er
+    private BigDecimal dimensionZInMeter; // map 2D heightY -> round down
 
     @NotBlank
     @Schema

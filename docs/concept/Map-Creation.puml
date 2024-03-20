@@ -20,8 +20,7 @@ Data:
  - oceanBaseHeight;
 end note
 SERVER -> SERVER: Create Map; persist
-SERVER -> SERVER: trigger MapCreatedEvent
-SERVER -> SERVER: Send in MessageBus: ScanMap-Chunk
+SERVER -> SERVER: Send in MessageBus: ScanMap-Chunk x/y
 SERVER -> CLIENT: MessageBus: scan Map-Chunk
 CLIENT -> CLIENT: Scan Chunk
 CLIENT -> SERVER: Submit scanned Chunk
@@ -30,7 +29,20 @@ SERVER -> SERVER: Send in MessageBus: scan another Map-Chunk
 SERVER -> SERVER: persist scanned Chunk
 SERVER -> CLIENT: MessageBus: scan another Map-Chunk
 
+...
+...
+...
+...
 
+
+CLIENT -> SERVER: Map exists?
+note left
+Alternate Flow:
+ - map exists
+ - trigger scan
+end note
+CLIENT <-- SERVER: Map does exist
+CLIENT <-- SERVER: scan Map-Chunk x/y
 
 
 
