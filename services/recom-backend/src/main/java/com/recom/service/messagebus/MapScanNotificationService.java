@@ -39,24 +39,48 @@ public class MapScanNotificationService {
         final String mapName = ChunkHelper.extractFromSessionIdentifier(sessionIdentifier).mapName();
 
         return gameMapPersistenceLayer.findByName(mapName).map((final GameMap gameMap) -> {
-                    List<SquareKilometerTopographyChunk> remainingChunksToScan = mapTopographyChunkPersistenceLayer.findByGameMap(gameMap).stream()
-                            .filter(chunk -> {
-                                final boolean isStale = LocalDateTime.now().minusMinutes(10).isAfter(chunk.getLastUpdate());
-                                return (chunk.getStatus() == ChunkStatus.PENDING) ||
-                                        (chunk.getStatus() == ChunkStatus.REQUESTED && isStale);
-                            })
-                            .toList();
-
-                    final SquareKilometerTopographyChunk randomChunk = remainingChunksToScan.get(random.nextInt(remainingChunksToScan.size()));
-                    final int nextChunkCoordinateX = randomChunk.getSquareCoordinateX().intValue();
-                    final int nextChunkCoordinateY = randomChunk.getSquareCoordinateY().intValue();
-                    final ChunkCoordinate chunkCoordinate = new ChunkCoordinate(nextChunkCoordinateX, nextChunkCoordinateY);
-
+                    final ChunkCoordinate chunkCoordinate = getChunkCoordinateToScan(gameMap);
                     notifyMapScan(gameMap, chunkCoordinate);
 
                     return true;
                 })
                 .orElse(false);
+    }
+
+    @NonNull
+    public ChunkCoordinate getChunkCoordinateToScan(@NonNull final GameMap gameMap) {
+        final List<SquareKilometerTopographyChunk> remainingChunksToScan = mapTopographyChunkPersistenceLayer.findByGameMap(gameMap).stream()
+                .filter(chunk -> {
+                    final boolean isStale = LocalDateTime.now().minusMinutes(10).isAfter(chunk.getLastUpdate());
+                    return (chunk.getStatus() == ChunkStatus.PENDING) ||
+                            (chunk.getStatus() == ChunkStatus.REQUESTED && isStale);
+                })
+                .toList();
+
+        final SquareKilometerTopographyChunk randomChunk = remainingChunksToScan.get(random.nextInt(remainingChunksToScan.size()));
+        final int nextChunkCoordinateX = randomChunk.getSquareCoordinateX().intValue();
+        final int nextChunkCoordinateY = randomChunk.getSquareCoordinateY().intValue();
+
+        return new ChunkCoordinate(nextChunkCoordinateX, nextChunkCoordinateY);
+    }
+
+    public void notifyMapScan(@NonNull final GameMap gameMap) {
+        final ChunkCoordinate chunkCoordinate = getChunkCoordinateToScan(gameMap);
+        messageBusService.sendMessage(MessageContainer.builder()
+                .gameMap(gameMap)
+                .messages(List.of(
+                        SingleMessage.builder()
+                                .messageType(MessageType.REQUEST_MAP_CHUNK)
+                                .payload(MapChunkScanRequestDto.builder()
+                                        .mapName(gameMap.getName())
+                                        .chunkCoordinateX((int) chunkCoordinate.x())
+                                        .chunkCoordinateY((int) chunkCoordinate.z())
+                                        .build()
+                                )
+                                .build()
+                ))
+                .build()
+        );
     }
 
     public void notifyMapScan(

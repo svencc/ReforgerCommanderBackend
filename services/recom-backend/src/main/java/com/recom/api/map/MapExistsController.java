@@ -3,11 +3,13 @@ package com.recom.api.map;
 import com.recom.api.commons.HttpCommons;
 import com.recom.dto.map.exists.MapExistsRequestDto;
 import com.recom.dto.map.exists.MapExistsResponseDto;
+import com.recom.entity.map.GameMap;
 import com.recom.exception.HttpNotFoundException;
 import com.recom.security.account.RECOMAccount;
 import com.recom.security.account.RECOMAuthorities;
 import com.recom.service.AssertionService;
 import com.recom.service.ReforgerPayloadParserService;
+import com.recom.service.messagebus.MapScanNotificationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -25,7 +27,10 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Slf4j
 @RestController
@@ -38,6 +43,11 @@ public class MapExistsController {
     private final AssertionService assertionService;
     @NonNull
     private final ReforgerPayloadParserService payloadParser;
+    @NonNull
+    private final MapScanNotificationService mapScanNotificationService;
+    @NonNull
+    private final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
+
 
     @Operation(
             summary = "Determines existence of com.recom.dto.map",
@@ -77,11 +87,21 @@ public class MapExistsController {
         log.debug("Requested GET /api/v1/com.recom.dto.map/exists (JSON)");
 
         try {
-            assertionService.provideMap(mapExistsRequestDto.getMapName());
+            final GameMap gameMap = assertionService.provideMap(mapExistsRequestDto.getMapName());
+
+            executorService.submit(() -> {
+                try {
+                    Thread.sleep(Duration.ofSeconds(1).toMillis());
+                    mapScanNotificationService.notifyMapScan(gameMap);
+                } catch (Throwable t) {
+                    log.error("Failed to notify map scan.", t);
+                }
+            });
+
             return ResponseEntity.status(HttpStatus.OK)
                     .cacheControl(CacheControl.noCache())
                     .body(MapExistsResponseDto.builder()
-                            .mapName(mapExistsRequestDto.getMapName())
+                            .mapName(gameMap.getName())
                             .mapExists(true)
                             .build());
         } catch (final HttpNotFoundException e) {
