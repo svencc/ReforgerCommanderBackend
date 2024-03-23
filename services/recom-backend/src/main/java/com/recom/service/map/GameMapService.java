@@ -135,7 +135,7 @@ public class GameMapService {
                         .gameMap(newGameMap)
                         .squareCoordinateX(x)
                         .squareCoordinateY(z)
-                        .status(ChunkStatus.PENDING)
+                        .status(ChunkStatus.OPEN)
                         .build()
                 );
             }

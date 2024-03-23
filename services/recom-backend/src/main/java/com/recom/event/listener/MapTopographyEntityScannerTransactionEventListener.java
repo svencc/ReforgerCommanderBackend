@@ -2,6 +2,7 @@ package com.recom.event.listener;
 
 import com.recom.dto.map.scanner.topography.MapTopographyEntityDto;
 import com.recom.dto.map.scanner.topography.TransactionalMapTopographyEntityPackageDto;
+import com.recom.entity.map.ChunkStatus;
 import com.recom.entity.map.GameMap;
 import com.recom.entity.map.SquareKilometerTopographyChunk;
 import com.recom.event.event.async.map.addmappackage.AddMapTopographyPackageAsyncEvent;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -105,6 +107,9 @@ public class MapTopographyEntityScannerTransactionEventListener extends Transact
             if (maybeChunk.isPresent()) {
                 final SquareKilometerTopographyChunk chunk = maybeChunk.get();
                 chunk.setData(serializationService.serializeObject(chunkedDem).toByteArray());
+                chunk.setStatus(ChunkStatus.CLOSED);
+                chunk.setLastUpdate(LocalDateTime.now());
+
                 return chunk;
             } else {
                 throw new IllegalArgumentException("No chunk found for gameMap " + gameMap.getName() + " and chunkCoordinate " + chunkCoordinate.toString() + "!");
