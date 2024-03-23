@@ -9,7 +9,7 @@ import com.recom.security.account.RECOMAccount;
 import com.recom.security.account.RECOMAuthorities;
 import com.recom.service.AssertionService;
 import com.recom.service.ReforgerPayloadParserService;
-import com.recom.service.messagebus.MapScanNotificationService;
+import com.recom.service.messagebus.MapTopographyChunkScanRequestNotificationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -44,7 +44,7 @@ public class MapExistsController {
     @NonNull
     private final ReforgerPayloadParserService payloadParser;
     @NonNull
-    private final MapScanNotificationService mapScanNotificationService;
+    private final MapTopographyChunkScanRequestNotificationService mapTopographyChunkScanRequestNotificationService;
     @NonNull
     private final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
 
@@ -92,7 +92,7 @@ public class MapExistsController {
             executorService.submit(() -> {
                 try {
                     Thread.sleep(Duration.ofSeconds(1).toMillis());
-                    mapScanNotificationService.notifyMapScan(gameMap);
+                    mapTopographyChunkScanRequestNotificationService.requestMapTopographyChunkScan(gameMap);
                 } catch (Throwable t) {
                     log.error("Failed to notify map scan.", t);
                 }

@@ -16,7 +16,7 @@ import com.recom.persistence.map.GameMapPersistenceLayer;
 import com.recom.persistence.map.topography.MapTopographyChunkPersistenceLayer;
 import com.recom.service.SerializationService;
 import com.recom.service.map.MapTransactionValidatorService;
-import com.recom.service.messagebus.MapScanNotificationService;
+import com.recom.service.messagebus.MapTopographyChunkScanRequestNotificationService;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -36,7 +36,7 @@ public class MapTopographyEntityScannerTransactionEventListener extends Transact
     @NonNull
     private final SerializationService serializationService;
     @NonNull
-    private final MapScanNotificationService mapScanNotificationService;
+    private final MapTopographyChunkScanRequestNotificationService mapTopographyChunkScanRequestNotificationService;
 
 
     public MapTopographyEntityScannerTransactionEventListener(
@@ -46,12 +46,12 @@ public class MapTopographyEntityScannerTransactionEventListener extends Transact
             @NonNull final GameMapPersistenceLayer gameMapPersistenceLayer,
             @NonNull final ApplicationEventPublisher applicationEventPublisher,
             @NonNull final SerializationService serializationService,
-            @NonNull final MapScanNotificationService mapScanNotificationService
+            @NonNull final MapTopographyChunkScanRequestNotificationService mapTopographyChunkScanRequestNotificationService
     ) {
         super(transactionTemplate, entityPersistenceLayer, mapTransactionValidator, gameMapPersistenceLayer, applicationEventPublisher);
 
         this.serializationService = serializationService;
-        this.mapScanNotificationService = mapScanNotificationService;
+        this.mapTopographyChunkScanRequestNotificationService = mapTopographyChunkScanRequestNotificationService;
     }
 
     @Async("AsyncMapTopographyTransactionExecutor")
@@ -74,8 +74,7 @@ public class MapTopographyEntityScannerTransactionEventListener extends Transact
     public void handleCommitTransactionEvent(@NonNull final CommitMapTopographyTransactionAsyncEvent event) {
         debugEvent(event);
         handleCommitTransaction(event.getTransactionIdentifierDto());
-
-        mapScanNotificationService.notifyMapScan(event.getTransactionIdentifierDto());
+        mapTopographyChunkScanRequestNotificationService.requestMapTopographyChunkScan(event.getTransactionIdentifierDto());
     }
 
     @NonNull

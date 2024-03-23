@@ -16,7 +16,7 @@ public class GameMapPersistenceLayer {
     private final GameMapRepository gameMapRepository;
 
     @NonNull
-    private final MapMetaRepository mapMetaRepository;
+    private final MapDimensionsRepository mapDimensionsRepository;
 
     
     @NonNull

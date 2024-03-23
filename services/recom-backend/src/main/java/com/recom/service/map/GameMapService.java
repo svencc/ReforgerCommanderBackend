@@ -3,12 +3,14 @@ package com.recom.service.map;
 import com.recom.dto.map.MapOverviewDto;
 import com.recom.dto.map.create.MapCreateRequestDto;
 import com.recom.dto.map.meta.MapMetaDto;
+import com.recom.entity.map.ChunkStatus;
 import com.recom.entity.map.GameMap;
-import com.recom.entity.map.MapMeta;
+import com.recom.entity.map.MapDimensions;
+import com.recom.entity.map.SquareKilometerTopographyChunk;
 import com.recom.persistence.map.GameMapPersistenceLayer;
-import com.recom.persistence.map.MapMetaPersistenceLayer;
 import com.recom.persistence.map.structure.MapStructurePersistenceLayer;
 import com.recom.service.dbcached.DBCachedService;
+import com.recom.service.messagebus.MapTopographyChunkScanRequestNotificationService;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -33,9 +35,9 @@ public class GameMapService {
     @NonNull
     private final GameMapPersistenceLayer gameMapPersistenceLayer;
     @NonNull
-    private final MapMetaPersistenceLayer mapMetaPersistenceLayer;
-    @NonNull
     private final MapStructurePersistenceLayer mapStructurePersistenceLayer;
+    @NonNull
+    private final MapTopographyChunkScanRequestNotificationService mapTopographyChunkScanRequestNotificationService;
     @NonNull
     private final DBCachedService dbCachedService;
 
@@ -97,24 +99,49 @@ public class GameMapService {
     @NonNull
     @Transactional
     public GameMap create(@NonNull final MapCreateRequestDto mapCreateRequestDto) {
-//        final GameMap createdGameMap = gameMapPersistenceLayer.save(
         final GameMap newGameMap = GameMap.builder()
                 .name(mapCreateRequestDto.getMapName())
                 .build();
-//        );
 
-//        mapMetaPersistenceLayer.save(
-        MapMeta.builder()
+        final MapDimensions newMapDimensions = MapDimensions.builder()
                 .gameMap(newGameMap)
                 .dimensionX(mapCreateRequestDto.getDimensionXInMeter().longValue())
                 .dimensionY(mapCreateRequestDto.getDimensionYInMeter().longValue())
                 .dimensionZ(mapCreateRequestDto.getDimensionZInMeter().longValue())
                 .oceanBaseHeight(mapCreateRequestDto.getOceanBaseHeight())
                 .build();
-//        );
+        newGameMap.setMapDimensions(newMapDimensions);
 
-        return gameMapPersistenceLayer.save(newGameMap);  // @TODO <<<<<<<<<<<<<<<<<<<<<<<<<<<< TESTEN!
-//        return createdGameMap;
+        generatePreparedChunks(newMapDimensions, newGameMap);
+
+        final GameMap persistedGameMap = gameMapPersistenceLayer.save(newGameMap);
+
+        mapTopographyChunkScanRequestNotificationService.requestMapTopographyChunkScan(persistedGameMap);
+
+        return persistedGameMap;
+    }
+
+    private void generatePreparedChunks(
+            @NonNull final MapDimensions newMapDimensions,
+            @NonNull final GameMap newGameMap
+    ) {
+        final int chunksInXDimension = (int) Math.ceil(newMapDimensions.getDimensionX() / 1000f);
+        final int chunksInZDimension = (int) Math.ceil(newMapDimensions.getDimensionZ() / 1000f);
+
+        final ArrayList<SquareKilometerTopographyChunk> topographyChunks = new ArrayList<>();
+        for (long x = 0; x < chunksInXDimension; x++) {
+            for (long z = 0; z < chunksInZDimension; z++) {
+                topographyChunks.add(SquareKilometerTopographyChunk.builder()
+                        .gameMap(newGameMap)
+                        .squareCoordinateX(x)
+                        .squareCoordinateY(z)
+                        .status(ChunkStatus.PENDING)
+                        .build()
+                );
+            }
+        }
+
+        newGameMap.getTopographyChunks().addAll(topographyChunks);
     }
 
 }

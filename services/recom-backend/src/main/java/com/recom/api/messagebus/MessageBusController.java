@@ -87,8 +87,12 @@ public class MessageBusController {
         }
         final GameMap gameMap = assertionService.provideMap(messageBusLongPollRequestDto.getMapName());
 
-        ResponseBodyEmitter emitter;
-        final Long sinceEpochMillis = Optional.ofNullable(messageBusLongPollRequestDto.getSinceEpochMilliseconds()).map(Long::valueOf).orElse(null);
+        final ResponseBodyEmitter emitter;
+        final Long sinceEpochMillis = Optional.ofNullable(messageBusLongPollRequestDto.getSinceEpochMilliseconds())
+                .filter(epochStringValue -> !epochStringValue.isBlank())
+                .map(Long::valueOf)
+                .orElse(null);
+
         final Lazy<MessageBusResponseDto> messagesSinceLazy = Lazy.of(() -> messageBusService.listMessagesSince(gameMap, sinceEpochMillis));
         if (StringUtil.isNumeric(messageBusLongPollRequestDto.getSinceEpochMilliseconds()) && !messagesSinceLazy.get().getMessages().isEmpty()) {
             emitter = new ResponseBodyEmitter(RECOM_CURL_TIMEOUT.toMillis());

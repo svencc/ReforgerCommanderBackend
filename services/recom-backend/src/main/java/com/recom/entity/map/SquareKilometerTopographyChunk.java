@@ -48,7 +48,7 @@ public class SquareKilometerTopographyChunk implements Persistable<Long>, Serial
     private ChunkStatus status;
 
     @Nullable
-    @Column(insertable = true, updatable = true, nullable = true)
+    @Column(insertable = true, updatable = true, nullable = true, columnDefinition = "TIMESTAMP")
     private LocalDateTime lastUpdate;
 
 

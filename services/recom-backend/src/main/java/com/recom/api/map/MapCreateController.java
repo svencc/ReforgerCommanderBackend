@@ -50,14 +50,14 @@ public class MapCreateController {
             @ApiResponse(responseCode = HttpCommons.UNAUTHORIZED_CODE, description = HttpCommons.UNAUTHORIZED, content = @Content())
     })
     @PostMapping(path = "/form", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity<MapCreateResponseDto> mapExistsForm(
+    public ResponseEntity<MapCreateResponseDto> mapCreateForm(
             @AuthenticationPrincipal final RECOMAccount account,
             @RequestParam(required = true)
             @NonNull final Map<String, String> payload
     ) {
         log.debug("Requested POST /api/v1/com.recom.dto.map/create/form (FORM)");
 
-        return mapExists(account, payloadParser.parseValidated(payload, MapCreateRequestDto.class));
+        return mapCreate(account, payloadParser.parseValidated(payload, MapCreateRequestDto.class));
     }
 
     @Operation(
@@ -71,7 +71,7 @@ public class MapCreateController {
     })
     @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
     @Secured({RECOMAuthorities.EVERYBODY})
-    public ResponseEntity<MapCreateResponseDto> mapExists(
+    public ResponseEntity<MapCreateResponseDto> mapCreate(
             @AuthenticationPrincipal final RECOMAccount account,
             @RequestBody final MapCreateRequestDto mapCreateRequestDto
     ) {

@@ -19,7 +19,7 @@ import java.math.BigDecimal;
 @Table(indexes = {})
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class MapMeta implements Persistable<Long>, Serializable, MapRelatedEntity {
+public class MapDimensions implements Persistable<Long>, Serializable, MapRelatedEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -43,7 +43,7 @@ public class MapMeta implements Persistable<Long>, Serializable, MapRelatedEntit
 
     @Override
     public int hashCode() {
-        return MapMeta.class.hashCode();
+        return MapDimensions.class.hashCode();
     }
 
     @Override
@@ -55,7 +55,7 @@ public class MapMeta implements Persistable<Long>, Serializable, MapRelatedEntit
         } else if (getClass() != obj.getClass()) {
             return false;
         } else {
-            final MapMeta other = (MapMeta) obj;
+            final MapDimensions other = (MapDimensions) obj;
             if (getId() == null) {
                 return false;
             } else return getId().equals(other.getId());

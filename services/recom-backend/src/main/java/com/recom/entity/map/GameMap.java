@@ -37,7 +37,7 @@ public class GameMap implements Persistable<Long>, Serializable {
     private String name;
 
     @OneToOne(mappedBy = "gameMap", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private MapMeta mapMeta;
+    private MapDimensions mapDimensions;
 
     @Builder.Default
     @OneToMany(mappedBy = "gameMap", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)

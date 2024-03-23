@@ -25,11 +25,11 @@ public class MapTopographyChunkScanRequestDto {
     @NotEmpty
     @Schema
     @JsonProperty()
-    private Integer chunkCoordinateX;
+    private Long chunkCoordinateX;
 
     @NotEmpty
     @Schema
     @JsonProperty()
-    private Integer chunkCoordinateY;
+    private Long chunkCoordinateY;
 
 }
