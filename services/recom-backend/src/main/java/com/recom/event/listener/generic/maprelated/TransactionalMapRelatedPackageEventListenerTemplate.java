@@ -4,6 +4,7 @@ import com.recom.entity.map.GameMap;
 import com.recom.event.BaseRecomEntityScannerEventListener;
 import com.recom.event.listener.generic.generic.MapRelatedEntityPersistable;
 import com.recom.event.listener.generic.generic.TransactionalMapEntityPackable;
+import com.recom.event.listener.topography.ChunkHelper;
 import com.recom.model.map.MapTransaction;
 import com.recom.persistence.map.GameMapPersistenceLayer;
 import com.recom.service.map.MapTransactionValidatorService;
@@ -49,12 +50,14 @@ public abstract class TransactionalMapRelatedPackageEventListenerTemplate<
         this.gameMapPersistenceLayer = gameMapPersistenceLayer;
     }
 
+    //    $RECOMClient:worlds/Arland_CTI/Arland_CTI.ent#####0,4
     protected boolean processTransaction(@NonNull final String sessionIdentifier) {
         if (transactions.containsKey(sessionIdentifier)) {
             final MapTransaction<DTO_TYPE, PACKAGE_TYPE> existingTransaction = transactions.get(sessionIdentifier);
             if (mapTransactionValidator.isValidTransaction(existingTransaction)) {
                 log.info("Process transaction named {}!", sessionIdentifier);
-                final Optional<GameMap> maybeGameMap = gameMapPersistenceLayer.findByName(sessionIdentifier);
+                final String mapName = ChunkHelper.extractFromSessionIdentifier(sessionIdentifier).mapName();
+                final Optional<GameMap> maybeGameMap = gameMapPersistenceLayer.findByName(mapName);
 
                 if (maybeGameMap.isPresent()) {
                     final ENTITY_TYPE entity = mapTransactionToEntity(sessionIdentifier, maybeGameMap.get(), existingTransaction.getPackages());

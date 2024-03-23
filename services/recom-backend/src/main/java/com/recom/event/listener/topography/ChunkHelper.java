@@ -46,21 +46,34 @@ public class ChunkHelper {
 
     @NonNull
     public ChunkDimensions determineChunkDimensions(@NonNull final List<TransactionalMapTopographyEntityPackageDto> packages) throws IllegalArgumentException {
-        final int dimensionX = packages.stream()
+        final int dimensionXmin = packages.stream()
+                .flatMap((entityPackage) -> entityPackage.getEntities().stream())
+                .map(MapTopographyEntityDto::getCoordinates)
+                .mapToInt((coordinates) -> coordinates.get(0).intValue())
+                .min()
+                .orElseThrow(() -> new IllegalArgumentException("No min X found!"));
+        final int dimensionXmax = packages.stream()
                 .flatMap((entityPackage) -> entityPackage.getEntities().stream())
                 .map(MapTopographyEntityDto::getCoordinates)
                 .mapToInt((coordinates) -> coordinates.get(0).intValue())
                 .max()
                 .orElseThrow(() -> new IllegalArgumentException("No max X found!"));
 
-        final int dimensionZ = packages.stream()
+
+        final int dimensionZmin = packages.stream()
+                .flatMap((entityPackage) -> entityPackage.getEntities().stream())
+                .map(MapTopographyEntityDto::getCoordinates)
+                .mapToInt((coordinates) -> coordinates.get(2).intValue())
+                .min()
+                .orElseThrow(() -> new IllegalArgumentException("No min Z found!"));
+        final int dimensionZmax = packages.stream()
                 .flatMap((entityPackage) -> entityPackage.getEntities().stream())
                 .map(MapTopographyEntityDto::getCoordinates)
                 .mapToInt((coordinates) -> coordinates.get(2).intValue())
                 .max()
                 .orElseThrow(() -> new IllegalArgumentException("No max Z found!"));
 
-        return new ChunkDimensions(dimensionX, dimensionZ);
+        return new ChunkDimensions(dimensionXmax - dimensionXmin + 1, dimensionZmax - dimensionZmin + 1);
     }
 
 }

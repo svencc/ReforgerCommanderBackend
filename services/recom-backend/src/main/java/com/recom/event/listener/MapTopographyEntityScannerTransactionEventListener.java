@@ -11,7 +11,6 @@ import com.recom.event.listener.generic.maprelated.TransactionalMapRelatedPackag
 import com.recom.event.listener.topography.ChunkCoordinate;
 import com.recom.event.listener.topography.ChunkDimensions;
 import com.recom.event.listener.topography.ChunkHelper;
-import com.recom.model.map.MapTransaction;
 import com.recom.persistence.map.GameMapPersistenceLayer;
 import com.recom.persistence.map.topography.MapTopographyChunkPersistenceLayer;
 import com.recom.service.SerializationService;
@@ -27,7 +26,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -37,6 +36,8 @@ public class MapTopographyEntityScannerTransactionEventListener extends Transact
     private final SerializationService serializationService;
     @NonNull
     private final MapTopographyChunkScanRequestNotificationService mapTopographyChunkScanRequestNotificationService;
+    @NonNull
+    private final MapTopographyChunkPersistenceLayer mapTopographyChunkPersistenceLayer;
 
 
     public MapTopographyEntityScannerTransactionEventListener(
@@ -46,12 +47,14 @@ public class MapTopographyEntityScannerTransactionEventListener extends Transact
             @NonNull final GameMapPersistenceLayer gameMapPersistenceLayer,
             @NonNull final ApplicationEventPublisher applicationEventPublisher,
             @NonNull final SerializationService serializationService,
-            @NonNull final MapTopographyChunkScanRequestNotificationService mapTopographyChunkScanRequestNotificationService
+            @NonNull final MapTopographyChunkScanRequestNotificationService mapTopographyChunkScanRequestNotificationService,
+            @NonNull final MapTopographyChunkPersistenceLayer mapTopographyChunkPersistenceLayer
     ) {
         super(transactionTemplate, entityPersistenceLayer, mapTransactionValidator, gameMapPersistenceLayer, applicationEventPublisher);
 
         this.serializationService = serializationService;
         this.mapTopographyChunkScanRequestNotificationService = mapTopographyChunkScanRequestNotificationService;
+        this.mapTopographyChunkPersistenceLayer = mapTopographyChunkPersistenceLayer;
     }
 
     @Async("AsyncMapTopographyTransactionExecutor")
@@ -59,7 +62,6 @@ public class MapTopographyEntityScannerTransactionEventListener extends Transact
     public void handleOpenTransactionEvent(@NonNull final OpenMapTopographyTransactionAsyncEvent event) {
         debugEvent(event);
         handleOpenTransaction(event.getTransactionIdentifierDto());
-        Map<String, MapTransaction<MapTopographyEntityDto, TransactionalMapTopographyEntityPackageDto>> transactions1 = getTransactions();
     }
 
     @Async("AsyncMapTopographyTransactionExecutor")
@@ -91,23 +93,22 @@ public class MapTopographyEntityScannerTransactionEventListener extends Transact
         packages.stream()
                 .flatMap((entityPackage) -> entityPackage.getEntities().stream())
                 .forEach((final MapTopographyEntityDto packageDto) -> {
-                    final int x = packageDto.getCoordinates().get(0).intValue();
+                    final int x = packageDto.getCoordinates().get(0).intValue() - (int) (chunkCoordinate.x() * 1000);
                     final float y = packageDto.getCoordinates().get(1).floatValue();
-                    final int z = packageDto.getCoordinates().get(2).intValue();
+                    final int z = packageDto.getCoordinates().get(2).intValue() - (int) (chunkCoordinate.z() * 1000);
                     chunkedDem[x][z] = y;
                 });
 
+        final Optional<SquareKilometerTopographyChunk> maybeChunk = mapTopographyChunkPersistenceLayer.findByGameMapAndCoordinate(gameMap, chunkCoordinate);
+
         try {
-            final SquareKilometerTopographyChunk squareKilometerTopographyChunk = SquareKilometerTopographyChunk.builder()
-                    .gameMap(gameMap)
-                    .squareCoordinateX(chunkCoordinate.x())
-                    .squareCoordinateY(chunkCoordinate.z())
-                    .data(serializationService.serializeObject(chunkedDem).toByteArray())
-                    .build();
-
-            gameMap.getTopographyChunks().add(squareKilometerTopographyChunk);
-
-            return squareKilometerTopographyChunk;
+            if (maybeChunk.isPresent()) {
+                final SquareKilometerTopographyChunk chunk = maybeChunk.get();
+                chunk.setData(serializationService.serializeObject(chunkedDem).toByteArray());
+                return chunk;
+            } else {
+                throw new IllegalArgumentException("No chunk found for gameMap " + gameMap.getName() + " and chunkCoordinate " + chunkCoordinate.toString() + "!");
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
