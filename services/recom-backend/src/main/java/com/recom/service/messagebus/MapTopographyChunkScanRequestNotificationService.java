@@ -48,11 +48,11 @@ public class MapTopographyChunkScanRequestNotificationService {
     public Optional<SquareKilometerTopographyChunk> getChunkToScanNext(@NonNull final GameMap gameMap) {
         final List<SquareKilometerTopographyChunk> remainingChunksToScan = mapTopographyChunkPersistenceLayer.findByGameMap(gameMap).stream()
                 .filter(chunk -> {
-                    final boolean isStale = Optional.ofNullable(chunk.getLastUpdate()).map(latestUpdate -> LocalDateTime.now().minusMinutes(10).isAfter(latestUpdate)).orElse(false);
+                    final boolean isStale = Optional.ofNullable(chunk.getLastUpdate()).map(latestUpdate -> LocalDateTime.now().plusMinutes(5).isAfter(latestUpdate)).orElse(false);
                     return chunk.getStatus() == ChunkStatus.OPEN ||
                             (chunk.getStatus() == ChunkStatus.REQUESTED && isStale);
                 })
-                .sorted(Comparator.comparing(SquareKilometerTopographyChunk::getLastUpdate, Comparator.nullsFirst(Comparator.reverseOrder()))) // @TODO das testen <<<<<<<<<<<<<<
+                .sorted(Comparator.comparing(SquareKilometerTopographyChunk::getLastUpdate, Comparator.nullsFirst(Comparator.naturalOrder())))
                 .toList();
 
         if (remainingChunksToScan.isEmpty()) {
