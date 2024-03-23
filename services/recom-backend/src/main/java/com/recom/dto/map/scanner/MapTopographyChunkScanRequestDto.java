@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MapChunkScanRequestDto {
+public class MapTopographyChunkScanRequestDto {
 
     @NotEmpty
     @Schema

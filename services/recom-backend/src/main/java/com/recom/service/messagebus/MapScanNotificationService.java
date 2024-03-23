@@ -1,6 +1,6 @@
 package com.recom.service.messagebus;
 
-import com.recom.dto.map.scanner.MapChunkScanRequestDto;
+import com.recom.dto.map.scanner.MapTopographyChunkScanRequestDto;
 import com.recom.dto.map.scanner.TransactionIdentifierDto;
 import com.recom.dto.message.MessageType;
 import com.recom.entity.map.ChunkStatus;
@@ -71,7 +71,7 @@ public class MapScanNotificationService {
                 .messages(List.of(
                         SingleMessage.builder()
                                 .messageType(MessageType.REQUEST_MAP_CHUNK)
-                                .payload(MapChunkScanRequestDto.builder()
+                                .payload(MapTopographyChunkScanRequestDto.builder()
                                         .mapName(gameMap.getName())
                                         .chunkCoordinateX((int) chunkCoordinate.x())
                                         .chunkCoordinateY((int) chunkCoordinate.z())
@@ -92,7 +92,7 @@ public class MapScanNotificationService {
                 .messages(List.of(
                         SingleMessage.builder()
                                 .messageType(MessageType.REQUEST_MAP_CHUNK)
-                                .payload(MapChunkScanRequestDto.builder()
+                                .payload(MapTopographyChunkScanRequestDto.builder()
                                         .mapName(gameMap.getName())
                                         .chunkCoordinateX((int) chunkCoordinate.x())
                                         .chunkCoordinateY((int) chunkCoordinate.z())
