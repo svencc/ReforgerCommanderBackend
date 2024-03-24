@@ -1,7 +1,6 @@
 package com.recom.api.map;
 
 import com.recom.api.commons.HttpCommons;
-import com.recom.commons.model.DEMDescriptor;
 import com.recom.dto.map.topography.HeightMapDescriptorDto;
 import com.recom.dto.map.topography.MapTopographyRequestDto;
 import com.recom.entity.map.GameMap;
@@ -26,7 +25,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
@@ -90,10 +92,8 @@ public class MapTopographyController {
         log.debug("Requested GET /api/v1/com.recom.dto.map/topography/data");
 
         final GameMap gameMap = assertionService.provideMap(mapTopographyRequestDto.getMapName());
-        final DEMDescriptor demDescriptor = mapTopographyService.provideDEMDescriptor(gameMap)
-                .orElseThrow(()-> new HttpNotFoundException("No topography com.recom.dto.map found for com.recom.dto.map with id " + gameMap.getId() + "!"));
 
-        HeightMapDescriptorDto dto = HeightMapDescriptorMapper.INSTANCE.toDto(demDescriptor, gameMap.getName());
+        final HeightMapDescriptorDto dto = HeightMapDescriptorMapper.INSTANCE.toDto(mapTopographyService.provideDEMDescriptor(gameMap), gameMap.getName());
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
                 .body(dto);
