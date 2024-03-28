@@ -13,7 +13,7 @@ import com.recom.event.listener.topography.ChunkCoordinate;
 import com.recom.event.listener.topography.ChunkDimensions;
 import com.recom.event.listener.topography.ChunkHelper;
 import com.recom.persistence.map.GameMapPersistenceLayer;
-import com.recom.persistence.map.topography.MapTopographyChunkPersistenceLayer;
+import com.recom.persistence.map.chunk.topography.MapTopographyChunkPersistenceLayer;
 import com.recom.service.SerializationService;
 import com.recom.service.map.MapTransactionValidatorService;
 import com.recom.service.messagebus.MapTopographyChunkScanRequestNotificationService;

@@ -17,7 +17,7 @@ import com.recom.entity.map.SquareKilometerTopographyChunk;
 import com.recom.exception.HttpUnprocessableEntityException;
 import com.recom.mapper.mapcomposer.MapDesignSchemeMapper;
 import com.recom.mapper.mapcomposer.MapLayerRasterizerConfigurationMapper;
-import com.recom.persistence.map.topography.MapTopographyChunkPersistenceLayer;
+import com.recom.persistence.map.chunk.topography.MapTopographyChunkPersistenceLayer;
 import com.recom.service.SerializationService;
 import com.recom.service.mapentitygenerator.ForestProviderGenerator;
 import com.recom.service.mapentitygenerator.StructureProviderGenerator;

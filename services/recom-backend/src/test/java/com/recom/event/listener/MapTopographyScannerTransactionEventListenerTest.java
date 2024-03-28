@@ -11,7 +11,7 @@ import com.recom.event.event.sync.cache.CacheResetSyncEvent;
 import com.recom.model.map.MapTransaction;
 import com.recom.model.map.TopographyData;
 import com.recom.persistence.map.GameMapPersistenceLayer;
-import com.recom.persistence.map.topography.MapTopographyChunkPersistenceLayer;
+import com.recom.persistence.map.chunk.topography.MapTopographyChunkPersistenceLayer;
 import com.recom.service.SerializationService;
 import com.recom.service.map.MapTransactionValidatorService;
 import com.recom.testhelper.SerializeObjectHelper;

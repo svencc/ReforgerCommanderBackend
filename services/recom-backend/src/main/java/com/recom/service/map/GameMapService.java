@@ -10,6 +10,7 @@ import com.recom.entity.map.SquareKilometerTopographyChunk;
 import com.recom.persistence.map.GameMapPersistenceLayer;
 import com.recom.persistence.map.structure.MapStructurePersistenceLayer;
 import com.recom.service.dbcached.DBCachedService;
+import com.recom.service.messagebus.MapStructureChunkScanRequestNotificationService;
 import com.recom.service.messagebus.MapTopographyChunkScanRequestNotificationService;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
@@ -39,7 +40,10 @@ public class GameMapService {
     @NonNull
     private final MapTopographyChunkScanRequestNotificationService mapTopographyChunkScanRequestNotificationService;
     @NonNull
+    private final MapStructureChunkScanRequestNotificationService mapStructureChunkScanRequestNotificationService;
+    @NonNull
     private final DBCachedService dbCachedService;
+
 
     @NonNull
     @Cacheable(cacheNames = PROVIDEMAPMETALIST_PROVIDEMAPMETALIST_CACHE)
@@ -117,6 +121,7 @@ public class GameMapService {
         final GameMap persistedGameMap = gameMapPersistenceLayer.save(newGameMap);
 
         mapTopographyChunkScanRequestNotificationService.requestMapTopographyChunkScan(persistedGameMap);
+        mapStructureChunkScanRequestNotificationService.requestMapStructureChunkScan(persistedGameMap);
 
         return persistedGameMap;
     }

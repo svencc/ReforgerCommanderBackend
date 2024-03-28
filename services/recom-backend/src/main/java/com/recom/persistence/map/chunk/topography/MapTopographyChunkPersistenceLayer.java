@@ -1,4 +1,4 @@
-package com.recom.persistence.map.topography;
+package com.recom.persistence.map.chunk.topography;
 
 import com.recom.entity.map.GameMap;
 import com.recom.entity.map.SquareKilometerTopographyChunk;
@@ -18,9 +18,10 @@ public class MapTopographyChunkPersistenceLayer implements MapRelatedEntityPersi
     @NonNull
     private final MapTopographyChunkRepository mapTopographyChunkRepository;
 
+
     @NonNull
-    public SquareKilometerTopographyChunk save(@NonNull SquareKilometerTopographyChunk distinctEntities) {
-        return mapTopographyChunkRepository.save(distinctEntities);
+    public SquareKilometerTopographyChunk save(@NonNull final SquareKilometerTopographyChunk chunk) {
+        return mapTopographyChunkRepository.save(chunk);
     }
 
     public Integer deleteMapEntities(@NonNull final GameMap gameMap) {

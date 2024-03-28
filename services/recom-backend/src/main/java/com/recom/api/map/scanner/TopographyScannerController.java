@@ -90,7 +90,7 @@ public class TopographyScannerController {
             @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK),
             @ApiResponse(responseCode = HttpCommons.UNAUTHORIZED_CODE, description = HttpCommons.UNAUTHORIZED, content = @Content())
     })
-    @PostMapping(path = "/transaction/entities", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @PostMapping(path = "/transaction/data", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity<Void> transmitMapTopographyPackage(
             @RequestParam(required = true)
             @NonNull final Map<String, String> payload

@@ -2,7 +2,7 @@ package com.recom.service.map.topography;
 
 import com.recom.commons.model.DEMDescriptor;
 import com.recom.entity.map.GameMap;
-import com.recom.persistence.map.topography.MapTopographyChunkPersistenceLayer;
+import com.recom.persistence.map.chunk.topography.MapTopographyChunkPersistenceLayer;
 import com.recom.service.SerializationService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

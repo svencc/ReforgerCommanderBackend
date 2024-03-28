@@ -1,4 +1,4 @@
-package com.recom.persistence.map.topography;
+package com.recom.persistence.map.chunk.topography;
 
 import com.recom.entity.map.GameMap;
 import com.recom.entity.map.SquareKilometerTopographyChunk;
