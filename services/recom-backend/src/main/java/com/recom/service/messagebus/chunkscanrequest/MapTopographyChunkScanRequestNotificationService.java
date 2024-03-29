@@ -1,4 +1,4 @@
-package com.recom.service.messagebus;
+package com.recom.service.messagebus.chunkscanrequest;
 
 import com.recom.dto.map.scanner.MapTopographyChunkScanRequestDto;
 import com.recom.dto.map.scanner.TransactionIdentifierDto;
@@ -11,6 +11,7 @@ import com.recom.model.message.MessageContainer;
 import com.recom.model.message.SingleMessage;
 import com.recom.persistence.map.GameMapPersistenceLayer;
 import com.recom.persistence.map.chunk.topography.MapTopographyChunkPersistenceLayer;
+import com.recom.service.messagebus.MessageBusService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Synchronized;
@@ -45,7 +46,7 @@ public class MapTopographyChunkScanRequestNotificationService {
     }
 
     @NonNull
-    public Optional<SquareKilometerTopographyChunk> getChunkToScanNext(@NonNull final GameMap gameMap) {
+    private Optional<SquareKilometerTopographyChunk> getChunkToScanNext(@NonNull final GameMap gameMap) {
         final List<SquareKilometerTopographyChunk> remainingChunksToScan = mapTopographyChunkPersistenceLayer.findByGameMap(gameMap).stream()
                 .filter(chunk -> {
                     final boolean isStale = Optional.ofNullable(chunk.getLastUpdate()).map(latestUpdate -> LocalDateTime.now().plusMinutes(5).isAfter(latestUpdate)).orElse(false);

@@ -1,5 +1,6 @@
 package com.recom.entity.map;
 
+import com.recom.entity.map.structure.MapStructureEntity;
 import com.recom.event.listener.generic.maprelated.MapRelatedEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -10,6 +11,8 @@ import org.springframework.lang.Nullable;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -39,14 +42,10 @@ public class SquareKilometerStructureChunk implements Persistable<Long>, Seriali
     @Column(insertable = true, updatable = false, nullable = false)
     private Long squareCoordinateY; // Down to Up | 0 ---> ...
 
-
-    // @TODO reference to the data table!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    /*
-    @Lob
-    @Column(insertable = true, updatable = true, nullable = true)
-    private byte[] data; // reference to the data table!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    @OneToMany
-     */
+    @NonNull
+    @Builder.Default
+    @OneToMany(mappedBy = "squareKilometerStructureChunk", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<MapStructureEntity> structureChunk = new HashSet<>();
 
     @NonNull
     @Enumerated(EnumType.STRING)

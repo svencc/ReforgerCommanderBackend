@@ -12,7 +12,7 @@ import com.recom.persistence.map.GameMapPersistenceLayer;
 import com.recom.persistence.map.chunk.structure.MapStructureChunkPersistenceLayer;
 import com.recom.persistence.map.structure.MapStructurePersistenceLayer;
 import com.recom.service.map.MapTransactionValidatorService;
-import com.recom.service.messagebus.MapStructureChunkScanRequestNotificationService;
+import com.recom.service.messagebus.chunkscanrequest.MapStructureChunkScanRequestNotificationService;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -58,7 +58,6 @@ public class MapStructureEntityScannerTransactionEventListener extends Transacti
         handleAddMapPackage(event.getTransactionalMapEntityPackage());
     }
 
-    @Transactional
     @Async("AsyncMapTransactionExecutor")
     @EventListener(classes = CommitMapTransactionAsyncEvent.class)
     public void handleCommitTransactionEvent(@NonNull final CommitMapTransactionAsyncEvent event) {

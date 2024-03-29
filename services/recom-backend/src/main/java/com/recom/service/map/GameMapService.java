@@ -3,15 +3,12 @@ package com.recom.service.map;
 import com.recom.dto.map.MapOverviewDto;
 import com.recom.dto.map.create.MapCreateRequestDto;
 import com.recom.dto.map.meta.MapMetaDto;
-import com.recom.entity.map.ChunkStatus;
-import com.recom.entity.map.GameMap;
-import com.recom.entity.map.MapDimensions;
-import com.recom.entity.map.SquareKilometerTopographyChunk;
+import com.recom.entity.map.*;
 import com.recom.persistence.map.GameMapPersistenceLayer;
 import com.recom.persistence.map.structure.MapStructurePersistenceLayer;
 import com.recom.service.dbcached.DBCachedService;
-import com.recom.service.messagebus.MapStructureChunkScanRequestNotificationService;
-import com.recom.service.messagebus.MapTopographyChunkScanRequestNotificationService;
+import com.recom.service.messagebus.chunkscanrequest.MapStructureChunkScanRequestNotificationService;
+import com.recom.service.messagebus.chunkscanrequest.MapTopographyChunkScanRequestNotificationService;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -134,9 +131,17 @@ public class GameMapService {
         final int chunksInZDimension = (int) Math.ceil(newMapDimensions.getDimensionZ() / 1000f);
 
         final ArrayList<SquareKilometerTopographyChunk> topographyChunks = new ArrayList<>();
+        final ArrayList<SquareKilometerStructureChunk> structureChunks = new ArrayList<>();
         for (long x = 0; x < chunksInXDimension; x++) {
             for (long z = 0; z < chunksInZDimension; z++) {
                 topographyChunks.add(SquareKilometerTopographyChunk.builder()
+                        .gameMap(newGameMap)
+                        .squareCoordinateX(x)
+                        .squareCoordinateY(z)
+                        .status(ChunkStatus.OPEN)
+                        .build()
+                );
+                structureChunks.add(SquareKilometerStructureChunk.builder()
                         .gameMap(newGameMap)
                         .squareCoordinateX(x)
                         .squareCoordinateY(z)
@@ -147,6 +152,7 @@ public class GameMapService {
         }
 
         newGameMap.getTopographyChunks().addAll(topographyChunks);
+        newGameMap.getStructureChunks().addAll(structureChunks);
     }
 
 }

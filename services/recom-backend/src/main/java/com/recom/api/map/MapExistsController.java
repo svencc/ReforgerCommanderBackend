@@ -9,7 +9,7 @@ import com.recom.security.account.RECOMAccount;
 import com.recom.security.account.RECOMAuthorities;
 import com.recom.service.AssertionService;
 import com.recom.service.ReforgerPayloadParserService;
-import com.recom.service.messagebus.MapTopographyChunkScanRequestNotificationService;
+import com.recom.service.messagebus.chunkscanrequest.MapTopographyChunkScanRequestNotificationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

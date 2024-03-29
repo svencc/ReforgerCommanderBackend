@@ -1,6 +1,7 @@
 package com.recom.entity.map.structure;
 
 import com.recom.entity.map.GameMap;
+import com.recom.entity.map.SquareKilometerStructureChunk;
 import com.recom.event.listener.generic.maplocated.MapLocatedEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,7 +24,8 @@ import java.math.BigDecimal;
         @Index(name = "IDX_gameMap_className", columnList = "game_map_id, class_name_id", unique = false),
         @Index(name = "IDX_gameMap_prefabName", columnList = "game_map_id, prefab_name_id", unique = false),
         @Index(name = "IDX_gameMap_resourceName", columnList = "game_map_id, resource_name_id", unique = false),
-        @Index(name = "IDX_gameMap_mapDescriptorType", columnList = "game_map_id, map_descriptor_type_id", unique = false)
+        @Index(name = "IDX_gameMap_mapDescriptorType", columnList = "game_map_id, map_descriptor_type_id", unique = false),
+        @Index(name = "IDX_squareKilometerStructureChunk", columnList = "square_kilometer_structure_chunk_id", unique = false)
 })
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -56,6 +58,9 @@ public class MapStructureEntity implements Persistable<Long>, Serializable, MapL
 
     @ManyToOne(optional = true, fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private MapDescriptorTypeEntity mapDescriptorType;
+
+    @ManyToOne(optional = true, fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    private SquareKilometerStructureChunk squareKilometerStructureChunk;
 
     @Lob
     @Column(insertable = true, updatable = false, nullable = true)

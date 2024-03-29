@@ -85,6 +85,7 @@ public abstract class TransactionalMapLocatedPackageEventListenerTemplate<
                                 .distinct()
                                 .map(entityMapper::toEntity)
                                 .peek(mapEntity -> mapEntity.setGameMap(maybeGameMap.get()))
+                                .peek(mapEntity -> mapEntity.setSquareKilometerStructureChunk(maybeChunk.get()))
                                 .collect(Collectors.toList());
 
                         log.info("... persist {} entities.", distinctEntities.size());

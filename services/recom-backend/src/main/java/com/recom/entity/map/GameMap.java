@@ -49,6 +49,10 @@ public class GameMap implements Persistable<Long>, Serializable {
 
     @Builder.Default
     @OneToMany(mappedBy = "gameMap", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<SquareKilometerStructureChunk> structureChunks = new HashSet<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "gameMap", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Configuration> configurations = new HashSet<>();
 
     @Builder.Default
