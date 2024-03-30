@@ -1,5 +1,6 @@
 package com.recom.event.listener.generic.maplocated;
 
+import com.recom.entity.map.ChunkStatus;
 import com.recom.entity.map.GameMap;
 import com.recom.entity.map.SquareKilometerStructureChunk;
 import com.recom.event.BaseRecomEntityScannerEventListener;
@@ -78,22 +79,29 @@ public abstract class TransactionalMapLocatedPackageEventListenerTemplate<
                     final Optional<SquareKilometerStructureChunk> maybeChunk = mapStructureChunkPersistenceLayer.findByGameMapAndCoordinate(maybeGameMap.get(), chunkCoordinate);
                     if (maybeChunk.isPresent()) {
                         log.info("... found existing chunk for transaction named {}!", sessionIdentifier);
-                        entityMapper.init();
 
-                        final List<ENTITY_TYPE> distinctEntities = existingTransaction.getPackages().stream()
-                                .flatMap(packageDto -> packageDto.getEntities().stream())
-                                .distinct()
-                                .map(entityMapper::toEntity)
-                                .peek(mapEntity -> mapEntity.setGameMap(maybeGameMap.get()))
-                                .peek(mapEntity -> mapEntity.setSquareKilometerStructureChunk(maybeChunk.get()))
-                                .collect(Collectors.toList());
-
-                        log.info("... persist {} entities.", distinctEntities.size());
-
+                        // open new transaction
                         final Boolean transactionExecuted = transactionTemplate.execute(status -> {
+                            final GameMap gameMap = gameMapPersistenceLayer.findByName(mapName).orElseThrow();
+                            final SquareKilometerStructureChunk mapChunk = mapStructureChunkPersistenceLayer.findByGameMapAndCoordinate(maybeGameMap.get(), chunkCoordinate).orElseThrow();
+
+                            entityMapper.init();
+                            mapChunk.setStatus(ChunkStatus.CLOSED);
+
+                            final List<ENTITY_TYPE> distinctEntities = existingTransaction.getPackages().stream()
+                                    .flatMap(packageDto -> packageDto.getEntities().stream())
+                                    .distinct()
+                                    .map(entityMapper::toEntity)
+                                    .peek(mapEntity -> mapEntity.setGameMap(gameMap))
+                                    .peek(mapEntity -> mapEntity.setSquareKilometerStructureChunk(mapChunk))
+                                    .collect(Collectors.toList());
+
+                            log.info("... persist {} entities.", distinctEntities.size());
+
                             // entityPersistenceLayer.deleteMapEntities(maybeGameMap.get());
-                            distinctEntities.forEach(entity -> entity.setGameMap(maybeGameMap.get()));
+//                            distinctEntities.forEach(entity -> entity.setGameMap(maybeGameMap.get()));
                             entityPersistenceLayer.saveAll(distinctEntities);
+                            mapStructureChunkPersistenceLayer.save(mapChunk);
                             log.info("Transaction named {} persisted!", sessionIdentifier);
 
                             return true;

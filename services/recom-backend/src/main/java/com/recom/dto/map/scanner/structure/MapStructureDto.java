@@ -18,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MapStructureEntityDto implements MapLocatedDto {
+public class MapStructureDto implements MapLocatedDto {
 
     @Schema
     @JsonProperty()

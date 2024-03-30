@@ -2,7 +2,7 @@ package com.recom.api.map.scanner;
 
 import com.recom.api.commons.HttpCommons;
 import com.recom.dto.map.scanner.TransactionIdentifierDto;
-import com.recom.dto.map.scanner.topography.TransactionalMapTopographyEntityPackageDto;
+import com.recom.dto.map.scanner.topography.TransactionalMapTopographyPackageDto;
 import com.recom.service.ReforgerPayloadParserService;
 import com.recom.service.map.scanner.MapTopographyTransactionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -97,7 +97,7 @@ public class TopographyScannerController {
     ) {
         log.debug("Requested POST /api/v1/scanner/topography/transaction/entities");
 
-        mapTopographyTransactionService.addMapEntitiesPackage(payloadParser.parseValidated(payload, TransactionalMapTopographyEntityPackageDto.class));
+        mapTopographyTransactionService.addMapEntitiesPackage(payloadParser.parseValidated(payload, TransactionalMapTopographyPackageDto.class));
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
                 .build();

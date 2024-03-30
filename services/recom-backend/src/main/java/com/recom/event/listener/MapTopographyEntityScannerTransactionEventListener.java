@@ -1,7 +1,7 @@
 package com.recom.event.listener;
 
-import com.recom.dto.map.scanner.topography.MapTopographyEntityDto;
-import com.recom.dto.map.scanner.topography.TransactionalMapTopographyEntityPackageDto;
+import com.recom.dto.map.scanner.topography.MapTopographyDto;
+import com.recom.dto.map.scanner.topography.TransactionalMapTopographyPackageDto;
 import com.recom.entity.map.ChunkStatus;
 import com.recom.entity.map.GameMap;
 import com.recom.entity.map.SquareKilometerTopographyChunk;
@@ -32,7 +32,7 @@ import java.util.Optional;
 
 @Slf4j
 @Component
-public class MapTopographyEntityScannerTransactionEventListener extends TransactionalMapRelatedPackageEventListenerTemplate<TransactionalMapTopographyEntityPackageDto, SquareKilometerTopographyChunk, MapTopographyEntityDto> {
+public class MapTopographyEntityScannerTransactionEventListener extends TransactionalMapRelatedPackageEventListenerTemplate<TransactionalMapTopographyPackageDto, SquareKilometerTopographyChunk, MapTopographyDto> {
 
     @NonNull
     private final SerializationService serializationService;
@@ -45,7 +45,7 @@ public class MapTopographyEntityScannerTransactionEventListener extends Transact
     public MapTopographyEntityScannerTransactionEventListener(
             @NonNull final TransactionTemplate transactionTemplate,
             @NonNull final MapTopographyChunkPersistenceLayer entityPersistenceLayer,
-            @NonNull final MapTransactionValidatorService<MapTopographyEntityDto, TransactionalMapTopographyEntityPackageDto> mapTransactionValidator,
+            @NonNull final MapTransactionValidatorService<MapTopographyDto, TransactionalMapTopographyPackageDto> mapTransactionValidator,
             @NonNull final GameMapPersistenceLayer gameMapPersistenceLayer,
             @NonNull final ApplicationEventPublisher applicationEventPublisher,
             @NonNull final SerializationService serializationService,
@@ -86,7 +86,7 @@ public class MapTopographyEntityScannerTransactionEventListener extends Transact
     protected SquareKilometerTopographyChunk mapTransactionToEntity(
             @NonNull final String sessionIdentifier,
             @NonNull final GameMap gameMap,
-            @NonNull final List<TransactionalMapTopographyEntityPackageDto> packages
+            @NonNull final List<TransactionalMapTopographyPackageDto> packages
     ) {
         final ChunkCoordinate chunkCoordinate = ChunkHelper.extractChunkCoordinateFromSessionIdentifier(sessionIdentifier);
         final ChunkDimensions chunkDimensions = ChunkHelper.determineChunkDimensions(packages);
@@ -94,7 +94,7 @@ public class MapTopographyEntityScannerTransactionEventListener extends Transact
         final float[][] chunkedDem = new float[chunkDimensions.x()][chunkDimensions.z()];
         packages.stream()
                 .flatMap((entityPackage) -> entityPackage.getEntities().stream())
-                .forEach((final MapTopographyEntityDto packageDto) -> {
+                .forEach((final MapTopographyDto packageDto) -> {
                     final int x = packageDto.getCoordinates().get(0).intValue() - (int) (chunkCoordinate.x() * 1000);
                     final float y = packageDto.getCoordinates().get(1).floatValue();
                     final int z = packageDto.getCoordinates().get(2).intValue() - (int) (chunkCoordinate.z() * 1000);

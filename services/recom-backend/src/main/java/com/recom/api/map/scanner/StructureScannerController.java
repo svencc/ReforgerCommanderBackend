@@ -2,7 +2,7 @@ package com.recom.api.map.scanner;
 
 import com.recom.api.commons.HttpCommons;
 import com.recom.dto.map.scanner.TransactionIdentifierDto;
-import com.recom.dto.map.scanner.structure.TransactionalMapStructureEntityPackageDto;
+import com.recom.dto.map.scanner.structure.TransactionalMapStructurePackageDto;
 import com.recom.service.ReforgerPayloadParserService;
 import com.recom.service.map.scanner.MapEntityTransactionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -97,7 +97,7 @@ public class StructureScannerController {
     ) {
         log.debug("Requested POST /api/v1/scanner/structure/transaction/entities");
 
-        mapEntityTransactionService.addMapEntitiesPackage(payloadParser.parseValidated(payload, TransactionalMapStructureEntityPackageDto.class));
+        mapEntityTransactionService.addMapEntitiesPackage(payloadParser.parseValidated(payload, TransactionalMapStructurePackageDto.class));
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
                 .build();

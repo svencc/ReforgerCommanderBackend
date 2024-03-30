@@ -1,7 +1,7 @@
 package com.recom.event.listener;
 
-import com.recom.dto.map.scanner.structure.MapStructureEntityDto;
-import com.recom.dto.map.scanner.structure.TransactionalMapStructureEntityPackageDto;
+import com.recom.dto.map.scanner.structure.MapStructureDto;
+import com.recom.dto.map.scanner.structure.TransactionalMapStructurePackageDto;
 import com.recom.entity.map.structure.MapStructureEntity;
 import com.recom.event.event.async.map.addmappackage.AddMapPackageAsyncEvent;
 import com.recom.event.event.async.map.commit.CommitMapTransactionAsyncEvent;
@@ -13,7 +13,6 @@ import com.recom.persistence.map.chunk.structure.MapStructureChunkPersistenceLay
 import com.recom.persistence.map.structure.MapStructurePersistenceLayer;
 import com.recom.service.map.MapTransactionValidatorService;
 import com.recom.service.messagebus.chunkscanrequest.MapStructureChunkScanRequestNotificationService;
-import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -24,7 +23,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 @Slf4j
 @Component
-public class MapStructureEntityScannerTransactionEventListener extends TransactionalMapLocatedPackageEventListenerTemplate<TransactionalMapStructureEntityPackageDto, MapStructureEntity, MapStructureEntityDto> {
+public class MapStructureEntityScannerTransactionEventListener extends TransactionalMapLocatedPackageEventListenerTemplate<TransactionalMapStructurePackageDto, MapStructureEntity, MapStructureDto> {
 
     @NonNull
     private final MapStructureChunkScanRequestNotificationService mapStructureChunkScanRequestNotificationService;
@@ -33,7 +32,7 @@ public class MapStructureEntityScannerTransactionEventListener extends Transacti
     public MapStructureEntityScannerTransactionEventListener(
             @NonNull final TransactionTemplate transactionTemplate,
             @NonNull final MapStructurePersistenceLayer entityPersistenceLayer,
-            @NonNull final MapTransactionValidatorService<MapStructureEntityDto, TransactionalMapStructureEntityPackageDto> mapTransactionValidator,
+            @NonNull final MapTransactionValidatorService<MapStructureDto, TransactionalMapStructurePackageDto> mapTransactionValidator,
             @NonNull final GameMapPersistenceLayer gameMapPersistenceLayer,
             @NonNull final ApplicationEventPublisher applicationEventPublisher,
             @NonNull final MapStructureChunkPersistenceLayer mapStructureChunkPersistenceLayer,

@@ -1,6 +1,6 @@
 package com.recom.service.messagebus.chunkscanrequest;
 
-import com.recom.dto.map.scanner.MapTopographyChunkScanRequestDto;
+import com.recom.dto.map.scanner.MapChunkScanRequestDto;
 import com.recom.dto.map.scanner.TransactionIdentifierDto;
 import com.recom.dto.message.MessageType;
 import com.recom.entity.map.ChunkStatus;
@@ -15,6 +15,7 @@ import com.recom.service.messagebus.MessageBusService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Synchronized;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MapStructureChunkScanRequestNotificationService {
@@ -41,6 +43,7 @@ public class MapStructureChunkScanRequestNotificationService {
         final String sessionIdentifier = transactionIdentifierDto.getSessionIdentifier();
         final String mapName = ChunkHelper.extractFromSessionIdentifier(sessionIdentifier).mapName();
 
+        log.debug("Requesting map structure chunk scan for map: {}", mapName);
         gameMapPersistenceLayer.findByName(mapName)
                 .ifPresent(this::requestMapStructureChunkScan);
     }
@@ -57,9 +60,11 @@ public class MapStructureChunkScanRequestNotificationService {
                 .toList();
 
         if (remainingChunksToScan.isEmpty()) {
+            log.debug("No chunks to scan for map: {}", gameMap.getName());
             return Optional.empty();
         } else {
             final SquareKilometerStructureChunk randomChunk = remainingChunksToScan.get(random.nextInt(remainingChunksToScan.size()));
+            log.debug("Selected chunk to scan: {}", randomChunk);
 
             return Optional.of(randomChunk);
         }
@@ -69,12 +74,13 @@ public class MapStructureChunkScanRequestNotificationService {
     public void requestMapStructureChunkScan(@NonNull final GameMap gameMap) {
         getChunkToScanNext(gameMap)
                 .ifPresent(nextChunk -> {
+                    log.debug("Requesting map structure chunk scan for chunk: {}", nextChunk);
                     messageBusService.sendMessage(MessageContainer.builder()
                             .gameMap(gameMap)
                             .messages(List.of(
                                     SingleMessage.builder()
                                             .messageType(MessageType.REQUEST_MAP_STRUCTURE_CHUNK)
-                                            .payload(MapTopographyChunkScanRequestDto.builder()
+                                            .payload(MapChunkScanRequestDto.builder()
                                                     .mapName(gameMap.getName())
                                                     .chunkCoordinateX(nextChunk.getSquareCoordinateX())
                                                     .chunkCoordinateY(nextChunk.getSquareCoordinateY())

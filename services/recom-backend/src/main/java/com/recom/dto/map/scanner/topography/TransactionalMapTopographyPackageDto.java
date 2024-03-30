@@ -1,13 +1,18 @@
-package com.recom.dto.map.scanner;
+package com.recom.dto.map.scanner.topography;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.recom.event.listener.generic.generic.TransactionalMapEntityPackable;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Schema
@@ -15,21 +20,21 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MapTopographyChunkScanRequestDto {
+public class TransactionalMapTopographyPackageDto implements TransactionalMapEntityPackable<MapTopographyDto> {
 
     @NotEmpty
     @Schema
     @JsonProperty()
-    private String mapName;
+    private String sessionIdentifier;
 
-    @NotEmpty
+    @NotNull
     @Schema
     @JsonProperty()
-    private Long chunkCoordinateX;
+    private Integer packageOrder;
 
-    @NotEmpty
     @Schema
     @JsonProperty()
-    private Long chunkCoordinateY;
+    @Builder.Default
+    private List<MapTopographyDto> entities = new ArrayList<>();
 
 }

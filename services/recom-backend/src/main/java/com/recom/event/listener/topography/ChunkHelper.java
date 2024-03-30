@@ -1,7 +1,7 @@
 package com.recom.event.listener.topography;
 
-import com.recom.dto.map.scanner.topography.MapTopographyEntityDto;
-import com.recom.dto.map.scanner.topography.TransactionalMapTopographyEntityPackageDto;
+import com.recom.dto.map.scanner.topography.MapTopographyDto;
+import com.recom.dto.map.scanner.topography.TransactionalMapTopographyPackageDto;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
@@ -45,16 +45,16 @@ public class ChunkHelper {
     }
 
     @NonNull
-    public ChunkDimensions determineChunkDimensions(@NonNull final List<TransactionalMapTopographyEntityPackageDto> packages) throws IllegalArgumentException {
+    public ChunkDimensions determineChunkDimensions(@NonNull final List<TransactionalMapTopographyPackageDto> packages) throws IllegalArgumentException {
         final int dimensionXmin = packages.stream()
                 .flatMap((entityPackage) -> entityPackage.getEntities().stream())
-                .map(MapTopographyEntityDto::getCoordinates)
+                .map(MapTopographyDto::getCoordinates)
                 .mapToInt((coordinates) -> coordinates.get(0).intValue())
                 .min()
                 .orElseThrow(() -> new IllegalArgumentException("No min X found!"));
         final int dimensionXmax = packages.stream()
                 .flatMap((entityPackage) -> entityPackage.getEntities().stream())
-                .map(MapTopographyEntityDto::getCoordinates)
+                .map(MapTopographyDto::getCoordinates)
                 .mapToInt((coordinates) -> coordinates.get(0).intValue())
                 .max()
                 .orElseThrow(() -> new IllegalArgumentException("No max X found!"));
@@ -62,13 +62,13 @@ public class ChunkHelper {
 
         final int dimensionZmin = packages.stream()
                 .flatMap((entityPackage) -> entityPackage.getEntities().stream())
-                .map(MapTopographyEntityDto::getCoordinates)
+                .map(MapTopographyDto::getCoordinates)
                 .mapToInt((coordinates) -> coordinates.get(2).intValue())
                 .min()
                 .orElseThrow(() -> new IllegalArgumentException("No min Z found!"));
         final int dimensionZmax = packages.stream()
                 .flatMap((entityPackage) -> entityPackage.getEntities().stream())
-                .map(MapTopographyEntityDto::getCoordinates)
+                .map(MapTopographyDto::getCoordinates)
                 .mapToInt((coordinates) -> coordinates.get(2).intValue())
                 .max()
                 .orElseThrow(() -> new IllegalArgumentException("No max Z found!"));

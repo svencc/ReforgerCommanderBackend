@@ -1,8 +1,8 @@
 package com.recom.event.listener;
 
 import com.recom.dto.map.scanner.TransactionIdentifierDto;
-import com.recom.dto.map.scanner.structure.MapStructureEntityDto;
-import com.recom.dto.map.scanner.structure.TransactionalMapStructureEntityPackageDto;
+import com.recom.dto.map.scanner.structure.MapStructureDto;
+import com.recom.dto.map.scanner.structure.TransactionalMapStructurePackageDto;
 import com.recom.entity.map.GameMap;
 import com.recom.event.event.async.map.addmappackage.AddMapPackageAsyncEvent;
 import com.recom.event.event.async.map.commit.CommitMapTransactionAsyncEvent;
@@ -40,7 +40,7 @@ public class MapStructureEntityScannerTransactionEventListenerTest {
     @Mock
     private MapStructurePersistenceLayer mapStructurePersistenceLayer;
     @Mock
-    private MapTransactionValidatorService<MapStructureEntityDto, TransactionalMapStructureEntityPackageDto> mapTransactionValidator;
+    private MapTransactionValidatorService<MapStructureDto, TransactionalMapStructurePackageDto> mapTransactionValidator;
     @Mock
     private GameMapPersistenceLayer gameMapPersistenceLayer;
     @InjectMocks
@@ -57,21 +57,21 @@ public class MapStructureEntityScannerTransactionEventListenerTest {
         transactionIdentifierDto.setSessionIdentifier("session1");
         final OpenMapTransactionAsyncEvent event = new OpenMapTransactionAsyncEvent(transactionIdentifierDto);
 
-        final Map<String, MapTransaction<MapStructureEntityDto, TransactionalMapStructureEntityPackageDto>> transactions = eventListenerUnderTest.getTransactions();
+        final Map<String, MapTransaction<MapStructureDto, TransactionalMapStructurePackageDto>> transactions = eventListenerUnderTest.getTransactions();
 
         // Act
         eventListenerUnderTest.handleOpenTransactionEvent(event);
 
         // Assert
         assertTrue(transactions.containsKey("session1"));
-        final MapTransaction<MapStructureEntityDto, TransactionalMapStructureEntityPackageDto> transaction = transactions.get("session1");
+        final MapTransaction<MapStructureDto, TransactionalMapStructurePackageDto> transaction = transactions.get("session1");
         assertEquals(transactionIdentifierDto, transaction.getOpenTransactionIdentifier());
     }
 
     @Test
     public void testHandleAddMapPackage_whenTransactionExists_shouldIgnoreEventAndDoNothing() {
         // Arrange
-        final TransactionalMapStructureEntityPackageDto packageDto = new TransactionalMapStructureEntityPackageDto();
+        final TransactionalMapStructurePackageDto packageDto = new TransactionalMapStructurePackageDto();
         final String session1 = "session1";
         packageDto.setSessionIdentifier(session1);
         final AddMapPackageAsyncEvent event = new AddMapPackageAsyncEvent(packageDto);
@@ -89,7 +89,7 @@ public class MapStructureEntityScannerTransactionEventListenerTest {
     @Test
     public void testHandleAddMapPackage_whenTransactionIsOpenedJustBefore_shouldAddPackageAndDoNotPersist() {
         // Arrange
-        final TransactionalMapStructureEntityPackageDto packageDto = new TransactionalMapStructureEntityPackageDto();
+        final TransactionalMapStructurePackageDto packageDto = new TransactionalMapStructurePackageDto();
         final String session1 = "session1";
         packageDto.setSessionIdentifier(session1);
         final AddMapPackageAsyncEvent event = new AddMapPackageAsyncEvent(packageDto);
@@ -112,7 +112,7 @@ public class MapStructureEntityScannerTransactionEventListenerTest {
     @Test
     public void testHandleCommitTransaction_whenTransactionIsValid_shouldProcessTransaction() {
         // Arrange
-        final TransactionalMapStructureEntityPackageDto packageDto = new TransactionalMapStructureEntityPackageDto();
+        final TransactionalMapStructurePackageDto packageDto = new TransactionalMapStructurePackageDto();
         final String session1 = "session1";
         packageDto.setSessionIdentifier(session1);
         final AddMapPackageAsyncEvent event = new AddMapPackageAsyncEvent(packageDto);
@@ -138,7 +138,7 @@ public class MapStructureEntityScannerTransactionEventListenerTest {
     @Test
     public void testHandleCommitTransaction_whenTransactionIsInvalid_shouldNotProcessTransaction() {
         // Arrange
-        final TransactionalMapStructureEntityPackageDto packageDto = new TransactionalMapStructureEntityPackageDto();
+        final TransactionalMapStructurePackageDto packageDto = new TransactionalMapStructurePackageDto();
         final String session1 = "session1";
         packageDto.setSessionIdentifier(session1);
         final AddMapPackageAsyncEvent event = new AddMapPackageAsyncEvent(packageDto);

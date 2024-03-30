@@ -20,7 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class TransactionalMapStructureEntityPackageDto implements TransactionalMapEntityPackable<MapStructureEntityDto> {
+public class TransactionalMapStructurePackageDto implements TransactionalMapEntityPackable<MapStructureDto> {
 
     @NotEmpty
     @Schema
@@ -35,6 +35,6 @@ public class TransactionalMapStructureEntityPackageDto implements TransactionalM
     @Schema
     @JsonProperty()
     @Builder.Default
-    private List<MapStructureEntityDto> entities = new ArrayList<>();
+    private List<MapStructureDto> entities = new ArrayList<>();
 
 }

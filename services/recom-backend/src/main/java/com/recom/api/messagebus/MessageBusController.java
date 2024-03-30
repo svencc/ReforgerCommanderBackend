@@ -97,6 +97,7 @@ public class MessageBusController {
         if (StringUtil.isNumeric(messageBusLongPollRequestDto.getSinceEpochMilliseconds()) && !messagesSinceLazy.get().getMessages().isEmpty()) {
             emitter = new ResponseBodyEmitter(RECOM_CURL_TIMEOUT.toMillis());
             try {
+                log.debug("Sending messages since {} to client: {}", messageBusLongPollRequestDto.getSinceEpochMilliseconds(), messagesSinceLazy.get());
                 emitter.send(messagesSinceLazy.get(), MediaType.APPLICATION_JSON);
                 emitter.complete();
             } catch (final Exception e) {
