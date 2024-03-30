@@ -13,6 +13,7 @@ import com.recom.persistence.map.chunk.structure.MapStructureChunkPersistenceLay
 import com.recom.persistence.map.structure.MapStructurePersistenceLayer;
 import com.recom.service.map.MapTransactionValidatorService;
 import com.recom.service.messagebus.chunkscanrequest.MapStructureChunkScanRequestNotificationService;
+import jakarta.persistence.EntityManager;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -30,6 +31,7 @@ public class MapStructureEntityScannerTransactionEventListener extends Transacti
 
 
     public MapStructureEntityScannerTransactionEventListener(
+            @NonNull final EntityManager entityManager,
             @NonNull final TransactionTemplate transactionTemplate,
             @NonNull final MapStructurePersistenceLayer entityPersistenceLayer,
             @NonNull final MapTransactionValidatorService<MapStructureDto, TransactionalMapStructurePackageDto> mapTransactionValidator,
@@ -38,7 +40,7 @@ public class MapStructureEntityScannerTransactionEventListener extends Transacti
             @NonNull final MapStructureChunkPersistenceLayer mapStructureChunkPersistenceLayer,
             @NonNull final MapStructureChunkScanRequestNotificationService mapStructureChunkScanRequestNotificationService
     ) {
-        super(transactionTemplate, entityPersistenceLayer, mapTransactionValidator, new MapStructureEntitySuperMapper(entityPersistenceLayer), gameMapPersistenceLayer, applicationEventPublisher, mapStructureChunkPersistenceLayer);
+        super(entityManager, transactionTemplate, entityPersistenceLayer, mapTransactionValidator, new MapStructureEntitySuperMapper(entityPersistenceLayer), gameMapPersistenceLayer, applicationEventPublisher, mapStructureChunkPersistenceLayer);
 
         this.mapStructureChunkScanRequestNotificationService = mapStructureChunkScanRequestNotificationService;
     }

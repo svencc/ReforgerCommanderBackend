@@ -13,6 +13,8 @@ import com.recom.model.map.MapTransaction;
 import com.recom.persistence.map.GameMapPersistenceLayer;
 import com.recom.persistence.map.chunk.structure.MapStructureChunkPersistenceLayer;
 import com.recom.service.map.MapTransactionValidatorService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -32,6 +34,8 @@ public abstract class TransactionalMapLocatedPackageEventListenerTemplate<
         DTO_TYPE extends MapLocatedDto>
         extends BaseRecomEntityScannerEventListener<PACKAGE_TYPE, DTO_TYPE> {
 
+    @PersistenceContext
+    private EntityManager entityManager;
     @NonNull
     protected final TransactionTemplate transactionTemplate;
     @NonNull
@@ -47,6 +51,7 @@ public abstract class TransactionalMapLocatedPackageEventListenerTemplate<
 
 
     public TransactionalMapLocatedPackageEventListenerTemplate(
+            @NonNull final EntityManager entityManager,
             @NonNull final TransactionTemplate transactionTemplate,
             @NonNull final MapLocatedEntityPersistable<ENTITY_TYPE> entityPersistenceLayer,
             @NonNull final MapTransactionValidatorService<DTO_TYPE, PACKAGE_TYPE> mapTransactionValidator,
@@ -56,6 +61,7 @@ public abstract class TransactionalMapLocatedPackageEventListenerTemplate<
             @NonNull final MapStructureChunkPersistenceLayer mapStructureChunkPersistenceLayer
     ) {
         super(applicationEventPublisher);
+        this.entityManager = entityManager;
         this.transactionTemplate = transactionTemplate;
         this.entityPersistenceLayer = entityPersistenceLayer;
         this.mapTransactionValidator = mapTransactionValidator;
@@ -82,8 +88,8 @@ public abstract class TransactionalMapLocatedPackageEventListenerTemplate<
 
                         // open new transaction
                         final Boolean transactionExecuted = transactionTemplate.execute(status -> {
-                            final GameMap gameMap = gameMapPersistenceLayer.findByName(mapName).orElseThrow();
-                            final SquareKilometerStructureChunk mapChunk = mapStructureChunkPersistenceLayer.findByGameMapAndCoordinate(maybeGameMap.get(), chunkCoordinate).orElseThrow();
+                            final GameMap gameMap = entityManager.merge(maybeGameMap.get());
+                            final SquareKilometerStructureChunk mapChunk = entityManager.merge(maybeChunk.get());
 
                             entityMapper.init();
                             mapChunk.setStatus(ChunkStatus.CLOSED);
@@ -98,8 +104,6 @@ public abstract class TransactionalMapLocatedPackageEventListenerTemplate<
 
                             log.info("... persist {} entities.", distinctEntities.size());
 
-                            // entityPersistenceLayer.deleteMapEntities(maybeGameMap.get());
-//                            distinctEntities.forEach(entity -> entity.setGameMap(maybeGameMap.get()));
                             entityPersistenceLayer.saveAll(distinctEntities);
                             mapStructureChunkPersistenceLayer.save(mapChunk);
                             log.info("Transaction named {} persisted!", sessionIdentifier);
