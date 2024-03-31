@@ -28,6 +28,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter
 
 import java.time.Duration;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @Validated
@@ -67,7 +68,7 @@ public class MessageBusController {
 
     @Operation(
             summary = "Long-poll latest messages",
-            description = "Polls for all com.recom.dto.map specific, latest com.recom.dto.message.",
+            description = "Polls for map specific, latest messages.",
             security = @SecurityRequirement(name = HttpCommons.BEARER_AUTHENTICATION_REQUIREMENT)
     )
     @ApiResponses(value = {
@@ -86,11 +87,17 @@ public class MessageBusController {
         }
         final GameMap gameMap = assertionService.provideMap(messageBusLongPollRequestDto.getMapName());
 
-        ResponseBodyEmitter emitter;
-        final Lazy<MessageBusResponseDto> messagesSinceLazy = Lazy.of(() -> messageBusService.listMessagesSince(gameMap, Long.valueOf(messageBusLongPollRequestDto.getSinceEpochMilliseconds())));
+        final ResponseBodyEmitter emitter;
+        final Long sinceEpochMillis = Optional.ofNullable(messageBusLongPollRequestDto.getSinceEpochMilliseconds())
+                .filter(epochStringValue -> !epochStringValue.isBlank())
+                .map(Long::valueOf)
+                .orElse(null);
+
+        final Lazy<MessageBusResponseDto> messagesSinceLazy = Lazy.of(() -> messageBusService.listMessagesSince(gameMap, sinceEpochMillis));
         if (StringUtil.isNumeric(messageBusLongPollRequestDto.getSinceEpochMilliseconds()) && !messagesSinceLazy.get().getMessages().isEmpty()) {
             emitter = new ResponseBodyEmitter(RECOM_CURL_TIMEOUT.toMillis());
             try {
+                log.debug("Sending messages since {} to client: {}", messageBusLongPollRequestDto.getSinceEpochMilliseconds(), messagesSinceLazy.get());
                 emitter.send(messagesSinceLazy.get(), MediaType.APPLICATION_JSON);
                 emitter.complete();
             } catch (final Exception e) {

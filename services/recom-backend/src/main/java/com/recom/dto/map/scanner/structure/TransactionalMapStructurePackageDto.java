@@ -1,9 +1,8 @@
-package com.recom.dto.map.scanner.topography;
+package com.recom.dto.map.scanner.structure;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.recom.event.listener.generic.generic.TransactionalMapEntityPackable;
-import com.recom.event.listener.generic.maprelated.TransactionalMapRelatedEntityPackable;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -21,7 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class TransactionalMapTopographyEntityPackageDto implements TransactionalMapEntityPackable<MapTopographyEntityDto> {
+public class TransactionalMapStructurePackageDto implements TransactionalMapEntityPackable<MapStructureDto> {
 
     @NotEmpty
     @Schema
@@ -36,6 +35,6 @@ public class TransactionalMapTopographyEntityPackageDto implements Transactional
     @Schema
     @JsonProperty()
     @Builder.Default
-    private List<MapTopographyEntityDto> entities = new ArrayList<>();
+    private List<MapStructureDto> entities = new ArrayList<>();
 
 }

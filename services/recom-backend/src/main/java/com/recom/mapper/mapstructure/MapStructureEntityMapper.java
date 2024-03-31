@@ -1,7 +1,7 @@
 package com.recom.mapper.mapstructure;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.recom.dto.map.scanner.structure.MapStructureEntityDto;
+import com.recom.dto.map.scanner.structure.MapStructureDto;
 import com.recom.entity.map.structure.MapStructureEntity;
 import com.recom.event.listener.generic.maplocated.MapLocatedEntity;
 import com.recom.mapper.MapperUtil;
@@ -75,7 +75,7 @@ public interface MapStructureEntityMapper {
     @Mapping(source = "coordinates", target = "coordinateX", qualifiedByName = "extractCoordinateX")
     @Mapping(source = "coordinates", target = "coordinateY", qualifiedByName = "extractCoordinateY")
     @Mapping(source = "coordinates", target = "coordinateZ", qualifiedByName = "extractCoordinateZ")
-    MapStructureEntity toEntity(final MapStructureEntityDto mapStructureEntityDto);
+    MapStructureEntity toEntity(final MapStructureDto mapStructureDto);
 
     @BeanMapping(ignoreByDefault = true)
     @Mapping(source = "entityId", target = "entityId")
@@ -88,6 +88,6 @@ public interface MapStructureEntityMapper {
     @Mapping(source = "rotationY", target = "rotationY", qualifiedByName = "decodeJsonStringToVector")
     @Mapping(source = "rotationZ", target = "rotationZ", qualifiedByName = "decodeJsonStringToVector")
     @Mapping(source = "entity", target = "coordinates", qualifiedByName = "joinEntityCoordinatesToDtoCoordinates")
-    MapStructureEntityDto toDto(final MapStructureEntity entity);
+    MapStructureDto toDto(final MapStructureEntity entity);
 
 }

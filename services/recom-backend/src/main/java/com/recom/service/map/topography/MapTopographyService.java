@@ -12,14 +12,14 @@ import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
 import com.recom.commons.model.maprendererpipeline.MapLayerRasterizerConfiguration;
 import com.recom.dto.map.mapcomposer.MapComposerConfigurationDto;
 import com.recom.entity.map.GameMap;
-import com.recom.entity.map.MapTopography;
-import com.recom.exception.HttpNotFoundException;
+import com.recom.entity.map.MapDimensions;
+import com.recom.entity.map.SquareKilometerTopographyChunk;
 import com.recom.exception.HttpUnprocessableEntityException;
 import com.recom.mapper.mapcomposer.MapDesignSchemeMapper;
 import com.recom.mapper.mapcomposer.MapLayerRasterizerConfigurationMapper;
-import com.recom.persistence.map.topography.MapLocatedTopographyPersistenceLayer;
-import com.recom.service.mapentitygenerator.ForestProviderGenerator;
+import com.recom.persistence.map.chunk.topography.MapTopographyChunkPersistenceLayer;
 import com.recom.service.SerializationService;
+import com.recom.service.mapentitygenerator.ForestProviderGenerator;
 import com.recom.service.mapentitygenerator.StructureProviderGenerator;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -28,19 +28,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class MapTopographyService {
 
-    @NonNull
-    private final MapLocatedTopographyPersistenceLayer mapTopographyPersistenceLayer;
     @NonNull
     private final SerializationService serializationService;
     @NonNull
@@ -53,6 +53,10 @@ public class MapTopographyService {
     private final ForestProviderGenerator forestProviderGenerator;
     @NonNull
     private final StructureProviderGenerator structureProviderGenerator;
+    @NonNull
+    private final MapTopographyChunkPersistenceLayer mapTopographyPersistenceLayer;
+    @NonNull
+    private final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
 
 
     @Transactional(readOnly = true)
@@ -60,19 +64,16 @@ public class MapTopographyService {
             @NonNull final GameMap gameMap,
             @NonNull final Optional<MapComposerConfigurationDto> maybeMapComposerConfiguration
     ) {
-        return mapTopographyPersistenceLayer.findByGameMap(gameMap)
-                .map(map -> provideTopographyPNG(map, maybeMapComposerConfiguration))
-                .orElseThrow(() -> new HttpNotFoundException("No topography com.recom.dto.map found for com.recom.dto.map with id " + gameMap.getId() + "!"));
+        return provideTopographyPNG(gameMap, provideDEMDescriptor(gameMap), maybeMapComposerConfiguration);
     }
 
     @NonNull
     private byte[] provideTopographyPNG(
-            @NonNull final MapTopography mapTopography,
+            @NonNull final GameMap gameMap,
+            @NonNull final DEMDescriptor demDescriptor,
             @NonNull final Optional<MapComposerConfigurationDto> maybeMapComposerConfiguration
     ) {
         try {
-            final DEMDescriptor demDescriptor = demService.deserializeToDEM(mapTopography);
-
             final int scaleFactor = provideScaleFactor(maybeMapComposerConfiguration);
             if (scaleFactor > 1) {
                 float[][] interpolatedDem = demInterpolationAlgorithm.interpolate(demDescriptor, scaleFactor);
@@ -82,8 +83,8 @@ public class MapTopographyService {
 
             final MapComposerWorkPackage workPackage = provideMapComposerWorkPackage(demDescriptor, maybeMapComposerConfiguration);
 
-            mapComposer.registerForestProvider(forestProviderGenerator.generate(mapTopography.getGameMap()));
-            mapComposer.registerVillageProvider(structureProviderGenerator.generate(mapTopography.getGameMap()));
+            mapComposer.registerForestProvider(forestProviderGenerator.generate(gameMap));
+            mapComposer.registerVillageProvider(structureProviderGenerator.generate(gameMap));
             mapComposer.execute(workPackage);
 
             if (workPackage.getReport().isSuccess()) {
@@ -125,7 +126,6 @@ public class MapTopographyService {
             @NonNull final DEMDescriptor demDescriptor,
             @NonNull final Optional<MapComposerConfigurationDto> mapComposerConfiguration
     ) {
-        // @TODO: Work here ....
         if (mapComposerConfiguration.isPresent()) {
             final MapDesignScheme designScheme = Optional.ofNullable(mapComposerConfiguration.get().getMapDesignScheme())
                     .map(MapDesignSchemeMapper.INSTANCE::toDesignScheme)
@@ -135,8 +135,6 @@ public class MapTopographyService {
                     .map((configs) -> configs.stream().map(MapLayerRasterizerConfigurationMapper.INSTANCE::toMapLayerRasterizerConfiguration).toList())
                     .orElse(new ArrayList<>());
 
-            // implement conversion of hex values ...
-            // I think we have to have default values, which gets overwritten by the provided configuration; test and verify; maybe i have to preset default values in class
             final MapComposerConfiguration configuration = MapComposerConfiguration.builder()
                     .demDescriptor(demDescriptor)
                     .mapDesignScheme(designScheme)
@@ -160,15 +158,58 @@ public class MapTopographyService {
 
 
     @NonNull
-    public Optional<DEMDescriptor> provideDEMDescriptor(@NonNull final GameMap gameMap) {
-        return mapTopographyPersistenceLayer.findByGameMap(gameMap)
-                .map(mapTopography -> {
-                    try {
-                        return demService.deserializeToDEM(mapTopography);
-                    } catch (IOException e) {
-                        throw new HttpUnprocessableEntityException();
+    public DEMDescriptor provideDEMDescriptor(@NonNull final GameMap gameMap) {
+        final List<SquareKilometerTopographyChunk> chunks = mapTopographyPersistenceLayer.findByGameMap(gameMap);
+
+        final MapDimensions mapDimensions = gameMap.getMapDimensions();
+        final int mapHeightX = mapDimensions.getDimensionX().intValue();
+        final int mapWidthY = mapDimensions.getDimensionZ().intValue();
+
+        final float[][] dem = new float[mapHeightX][mapWidthY];
+        final CountDownLatch latch = new CountDownLatch(chunks.size());
+        for (final SquareKilometerTopographyChunk chunk : chunks) {
+            executorService.execute(() -> {
+                try {
+                    final Optional<float[][]> maybeChunkedDEM = serializationService.deserializeObject(chunk.getData());
+                    if (maybeChunkedDEM.isPresent()) {
+                        final int demGridOffsetX = chunk.getSquareCoordinateX().intValue() * 1000;
+                        final int demGridOffsetY = chunk.getSquareCoordinateY().intValue() * 1000;
+
+                        final float[][] chunkedDem = maybeChunkedDEM.get();
+                        for (int x = 0; x < chunkedDem.length; x++) {
+                            final int demCoordinateX = demGridOffsetX + x;
+                            if (demCoordinateX >= mapHeightX) {
+                                break;
+                            }
+                            for (int y = 0; y < chunkedDem[x].length; y++) {
+                                final int demCoordinateY = demGridOffsetY + y;
+                                if (demCoordinateY >= mapWidthY) {
+                                    break;
+                                }
+                                dem[demCoordinateX][demCoordinateY] = chunkedDem[x][y];
+                            }
+                        }
                     }
-                });
+                } catch (final Throwable e) {
+                    log.error("{}: {}\n{}", getClass().getName(), e.getMessage(), e.getStackTrace());
+                } finally {
+                    latch.countDown();
+                }
+            });
+        }
+
+        try {
+            latch.await();
+        } catch (final InterruptedException e) {
+            log.error("{}: {}\n{}", getClass().getName(), e.getMessage(), e.getStackTrace());
+        }
+
+        try {
+            return demService.invertDEM(dem, gameMap);
+        } catch (Throwable e) {
+            log.error("{}: {}\n{}", getClass().getName(), e.getMessage(), e.getStackTrace());
+            throw new HttpUnprocessableEntityException();
+        }
     }
 
 }

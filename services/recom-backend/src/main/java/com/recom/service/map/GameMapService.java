@@ -1,11 +1,15 @@
 package com.recom.service.map;
 
 import com.recom.dto.map.MapOverviewDto;
+import com.recom.dto.map.create.MapCreateRequestDto;
 import com.recom.dto.map.meta.MapMetaDto;
-import com.recom.entity.map.GameMap;
+import com.recom.entity.map.*;
 import com.recom.persistence.map.GameMapPersistenceLayer;
 import com.recom.persistence.map.structure.MapStructurePersistenceLayer;
 import com.recom.service.dbcached.DBCachedService;
+import com.recom.service.messagebus.chunkscanrequest.MapStructureChunkScanRequestNotificationService;
+import com.recom.service.messagebus.chunkscanrequest.MapTopographyChunkScanRequestNotificationService;
+import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +35,12 @@ public class GameMapService {
     @NonNull
     private final MapStructurePersistenceLayer mapStructurePersistenceLayer;
     @NonNull
+    private final MapTopographyChunkScanRequestNotificationService mapTopographyChunkScanRequestNotificationService;
+    @NonNull
+    private final MapStructureChunkScanRequestNotificationService mapStructureChunkScanRequestNotificationService;
+    @NonNull
     private final DBCachedService dbCachedService;
+
 
     @NonNull
     @Cacheable(cacheNames = PROVIDEMAPMETALIST_PROVIDEMAPMETALIST_CACHE)
@@ -88,11 +97,62 @@ public class GameMapService {
         return gameMapPersistenceLayer.findByName(mapName);
     }
 
-    public void create(@NonNull final String mapName) {
-        gameMapPersistenceLayer.save(
-                GameMap.builder()
-                        .name(mapName)
-                        .build()
-        );
+    @NonNull
+    @Transactional
+    public GameMap create(@NonNull final MapCreateRequestDto mapCreateRequestDto) {
+        final GameMap newGameMap = GameMap.builder()
+                .name(mapCreateRequestDto.getMapName())
+                .build();
+
+        final MapDimensions newMapDimensions = MapDimensions.builder()
+                .gameMap(newGameMap)
+                .dimensionX(mapCreateRequestDto.getDimensionXInMeter().longValue())
+                .dimensionY(mapCreateRequestDto.getDimensionYInMeter().longValue())
+                .dimensionZ(mapCreateRequestDto.getDimensionZInMeter().longValue())
+                .oceanBaseHeight(mapCreateRequestDto.getOceanBaseHeight())
+                .build();
+        newGameMap.setMapDimensions(newMapDimensions);
+
+        generatePreparedChunks(newMapDimensions, newGameMap);
+
+        final GameMap persistedGameMap = gameMapPersistenceLayer.save(newGameMap);
+
+        mapTopographyChunkScanRequestNotificationService.requestMapTopographyChunkScan(persistedGameMap);
+        mapStructureChunkScanRequestNotificationService.requestMapStructureChunkScan(persistedGameMap);
+
+        return persistedGameMap;
     }
+
+    private void generatePreparedChunks(
+            @NonNull final MapDimensions newMapDimensions,
+            @NonNull final GameMap newGameMap
+    ) {
+        final int chunksInXDimension = (int) Math.ceil(newMapDimensions.getDimensionX() / 1000f);
+        final int chunksInZDimension = (int) Math.ceil(newMapDimensions.getDimensionZ() / 1000f);
+
+        final ArrayList<SquareKilometerTopographyChunk> topographyChunks = new ArrayList<>();
+        final ArrayList<SquareKilometerStructureChunk> structureChunks = new ArrayList<>();
+        for (long x = 0; x < chunksInXDimension; x++) {
+            for (long z = 0; z < chunksInZDimension; z++) {
+                topographyChunks.add(SquareKilometerTopographyChunk.builder()
+                        .gameMap(newGameMap)
+                        .squareCoordinateX(x)
+                        .squareCoordinateY(z)
+                        .status(ChunkStatus.OPEN)
+                        .build()
+                );
+                structureChunks.add(SquareKilometerStructureChunk.builder()
+                        .gameMap(newGameMap)
+                        .squareCoordinateX(x)
+                        .squareCoordinateY(z)
+                        .status(ChunkStatus.OPEN)
+                        .build()
+                );
+            }
+        }
+
+        newGameMap.getTopographyChunks().addAll(topographyChunks);
+        newGameMap.getStructureChunks().addAll(structureChunks);
+    }
+
 }

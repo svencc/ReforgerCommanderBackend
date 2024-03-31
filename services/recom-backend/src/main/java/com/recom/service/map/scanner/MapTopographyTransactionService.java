@@ -1,7 +1,7 @@
 package com.recom.service.map.scanner;
 
 import com.recom.dto.map.scanner.TransactionIdentifierDto;
-import com.recom.dto.map.scanner.topography.TransactionalMapTopographyEntityPackageDto;
+import com.recom.dto.map.scanner.topography.TransactionalMapTopographyPackageDto;
 import com.recom.event.event.async.map.addmappackage.AddMapTopographyPackageAsyncEvent;
 import com.recom.event.event.async.map.commit.CommitMapTopographyTransactionAsyncEvent;
 import com.recom.event.event.async.map.open.OpenMapTopographyTransactionAsyncEvent;
@@ -22,7 +22,7 @@ public class MapTopographyTransactionService {
         applicationEventPublisher.publishEvent(new OpenMapTopographyTransactionAsyncEvent(transactionIdentifierDto));
     }
 
-    public void addMapEntitiesPackage(@NonNull final TransactionalMapTopographyEntityPackageDto transactionalMapEntityPackageDto) {
+    public void addMapEntitiesPackage(@NonNull final TransactionalMapTopographyPackageDto transactionalMapEntityPackageDto) {
         applicationEventPublisher.publishEvent(new AddMapTopographyPackageAsyncEvent(transactionalMapEntityPackageDto));
     }
 

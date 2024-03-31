@@ -7,6 +7,7 @@ import com.recom.observer.ObserverTemplate;
 import com.recom.observer.Subjective;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
@@ -28,11 +29,11 @@ public class MessageLongPollObserver extends ObserverTemplate<MessageBusResponse
     }
 
     @Override
+    @Synchronized
     public void takeNotice(
             @NonNull final Subjective<MessageBusResponseDto> subject,
             @NonNull final Notification<MessageBusResponseDto> response
     ) {
-        log.debug("MessageLongPollObserver.takeNotice");
         try {
             responseBodyEmitter.send(response.getPayload(), MediaType.APPLICATION_JSON);
         } catch (final Exception e) {

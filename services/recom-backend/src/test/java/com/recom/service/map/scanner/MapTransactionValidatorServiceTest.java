@@ -1,8 +1,8 @@
 package com.recom.service.map.scanner;
 
 import com.recom.dto.map.scanner.TransactionIdentifierDto;
-import com.recom.dto.map.scanner.structure.MapStructureEntityDto;
-import com.recom.dto.map.scanner.structure.TransactionalMapStructureEntityPackageDto;
+import com.recom.dto.map.scanner.structure.MapStructureDto;
+import com.recom.dto.map.scanner.structure.TransactionalMapStructurePackageDto;
 import com.recom.model.map.MapTransaction;
 import com.recom.service.map.MapTransactionValidatorService;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MapTransactionValidatorServiceTest {
 
-    private MapTransactionValidatorService<MapStructureEntityDto, TransactionalMapStructureEntityPackageDto> serviceUnderTest;
+    private MapTransactionValidatorService<MapStructureDto, TransactionalMapStructurePackageDto> serviceUnderTest;
 
     @BeforeEach
     public void beforeEach() {
@@ -55,11 +55,11 @@ class MapTransactionValidatorServiceTest {
     void testIsValidTransaction_whenTransactionHasMissingPackage_shouldFail() {
         // Arrange
         final String sessionName = "session1";
-        final MapTransaction<MapStructureEntityDto, TransactionalMapStructureEntityPackageDto> testTransaction = MapTransaction.<MapStructureEntityDto, TransactionalMapStructureEntityPackageDto>builder()
+        final MapTransaction<MapStructureDto, TransactionalMapStructurePackageDto> testTransaction = MapTransaction.<MapStructureDto, TransactionalMapStructurePackageDto>builder()
                 .openTransactionIdentifier(TransactionIdentifierDto.builder().sessionIdentifier(sessionName).packageOrder(0).build())
                 .commitTransactionIdentifier(TransactionIdentifierDto.builder().sessionIdentifier(sessionName).packageOrder(3).build())
                 .packages(List.of(
-                        TransactionalMapStructureEntityPackageDto.builder().packageOrder(1).build()
+                        TransactionalMapStructurePackageDto.builder().packageOrder(1).build()
                 ))
                 .build();
 
@@ -74,12 +74,12 @@ class MapTransactionValidatorServiceTest {
     void testIsValidTransaction_whenTransactionIsValid_shouldPass() {
         // Arrange
         final String sessionName = "session1";
-        final MapTransaction<MapStructureEntityDto, TransactionalMapStructureEntityPackageDto> testTransaction = MapTransaction.<MapStructureEntityDto, TransactionalMapStructureEntityPackageDto>builder()
+        final MapTransaction<MapStructureDto, TransactionalMapStructurePackageDto> testTransaction = MapTransaction.<MapStructureDto, TransactionalMapStructurePackageDto>builder()
                 .openTransactionIdentifier(TransactionIdentifierDto.builder().sessionIdentifier(sessionName).packageOrder(0).build())
                 .commitTransactionIdentifier(TransactionIdentifierDto.builder().sessionIdentifier(sessionName).packageOrder(3).build())
                 .packages(List.of(
-                        TransactionalMapStructureEntityPackageDto.builder().packageOrder(1).build(),
-                        TransactionalMapStructureEntityPackageDto.builder().packageOrder(2).build()
+                        TransactionalMapStructurePackageDto.builder().packageOrder(1).build(),
+                        TransactionalMapStructurePackageDto.builder().packageOrder(2).build()
                 ))
                 .build();
 

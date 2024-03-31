@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 import java.util.List;
 
+@Deprecated
 @Slf4j
 @Validated
 @RestController
@@ -47,6 +48,7 @@ public class EmitMessagesController {
     private final MessageBusService messageBusService;
     @NonNull
     private final AsyncConfiguration asyncConfiguration;
+
 
     @Operation(
             summary = "Test-Only: Emits Messages",

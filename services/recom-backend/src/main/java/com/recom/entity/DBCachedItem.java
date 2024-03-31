@@ -36,8 +36,7 @@ public class DBCachedItem implements Persistable<Long>, Serializable {
     private String cacheName;
 
     @Lob
-    // @Column(insertable = true, updatable = true, nullable = false, columnDefinition = "LONGBLOB") // MARIA DB
-    @Column(insertable = true, updatable = true, nullable = false) // H2 BINARY LARGE OBJECT
+    @Column(insertable = true, updatable = true, nullable = false)
     private byte[] cachedValue;
 
 

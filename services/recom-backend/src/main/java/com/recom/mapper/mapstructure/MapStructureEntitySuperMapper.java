@@ -1,6 +1,6 @@
 package com.recom.mapper.mapstructure;
 
-import com.recom.dto.map.scanner.structure.MapStructureEntityDto;
+import com.recom.dto.map.scanner.structure.MapStructureDto;
 import com.recom.entity.map.structure.*;
 import com.recom.event.listener.generic.maplocated.TransactionalMapLocatedEntityMappable;
 import com.recom.persistence.map.structure.MapStructurePersistenceLayer;
@@ -13,7 +13,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-public class MapStructureEntitySuperMapper implements TransactionalMapLocatedEntityMappable<MapStructureEntity, MapStructureEntityDto> {
+public class MapStructureEntitySuperMapper implements TransactionalMapLocatedEntityMappable<MapStructureEntity, MapStructureDto> {
 
     @NonNull
     private final MapStructurePersistenceLayer mapStructurePersistenceLayer;
@@ -69,19 +69,19 @@ public class MapStructureEntitySuperMapper implements TransactionalMapLocatedEnt
     }
 
     @NonNull
-    public MapStructureEntity toEntity(@NonNull final MapStructureEntityDto mapStructureEntityDto) {
-        final MapStructureEntity preparedStructure = MapStructureEntityMapper.INSTANCE.toEntity(mapStructureEntityDto);
+    public MapStructureEntity toEntity(@NonNull final MapStructureDto mapStructureDto) {
+        final MapStructureEntity preparedStructure = MapStructureEntityMapper.INSTANCE.toEntity(mapStructureDto);
 
-        augmentWithClassNameEntity(mapStructureEntityDto, preparedStructure);
-        augmentWithPrefabNameEntity(mapStructureEntityDto, preparedStructure);
-        augmentWithResourceNameEntity(mapStructureEntityDto, preparedStructure);
-        augmentMapDescriptorTypeEntity(mapStructureEntityDto, preparedStructure);
+        augmentWithClassNameEntity(mapStructureDto, preparedStructure);
+        augmentWithPrefabNameEntity(mapStructureDto, preparedStructure);
+        augmentWithResourceNameEntity(mapStructureDto, preparedStructure);
+        augmentMapDescriptorTypeEntity(mapStructureDto, preparedStructure);
 
         return preparedStructure;
     }
 
     private void augmentWithClassNameEntity(
-            @NonNull final MapStructureEntityDto structureDto,
+            @NonNull final MapStructureDto structureDto,
             @NonNull final MapStructureEntity mapStructureEntity
     ) {
         if (structureDto.getClassName() == null || structureDto.getClassName().isBlank()) {
@@ -100,7 +100,7 @@ public class MapStructureEntitySuperMapper implements TransactionalMapLocatedEnt
     }
 
     private void augmentWithPrefabNameEntity(
-            @NonNull final MapStructureEntityDto structureDto,
+            @NonNull final MapStructureDto structureDto,
             @NonNull final MapStructureEntity mapStructureEntity
     ) {
         if (structureDto.getPrefabName() == null || structureDto.getPrefabName().isBlank()) {
@@ -119,7 +119,7 @@ public class MapStructureEntitySuperMapper implements TransactionalMapLocatedEnt
     }
 
     private void augmentWithResourceNameEntity(
-            @NonNull final MapStructureEntityDto structureDto,
+            @NonNull final MapStructureDto structureDto,
             @NonNull final MapStructureEntity mapStructureEntity
     ) {
         if (structureDto.getResourceName() == null || structureDto.getResourceName().isBlank()) {
@@ -138,7 +138,7 @@ public class MapStructureEntitySuperMapper implements TransactionalMapLocatedEnt
     }
 
     private void augmentMapDescriptorTypeEntity(
-            @NonNull final MapStructureEntityDto structureDto,
+            @NonNull final MapStructureDto structureDto,
             @NonNull final MapStructureEntity mapStructureEntity
     ) {
         if (structureDto.getMapDescriptorType() == null || structureDto.getMapDescriptorType().isBlank()) {

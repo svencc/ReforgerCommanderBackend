@@ -10,13 +10,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.task.AsyncTaskExecutor;
-import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.support.TaskExecutorAdapter;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Slf4j
@@ -34,7 +32,7 @@ public class AsyncConfiguration implements AsyncConfigurer {
     // First Async Executor
     @Primary
     @Override
-    public AsyncTaskExecutor  getAsyncExecutor() {
+    public AsyncTaskExecutor getAsyncExecutor() {
         return new TaskExecutorAdapter(Executors.newVirtualThreadPerTaskExecutor()); // TODO <<<<<<<<<<<<<<<< migrate all to this; especially the async map transaction executor
 //        final SimpleAsyncTaskExecutor executor = new SimpleAsyncTaskExecutor("Async-Executor");
 //
@@ -58,6 +56,7 @@ public class AsyncConfiguration implements AsyncConfigurer {
 
         return executor;
     }
+
     @Bean("AsyncMapTopographyTransactionExecutor")
     @Qualifier(value = "AsyncMapTopographyTransactionExecutor")
     public ThreadPoolTaskExecutor getAsyncMapTopographyTransactionExecutor() {

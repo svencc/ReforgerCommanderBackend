@@ -1,8 +1,8 @@
 package com.recom.event.listener;
 
 import com.recom.dto.map.scanner.TransactionIdentifierDto;
-import com.recom.dto.map.scanner.topography.MapTopographyEntityDto;
-import com.recom.dto.map.scanner.topography.TransactionalMapTopographyEntityPackageDto;
+import com.recom.dto.map.scanner.topography.MapTopographyDto;
+import com.recom.dto.map.scanner.topography.TransactionalMapTopographyPackageDto;
 import com.recom.entity.map.GameMap;
 import com.recom.event.event.async.map.addmappackage.AddMapTopographyPackageAsyncEvent;
 import com.recom.event.event.async.map.commit.CommitMapTopographyTransactionAsyncEvent;
@@ -11,7 +11,7 @@ import com.recom.event.event.sync.cache.CacheResetSyncEvent;
 import com.recom.model.map.MapTransaction;
 import com.recom.model.map.TopographyData;
 import com.recom.persistence.map.GameMapPersistenceLayer;
-import com.recom.persistence.map.topography.MapLocatedTopographyPersistenceLayer;
+import com.recom.persistence.map.chunk.topography.MapTopographyChunkPersistenceLayer;
 import com.recom.service.SerializationService;
 import com.recom.service.map.MapTransactionValidatorService;
 import com.recom.testhelper.SerializeObjectHelper;
@@ -43,9 +43,9 @@ public class MapTopographyScannerTransactionEventListenerTest {
     @Mock
     private ApplicationEventPublisher applicationEventPublisher;
     @Mock
-    private MapLocatedTopographyPersistenceLayer mapEntityPersistenceLayer;
+    private MapTopographyChunkPersistenceLayer mapEntityPersistenceLayer;
     @Mock
-    private MapTransactionValidatorService<MapTopographyEntityDto, TransactionalMapTopographyEntityPackageDto> mapTransactionValidator;
+    private MapTransactionValidatorService<MapTopographyDto, TransactionalMapTopographyPackageDto> mapTransactionValidator;
     @Mock
     private GameMapPersistenceLayer gameMapPersistenceLayer;
     @Mock
@@ -64,21 +64,21 @@ public class MapTopographyScannerTransactionEventListenerTest {
         transactionIdentifierDto.setSessionIdentifier("session1");
         final OpenMapTopographyTransactionAsyncEvent event = new OpenMapTopographyTransactionAsyncEvent(transactionIdentifierDto);
 
-        final Map<String, MapTransaction<MapTopographyEntityDto, TransactionalMapTopographyEntityPackageDto>> transactions = eventListenerUnderTest.getTransactions();
+        final Map<String, MapTransaction<MapTopographyDto, TransactionalMapTopographyPackageDto>> transactions = eventListenerUnderTest.getTransactions();
 
         // Act
         eventListenerUnderTest.handleOpenTransactionEvent(event);
 
         // Assert
         assertTrue(transactions.containsKey("session1"));
-        final MapTransaction<MapTopographyEntityDto, TransactionalMapTopographyEntityPackageDto> transaction = transactions.get("session1");
+        final MapTransaction<MapTopographyDto, TransactionalMapTopographyPackageDto> transaction = transactions.get("session1");
         assertEquals(transactionIdentifierDto, transaction.getOpenTransactionIdentifier());
     }
 
     @Test
     public void testHandleAddMapPackage_whenTransactionExists_shouldIgnoreEventAndDoNothing() {
         // Arrange
-        final TransactionalMapTopographyEntityPackageDto packageDto = new TransactionalMapTopographyEntityPackageDto();
+        final TransactionalMapTopographyPackageDto packageDto = new TransactionalMapTopographyPackageDto();
         final String session1 = "session1";
         packageDto.setSessionIdentifier(session1);
         final AddMapTopographyPackageAsyncEvent event = new AddMapTopographyPackageAsyncEvent(packageDto);
@@ -96,7 +96,7 @@ public class MapTopographyScannerTransactionEventListenerTest {
     @Test
     public void testHandleAddMapPackage_whenTransactionIsOpenedJustBefore_shouldAddPackageAndDoNotPersist() {
         // Arrange
-        final TransactionalMapTopographyEntityPackageDto packageDto = new TransactionalMapTopographyEntityPackageDto();
+        final TransactionalMapTopographyPackageDto packageDto = new TransactionalMapTopographyPackageDto();
         final String session1 = "session1";
         packageDto.setSessionIdentifier(session1);
         final AddMapTopographyPackageAsyncEvent event = new AddMapTopographyPackageAsyncEvent(packageDto);
@@ -120,16 +120,16 @@ public class MapTopographyScannerTransactionEventListenerTest {
     public void testHandleCommitTransaction_whenTransactionIsValid_shouldProcessTransaction() throws IOException {
 
         // Arrange
-        final List<MapTopographyEntityDto> entities = List.of(MapTopographyEntityDto.builder()
+        final List<MapTopographyDto> entities = List.of(MapTopographyDto.builder()
                 .iterationX(0)
                 .iterationZ(0)
                 .coordinates(List.of(BigDecimal.valueOf(1.0), BigDecimal.valueOf(2.0), BigDecimal.valueOf(3.0)))
-                .scanIterationsX(1)
-                .scanIterationsZ(1)
-                .stepSize(1.0f)
+                .chunkSizeX(1)
+                .chunkSizeZ(1)
+                .stepSize(1)
                 .oceanBaseHeight(0.0f)
                 .build());
-        final TransactionalMapTopographyEntityPackageDto packageDto = TransactionalMapTopographyEntityPackageDto.builder()
+        final TransactionalMapTopographyPackageDto packageDto = TransactionalMapTopographyPackageDto.builder()
                 .entities(entities)
                 .build();
 
@@ -140,7 +140,7 @@ public class MapTopographyScannerTransactionEventListenerTest {
         when(gameMapPersistenceLayer.findByName(eq(session1))).thenReturn(Optional.of(GameMap.builder().name(session1).build()));
 
         final TopographyData topographyData = TopographyData.builder()
-                .stepSize(1.0f)
+                .stepSize(1)
                 .scanIterationsX(0)
                 .scanIterationsZ(0)
                 .oceanBaseHeight(0.0f)
@@ -169,7 +169,7 @@ public class MapTopographyScannerTransactionEventListenerTest {
     public void testHandleCommitTransaction_whenTransactionIsInvalid_shouldNotProcessTransaction() {
 
         // Arrange
-        final TransactionalMapTopographyEntityPackageDto packageDto = new TransactionalMapTopographyEntityPackageDto();
+        final TransactionalMapTopographyPackageDto packageDto = new TransactionalMapTopographyPackageDto();
         final String session1 = "session1";
         packageDto.setSessionIdentifier(session1);
         final AddMapTopographyPackageAsyncEvent event = new AddMapTopographyPackageAsyncEvent(packageDto);

@@ -3,8 +3,8 @@ package com.recom.service.messagebus;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.recom.dto.message.MessageBusResponseDto;
 import com.recom.dto.message.MessageDto;
-import com.recom.entity.map.GameMap;
 import com.recom.entity.Message;
+import com.recom.entity.map.GameMap;
 import com.recom.model.message.MessageContainer;
 import com.recom.observer.HasSubject;
 import com.recom.observer.Notification;
@@ -15,6 +15,7 @@ import com.recom.service.provider.StaticObjectMapperProvider;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
@@ -37,7 +38,10 @@ public class MessageBusService implements HasSubject<MessageBusResponseDto> {
     @NonNull
     private final MessagePersistenceLayer messagePersistenceLayer;
 
+
+    @Synchronized
     public <T> void sendMessage(@NonNull final MessageContainer messageContainer) {
+        log.debug("Sending message: {}", messageContainer);
         final MessageBusResponseDto response = prepareNotification(messageContainer);
         final List<Message> persistedMessages = persistNotification(messageContainer.getGameMap(), response);
         setLatestMessageTimestamp(response, persistedMessages);
@@ -115,7 +119,6 @@ public class MessageBusService implements HasSubject<MessageBusResponseDto> {
     public MessageBusResponseDto listMessagesSince(
             @NonNull final GameMap gameMap,
             @Nullable final Long sinceTimestampEpochMilliseconds
-
     ) {
         final List<MessageDto> messages = messagePersistenceLayer.findAllMapSpecificMessagesSince(gameMap, Optional.ofNullable(sinceTimestampEpochMilliseconds).orElse(0L));
         return MessageBusResponseDto.builder()

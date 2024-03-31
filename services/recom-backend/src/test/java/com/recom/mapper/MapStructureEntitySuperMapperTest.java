@@ -2,7 +2,7 @@ package com.recom.mapper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.recom.dto.map.scanner.structure.MapStructureEntityDto;
+import com.recom.dto.map.scanner.structure.MapStructureDto;
 import com.recom.entity.map.structure.MapStructureEntity;
 import com.recom.mapper.mapstructure.MapStructureEntitySuperMapper;
 import com.recom.persistence.map.structure.MapStructurePersistenceLayer;
@@ -48,7 +48,7 @@ class MapStructureEntitySuperMapperTest {
         final List<BigDecimal> rotationZ = List.of(BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.valueOf(1.0));
         final List<BigDecimal> coordinates = List.of(BigDecimal.valueOf(1.0), BigDecimal.valueOf(2.0), BigDecimal.valueOf(3.0));
 
-        final MapStructureEntityDto dto = MapStructureEntityDto.builder()
+        final MapStructureDto dto = MapStructureDto.builder()
                 .entityId(entityId)
                 .name(null)
                 .className(className)

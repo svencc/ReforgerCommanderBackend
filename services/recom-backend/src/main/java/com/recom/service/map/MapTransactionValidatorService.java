@@ -32,12 +32,12 @@ public class MapTransactionValidatorService<DTO_TYPE extends MapDto, PACKAGE_TYP
             return false;
         }
         // CommitTransactionIdentifier number has to be greater than 0 or 1
-        if (transaction.getCommitTransactionIdentifier().getPackageOrder() <= 1) {
-            log.warn("Commit transaction messages packageOrder has to be at least 2! => {}", transaction.getCommitTransactionIdentifier().getPackageOrder());
+        if (transaction.getCommitTransactionIdentifier().getPackageOrder() < 1) {
+            log.warn("Commit transaction messages packageOrder has to be at least 1! => {}", transaction.getCommitTransactionIdentifier().getPackageOrder());
             return false;
         }
 
-        // Get commitPackageNumber - should be the highest/last number!
+        // Get commitPackageNumber - should be the highest OR last number!
         final Integer commitPackageNumber = transaction.getCommitTransactionIdentifier().getPackageOrder();
         final Integer expectedPackageSize = commitPackageNumber - 1;
 
@@ -45,7 +45,7 @@ public class MapTransactionValidatorService<DTO_TYPE extends MapDto, PACKAGE_TYP
             log.warn("Package size does not match expected size {} != {}", transaction.getPackages().size(), expectedPackageSize);
             return false;
         } else {
-            log.warn("Package size does match expected size {}", transaction.getPackages().size());
+            log.warn("Package size does match expected size {}/{}", transaction.getPackages().size(), expectedPackageSize);
         }
 
         // Predict expected package order checksum (commitPackageNumber) <= exclusive value!

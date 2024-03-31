@@ -18,38 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MapTopographyEntityDto implements MapRelatedDto {
-
-    // META DATA
-    @Schema
-    @JsonProperty()
-    private Float stepSize;
-
-    @Schema
-    @JsonProperty()
-    private Integer scanIterationsX;
-
-    @Schema
-    @JsonProperty()
-    private Integer scanIterationsZ;
-
-    @Schema
-    @JsonProperty()
-    private Float oceanHeight;
-
-    @Schema
-    @JsonProperty()
-    private Float oceanBaseHeight;
-
-
-    // PACKAGE SPECIFIC DATA
-    @Schema
-    @JsonProperty()
-    private Integer iterationX;
-
-    @Schema
-    @JsonProperty()
-    private Integer iterationZ;
+public class MapTopographyDto implements MapRelatedDto {
 
     @Schema
     @JsonProperty()

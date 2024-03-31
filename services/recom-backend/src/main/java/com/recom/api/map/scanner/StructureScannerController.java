@@ -2,7 +2,7 @@ package com.recom.api.map.scanner;
 
 import com.recom.api.commons.HttpCommons;
 import com.recom.dto.map.scanner.TransactionIdentifierDto;
-import com.recom.dto.map.scanner.structure.TransactionalMapStructureEntityPackageDto;
+import com.recom.dto.map.scanner.structure.TransactionalMapStructurePackageDto;
 import com.recom.service.ReforgerPayloadParserService;
 import com.recom.service.map.scanner.MapEntityTransactionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -90,14 +90,14 @@ public class StructureScannerController {
             @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK),
             @ApiResponse(responseCode = HttpCommons.UNAUTHORIZED_CODE, description = HttpCommons.UNAUTHORIZED, content = @Content())
     })
-    @PostMapping(path = "/transaction/entities", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @PostMapping(path = "/transaction/data", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity<Void> transmitEntityPackage(
             @RequestParam(required = true)
             @NonNull final Map<String, String> payload
     ) {
         log.debug("Requested POST /api/v1/scanner/structure/transaction/entities");
 
-        mapEntityTransactionService.addMapEntitiesPackage(payloadParser.parseValidated(payload, TransactionalMapStructureEntityPackageDto.class));
+        mapEntityTransactionService.addMapEntitiesPackage(payloadParser.parseValidated(payload, TransactionalMapStructurePackageDto.class));
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
                 .build();

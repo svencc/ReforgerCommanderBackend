@@ -1,7 +1,7 @@
 package com.recom.service.map.scanner;
 
 import com.recom.dto.map.scanner.TransactionIdentifierDto;
-import com.recom.dto.map.scanner.structure.TransactionalMapStructureEntityPackageDto;
+import com.recom.dto.map.scanner.structure.TransactionalMapStructurePackageDto;
 import com.recom.event.event.async.map.addmappackage.AddMapPackageAsyncEvent;
 import com.recom.event.event.async.map.commit.CommitMapTransactionAsyncEvent;
 import com.recom.event.event.async.map.open.OpenMapTransactionAsyncEvent;
@@ -39,7 +39,7 @@ class MapStructureEntityTransactionServiceTest {
     @Test
     public void testAddMapEntitiesPackage() {
         // Arrange
-        final TransactionalMapStructureEntityPackageDto entityPackageDto = TransactionalMapStructureEntityPackageDto.builder().sessionIdentifier("transactionId").build();
+        final TransactionalMapStructurePackageDto entityPackageDto = TransactionalMapStructurePackageDto.builder().sessionIdentifier("transactionId").build();
 
         // Act
         serviceUnderTest.addMapEntitiesPackage(entityPackageDto);

@@ -1,4 +1,4 @@
-package com.recom.dto.map.scanner.structure;
+package com.recom.dto.map.scanner.topography;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -20,7 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class TransactionalMapStructureEntityPackageDto implements TransactionalMapEntityPackable<MapStructureEntityDto> {
+public class TransactionalMapTopographyPackageDto implements TransactionalMapEntityPackable<MapTopographyDto> {
 
     @NotEmpty
     @Schema
@@ -35,6 +35,6 @@ public class TransactionalMapStructureEntityPackageDto implements TransactionalM
     @Schema
     @JsonProperty()
     @Builder.Default
-    private List<MapStructureEntityDto> entities = new ArrayList<>();
+    private List<MapTopographyDto> entities = new ArrayList<>();
 
 }

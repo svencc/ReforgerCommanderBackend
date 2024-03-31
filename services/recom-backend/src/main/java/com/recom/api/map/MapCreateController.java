@@ -3,9 +3,9 @@ package com.recom.api.map;
 import com.recom.api.commons.HttpCommons;
 import com.recom.dto.map.create.MapCreateRequestDto;
 import com.recom.dto.map.create.MapCreateResponseDto;
+import com.recom.entity.map.GameMap;
 import com.recom.security.account.RECOMAccount;
 import com.recom.security.account.RECOMAuthorities;
-import com.recom.service.AssertionService;
 import com.recom.service.ReforgerPayloadParserService;
 import com.recom.service.map.GameMapService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,11 +35,10 @@ import java.util.Map;
 public class MapCreateController {
 
     @NonNull
-    private final AssertionService assertionService;
-    @NonNull
     private final ReforgerPayloadParserService payloadParser;
     @NonNull
     private final GameMapService gameMapService;
+
 
     @Operation(
             summary = "Create a com.recom.dto.map",
@@ -51,14 +50,14 @@ public class MapCreateController {
             @ApiResponse(responseCode = HttpCommons.UNAUTHORIZED_CODE, description = HttpCommons.UNAUTHORIZED, content = @Content())
     })
     @PostMapping(path = "/form", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity<MapCreateResponseDto> mapExistsForm(
+    public ResponseEntity<MapCreateResponseDto> mapCreateForm(
             @AuthenticationPrincipal final RECOMAccount account,
             @RequestParam(required = true)
             @NonNull final Map<String, String> payload
     ) {
         log.debug("Requested POST /api/v1/com.recom.dto.map/create/form (FORM)");
 
-        return mapExists(account, payloadParser.parseValidated(payload, MapCreateRequestDto.class));
+        return mapCreate(account, payloadParser.parseValidated(payload, MapCreateRequestDto.class));
     }
 
     @Operation(
@@ -72,20 +71,19 @@ public class MapCreateController {
     })
     @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
     @Secured({RECOMAuthorities.EVERYBODY})
-    public ResponseEntity<MapCreateResponseDto> mapExists(
+    public ResponseEntity<MapCreateResponseDto> mapCreate(
             @AuthenticationPrincipal final RECOMAccount account,
-            @RequestBody final MapCreateRequestDto mapExistsRequestDto
+            @RequestBody final MapCreateRequestDto mapCreateRequestDto
     ) {
         log.debug("Requested GET /api/v1/com.recom.dto.map/create (JSON)");
 
-        if (assertionService.provideMaybeMap(mapExistsRequestDto.getMapName()).isEmpty()) {
-            gameMapService.create(mapExistsRequestDto.getMapName());
-        }
+        final GameMap gameMap = gameMapService.provideGameMap(mapCreateRequestDto.getMapName())
+                .orElseGet(() -> gameMapService.create(mapCreateRequestDto));
 
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
                 .body(MapCreateResponseDto.builder()
-                        .mapName(mapExistsRequestDto.getMapName())
+                        .mapName(gameMap.getName())
                         .mapExists(true)
                         .build()
                 );

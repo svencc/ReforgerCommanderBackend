@@ -5,7 +5,7 @@ import com.recom.dto.map.cluster.ClusterDto;
 import com.recom.dto.map.cluster.ClusterResponseDto;
 import com.recom.dto.map.cluster.ConcaveHullDto;
 import com.recom.dto.map.cluster.ConvexHullDto;
-import com.recom.dto.map.scanner.structure.MapStructureEntityDto;
+import com.recom.dto.map.scanner.structure.MapStructureDto;
 import com.recom.entity.map.GameMap;
 import com.recom.mapper.mapstructure.MapStructureEntityMapper;
 import com.recom.model.map.ClusterConfiguration;
@@ -102,7 +102,7 @@ public class ClusteringService {
                                 final List<String> clusterResources = configurationValueProvider.queryValue(gameMap, configuration.getClusteringResourcesListDescriptor());
                                 final List<DoublePoint> resources = mapStructurePersistenceLayer.findAllByMapNameAndResourceNameIn(gameMap, clusterResources).stream()
                                         .map(MapStructureEntityMapper.INSTANCE::toDto)
-                                        .map(MapStructureEntityDto::getCoordinates)
+                                        .map(MapStructureDto::getCoordinates)
                                         .filter(Objects::nonNull)
                                         .filter(vector -> vector.size() == 3)
                                         .map(this::vectorToPoint)

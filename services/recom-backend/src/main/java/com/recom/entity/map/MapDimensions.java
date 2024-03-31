@@ -8,6 +8,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -18,26 +19,31 @@ import java.io.Serializable;
 @Table(indexes = {})
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class MapTopography implements Persistable<Long>, Serializable, MapRelatedEntity {
+public class MapDimensions implements Persistable<Long>, Serializable, MapRelatedEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(insertable = true, updatable = false, nullable = false)
     private Long id;
 
-    @NonNull
     @OneToOne(fetch = FetchType.EAGER, optional = false)
     private GameMap gameMap;
 
-    @Lob
-    // @Column(insertable = true, updatable = true, nullable = false, columnDefinition = "LONGBLOB")
-    @Column(insertable = true, updatable = true, nullable = false) // H2 BINARY LARGE OBJECT
-    private byte[] data;
+    @Column(insertable = true, updatable = false, nullable = false)
+    private Long dimensionX;
 
+    @Column(insertable = true, updatable = false, nullable = false)
+    private Long dimensionY;
+
+    @Column(insertable = true, updatable = false, nullable = false)
+    private Long dimensionZ;
+
+    @Column(columnDefinition = "Decimal(15,10)", insertable = true, updatable = false, nullable = true)
+    private BigDecimal oceanBaseHeight;
 
     @Override
     public int hashCode() {
-        return MapTopography.class.hashCode();
+        return MapDimensions.class.hashCode();
     }
 
     @Override
@@ -49,7 +55,7 @@ public class MapTopography implements Persistable<Long>, Serializable, MapRelate
         } else if (getClass() != obj.getClass()) {
             return false;
         } else {
-            final MapTopography other = (MapTopography) obj;
+            final MapDimensions other = (MapDimensions) obj;
             if (getId() == null) {
                 return false;
             } else return getId().equals(other.getId());

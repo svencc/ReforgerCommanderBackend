@@ -16,6 +16,10 @@ public class GameMapPersistenceLayer {
     private final GameMapRepository gameMapRepository;
 
     @NonNull
+    private final MapDimensionsRepository mapDimensionsRepository;
+
+    
+    @NonNull
     public List<GameMap> saveAll(@NonNull List<GameMap> distinctEntities) {
         return gameMapRepository.saveAll(distinctEntities);
     }

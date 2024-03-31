@@ -46,11 +46,6 @@ To create more intelligence from gameMap data the following features are planned
 After having more intelligence from the gameMap data, the work on the AI Commander will start.
 Planned is to harness the power of OpenAI to create a commander that make decisions and gives orders to his units.
 
-## Setup or run mariaDb docker container
-
-Just execute the docker/mariadb-docker-setup-or-start-win.ps1 script from the docker directory!
-Database is ready configured for application-server connection.
-
 ## Run application server
 
 Run com.recom.RecomBackendApplication with "local" profile.
