@@ -52,9 +52,9 @@ public class MapStructureChunkScanRequestNotificationService {
     private Optional<SquareKilometerStructureChunk> getChunkToScanNext(@NonNull final GameMap gameMap) {
         final List<SquareKilometerStructureChunk> remainingChunksToScan = mapStructureChunkPersistenceLayer.findByGameMap(gameMap).stream()
                 .filter(chunk -> {
-                    final boolean isStale = Optional.ofNullable(chunk.getLastUpdate()).map(latestUpdate -> LocalDateTime.now().plusMinutes(5).isAfter(latestUpdate)).orElse(false);
+                    final boolean isStale = Optional.ofNullable(chunk.getLastUpdate()).map(latestUpdate -> LocalDateTime.now().plusSeconds(30).isAfter(latestUpdate)).orElse(false);
                     return chunk.getStatus() == ChunkStatus.OPEN ||
-                            (chunk.getStatus() == ChunkStatus.REQUESTED && isStale);
+                            (chunk.getStatus() == ChunkStatus.REQUESTED && !isStale);
                 })
                 .sorted(Comparator.comparing(SquareKilometerStructureChunk::getLastUpdate, Comparator.nullsFirst(Comparator.naturalOrder())))
                 .toList();
@@ -64,7 +64,7 @@ public class MapStructureChunkScanRequestNotificationService {
             return Optional.empty();
         } else {
             final SquareKilometerStructureChunk randomChunk = remainingChunksToScan.get(random.nextInt(remainingChunksToScan.size()));
-            log.debug("Selected chunk to scan: {}", randomChunk);
+            log.debug("Selected chunk to scan: {},{}", randomChunk.getSquareCoordinateX(), randomChunk.getSquareCoordinateY());
 
             return Optional.of(randomChunk);
         }
@@ -74,7 +74,7 @@ public class MapStructureChunkScanRequestNotificationService {
     public void requestMapStructureChunkScan(@NonNull final GameMap gameMap) {
         getChunkToScanNext(gameMap)
                 .ifPresent(nextChunk -> {
-                    log.debug("Requesting map structure chunk scan for chunk: {}", nextChunk);
+                    log.debug("Requesting map structure chunk scan for chunk: {},{}", nextChunk.getSquareCoordinateX(), nextChunk.getSquareCoordinateY());
                     messageBusService.sendMessage(MessageContainer.builder()
                             .gameMap(gameMap)
                             .messages(List.of(

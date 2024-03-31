@@ -45,7 +45,7 @@ public class SquareKilometerStructureChunk implements Persistable<Long>, Seriali
     @NonNull
     @Builder.Default
     @OneToMany(mappedBy = "squareKilometerStructureChunk", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<MapStructureEntity> structureChunk = new HashSet<>();
+    private Set<MapStructureEntity> structures = new HashSet<>();
 
     @NonNull
     @Enumerated(EnumType.STRING)

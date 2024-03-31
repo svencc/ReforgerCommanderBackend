@@ -54,7 +54,7 @@ public class MapTopographyChunkScanRequestNotificationService {
                 .filter(chunk -> {
                     final boolean isStale = Optional.ofNullable(chunk.getLastUpdate()).map(latestUpdate -> LocalDateTime.now().plusMinutes(5).isAfter(latestUpdate)).orElse(false);
                     return chunk.getStatus() == ChunkStatus.OPEN ||
-                            (chunk.getStatus() == ChunkStatus.REQUESTED && isStale);
+                            (chunk.getStatus() == ChunkStatus.REQUESTED && !isStale);
                 })
                 .sorted(Comparator.comparing(SquareKilometerTopographyChunk::getLastUpdate, Comparator.nullsFirst(Comparator.naturalOrder())))
                 .toList();
