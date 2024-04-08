@@ -16,7 +16,7 @@
     * add transparency of forest and structure merging
     * add transparency of merging layers to configuration!
 
-  * cache forest and/or spatialForestMap > eclipseStore
+  * cache forest and/or spatialForestMap
 
 
 * add names to villages
@@ -25,6 +25,7 @@
 
 
 * integrate pipeline in commander!
+* cache data locally for faster access
 * add DynamicLayerProperties (configuration for RecomMapEntity) (/)
 
 
@@ -32,9 +33,6 @@
   * prebuffering of zoom levels (for faster zooming) or find out what is the bottleneck
   * (add pre-click-event (preclick, click, doublecklic) events)
   * fix window stage tacview size setting onload -> issue is that window size + engine size is the same at this moment
-  * eclipse store
-   * Switch map data to eclipse store!
-   * switch all data to eclipse store!
 
 
 # 1.1
