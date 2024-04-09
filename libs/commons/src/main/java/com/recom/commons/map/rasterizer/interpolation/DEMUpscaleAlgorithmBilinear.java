@@ -5,18 +5,16 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 @NoArgsConstructor
-public class DEMInterpolationAlgorithmBilinear implements DEMInterpolationAlgorithm {
+public class DEMUpscaleAlgorithmBilinear {
 
-    @Override
-    public float[][] interpolate(
+    public float[][] scaleUp(
             @NonNull DEMDescriptor demDescriptor,
             final int scaleFactor
     ) {
-        return interpolate(demDescriptor.getDem(), scaleFactor);
+        return scaleUp(demDescriptor.getDem(), scaleFactor);
     }
 
-    @Override
-    public float[][] interpolate(
+    public float[][] scaleUp(
             @NonNull float[][] dem,
             final int scaleFactor
     ) {

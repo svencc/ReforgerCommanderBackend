@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.springframework.lang.Nullable;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class MapComposerConfigurationDto {
     @Nullable
     @Schema
     @JsonProperty()
-    private Integer scaleFactor;
+    private BigDecimal scaleFactor;
     @Nullable
     @Schema
     @JsonProperty()

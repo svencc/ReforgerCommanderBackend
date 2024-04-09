@@ -3,17 +3,21 @@ package com.recom.event.listener;
 import com.recom.dto.map.scanner.TransactionIdentifierDto;
 import com.recom.dto.map.scanner.topography.MapTopographyDto;
 import com.recom.dto.map.scanner.topography.TransactionalMapTopographyPackageDto;
+import com.recom.entity.map.ChunkStatus;
 import com.recom.entity.map.GameMap;
+import com.recom.entity.map.SquareKilometerTopographyChunk;
 import com.recom.event.event.async.map.addmappackage.AddMapTopographyPackageAsyncEvent;
 import com.recom.event.event.async.map.commit.CommitMapTopographyTransactionAsyncEvent;
 import com.recom.event.event.async.map.open.OpenMapTopographyTransactionAsyncEvent;
 import com.recom.event.event.sync.cache.CacheResetSyncEvent;
+import com.recom.event.listener.topography.ChunkCoordinate;
 import com.recom.model.map.MapTransaction;
 import com.recom.model.map.TopographyData;
 import com.recom.persistence.map.GameMapPersistenceLayer;
 import com.recom.persistence.map.chunk.topography.MapTopographyChunkPersistenceLayer;
 import com.recom.service.SerializationService;
 import com.recom.service.map.MapTransactionValidatorService;
+import com.recom.service.messagebus.chunkscanrequest.MapTopographyChunkScanRequestNotificationService;
 import com.recom.testhelper.SerializeObjectHelper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,6 +54,8 @@ public class MapTopographyScannerTransactionEventListenerTest {
     private GameMapPersistenceLayer gameMapPersistenceLayer;
     @Mock
     private SerializationService serializationService;
+    @Mock
+    private MapTopographyChunkScanRequestNotificationService mapTopographyChunkScanRequestNotificationService;
     @InjectMocks
     private MapTopographyEntityScannerTransactionEventListener eventListenerUnderTest;
 
@@ -121,46 +127,52 @@ public class MapTopographyScannerTransactionEventListenerTest {
 
         // Arrange
         final List<MapTopographyDto> entities = List.of(MapTopographyDto.builder()
-                .iterationX(0)
-                .iterationZ(0)
-                .coordinates(List.of(BigDecimal.valueOf(1.0), BigDecimal.valueOf(2.0), BigDecimal.valueOf(3.0)))
-                .chunkSizeX(1)
-                .chunkSizeZ(1)
-                .stepSize(1)
-                .oceanBaseHeight(0.0f)
+                .coordinates(List.of(BigDecimal.valueOf(0.0), BigDecimal.valueOf(2.0), BigDecimal.valueOf(0.0)))
                 .build());
         final TransactionalMapTopographyPackageDto packageDto = TransactionalMapTopographyPackageDto.builder()
                 .entities(entities)
                 .build();
 
-        final String session1 = "session1";
-        packageDto.setSessionIdentifier(session1);
+        final String session1Identifier = "session1#####0,0";
+        final String session1MapName = "session1";
+        final GameMap gameMap = GameMap.builder().name(session1MapName).build();
+        final SquareKilometerTopographyChunk chunk = SquareKilometerTopographyChunk.builder()
+                .gameMap(gameMap)
+                .squareCoordinateX(0L)
+                .squareCoordinateY(0L)
+                .status(ChunkStatus.OPEN)
+                .build();
+
+        packageDto.setSessionIdentifier(session1Identifier);
         final AddMapTopographyPackageAsyncEvent event = new AddMapTopographyPackageAsyncEvent(packageDto);
         when(mapTransactionValidator.isValidTransaction(any(MapTransaction.class))).thenReturn(true);
-        when(gameMapPersistenceLayer.findByName(eq(session1))).thenReturn(Optional.of(GameMap.builder().name(session1).build()));
+        when(gameMapPersistenceLayer.findByName(eq(session1MapName))).thenReturn(Optional.of(gameMap));
+
+        final Optional<SquareKilometerTopographyChunk> maybeChunk = Optional.of(chunk);
+        when(mapEntityPersistenceLayer.findByGameMapAndCoordinate(eq(gameMap), any(ChunkCoordinate.class))).thenReturn(maybeChunk);
 
         final TopographyData topographyData = TopographyData.builder()
                 .stepSize(1)
-                .scanIterationsX(0)
-                .scanIterationsZ(0)
+                .scanIterationsX(1)
+                .scanIterationsZ(1)
                 .oceanBaseHeight(0.0f)
-                .surfaceData(new float[][]{{1.0f}})
+                .surfaceData(new float[][]{{2.0f}})
                 .build();
         when(serializationService.serializeObject(any())).thenReturn(SerializeObjectHelper.serializeObjectHelper(topographyData));
 
 
         // Act
         // open transaction and send event/package
-        final OpenMapTopographyTransactionAsyncEvent openTransactionEvent = new OpenMapTopographyTransactionAsyncEvent(TransactionIdentifierDto.builder().sessionIdentifier(session1).build());
+        final OpenMapTopographyTransactionAsyncEvent openTransactionEvent = new OpenMapTopographyTransactionAsyncEvent(TransactionIdentifierDto.builder().sessionIdentifier(session1Identifier).build());
         eventListenerUnderTest.handleOpenTransactionEvent(openTransactionEvent);
 
         eventListenerUnderTest.handleAddMapPackageEvent(event);
 
-        final CommitMapTopographyTransactionAsyncEvent commitEvent = new CommitMapTopographyTransactionAsyncEvent(TransactionIdentifierDto.builder().sessionIdentifier(session1).build());
+        final CommitMapTopographyTransactionAsyncEvent commitEvent = new CommitMapTopographyTransactionAsyncEvent(TransactionIdentifierDto.builder().sessionIdentifier(session1Identifier).build());
         eventListenerUnderTest.handleCommitTransactionEvent(commitEvent);
 
         // Assert
-        verify(mapTransactionValidator, times(1)).isValidTransaction(eq(eventListenerUnderTest.getTransactions().get(session1)));
+        verify(mapTransactionValidator, times(1)).isValidTransaction(eq(eventListenerUnderTest.getTransactions().get(session1Identifier)));
         verify(transactionTemplate, times(1)).execute(any());
     }
 

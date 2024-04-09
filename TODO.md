@@ -2,9 +2,8 @@
 
 # 1
 
-  * feature to not render with original map resolution! 1/10th of the resolution for example!
   * RAM issue; i guess all entities are loaded into memory; and never released?
-    * is hibernate responsible for this? hibernate l2 cache? get rid of it ot limit cache size or time to live
+    * is hibernate responsible for this? hibernate l2 cache? get rid of it, or limit cache size or time to live
 
   * /api/v1/configuration/map-tools/resources/forest?mapName= tooks way too long; does it already make use of the resource_name, class_name and prefab_name tables?   
   * dbcache forest and structure provider!!!
@@ -16,7 +15,7 @@
     * add transparency of forest and structure merging
     * add transparency of merging layers to configuration!
 
-  * cache forest and/or spatialForestMap > eclipseStore
+  * cache forest and/or spatialForestMap
 
 
 * add names to villages
@@ -25,6 +24,7 @@
 
 
 * integrate pipeline in commander!
+* cache data locally for faster access
 * add DynamicLayerProperties (configuration for RecomMapEntity) (/)
 
 
@@ -32,9 +32,6 @@
   * prebuffering of zoom levels (for faster zooming) or find out what is the bottleneck
   * (add pre-click-event (preclick, click, doublecklic) events)
   * fix window stage tacview size setting onload -> issue is that window size + engine size is the same at this moment
-  * eclipse store
-   * Switch map data to eclipse store!
-   * switch all data to eclipse store!
 
 
 # 1.1

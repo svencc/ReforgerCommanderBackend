@@ -49,14 +49,13 @@ public class MapTopographyEntityScannerTransactionEventListener extends Transact
             @NonNull final GameMapPersistenceLayer gameMapPersistenceLayer,
             @NonNull final ApplicationEventPublisher applicationEventPublisher,
             @NonNull final SerializationService serializationService,
-            @NonNull final MapTopographyChunkScanRequestNotificationService mapTopographyChunkScanRequestNotificationService,
-            @NonNull final MapTopographyChunkPersistenceLayer mapTopographyChunkPersistenceLayer
+            @NonNull final MapTopographyChunkScanRequestNotificationService mapTopographyChunkScanRequestNotificationService
     ) {
         super(transactionTemplate, entityPersistenceLayer, mapTransactionValidator, gameMapPersistenceLayer, applicationEventPublisher);
 
         this.serializationService = serializationService;
         this.mapTopographyChunkScanRequestNotificationService = mapTopographyChunkScanRequestNotificationService;
-        this.mapTopographyChunkPersistenceLayer = mapTopographyChunkPersistenceLayer;
+        this.mapTopographyChunkPersistenceLayer = entityPersistenceLayer;
     }
 
     @Async("AsyncMapTopographyTransactionExecutor")

@@ -49,8 +49,8 @@ public class D8AlgorithmForStructureMap {
         final int structureCellSizeSquared = structureCellSizeInMeter * structureCellSizeInMeter;
         double structureDensityThreshold = 1F / 100; // @TODO extract to conf
 
-        final int spacialX = demX * demDescriptor.getStepSize();
-        final int spacialY = demY * demDescriptor.getStepSize();
+        final double spacialX = demX * demDescriptor.getStepSize().doubleValue();
+        final double spacialY = demY * demDescriptor.getStepSize().doubleValue();
 
         final List<StructureItem> structureItemsInSpace = spacialIndex.getInSpace(spacialX, spacialY);
         final double StructureDensity = structureItemsInSpace.size() / (double) structureCellSizeSquared;

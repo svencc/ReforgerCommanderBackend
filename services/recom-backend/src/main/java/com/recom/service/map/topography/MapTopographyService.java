@@ -2,7 +2,8 @@ package com.recom.service.map.topography;
 
 import com.recom.commons.map.MapComposer;
 import com.recom.commons.map.PixelBufferMapperUtil;
-import com.recom.commons.map.rasterizer.interpolation.DEMInterpolationAlgorithm;
+import com.recom.commons.map.rasterizer.interpolation.DEMDownscaleAlgorithm;
+import com.recom.commons.map.rasterizer.interpolation.DEMUpscaleAlgorithmBilinear;
 import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
 import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignSchemeImplementation;
 import com.recom.commons.map.rasterizer.mapdesignscheme.ReforgerMapDesignScheme;
@@ -28,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayOutputStream;
+import java.math.BigDecimal;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,11 +46,13 @@ public class MapTopographyService {
     @NonNull
     private final SerializationService serializationService;
     @NonNull
-    private final DEMService demService;
+    private final DEMInvertService demInvertService;
     @NonNull
     private final MapComposer mapComposer;
     @NonNull
-    private final DEMInterpolationAlgorithm demInterpolationAlgorithm;
+    private final DEMUpscaleAlgorithmBilinear demUpscaleAlgorithm;
+    @NonNull
+    private final DEMDownscaleAlgorithm demDownscaleAlgorithm;
     @NonNull
     private final ForestProviderGenerator forestProviderGenerator;
     @NonNull
@@ -57,6 +61,8 @@ public class MapTopographyService {
     private final MapTopographyChunkPersistenceLayer mapTopographyPersistenceLayer;
     @NonNull
     private final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
+    @NonNull
+    private final StepSizeCalculator stepSizeCalculator;
 
 
     @Transactional(readOnly = true)
@@ -74,11 +80,15 @@ public class MapTopographyService {
             @NonNull final Optional<MapComposerConfigurationDto> maybeMapComposerConfiguration
     ) {
         try {
-            final int scaleFactor = provideScaleFactor(maybeMapComposerConfiguration);
-            if (scaleFactor > 1) {
-                float[][] interpolatedDem = demInterpolationAlgorithm.interpolate(demDescriptor, scaleFactor);
+            final BigDecimal scaleFactor = provideScaleFactor(maybeMapComposerConfiguration);
+            if (scaleFactor.compareTo(BigDecimal.ONE) > 0) {
+                float[][] interpolatedDem = demUpscaleAlgorithm.scaleUp(demDescriptor, scaleFactor.intValue());
                 demDescriptor.setDem(interpolatedDem);
-                demDescriptor.setStepSize(calculateStepSize(demDescriptor, (float) scaleFactor));
+                demDescriptor.setStepSize(stepSizeCalculator.calculateStepSize(demDescriptor, new BigDecimal(scaleFactor.intValue())));
+            } else if (scaleFactor.compareTo(BigDecimal.ONE) < 0) {
+                float[][] downScaledDem = demDownscaleAlgorithm.scaleDown(demDescriptor, scaleFactor.multiply(new BigDecimal(100)).intValue());
+                demDescriptor.setDem(downScaledDem);
+                demDescriptor.setStepSize(stepSizeCalculator.calculateStepSize(demDescriptor, scaleFactor));
             }
 
             final MapComposerWorkPackage workPackage = provideMapComposerWorkPackage(demDescriptor, maybeMapComposerConfiguration);
@@ -104,21 +114,10 @@ public class MapTopographyService {
         }
     }
 
-    private int calculateStepSize(
-            @NonNull final DEMDescriptor demDescriptor,
-            float scaleFactor
-    ) {
-        if (demDescriptor.getStepSize() % scaleFactor != 0) {
-            throw new IllegalArgumentException("The provided scale factor does not fit the step size of the dem!");
-        } else {
-            return (int) (demDescriptor.getStepSize() / scaleFactor);
-        }
-    }
-
-    private int provideScaleFactor(@NonNull Optional<MapComposerConfigurationDto> maybeMapComposerConfiguration) {
+    private BigDecimal provideScaleFactor(@NonNull Optional<MapComposerConfigurationDto> maybeMapComposerConfiguration) {
         return maybeMapComposerConfiguration
                 .map(MapComposerConfigurationDto::getScaleFactor)
-                .orElse(1);
+                .orElse(BigDecimal.ONE);
     }
 
     @NonNull
@@ -205,7 +204,7 @@ public class MapTopographyService {
         }
 
         try {
-            return demService.invertDEM(dem, gameMap);
+            return demInvertService.invertDEM(dem, gameMap);
         } catch (Throwable e) {
             log.error("{}: {}\n{}", getClass().getName(), e.getMessage(), e.getStackTrace());
             throw new HttpUnprocessableEntityException();
