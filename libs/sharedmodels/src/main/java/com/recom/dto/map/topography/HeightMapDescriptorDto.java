@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Data
 @Schema
@@ -25,7 +26,7 @@ public class HeightMapDescriptorDto implements Serializable {
 
     @Schema
     @JsonProperty()
-    private Integer stepSize;
+    private BigDecimal stepSize;
 
     @Schema
     @JsonProperty()

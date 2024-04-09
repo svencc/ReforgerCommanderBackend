@@ -1,8 +1,8 @@
 package com.recom.configuration;
 
 import com.recom.commons.map.MapComposer;
-import com.recom.commons.map.rasterizer.interpolation.DEMInterpolationAlgorithm;
-import com.recom.commons.map.rasterizer.interpolation.DEMInterpolationAlgorithmBilinear;
+import com.recom.commons.map.rasterizer.interpolation.DEMDownscaleAlgorithm;
+import com.recom.commons.map.rasterizer.interpolation.DEMUpscaleAlgorithmBilinear;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,8 +19,13 @@ public class MapComposerConfiguration {
 
 
     @Bean()
-    public DEMInterpolationAlgorithm demInterpolationAlgorithm() {
-        return new DEMInterpolationAlgorithmBilinear();
+    public DEMUpscaleAlgorithmBilinear demUpscaleAlgorithmBilinear() {
+        return new DEMUpscaleAlgorithmBilinear();
+    }
+
+    @Bean()
+    public DEMDownscaleAlgorithm demDownscaleAlgorithm() {
+        return new DEMDownscaleAlgorithm();
     }
 
 }

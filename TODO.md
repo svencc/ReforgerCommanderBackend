@@ -2,9 +2,12 @@
 
 # 1
 
-  * feature to not render with original map resolution! 1/10th of the resolution for example!
+  * feature to not render with original map resolution! 1/10th of the resolution for example! (<---)
+    * upScale (ganzzahlig) 
+    * downScale (decimal; Zentehl; 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9)
+  * 
   * RAM issue; i guess all entities are loaded into memory; and never released?
-    * is hibernate responsible for this? hibernate l2 cache? get rid of it ot limit cache size or time to live
+    * is hibernate responsible for this? hibernate l2 cache? get rid of it, or limit cache size or time to live
 
   * /api/v1/configuration/map-tools/resources/forest?mapName= tooks way too long; does it already make use of the resource_name, class_name and prefab_name tables?   
   * dbcache forest and structure provider!!!

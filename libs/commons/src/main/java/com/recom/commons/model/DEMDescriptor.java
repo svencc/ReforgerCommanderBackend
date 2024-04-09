@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -13,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class DEMDescriptor implements Cloneable {
 
     // meta data
-    private Integer stepSize;
+    private BigDecimal stepSize;
     private Integer scanIterationsX;
     private Integer scanIterationsZ;
 
@@ -32,15 +34,19 @@ public class DEMDescriptor implements Cloneable {
     }
 
     public int getMapWidthInMeter() {
-        return Round.halfUp(getDemWidth() * stepSize);
+        return Round.halfUp(stepSize.multiply(BigDecimal.valueOf(getDemWidth())).intValue());
     }
 
     public int getMapHeightInMeter() {
-        return Round.halfUp(getDemHeight() * stepSize);
+        return Round.halfUp(stepSize.multiply(BigDecimal.valueOf(getDemHeight())).intValue());
     }
 
-    public Integer getStepSize() {
-        return stepSize.intValue();
+//    public Integer getStepSize() {
+//        return stepSize.intValue();
+//    }
+
+    public BigDecimal getStepSize() {
+        return stepSize;
     }
 
     @Override

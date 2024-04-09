@@ -49,8 +49,8 @@ public class D8AlgorithmForForestMap {
         final int forestCellSizeSquared = forestCellSizeInMeter * forestCellSizeInMeter;
         double forestDensityThreshold = 1F / 100; // @TODO extract to conf
 
-        final int spacialX = demX * demDescriptor.getStepSize();
-        final int spacialY = demY * demDescriptor.getStepSize();
+        final double spacialX = demX * demDescriptor.getStepSize().doubleValue();
+        final double spacialY = demY * demDescriptor.getStepSize().doubleValue();
 
         final List<ForestItem> forestItemsInSpace = spacialIndex.getInSpace(spacialX, spacialY);
         final double treeDensity = forestItemsInSpace.size() / (double) forestCellSizeSquared;

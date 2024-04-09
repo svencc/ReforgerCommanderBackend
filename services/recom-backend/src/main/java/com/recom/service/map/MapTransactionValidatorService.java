@@ -41,6 +41,11 @@ public class MapTransactionValidatorService<DTO_TYPE extends MapDto, PACKAGE_TYP
         final Integer commitPackageNumber = transaction.getCommitTransactionIdentifier().getPackageOrder();
         final Integer expectedPackageSize = commitPackageNumber - 1;
 
+        if (transaction.getPackages().isEmpty()) {
+            log.warn("Packages are empty!");
+            return false;
+        }
+
         if (transaction.getPackages().size() != expectedPackageSize) {
             log.warn("Package size does not match expected size {} != {}", transaction.getPackages().size(), expectedPackageSize);
             return false;
