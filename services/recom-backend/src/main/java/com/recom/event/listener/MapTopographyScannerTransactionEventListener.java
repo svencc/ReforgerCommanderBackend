@@ -9,9 +9,9 @@ import com.recom.event.event.async.map.addmappackage.AddMapTopographyPackageAsyn
 import com.recom.event.event.async.map.commit.CommitMapTopographyTransactionAsyncEvent;
 import com.recom.event.event.async.map.open.OpenMapTopographyTransactionAsyncEvent;
 import com.recom.event.listener.generic.maprelated.TransactionalMapRelatedPackageEventListenerTemplate;
-import com.recom.event.listener.topography.ChunkCoordinate;
-import com.recom.event.listener.topography.ChunkDimensions;
-import com.recom.event.listener.topography.ChunkHelper;
+import com.recom.event.listener.util.ChunkCoordinate;
+import com.recom.event.listener.util.ChunkDimensions;
+import com.recom.event.listener.util.ChunkHelper;
 import com.recom.persistence.map.GameMapPersistenceLayer;
 import com.recom.persistence.map.chunk.topography.MapTopographyChunkPersistenceLayer;
 import com.recom.service.SerializationService;
@@ -32,7 +32,7 @@ import java.util.Optional;
 
 @Slf4j
 @Component
-public class MapTopographyEntityScannerTransactionEventListener extends TransactionalMapRelatedPackageEventListenerTemplate<TransactionalMapTopographyPackageDto, SquareKilometerTopographyChunk, MapTopographyDto> {
+public class MapTopographyScannerTransactionEventListener extends TransactionalMapRelatedPackageEventListenerTemplate<TransactionalMapTopographyPackageDto, SquareKilometerTopographyChunk, MapTopographyDto> {
 
     @NonNull
     private final SerializationService serializationService;
@@ -42,7 +42,7 @@ public class MapTopographyEntityScannerTransactionEventListener extends Transact
     private final MapTopographyChunkPersistenceLayer mapTopographyChunkPersistenceLayer;
 
 
-    public MapTopographyEntityScannerTransactionEventListener(
+    public MapTopographyScannerTransactionEventListener(
             @NonNull final TransactionTemplate transactionTemplate,
             @NonNull final MapTopographyChunkPersistenceLayer entityPersistenceLayer,
             @NonNull final MapTransactionValidatorService<MapTopographyDto, TransactionalMapTopographyPackageDto> mapTransactionValidator,

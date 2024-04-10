@@ -123,7 +123,7 @@
             <artifactId>ehcache</artifactId>
             <version>${ehcache.version}</version>
             <classifier>jakarta</classifier>
-            <scope>runtime</scope>
+            <scope>compile</scope>
         </dependency>
         <!-- CACHE  -->
 

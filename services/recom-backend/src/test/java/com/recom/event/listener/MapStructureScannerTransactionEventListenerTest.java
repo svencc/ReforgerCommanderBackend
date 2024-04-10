@@ -10,7 +10,7 @@ import com.recom.event.event.async.map.addmappackage.AddMapPackageAsyncEvent;
 import com.recom.event.event.async.map.commit.CommitMapTransactionAsyncEvent;
 import com.recom.event.event.async.map.open.OpenMapTransactionAsyncEvent;
 import com.recom.event.event.sync.cache.CacheResetSyncEvent;
-import com.recom.event.listener.topography.ChunkCoordinate;
+import com.recom.event.listener.util.ChunkCoordinate;
 import com.recom.model.map.MapTransaction;
 import com.recom.persistence.map.GameMapPersistenceLayer;
 import com.recom.persistence.map.chunk.structure.MapStructureChunkPersistenceLayer;
@@ -37,7 +37,7 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class MapStructureEntityScannerTransactionEventListenerTest {
+public class MapStructureScannerTransactionEventListenerTest {
 
     @Mock
     private EntityManager entityManager;
@@ -56,7 +56,7 @@ public class MapStructureEntityScannerTransactionEventListenerTest {
     @Mock
     private GameMapPersistenceLayer gameMapPersistenceLayer;
     @InjectMocks
-    private MapStructureEntityScannerTransactionEventListener eventListenerUnderTest;
+    private MapStructureScannerTransactionEventListener eventListenerUnderTest;
 
     @Captor
     private ArgumentCaptor<CacheResetSyncEvent> cacheResetEventCaptor;

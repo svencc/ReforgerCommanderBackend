@@ -6,7 +6,7 @@ import com.recom.dto.message.MessageType;
 import com.recom.entity.map.ChunkStatus;
 import com.recom.entity.map.GameMap;
 import com.recom.entity.map.SquareKilometerStructureChunk;
-import com.recom.event.listener.topography.ChunkHelper;
+import com.recom.event.listener.util.ChunkHelper;
 import com.recom.model.message.MessageContainer;
 import com.recom.model.message.SingleMessage;
 import com.recom.persistence.map.GameMapPersistenceLayer;
@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -71,6 +72,7 @@ public class MapStructureChunkScanRequestNotificationService {
     }
 
     @Synchronized
+    @Transactional(readOnly = false)
     public void requestMapStructureChunkScan(@NonNull final GameMap gameMap) {
         getChunkToScanNext(gameMap)
                 .ifPresent(nextChunk -> {

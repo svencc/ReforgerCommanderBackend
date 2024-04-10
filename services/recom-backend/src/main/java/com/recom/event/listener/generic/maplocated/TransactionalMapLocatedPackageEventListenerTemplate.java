@@ -6,9 +6,9 @@ import com.recom.entity.map.SquareKilometerStructureChunk;
 import com.recom.event.BaseRecomEntityScannerEventListener;
 import com.recom.event.listener.generic.generic.MapLocatedEntityPersistable;
 import com.recom.event.listener.generic.generic.TransactionalMapEntityPackable;
-import com.recom.event.listener.topography.ChunkCoordinate;
-import com.recom.event.listener.topography.ChunkHelper;
-import com.recom.event.listener.topography.MapScanSessionIdentifierData;
+import com.recom.event.listener.util.ChunkCoordinate;
+import com.recom.event.listener.util.ChunkHelper;
+import com.recom.event.listener.util.MapScanSessionIdentifierData;
 import com.recom.model.map.MapTransaction;
 import com.recom.persistence.map.GameMapPersistenceLayer;
 import com.recom.persistence.map.chunk.structure.MapStructureChunkPersistenceLayer;
@@ -88,12 +88,18 @@ public abstract class TransactionalMapLocatedPackageEventListenerTemplate<
 
                         // open new transaction
                         final Boolean transactionExecuted = transactionTemplate.execute(status -> {
+                            final long startTransaction = System.currentTimeMillis();
+                            log.debug("... execute transaction {}!", sessionIdentifier);
+                            log.debug("... merge gameMap");
                             final GameMap gameMap = entityManager.merge(maybeGameMap.get());
+                            log.debug("... merge mapChunk");
                             final SquareKilometerStructureChunk mapChunk = entityManager.merge(maybeChunk.get());
 
+                            log.debug("... init entity mapper!");
                             entityMapper.init();
                             mapChunk.setStatus(ChunkStatus.CLOSED);
 
+                            log.debug("... set gameMap and mapChunk to entities!");
                             final List<ENTITY_TYPE> distinctEntities = existingTransaction.getPackages().stream()
                                     .flatMap(packageDto -> packageDto.getEntities().stream())
                                     .distinct()
@@ -106,7 +112,7 @@ public abstract class TransactionalMapLocatedPackageEventListenerTemplate<
 
                             entityPersistenceLayer.saveAll(distinctEntities);
                             mapStructureChunkPersistenceLayer.save(mapChunk);
-                            log.info("Transaction named {} persisted!", sessionIdentifier);
+                            log.info("Transaction named {} persisted in {}ms!", sessionIdentifier, System.currentTimeMillis() - startTransaction);
 
                             return true;
                         });
@@ -121,11 +127,14 @@ public abstract class TransactionalMapLocatedPackageEventListenerTemplate<
                     log.warn("No map meta found for transaction named {}!", sessionIdentifier);
                     return false;
                 }
+            } else {
+                log.warn("Invalid Transaction {}!", sessionIdentifier);
+                return false;
             }
+        } else {
+            log.warn("No transaction named {} found to process!", sessionIdentifier);
+            return false;
         }
-
-        log.warn("No transaction named {} found to process!", sessionIdentifier);
-        return false;
     }
 
 }

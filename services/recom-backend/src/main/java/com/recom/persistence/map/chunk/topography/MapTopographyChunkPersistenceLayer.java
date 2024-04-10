@@ -3,7 +3,7 @@ package com.recom.persistence.map.chunk.topography;
 import com.recom.entity.map.GameMap;
 import com.recom.entity.map.SquareKilometerTopographyChunk;
 import com.recom.event.listener.generic.generic.MapRelatedEntityPersistable;
-import com.recom.event.listener.topography.ChunkCoordinate;
+import com.recom.event.listener.util.ChunkCoordinate;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

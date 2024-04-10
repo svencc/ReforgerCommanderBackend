@@ -117,8 +117,8 @@ public class GameMapService {
 
         final GameMap persistedGameMap = gameMapPersistenceLayer.save(newGameMap);
 
-        mapTopographyChunkScanRequestNotificationService.requestMapTopographyChunkScan(persistedGameMap);
-        mapStructureChunkScanRequestNotificationService.requestMapStructureChunkScan(persistedGameMap);
+//        mapTopographyChunkScanRequestNotificationService.requestMapTopographyChunkScan(persistedGameMap);
+//        mapStructureChunkScanRequestNotificationService.requestMapStructureChunkScan(persistedGameMap);
 
         return persistedGameMap;
     }

@@ -24,13 +24,13 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 @Slf4j
 @Component
-public class MapStructureEntityScannerTransactionEventListener extends TransactionalMapLocatedPackageEventListenerTemplate<TransactionalMapStructurePackageDto, MapStructureEntity, MapStructureDto> {
+public class MapStructureScannerTransactionEventListener extends TransactionalMapLocatedPackageEventListenerTemplate<TransactionalMapStructurePackageDto, MapStructureEntity, MapStructureDto> {
 
     @NonNull
     private final MapStructureChunkScanRequestNotificationService mapStructureChunkScanRequestNotificationService;
 
 
-    public MapStructureEntityScannerTransactionEventListener(
+    public MapStructureScannerTransactionEventListener(
             @NonNull final EntityManager entityManager,
             @NonNull final TransactionTemplate transactionTemplate,
             @NonNull final MapStructurePersistenceLayer entityPersistenceLayer,
@@ -45,21 +45,21 @@ public class MapStructureEntityScannerTransactionEventListener extends Transacti
         this.mapStructureChunkScanRequestNotificationService = mapStructureChunkScanRequestNotificationService;
     }
 
-    @Async("AsyncMapTransactionExecutor")
+    @Async("AsyncMapStructureTransactionExecutor")
     @EventListener(classes = OpenMapTransactionAsyncEvent.class)
     public void handleOpenTransactionEvent(@NonNull final OpenMapTransactionAsyncEvent event) {
         infoEvent(event);
         handleOpenTransaction(event.getTransactionIdentifierDto());
     }
 
-    @Async("AsyncMapTransactionExecutor")
+    @Async("AsyncMapStructureTransactionExecutor")
     @EventListener(classes = AddMapPackageAsyncEvent.class)
     public void handleAddMapPackageEvent(@NonNull final AddMapPackageAsyncEvent event) {
         traceEvent(event);
         handleAddMapPackage(event.getTransactionalMapEntityPackage());
     }
 
-    @Async("AsyncMapTransactionExecutor")
+    @Async("AsyncMapStructureTransactionExecutor")
     @EventListener(classes = CommitMapTransactionAsyncEvent.class)
     public void handleCommitTransactionEvent(@NonNull final CommitMapTransactionAsyncEvent event) {
         infoEvent(event);

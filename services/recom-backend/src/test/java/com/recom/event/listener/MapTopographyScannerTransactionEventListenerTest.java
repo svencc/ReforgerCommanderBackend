@@ -10,7 +10,7 @@ import com.recom.event.event.async.map.addmappackage.AddMapTopographyPackageAsyn
 import com.recom.event.event.async.map.commit.CommitMapTopographyTransactionAsyncEvent;
 import com.recom.event.event.async.map.open.OpenMapTopographyTransactionAsyncEvent;
 import com.recom.event.event.sync.cache.CacheResetSyncEvent;
-import com.recom.event.listener.topography.ChunkCoordinate;
+import com.recom.event.listener.util.ChunkCoordinate;
 import com.recom.model.map.MapTransaction;
 import com.recom.model.map.TopographyData;
 import com.recom.persistence.map.GameMapPersistenceLayer;
@@ -57,7 +57,7 @@ public class MapTopographyScannerTransactionEventListenerTest {
     @Mock
     private MapTopographyChunkScanRequestNotificationService mapTopographyChunkScanRequestNotificationService;
     @InjectMocks
-    private MapTopographyEntityScannerTransactionEventListener eventListenerUnderTest;
+    private MapTopographyScannerTransactionEventListener eventListenerUnderTest;
 
     @Captor
     private ArgumentCaptor<CacheResetSyncEvent> cacheResetEventCaptor;

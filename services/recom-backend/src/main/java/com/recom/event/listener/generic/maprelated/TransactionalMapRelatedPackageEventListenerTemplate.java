@@ -4,7 +4,7 @@ import com.recom.entity.map.GameMap;
 import com.recom.event.BaseRecomEntityScannerEventListener;
 import com.recom.event.listener.generic.generic.MapRelatedEntityPersistable;
 import com.recom.event.listener.generic.generic.TransactionalMapEntityPackable;
-import com.recom.event.listener.topography.ChunkHelper;
+import com.recom.event.listener.util.ChunkHelper;
 import com.recom.model.map.MapTransaction;
 import com.recom.persistence.map.GameMapPersistenceLayer;
 import com.recom.service.map.MapTransactionValidatorService;
@@ -60,11 +60,14 @@ public abstract class TransactionalMapRelatedPackageEventListenerTemplate<
                 final Optional<GameMap> maybeGameMap = gameMapPersistenceLayer.findByName(mapName);
 
                 if (maybeGameMap.isPresent()) {
+                    log.info("... found existing chunk for transaction named {}!", sessionIdentifier);
                     final ENTITY_TYPE entity = mapTransactionToEntity(sessionIdentifier, maybeGameMap.get(), existingTransaction.getPackages());
 
                     final Boolean transactionExecuted = transactionTemplate.execute(status -> {
+                        final long startTransaction = System.currentTimeMillis();
+                        log.debug("... execute transaction {}!", sessionIdentifier);
                         entityPersistenceLayer.save(entity);
-                        log.info("Transaction named {} persisted!", sessionIdentifier);
+                        log.info("Transaction named {} persisted in {}ms!", sessionIdentifier, System.currentTimeMillis() - startTransaction);
 
                         return true;
                     });

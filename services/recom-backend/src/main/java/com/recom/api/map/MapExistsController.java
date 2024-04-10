@@ -97,7 +97,7 @@ public class MapExistsController {
                     Thread.sleep(Duration.ofSeconds(1).toMillis());
                     mapTopographyChunkScanRequestNotificationService.requestMapTopographyChunkScan(gameMap);
                     mapStructureChunkScanRequestNotificationService.requestMapStructureChunkScan(gameMap);
-                } catch (Throwable t) {
+                } catch (final Throwable t) {
                     log.error("Failed to notify map scan.", t);
                 }
             });
