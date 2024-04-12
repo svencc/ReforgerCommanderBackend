@@ -1,10 +1,6 @@
 # TODO LIST
 
 # 1
-  * Merge Layer Transparency
-    * add transparency of forest and structure merging
-    * add transparency of merging layers to configuration!
-
 * Clustering
   * add names to villages
   * add general map names
