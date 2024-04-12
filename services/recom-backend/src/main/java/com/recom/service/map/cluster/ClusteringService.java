@@ -27,9 +27,9 @@ import org.apache.commons.math3.geometry.euclidean.twod.hull.MonotoneChain;
 import org.apache.commons.math3.ml.clustering.Cluster;
 import org.apache.commons.math3.ml.clustering.DBSCANClusterer;
 import org.apache.commons.math3.ml.clustering.DoublePoint;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import javax.cache.annotation.CacheResult;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -74,7 +74,7 @@ public class ClusteringService {
         concaveHullGenerator = new ConcaveHull();
     }
 
-    @Cacheable(cacheNames = CLUSTERINGSERVICE_GENERATECLUSTERS_CACHE)
+    // @CacheResult(cacheName = CLUSTERINGSERVICE_GENERATECLUSTERS_CACHE)
     public ClusterResponseDto generateClusters(@NonNull final GameMap gameMap) {
         final List<ClusterConfiguration> clusterConfigurations = List.of(
                 ClusterConfiguration.builder()

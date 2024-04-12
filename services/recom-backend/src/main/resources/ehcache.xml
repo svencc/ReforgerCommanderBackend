@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns="http://www.ehcache.org/v3"
+<config xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+        xmlns='http://www.ehcache.org/v3'
         xsi:schemaLocation="http://www.ehcache.org/v3 http://www.ehcache.org/schema/ehcache-core-3.10.xsd">
-
     <!-- look: https://springframework.guru/using-ehcache-3-in-spring-boot/ -->
     <!-- look: https://www.digitalocean.com/community/tutorials/hibernate-ehcache-hibernate-second-level-cache -->
 
     <!-- Persistent cache directory -->
     <persistence directory="ehcache/cache"/>
 
-    <cache-template name="recomDefaultCache">
+
+
+    <!-- CACHE TEMPLATES -->
+    <cache-template name="entityCache">
         <expiry>
-            <ttl unit="hours">24</ttl>
+            <ttl unit="hours">876000</ttl>
         </expiry>
         <listeners>
             <listener>
-                <class>com.recom.util.CacheLogger</class>
+                <class>com.recom.service.EHCacheLogger</class>
                 <event-firing-mode>ASYNCHRONOUS</event-firing-mode>
                 <event-ordering-mode>UNORDERED</event-ordering-mode>
                 <events-to-fire-on>CREATED</events-to-fire-on>
@@ -24,101 +26,119 @@
             </listener>
         </listeners>
         <resources>
-            <heap unit="entries">5</heap>
-            <offheap unit="MB">10</offheap>
-             <disk persistent="true" unit="MB">1000</disk>
+            <heap unit="entries">1000</heap>
+<!--            <offheap unit="MB">10</offheap>-->
+            <disk persistent="true" unit="MB">1000</disk>
         </resources>
     </cache-template>
 
-
-    <cache alias="UserPersistenceLayer.findByUUID" uses-template="recomDefaultCache">
-<!--        <key-type>java.lang.Integer</key-type>-->
-<!--        <value-type>java.lang.Double</value-type>-->
-    </cache>
-
-
-    <cache alias="MapMetaDataService.provideMapMeta" uses-template="recomDefaultCache">
-    </cache>
-    <cache alias="MapMetaDataService.provideMapMetaList" uses-template="recomDefaultCache">
-    </cache>
-    <cache alias="MapMetaDataService.provideAllMapNames" uses-template="recomDefaultCache">
-    </cache>
-    <cache alias="MapMetaDataService.mapExists" uses-template="recomDefaultCache">
-    </cache>
+    <cache-template name="infinite">
+        <resources>
+            <heap unit="entries">9223372036854775807</heap>
+        </resources>
+    </cache-template>
+    <!-- CACHE TEMPLATES -->
 
 
-    <cache alias="MapRendererService.mapRenderCommands" uses-template="recomDefaultCache">
-    </cache>
 
+    <!-- APPLICATION CACHE -->
+<!--    <cache alias="UserPersistenceLayer.findByUUID" uses-template="entityCache">-->
+<!--    </cache>-->
 
-    <cache alias="ConfigurationPersistenceLayer.findValues" uses-template="recomDefaultCache">
-    </cache>
-    <cache alias="ConfigurationPersistenceLayer.findAllMapSpecificValueEntities" uses-template="recomDefaultCache">
-    </cache>
-    <cache alias="ConfigurationPersistenceLayer.findAllDefaultValueEntities" uses-template="recomDefaultCache">
-    </cache>
+<!--    <cache alias="MapMetaDataService.provideMapMeta" uses-template="entityCache">-->
+<!--    </cache>-->
+<!--    <cache alias="MapMetaDataService.provideMapMetaList" uses-template="entityCache">-->
+<!--    </cache>-->
+<!--    <cache alias="MapMetaDataService.provideAllMapNames" uses-template="entityCache">-->
+<!--    </cache>-->
+<!--    <cache alias="MapMetaDataService.mapExists" uses-template="entityCache">-->
+<!--    </cache>-->
 
+<!--    <cache alias="MapRendererService.mapRenderCommands" uses-template="entityCache">-->
+<!--    </cache>-->
 
-    <cache alias="ClusteringService.generateClusters" uses-template="recomDefaultCache">
-    </cache>
+<!--    <cache alias="ConfigurationPersistenceLayer.findValues" uses-template="entityCache">-->
+<!--    </cache>-->
+<!--    <cache alias="ConfigurationPersistenceLayer.findAllMapSpecificValueEntities" uses-template="entityCache">-->
+<!--    </cache>-->
+<!--    <cache alias="ConfigurationPersistenceLayer.findAllDefaultValueEntities" uses-template="entityCache">-->
+<!--    </cache>-->
 
+<!--    <cache alias="ClusteringService.generateClusters" uses-template="entityCache">-->
+<!--    </cache>-->
 
-    <cache alias="MapStructurePersistenceLayer.findAllByMapNameAndResourceNameIn" uses-template="recomDefaultCache">
-    </cache>
-    <cache alias="MapStructurePersistenceLayer.projectStructureItemByMapNameAndResourceNameIn" uses-template="recomDefaultCache">
-    </cache>
-    <cache alias="MapStructurePersistenceLayer.findAllTownEntities" uses-template="recomDefaultCache">
-    </cache>
-    <cache alias="MapStructurePersistenceLayer.findAllMapNames" uses-template="recomDefaultCache">
-    </cache>
-    <cache alias="MapStructurePersistenceLayer.countEntitiesByMapName" uses-template="recomDefaultCache">
-    </cache>
-    <cache alias="MapStructurePersistenceLayer.utilizedClassesByMapName" uses-template="recomDefaultCache">
-    </cache>
-    <cache alias="MapStructurePersistenceLayer.utilizedResourcesByMapName" uses-template="recomDefaultCache">
-    </cache>
-    <cache alias="MapStructurePersistenceLayer.utilizedPrefabsByMapName" uses-template="recomDefaultCache">
-    </cache>
-    <cache alias="MapStructurePersistenceLayer.utilizedNamedEntitiesByMapName" uses-template="recomDefaultCache">
-    </cache>
-    <cache alias="MapStructurePersistenceLayer.utilizedMapMetaTypeByMapName" uses-template="recomDefaultCache">
-    </cache>
-    <cache alias="MapStructurePersistenceLayer.findAllByMapNameAndPrefabNameIn" uses-template="recomDefaultCache">
-    </cache>
-    <cache alias="MapStructurePersistenceLayer.findAllByClassIn" uses-template="recomDefaultCache">
-    </cache>
-    <cache alias="MapStructurePersistenceLayer.findAllByMapDescriptorTypeIn" uses-template="recomDefaultCache">
-    </cache>
+<!--    <cache alias="MapStructurePersistenceLayer.findAllByMapNameAndResourceNameIn" uses-template="entityCache">-->
+<!--    </cache>-->
+<!--    <cache alias="MapStructurePersistenceLayer.projectStructureItemByMapNameAndResourceNameIn"-->
+<!--           uses-template="entityCache">-->
+<!--    </cache>-->
+<!--    <cache alias="MapStructurePersistenceLayer.findAllTownEntities" uses-template="entityCache">-->
+<!--    </cache>-->
+<!--    <cache alias="MapStructurePersistenceLayer.findAllMapNames" uses-template="entityCache">-->
+<!--    </cache>-->
+<!--    <cache alias="MapStructurePersistenceLayer.countEntitiesByMapName" uses-template="entityCache">-->
+<!--    </cache>-->
+<!--    <cache alias="MapStructurePersistenceLayer.utilizedClassesByMapName" uses-template="entityCache">-->
+<!--    </cache>-->
+<!--    <cache alias="MapStructurePersistenceLayer.utilizedResourcesByMapName" uses-template="entityCache">-->
+<!--    </cache>-->
+<!--    <cache alias="MapStructurePersistenceLayer.utilizedPrefabsByMapName" uses-template="entityCache">-->
+<!--    </cache>-->
+<!--    <cache alias="MapStructurePersistenceLayer.utilizedNamedEntitiesByMapName" uses-template="entityCache">-->
+<!--    </cache>-->
+<!--    <cache alias="MapStructurePersistenceLayer.utilizedMapMetaTypeByMapName" uses-template="entityCache">-->
+<!--    </cache>-->
+<!--    <cache alias="MapStructurePersistenceLayer.findAllByMapNameAndPrefabNameIn" uses-template="entityCache">-->
+<!--    </cache>-->
+<!--    <cache alias="MapStructurePersistenceLayer.findAllByClassIn" uses-template="entityCache">-->
+<!--    </cache>-->
+<!--    <cache alias="MapStructurePersistenceLayer.findAllByMapDescriptorTypeIn" uses-template="entityCache">-->
+<!--    </cache>-->
+    <!-- APPLICATION CACHE -->
+
 
 
     <!-- ENTITIES -->
-    <cache alias="com.recom.entity.Account" uses-template="recomDefaultCache">
+    <cache alias="com.recom.entity.Account" uses-template="entityCache">
     </cache>
-    <cache alias="com.recom.entity.map.MapDimensions" uses-template="recomDefaultCache">
+    <cache alias="com.recom.entity.map.MapDimensions" uses-template="entityCache">
     </cache>
-    <cache alias="com.recom.entity.map.structure.ClassNameEntity" uses-template="recomDefaultCache">
+    <cache alias="com.recom.entity.map.structure.ClassNameEntity" uses-template="entityCache">
     </cache>
-    <cache alias="com.recom.entity.map.structure.MapDescriptorTypeEntity" uses-template="recomDefaultCache">
+    <cache alias="com.recom.entity.map.structure.MapDescriptorTypeEntity" uses-template="entityCache">
     </cache>
-    <cache alias="com.recom.entity.map.GameMap" uses-template="recomDefaultCache">
+    <cache alias="com.recom.entity.map.GameMap" uses-template="entityCache">
     </cache>
-    <cache alias="com.recom.entity.Configuration" uses-template="recomDefaultCache">
+    <cache alias="com.recom.entity.Configuration" uses-template="entityCache">
     </cache>
-    <cache alias="com.recom.entity.Message" uses-template="recomDefaultCache">
+    <cache alias="com.recom.entity.Message" uses-template="entityCache">
     </cache>
-    <cache alias="com.recom.entity.map.SquareKilometerStructureChunk" uses-template="recomDefaultCache">
+    <cache alias="com.recom.entity.map.SquareKilometerStructureChunk" uses-template="entityCache">
     </cache>
-    <cache alias="com.recom.entity.map.structure.MapStructureEntity" uses-template="recomDefaultCache">
+    <cache alias="com.recom.entity.map.structure.MapStructureEntity" uses-template="entityCache">
     </cache>
-    <cache alias="com.recom.entity.DBCachedItem" uses-template="recomDefaultCache">
+<!--    <cache alias="com.recom.entity.DBCachedItem" uses-template="entityCache">-->
+<!--    </cache>-->
+    <cache alias="com.recom.entity.map.SquareKilometerTopographyChunk" uses-template="entityCache">
     </cache>
-    <cache alias="com.recom.entity.map.SquareKilometerTopographyChunk" uses-template="recomDefaultCache">
+    <cache alias="com.recom.entity.map.structure.ResourceNameEntity" uses-template="entityCache">
     </cache>
-    <cache alias="com.recom.entity.map.structure.ResourceNameEntity" uses-template="recomDefaultCache">
-    </cache>
-    <cache alias="com.recom.entity.map.structure.PrefabNameEntity" uses-template="recomDefaultCache">
+    <cache alias="com.recom.entity.map.structure.PrefabNameEntity" uses-template="entityCache">
     </cache>
     <!-- ENTITIES -->
+
+
+
+    <!-- HYBERNATE -->
+    <cache alias="default-update-timestamps-region" uses-template="infinite">
+    </cache>
+    <cache alias="default-query-results-region">
+        <resources>
+            <heap unit="entries">10000</heap>
+        </resources>
+    </cache>
+    <!-- HYBERNATE -->
+
 
 
 </config>

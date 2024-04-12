@@ -7,9 +7,9 @@ import com.recom.event.listener.generic.generic.MapLocatedEntityPersistable;
 import com.recom.model.map.EnumMapDescriptorType;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import javax.cache.annotation.CacheResult;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -37,7 +37,7 @@ public class MapStructurePersistenceLayer implements MapLocatedEntityPersistable
         return mapStructureRepository.deleteByGameMap(gameMap);
     }
 
-    @Cacheable(cacheNames = "MapStructurePersistenceLayer.findAllByMapNameAndResourceNameIn")
+    // @CacheResult(cacheName = "MapStructurePersistenceLayer.findAllByMapNameAndResourceNameIn")
     public List<MapStructureEntity> findAllByMapNameAndResourceNameIn(
             @NonNull final GameMap gameMap,
             @NonNull final List<String> resourceNames
@@ -47,7 +47,7 @@ public class MapStructurePersistenceLayer implements MapLocatedEntityPersistable
     }
 
     @SuppressWarnings("unchecked")
-    @Cacheable(cacheNames = "MapStructurePersistenceLayer.projectStructureItemByMapNameAndResourceNameIn")
+    // @CacheResult(cacheName = "MapStructurePersistenceLayer.projectStructureItemByMapNameAndResourceNameIn")
     public <T extends SpacialItem> List<T> projectStructureItemByMapNameAndResourceNameIn(
             @NonNull final GameMap gameMap,
             @NonNull final List<String> resourceNames
@@ -57,7 +57,7 @@ public class MapStructurePersistenceLayer implements MapLocatedEntityPersistable
                 .toList();
     }
 
-    @Cacheable(cacheNames = "MapStructurePersistenceLayer.findAllTownEntities")
+    // @CacheResult(cacheName = "MapStructurePersistenceLayer.findAllTownEntities")
     public List<MapStructureEntity> findAllTownEntities(@NonNull final GameMap gameMap) {
         return mapStructureRepository.findAllByGameMapAndMapDescriptorTypeNameIn(gameMap, Stream.of(
                         EnumMapDescriptorType.MDT_NAME_SETTLEMENT,
@@ -69,43 +69,43 @@ public class MapStructurePersistenceLayer implements MapLocatedEntityPersistable
                 .toList());
     }
 
-//    @Cacheable(cacheNames = "MapEntityPersistenceLayer.findAllMapNames")
+//    // @CacheResult(cacheName = "MapEntityPersistenceLayer.findAllMapNames")
 //    public List<String> findAllMapNames() {
 //        return mapStructureRepository.projectMapNames();
 //    }
 
-    @Cacheable(cacheNames = "MapStructurePersistenceLayer.utilizedClassesByMapName")
+    // @CacheResult(cacheName = "MapStructurePersistenceLayer.utilizedClassesByMapName")
     public List<String> utilizedClassesByMapName(@NonNull final GameMap gameMap) {
         return mapStructureRepository.projectUtilizedClassNamesByGameMap(gameMap);
     }
 
-    @Cacheable(cacheNames = "MapStructurePersistenceLayer.utilizedResourcesByMapName")
+    // @CacheResult(cacheName = "MapStructurePersistenceLayer.utilizedResourcesByMapName")
     public List<String> utilizedResourcesByMapName(@NonNull final GameMap gameMap) {
         return mapStructureRepository.projectUtilizedResourceNamesByGameMap(gameMap);
     }
 
-    @Cacheable(cacheNames = "MapStructurePersistenceLayer.utilizedPrefabsByMapName")
+    // @CacheResult(cacheName = "MapStructurePersistenceLayer.utilizedPrefabsByMapName")
     public List<String> utilizedPrefabsByMapName(@NonNull final GameMap gameMap) {
         return mapStructureRepository.projectUtilizedPrefabNameByGameMap(gameMap);
     }
 
-    @Cacheable(cacheNames = "MapStructurePersistenceLayer.utilizedNamedEntitiesByMapName")
+    // @CacheResult(cacheName = "MapStructurePersistenceLayer.utilizedNamedEntitiesByMapName")
     public List<String> utilizedNamedEntitiesByMapName(@NonNull final GameMap gameMap) {
         return mapStructureRepository.projectNamedEntitiesByGameMap(gameMap);
     }
 
-    @Cacheable(cacheNames = "MapStructurePersistenceLayer.countEntitiesByMapName")
+    // @CacheResult(cacheName = "MapStructurePersistenceLayer.countEntitiesByMapName")
     public Integer countEntitiesByMapName(@NonNull final GameMap gameMap) {
         return mapStructureRepository.countByGameMap(gameMap);
     }
 
-    @Cacheable(cacheNames = "MapStructurePersistenceLayer.utilizedMapMetaTypeByMapName")
+    // @CacheResult(cacheName = "MapStructurePersistenceLayer.utilizedMapMetaTypeByMapName")
     public List<String> utilizedMapMetaTypeByMapName(@NonNull final GameMap gameMap) {
         return mapStructureRepository.projectMapMetaTypesByGameMap(gameMap);
     }
 
     @NonNull
-    @Cacheable(cacheNames = "MapStructurePersistenceLayer.findAllByMapNameAndPrefabNameIn")
+    // @CacheResult(cacheName = "MapStructurePersistenceLayer.findAllByMapNameAndPrefabNameIn")
     public List<MapStructureEntity> findAllByPrefabIn(
             @NonNull final GameMap gameMap,
             @NonNull final List<String> prefabNames
@@ -114,7 +114,7 @@ public class MapStructurePersistenceLayer implements MapLocatedEntityPersistable
     }
 
     @NonNull
-    @Cacheable(cacheNames = "MapStructurePersistenceLayer.findAllByClassIn")
+    // @CacheResult(cacheName = "MapStructurePersistenceLayer.findAllByClassIn")
     public List<MapStructureEntity> findAllByClassIn(
             @NonNull final GameMap gameMap,
             @NonNull final List<String> classNames
@@ -123,7 +123,7 @@ public class MapStructurePersistenceLayer implements MapLocatedEntityPersistable
     }
 
     @NonNull
-    @Cacheable(cacheNames = "MapStructurePersistenceLayer.findAllByMapDescriptorTypeIn")
+    // @CacheResult(cacheName = "MapStructurePersistenceLayer.findAllByMapDescriptorTypeIn")
     public List<MapStructureEntity> findAllByMapDescriptorTypeIn(
             @NonNull final GameMap gameMap,
             @NonNull final List<String> descriptorTypes

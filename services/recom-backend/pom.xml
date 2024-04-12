@@ -117,11 +117,12 @@
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-jcache</artifactId>
+            <version>${hibernate.version}</version>
         </dependency>
         <dependency>
             <groupId>org.ehcache</groupId>
             <artifactId>ehcache</artifactId>
-            <version>${ehcache.version}</version>
+<!--            <version>${ehcache.version}</version>-->
             <classifier>jakarta</classifier>
             <scope>compile</scope>
         </dependency>

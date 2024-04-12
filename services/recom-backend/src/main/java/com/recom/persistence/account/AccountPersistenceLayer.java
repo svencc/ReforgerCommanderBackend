@@ -3,9 +3,9 @@ package com.recom.persistence.account;
 import com.recom.entity.Account;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import javax.cache.annotation.CacheResult;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -22,7 +22,7 @@ public class AccountPersistenceLayer {
     }
 
     @NonNull
-    @Cacheable(cacheNames = "UserPersistenceLayer.findByUUID")
+    // @CacheResult(cacheName = "UserPersistenceLayer.findByUUID")
     public Optional<Account> findByUUID(@NonNull final UUID uuid) {
         return accountRepository.findById(uuid);
     }
