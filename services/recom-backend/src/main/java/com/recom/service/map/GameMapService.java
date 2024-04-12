@@ -6,7 +6,7 @@ import com.recom.dto.map.meta.MapMetaDto;
 import com.recom.entity.map.*;
 import com.recom.persistence.map.GameMapPersistenceLayer;
 import com.recom.persistence.map.structure.MapStructurePersistenceLayer;
-import com.recom.service.dbcached.DBCachedService;
+import com.recom.service.cache.dbcached.DBCachedService;
 import com.recom.service.messagebus.chunkscanrequest.MapStructureChunkScanRequestNotificationService;
 import com.recom.service.messagebus.chunkscanrequest.MapTopographyChunkScanRequestNotificationService;
 import jakarta.transaction.Transactional;

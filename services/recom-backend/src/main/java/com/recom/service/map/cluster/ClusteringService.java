@@ -13,7 +13,7 @@ import com.recom.persistence.map.GameMapPersistenceLayer;
 import com.recom.persistence.map.structure.MapStructurePersistenceLayer;
 import com.recom.service.configuration.ConfigurationDescriptorProvider;
 import com.recom.service.configuration.ConfigurationValueProvider;
-import com.recom.service.dbcached.DBCachedService;
+import com.recom.service.cache.dbcached.DBCachedService;
 import com.recom.util.JSNumberUtil;
 import jakarta.annotation.PostConstruct;
 import lib.clipboard.alphashape.AlphaShapeConcaveHull;

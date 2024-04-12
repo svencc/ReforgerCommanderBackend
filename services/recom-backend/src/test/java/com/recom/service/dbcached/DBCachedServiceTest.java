@@ -2,6 +2,7 @@ package com.recom.service.dbcached;
 
 import com.recom.exception.DBCachedDeserializationException;
 import com.recom.persistence.dbcached.DBCachedPersistenceLayer;
+import com.recom.service.cache.dbcached.DBCachedService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

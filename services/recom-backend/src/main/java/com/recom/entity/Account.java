@@ -16,7 +16,8 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Cacheable
+//@Cacheable
+//@Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "second-level-entity-region-x")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Account implements Persistable<UUID>, Serializable {
 

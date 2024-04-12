@@ -5,16 +5,16 @@ import com.recom.property.RECOMSecurityProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
 
 import java.util.Locale;
 import java.util.TimeZone;
 
-@EnableCaching
+@EnableScheduling
 @SpringBootApplication(scanBasePackages = {"com.recom"})
 @EnableConfigurationProperties({
         RECOMSecurityProperties.class,

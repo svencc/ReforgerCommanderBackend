@@ -1,4 +1,4 @@
-package com.recom.service.dbcached;
+package com.recom.service.cache.dbcached;
 
 import com.recom.persistence.dbcached.DBCachedPersistenceLayer;
 import lombok.NonNull;

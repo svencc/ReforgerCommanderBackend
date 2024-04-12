@@ -2,7 +2,7 @@ package com.recom.event.listener;
 
 import com.recom.event.event.async.cache.CacheResetAsyncEvent;
 import com.recom.event.event.sync.cache.CacheResetSyncEvent;
-import com.recom.service.dbcached.DBCachedManager;
+import com.recom.service.cache.dbcached.DBCachedManager;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;

@@ -20,8 +20,8 @@ import java.util.Set;
 @Table(indexes = {
         @Index(name = "IDX_name", columnList = "name", unique = true)
 })
-@Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+//@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "second-level-entity-region")
 public class PrefabNameEntity implements Persistable<Long>, Serializable {
 
     @Id

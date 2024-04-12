@@ -21,8 +21,8 @@ import java.io.Serializable;
         @Index(name = "IDX_namespace_name", columnList = "namespace, name", unique = false),
         @Index(name = "IDX_gameMap_namespace_name", columnList = "game_map_id, namespace, name", unique = false),
 })
-@Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+//@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "second-level-entity-region")
 public class Configuration implements Persistable<Long>, Serializable {
 
     @Id

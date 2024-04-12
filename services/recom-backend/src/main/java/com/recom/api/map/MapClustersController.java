@@ -6,7 +6,7 @@ import com.recom.dto.map.cluster.MapClusterRequestDto;
 import com.recom.entity.map.GameMap;
 import com.recom.service.AssertionService;
 import com.recom.service.ReforgerPayloadParserService;
-import com.recom.service.dbcached.AsyncCacheableRequestProcessor;
+import com.recom.service.cache.dbcached.AsyncCacheableRequestProcessor;
 import com.recom.service.map.cluster.ClusteringService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

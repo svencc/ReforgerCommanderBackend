@@ -22,8 +22,8 @@ import java.util.UUID;
         @Index(name = "IDX_gameMap_messageType_timestamp", columnList = "game_map_id, messageType, timestamp", unique = false),
         @Index(name = "IDX_gameMap_timestamp", columnList = "game_map_id, timestamp", unique = false),
 })
-@Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+//@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "second-level-entity-region")
 public class Message implements Persistable<UUID>, Serializable {
 
     @Id

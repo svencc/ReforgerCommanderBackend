@@ -22,7 +22,7 @@ public class AccountPersistenceLayer {
     }
 
     @NonNull
-    @Cacheable(cacheNames = "UserPersistenceLayer.findByUUID")
+//    @Cacheable(cacheNames = "UserPersistenceLayer.findByUUID")
     public Optional<Account> findByUUID(@NonNull final UUID uuid) {
         return accountRepository.findById(uuid);
     }

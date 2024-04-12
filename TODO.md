@@ -2,7 +2,7 @@
 
 # 1
 
-  * RAM issue; i guess all entities are loaded into memory; and never released?
+  * RAM issue; i guess all entities are loaded into memory; and never released? (<-)
     * is hibernate responsible for this? hibernate l2 cache? get rid of it, or limit cache size or time to live
 
   * /api/v1/configuration/map-tools/resources/forest?mapName= tooks way too long; does it already make use of the resource_name, class_name and prefab_name tables?   
