@@ -20,7 +20,7 @@ import java.util.Set;
 @Table(indexes = {
         @Index(name = "IDX_name", columnList = "name", unique = true)
 })
-//@Cacheable
+@Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class ResourceNameEntity implements Persistable<Long>, Serializable {
 
