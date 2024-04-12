@@ -5,6 +5,10 @@
   * add names to villages
   * add general map names
 * Save Aspect in rad value for smoother shading!
+* draw on pixel buffer
+  * text
+  * lines
+  * polygons ...
 
 
 * integrate pipeline in commander!
