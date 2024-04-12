@@ -1,30 +1,17 @@
 # TODO LIST
 
 # 1
-
-  * RAM issue; i guess all entities are loaded into memory; and never released?
-    * is hibernate responsible for this? hibernate l2 cache? get rid of it, or limit cache size or time to live
-
-  * /api/v1/configuration/map-tools/resources/forest?mapName= tooks way too long; does it already make use of the resource_name, class_name and prefab_name tables?   
-  * dbcache forest and structure provider!!!
-  * call to load/prepare caches for specific map
-
-
-  * dbBache layers (input configuration parameters)
   * Merge Layer Transparency
     * add transparency of forest and structure merging
     * add transparency of merging layers to configuration!
 
-  * cache forest and/or spatialForestMap
-
-
-* add names to villages
-* add general map names
+* Clustering
+  * add names to villages
+  * add general map names
 * Save Aspect in rad value for smoother shading!
 
 
 * integrate pipeline in commander!
-* cache data locally for faster access
 * add DynamicLayerProperties (configuration for RecomMapEntity) (/)
 
 
@@ -44,6 +31,9 @@
 
 
 
+  * RAM issue; i guess all entities are loaded into memory; and never released?
+    * is hibernate responsible for this? hibernate l2 cache? get rid of it, or limit cache size or time to live
+  * -> eclipse store
 ------------------------------------------------------------
 
 # 1.5
@@ -53,18 +43,11 @@
 * Spring Boot Executors -> use virtual threads
 
 # 2
-* add metadata to open-transaction!
-  * size, width, height
-  * @Embeddable for rotation
-  * ocean_base_height
-
-# 2
-* scanner -> qubus
-* Cache Reset Map Exists!
 * Account Settings are also cached -> reset when creating new account!....
 * TODO/BUG MapMetaDataService.mapExists cache gets not deleted after gameMap was imported!
 
 * tidy up unfinished MapTransactions @Scheduled
+* tidy up entities from cache !? @Scheduled
 
 
 * x heatmaps generator
