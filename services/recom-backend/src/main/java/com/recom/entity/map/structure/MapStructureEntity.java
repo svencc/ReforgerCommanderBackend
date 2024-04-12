@@ -27,8 +27,8 @@ import java.math.BigDecimal;
         @Index(name = "IDX_gameMap_mapDescriptorType", columnList = "game_map_id, map_descriptor_type_id", unique = false),
         @Index(name = "IDX_squareKilometerStructureChunk", columnList = "square_kilometer_structure_chunk_id", unique = false)
 })
-//@Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "entityCacheRegion")
 public class MapStructureEntity implements Persistable<Long>, Serializable, MapLocatedEntity {
 
     @Id

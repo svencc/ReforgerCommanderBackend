@@ -27,7 +27,7 @@ public class ConfigurationPersistenceLayer {
     }
 
     @NonNull
-    @Cacheable(cacheNames = "ConfigurationPersistenceLayer.findAllDefaultValueEntities")
+//    @Cacheable(cacheNames = "ConfigurationPersistenceLayer.findAllDefaultValueEntities") // called too early ....
     public List<Configuration> findAllDefaultValueEntities() {
         return configurationRepository.findAllByGameMapIsNull();
     }

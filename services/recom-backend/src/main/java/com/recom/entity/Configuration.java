@@ -22,7 +22,7 @@ import java.io.Serializable;
         @Index(name = "IDX_gameMap_namespace_name", columnList = "game_map_id, namespace, name", unique = false),
 })
 @Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "entityCacheRegion")
 public class Configuration implements Persistable<Long>, Serializable {
 
     @Id

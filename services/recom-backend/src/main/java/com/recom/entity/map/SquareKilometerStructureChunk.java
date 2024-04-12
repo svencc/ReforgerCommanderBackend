@@ -21,8 +21,8 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(indexes = {})
-//@Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "entityCacheRegion")
 public class SquareKilometerStructureChunk implements Persistable<Long>, Serializable, MapRelatedEntity {
 
     @Id

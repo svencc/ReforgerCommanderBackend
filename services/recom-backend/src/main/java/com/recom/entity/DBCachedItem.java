@@ -19,7 +19,7 @@ import java.io.Serializable;
         @Index(name = "IDX_cacheName_cacheKey", columnList = "cacheName, cacheKey", unique = true),
 })
 @Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "entityCacheRegion")
 public class DBCachedItem implements Persistable<Long>, Serializable {
 
     @Id

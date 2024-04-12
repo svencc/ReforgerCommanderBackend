@@ -23,8 +23,8 @@ import java.util.Set;
 @Table(indexes = {
         @Index(name = "IDX_name", columnList = "name", unique = false)
 })
-//@Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "entityCacheRegion")
 public class GameMap implements Persistable<Long>, Serializable {
 
     @Id
