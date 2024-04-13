@@ -2,6 +2,8 @@
 
 # 1
 
+* try to restore app-cache ... (not working now)
+
 * Clustering Villages
   * add names to villages
   * add general map names

@@ -31,7 +31,7 @@ public class MapRendererService {
 
     @NonNull
 //    @Cacheable(value = MAP_RENDERER_CACHE_NAME)
-    @CacheResult(cacheName = MAP_RENDERER_CACHE_NAME)
+//    @CacheResult(cacheName = MAP_RENDERER_CACHE_NAME)
     public MapRenderResponseDto renderMap(@NonNull final GameMap gameMap) {
         final List<MapRenderCommandDto> renderCommands = clusteringService.generateClusters(gameMap).getClusterList().stream()
                 .map(cluster -> MapRenderCommandDto.builder()
