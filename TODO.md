@@ -14,12 +14,8 @@
 * integrate pipeline in commander!
 * add DynamicLayerProperties (configuration for RecomMapEntity) (/)
 
-
 * known issues or optimizations:
-  * prebuffering of zoom levels (for faster zooming) or find out what is the bottleneck
-  * (add pre-click-event (preclick, click, doublecklic) events)
   * fix window stage tacview size setting onload -> issue is that window size + engine size is the same at this moment
-  * try to restore app-cache ... (not working now)
 
 
 # 1.1
