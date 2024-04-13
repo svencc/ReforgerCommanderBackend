@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.cache.annotation.CacheResult;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -43,7 +42,6 @@ public class GameMapService {
 
 
     @NonNull
-    // @CacheResult(cacheName = PROVIDEMAPMETALIST_PROVIDEMAPMETALIST_CACHE)
     public List<MapMetaDto> provideGameMapMetaList() {
         return dbCachedService.proxyToDBCacheSafe(
                 PROVIDEMAPMETALIST_PROVIDEMAPMETALIST_CACHE,
@@ -65,7 +63,6 @@ public class GameMapService {
     }
 
     @NonNull
-    // @CacheResult(cacheName = PROVIDEMAPMETALIST_PROVIDEMAPMETA_CACHE)
     public MapMetaDto provideGameMapMetaData(@NonNull final GameMap gameMap) {
         log.debug("provideMapMeta({})", gameMap);
         return dbCachedService.proxyToDBCacheSafe(
@@ -85,14 +82,13 @@ public class GameMapService {
     }
 
     @NonNull
-    // @CacheResult(cacheName = "MapMetaDataService.provideAllMapNames")
     public MapOverviewDto provideAllGameMapNames() {
         return MapOverviewDto.builder()
                 .maps(gameMapPersistenceLayer.findAllMapNames())
                 .build();
     }
 
-    //    // @CacheResult(cacheName = "MapMetaDataService.mapExists") // @TODO does not reset when data are added!
+    @NonNull
     public Optional<GameMap> provideGameMap(@NonNull final String mapName) {
         return gameMapPersistenceLayer.findByName(mapName);
     }

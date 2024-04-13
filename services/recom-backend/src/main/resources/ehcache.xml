@@ -43,57 +43,7 @@
 
 
     <!-- APPLICATION CACHE -->
-<!--    <cache alias="UserPersistenceLayer.findByUUID" uses-template="entityCache">-->
-<!--    </cache>-->
-
-<!--    <cache alias="MapMetaDataService.provideMapMeta" uses-template="entityCache">-->
-<!--    </cache>-->
-<!--    <cache alias="MapMetaDataService.provideMapMetaList" uses-template="entityCache">-->
-<!--    </cache>-->
-<!--    <cache alias="MapMetaDataService.provideAllMapNames" uses-template="entityCache">-->
-<!--    </cache>-->
-<!--    <cache alias="MapMetaDataService.mapExists" uses-template="entityCache">-->
-<!--    </cache>-->
-
-<!--    <cache alias="MapRendererService.mapRenderCommands" uses-template="entityCache">-->
-<!--    </cache>-->
-
-<!--    <cache alias="ConfigurationPersistenceLayer.findValues" uses-template="entityCache">-->
-<!--    </cache>-->
-<!--    <cache alias="ConfigurationPersistenceLayer.findAllMapSpecificValueEntities" uses-template="entityCache">-->
-<!--    </cache>-->
-<!--    <cache alias="ConfigurationPersistenceLayer.findAllDefaultValueEntities" uses-template="entityCache">-->
-<!--    </cache>-->
-
-<!--    <cache alias="ClusteringService.generateClusters" uses-template="entityCache">-->
-<!--    </cache>-->
-
-<!--    <cache alias="MapStructurePersistenceLayer.findAllByMapNameAndResourceNameIn" uses-template="entityCache">-->
-<!--    </cache>-->
-<!--    <cache alias="MapStructurePersistenceLayer.projectStructureItemByMapNameAndResourceNameIn"-->
-<!--           uses-template="entityCache">-->
-<!--    </cache>-->
-<!--    <cache alias="MapStructurePersistenceLayer.findAllTownEntities" uses-template="entityCache">-->
-<!--    </cache>-->
-<!--    <cache alias="MapStructurePersistenceLayer.findAllMapNames" uses-template="entityCache">-->
-<!--    </cache>-->
-<!--    <cache alias="MapStructurePersistenceLayer.countEntitiesByMapName" uses-template="entityCache">-->
-<!--    </cache>-->
-<!--    <cache alias="MapStructurePersistenceLayer.utilizedClassesByMapName" uses-template="entityCache">-->
-<!--    </cache>-->
-<!--    <cache alias="MapStructurePersistenceLayer.utilizedResourcesByMapName" uses-template="entityCache">-->
-<!--    </cache>-->
-<!--    <cache alias="MapStructurePersistenceLayer.utilizedPrefabsByMapName" uses-template="entityCache">-->
-<!--    </cache>-->
-<!--    <cache alias="MapStructurePersistenceLayer.utilizedNamedEntitiesByMapName" uses-template="entityCache">-->
-<!--    </cache>-->
-<!--    <cache alias="MapStructurePersistenceLayer.utilizedMapMetaTypeByMapName" uses-template="entityCache">-->
-<!--    </cache>-->
-<!--    <cache alias="MapStructurePersistenceLayer.findAllByMapNameAndPrefabNameIn" uses-template="entityCache">-->
-<!--    </cache>-->
-<!--    <cache alias="MapStructurePersistenceLayer.findAllByClassIn" uses-template="entityCache">-->
-<!--    </cache>-->
-<!--    <cache alias="MapStructurePersistenceLayer.findAllByMapDescriptorTypeIn" uses-template="entityCache">-->
+<!--    <cache alias="Class.method" uses-template="applicationCache">-->
 <!--    </cache>-->
     <!-- APPLICATION CACHE -->
 
@@ -118,8 +68,6 @@
     </cache>
     <cache alias="com.recom.entity.map.structure.MapStructureEntity" uses-template="entityCache">
     </cache>
-<!--    <cache alias="com.recom.entity.DBCachedItem" uses-template="entityCache">-->
-<!--    </cache>-->
     <cache alias="com.recom.entity.map.SquareKilometerTopographyChunk" uses-template="entityCache">
     </cache>
     <cache alias="com.recom.entity.map.structure.ResourceNameEntity" uses-template="entityCache">

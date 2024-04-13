@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(indexes = {})
-//@Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class SquareKilometerTopographyChunk implements Persistable<Long>, Serializable, MapRelatedEntity {
 

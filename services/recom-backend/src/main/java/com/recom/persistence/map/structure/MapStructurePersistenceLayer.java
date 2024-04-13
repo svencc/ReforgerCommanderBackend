@@ -9,7 +9,6 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.cache.annotation.CacheResult;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -37,7 +36,6 @@ public class MapStructurePersistenceLayer implements MapLocatedEntityPersistable
         return mapStructureRepository.deleteByGameMap(gameMap);
     }
 
-    // @CacheResult(cacheName = "MapStructurePersistenceLayer.findAllByMapNameAndResourceNameIn")
     public List<MapStructureEntity> findAllByMapNameAndResourceNameIn(
             @NonNull final GameMap gameMap,
             @NonNull final List<String> resourceNames
@@ -46,8 +44,8 @@ public class MapStructurePersistenceLayer implements MapLocatedEntityPersistable
         return allByGameMapAndResourceNameIn;
     }
 
+    @NonNull
     @SuppressWarnings("unchecked")
-    // @CacheResult(cacheName = "MapStructurePersistenceLayer.projectStructureItemByMapNameAndResourceNameIn")
     public <T extends SpacialItem> List<T> projectStructureItemByMapNameAndResourceNameIn(
             @NonNull final GameMap gameMap,
             @NonNull final List<String> resourceNames
@@ -57,7 +55,7 @@ public class MapStructurePersistenceLayer implements MapLocatedEntityPersistable
                 .toList();
     }
 
-    // @CacheResult(cacheName = "MapStructurePersistenceLayer.findAllTownEntities")
+    @NonNull
     public List<MapStructureEntity> findAllTownEntities(@NonNull final GameMap gameMap) {
         return mapStructureRepository.findAllByGameMapAndMapDescriptorTypeNameIn(gameMap, Stream.of(
                         EnumMapDescriptorType.MDT_NAME_SETTLEMENT,
@@ -69,43 +67,41 @@ public class MapStructurePersistenceLayer implements MapLocatedEntityPersistable
                 .toList());
     }
 
-//    // @CacheResult(cacheName = "MapEntityPersistenceLayer.findAllMapNames")
 //    public List<String> findAllMapNames() {
 //        return mapStructureRepository.projectMapNames();
 //    }
 
-    // @CacheResult(cacheName = "MapStructurePersistenceLayer.utilizedClassesByMapName")
+    @NonNull
     public List<String> utilizedClassesByMapName(@NonNull final GameMap gameMap) {
         return mapStructureRepository.projectUtilizedClassNamesByGameMap(gameMap);
     }
 
-    // @CacheResult(cacheName = "MapStructurePersistenceLayer.utilizedResourcesByMapName")
+    @NonNull
     public List<String> utilizedResourcesByMapName(@NonNull final GameMap gameMap) {
         return mapStructureRepository.projectUtilizedResourceNamesByGameMap(gameMap);
     }
 
-    // @CacheResult(cacheName = "MapStructurePersistenceLayer.utilizedPrefabsByMapName")
+    @NonNull
     public List<String> utilizedPrefabsByMapName(@NonNull final GameMap gameMap) {
         return mapStructureRepository.projectUtilizedPrefabNameByGameMap(gameMap);
     }
 
-    // @CacheResult(cacheName = "MapStructurePersistenceLayer.utilizedNamedEntitiesByMapName")
+    @NonNull
     public List<String> utilizedNamedEntitiesByMapName(@NonNull final GameMap gameMap) {
         return mapStructureRepository.projectNamedEntitiesByGameMap(gameMap);
     }
 
-    // @CacheResult(cacheName = "MapStructurePersistenceLayer.countEntitiesByMapName")
+    @NonNull
     public Integer countEntitiesByMapName(@NonNull final GameMap gameMap) {
         return mapStructureRepository.countByGameMap(gameMap);
     }
 
-    // @CacheResult(cacheName = "MapStructurePersistenceLayer.utilizedMapMetaTypeByMapName")
+    @NonNull
     public List<String> utilizedMapMetaTypeByMapName(@NonNull final GameMap gameMap) {
         return mapStructureRepository.projectMapMetaTypesByGameMap(gameMap);
     }
 
     @NonNull
-    // @CacheResult(cacheName = "MapStructurePersistenceLayer.findAllByMapNameAndPrefabNameIn")
     public List<MapStructureEntity> findAllByPrefabIn(
             @NonNull final GameMap gameMap,
             @NonNull final List<String> prefabNames
@@ -114,7 +110,6 @@ public class MapStructurePersistenceLayer implements MapLocatedEntityPersistable
     }
 
     @NonNull
-    // @CacheResult(cacheName = "MapStructurePersistenceLayer.findAllByClassIn")
     public List<MapStructureEntity> findAllByClassIn(
             @NonNull final GameMap gameMap,
             @NonNull final List<String> classNames
@@ -123,7 +118,6 @@ public class MapStructurePersistenceLayer implements MapLocatedEntityPersistable
     }
 
     @NonNull
-    // @CacheResult(cacheName = "MapStructurePersistenceLayer.findAllByMapDescriptorTypeIn")
     public List<MapStructureEntity> findAllByMapDescriptorTypeIn(
             @NonNull final GameMap gameMap,
             @NonNull final List<String> descriptorTypes

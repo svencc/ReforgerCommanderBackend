@@ -20,7 +20,6 @@ import java.util.Set;
 @Table(indexes = {
         @Index(name = "IDX_name", columnList = "name", unique = true)
 })
-//@Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class PrefabNameEntity implements Persistable<Long>, Serializable {
 

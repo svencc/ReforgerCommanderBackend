@@ -17,7 +17,6 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(indexes = {})
-//@Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class MapDimensions implements Persistable<Long>, Serializable, MapRelatedEntity {
 

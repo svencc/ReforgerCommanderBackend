@@ -18,8 +18,6 @@ import java.io.Serializable;
 @Table(indexes = {
         @Index(name = "IDX_cacheName_cacheKey", columnList = "cacheName, cacheKey", unique = true),
 })
-//@Cacheable
-//@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class DBCachedItem implements Persistable<Long>, Serializable {
 
     @Id

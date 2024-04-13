@@ -1,18 +1,16 @@
 package com.recom.service.map;
 
+import com.recom.commons.calculator.ARGBColor;
 import com.recom.dto.map.renderer.MapRenderCommandDto;
 import com.recom.dto.map.renderer.MapRenderCommandType;
 import com.recom.dto.map.renderer.MapRenderResponseDto;
 import com.recom.entity.map.GameMap;
 import com.recom.service.map.cluster.ClusteringService;
-import com.recom.commons.calculator.ARGBColor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import javax.cache.annotation.CacheResult;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -30,8 +28,6 @@ public class MapRendererService {
     private final ClusteringService clusteringService;
 
     @NonNull
-//    @Cacheable(value = MAP_RENDERER_CACHE_NAME)
-//    @CacheResult(cacheName = MAP_RENDERER_CACHE_NAME)
     public MapRenderResponseDto renderMap(@NonNull final GameMap gameMap) {
         final List<MapRenderCommandDto> renderCommands = clusteringService.generateClusters(gameMap).getClusterList().stream()
                 .map(cluster -> MapRenderCommandDto.builder()

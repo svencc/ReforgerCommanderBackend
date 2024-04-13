@@ -16,7 +16,6 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-//@Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Account implements Persistable<UUID>, Serializable {
 
