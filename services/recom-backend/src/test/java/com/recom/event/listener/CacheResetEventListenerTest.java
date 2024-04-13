@@ -3,6 +3,8 @@ package com.recom.event.listener;
 import com.recom.event.event.async.cache.CacheResetAsyncEvent;
 import com.recom.event.event.sync.cache.CacheResetSyncEvent;
 import com.recom.service.dbcached.DBCachedManager;
+import jakarta.persistence.EntityManagerFactory;
+import lombok.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -25,6 +27,8 @@ public class CacheResetEventListenerTest {
     private CacheManager cacheManager;
     @Mock
     private DBCachedManager dbCachedManager;
+    @Mock
+    private EntityManagerFactory entityManagerFactory;
     @Mock
     private Cache cache;
     @InjectMocks

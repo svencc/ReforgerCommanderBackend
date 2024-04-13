@@ -42,9 +42,11 @@ public class CacheResetEventListener extends BaseRecomEventListener {
         cacheManager.getCacheNames().forEach(cacheName -> Optional.ofNullable(cacheManager.getCache(cacheName)).ifPresent(Cache::clear));
 
         // Clear Hibernate Level 2 Entity Caches
-        entityManagerFactory.getCache().unwrap(org.hibernate.Cache.class).evictAllRegions(); // does not work?
-//        entityManagerFactory.getCache().evictAll();
-//        entityManagerFactory.getCache().evict(Account.class);
+        if (entityManagerFactory.getCache() != null) {
+            entityManagerFactory.getCache().evictAll();
+            // entityManagerFactory.getCache().evictAll();
+            // entityManagerFactory.getCache().evict(Account.class);
+        }
 
         // Clear DBCached Caches
         dbCachedManager.clearAll();
