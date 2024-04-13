@@ -6,7 +6,8 @@
     <!-- look: https://www.digitalocean.com/community/tutorials/hibernate-ehcache-hibernate-second-level-cache -->
 
     <!-- Persistent cache directory -->
-    <persistence directory="ehcache/cache"/>
+    <persistence directory="${user.home}/RECOMBackend/ehcache"/>
+    <!-- Persistent cache directory -->
 
 
 
@@ -129,15 +130,12 @@
 
 
 
-    <!-- HYBERNATE -->
+    <!-- HIBERNATE -->
     <cache alias="default-update-timestamps-region" uses-template="infinite">
     </cache>
-    <cache alias="default-query-results-region">
-        <resources>
-            <heap unit="entries">10000</heap>
-        </resources>
+    <cache alias="default-query-results-region" uses-template="infinite">
     </cache>
-    <!-- HYBERNATE -->
+    <!-- HIBERNATE -->
 
 
 

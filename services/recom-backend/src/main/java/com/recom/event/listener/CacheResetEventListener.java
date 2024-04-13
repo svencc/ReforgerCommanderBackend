@@ -1,9 +1,11 @@
 package com.recom.event.listener;
 
+import com.recom.entity.Account;
 import com.recom.event.BaseRecomEventListener;
 import com.recom.event.event.async.cache.CacheResetAsyncEvent;
 import com.recom.event.event.sync.cache.CacheResetSyncEvent;
 import com.recom.service.dbcached.DBCachedManager;
+import jakarta.persistence.EntityManagerFactory;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +26,9 @@ public class CacheResetEventListener extends BaseRecomEventListener {
     private final CacheManager cacheManager;
     @NonNull
     private final DBCachedManager dbCachedManager;
+    @NonNull
+    private final EntityManagerFactory entityManagerFactory;
+
 
     @Async("CacheResetExecutor")
     @EventListener(classes = CacheResetAsyncEvent.class)
@@ -33,7 +38,15 @@ public class CacheResetEventListener extends BaseRecomEventListener {
     }
 
     private void clearAllCaches() {
+        // Clear Application Caches
         cacheManager.getCacheNames().forEach(cacheName -> Optional.ofNullable(cacheManager.getCache(cacheName)).ifPresent(Cache::clear));
+
+        // Clear Hibernate Level 2 Entity Caches
+        entityManagerFactory.getCache().unwrap(org.hibernate.Cache.class).evictAllRegions(); // does not work?
+//        entityManagerFactory.getCache().evictAll();
+//        entityManagerFactory.getCache().evict(Account.class);
+
+        // Clear DBCached Caches
         dbCachedManager.clearAll();
     }
 

@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import javax.cache.annotation.CacheResult;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -29,7 +30,8 @@ public class MapRendererService {
     private final ClusteringService clusteringService;
 
     @NonNull
-    @Cacheable(value = MAP_RENDERER_CACHE_NAME)
+//    @Cacheable(value = MAP_RENDERER_CACHE_NAME)
+    @CacheResult(cacheName = MAP_RENDERER_CACHE_NAME)
     public MapRenderResponseDto renderMap(@NonNull final GameMap gameMap) {
         final List<MapRenderCommandDto> renderCommands = clusteringService.generateClusters(gameMap).getClusterList().stream()
                 .map(cluster -> MapRenderCommandDto.builder()
