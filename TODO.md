@@ -1,9 +1,6 @@
 # TODO LIST
 
 # 1
-
-* try to restore app-cache ... (not working now)
-
 * Clustering Villages
   * add names to villages
   * add general map names
@@ -22,6 +19,7 @@
   * prebuffering of zoom levels (for faster zooming) or find out what is the bottleneck
   * (add pre-click-event (preclick, click, doublecklic) events)
   * fix window stage tacview size setting onload -> issue is that window size + engine size is the same at this moment
+  * try to restore app-cache ... (not working now)
 
 
 # 1.1
