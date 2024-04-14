@@ -93,13 +93,14 @@ public class CacheController {
         log.debug("Requested GET /api/v1/cache/test-app-cache");
 
         final CacheStatisticsDto testWithoutKey = applicationCacheTester.testWithoutKey();
-//        final CacheStatisticsDto testWithOneKey = applicationCacheTester.testWithOneKey("key1");
-//        final CacheStatisticsDto testWithMultipleKEys = applicationCacheTester.testWithMultipleKeys("key1", "key2");
+        for (int i = 0; i < 1000; i++) {
+            applicationCacheTester.testWithOneKey("key" + i);
+            applicationCacheTester.testWithMultipleKeys("key1" + i, "key2" + i);
+        }
 
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
                 .body(List.of(testWithoutKey));
-//                .body(List.of(testWithoutKey, testWithOneKey, testWithMultipleKEys));
     }
 
 }

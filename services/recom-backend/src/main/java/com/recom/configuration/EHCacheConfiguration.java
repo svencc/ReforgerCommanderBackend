@@ -9,6 +9,7 @@ import org.ehcache.config.builders.CacheConfigurationBuilder;
 import org.ehcache.config.builders.ResourcePoolsBuilder;
 import org.ehcache.jsr107.Eh107Configuration;
 import org.springframework.boot.autoconfigure.cache.JCacheManagerCustomizer;
+import org.springframework.cache.interceptor.SimpleKey;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -52,7 +53,9 @@ public class EHCacheConfiguration {
 
 
     private void addEHCaches(@NotNull final CacheManager eh107CacheManager) {
-        final Cache<Object, CacheStatisticsDto> myCache = eh107CacheManager.createCache("com.recom.service.cache.ApplicationCacheTester.testWithoutKey()", Eh107Configuration.fromEhcacheCacheConfiguration(applicationEHCacheConfiguration(Object.class, CacheStatisticsDto.class)));
+        eh107CacheManager.createCache("com.recom.service.cache.ApplicationCacheTester.testWithoutKey", Eh107Configuration.fromEhcacheCacheConfiguration(applicationEHCacheConfiguration(Object.class, CacheStatisticsDto.class)));
+        eh107CacheManager.createCache("com.recom.service.cache.ApplicationCacheTester.testWithOneKey", Eh107Configuration.fromEhcacheCacheConfiguration(applicationEHCacheConfiguration(String.class, CacheStatisticsDto.class)));
+        eh107CacheManager.createCache("com.recom.service.cache.ApplicationCacheTester.testWithMultipleKeys", Eh107Configuration.fromEhcacheCacheConfiguration(applicationEHCacheConfiguration(SimpleKey.class, CacheStatisticsDto.class)));
     }
 
     @NonNull
