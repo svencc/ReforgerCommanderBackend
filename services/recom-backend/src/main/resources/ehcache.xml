@@ -7,10 +7,10 @@
 
 
     <!-- DEFAULT CACHE -->
-    <service>
-        <jsr107:defaults default-template="applicationCache">
-        </jsr107:defaults>
-    </service>
+<!--    <service>-->
+<!--        <jsr107:defaults default-template="applicationCache">-->
+<!--        </jsr107:defaults>-->
+<!--    </service>-->
     <!-- DEFAULT CACHE -->
 
 
@@ -47,27 +47,27 @@
             <disk persistent="true" unit="MB">1000</disk>
         </resources>
     </cache-template>
-    <cache-template name="applicationCache">
-        <key-type>org.springframework.cache.interceptor.SimpleKey</key-type>
-        <expiry>
-            <ttl unit="hours">876000</ttl>
-        </expiry>
-        <listeners>
-            <listener>
-                <class>com.recom.service.EHCacheLogger</class>
-                <event-firing-mode>ASYNCHRONOUS</event-firing-mode>
-                <event-ordering-mode>UNORDERED</event-ordering-mode>
-                <events-to-fire-on>CREATED</events-to-fire-on>
-                <events-to-fire-on>EXPIRED</events-to-fire-on>
-                <events-to-fire-on>EVICTED</events-to-fire-on>
-            </listener>
-        </listeners>
-        <resources>
-            <heap unit="entries">2000</heap>
-<!--            <offheap unit="MB">10</offheap>-->
-            <disk persistent="true" unit="MB">1000</disk>
-        </resources>
-    </cache-template>
+<!--    <cache-template name="applicationCache">-->
+<!--        <key-type>org.springframework.cache.interceptor.SimpleKey</key-type>-->
+<!--        <expiry>-->
+<!--            <ttl unit="hours">876000</ttl>-->
+<!--        </expiry>-->
+<!--        <listeners>-->
+<!--            <listener>-->
+<!--                <class>com.recom.service.EHCacheLogger</class>-->
+<!--                <event-firing-mode>ASYNCHRONOUS</event-firing-mode>-->
+<!--                <event-ordering-mode>UNORDERED</event-ordering-mode>-->
+<!--                <events-to-fire-on>CREATED</events-to-fire-on>-->
+<!--                <events-to-fire-on>EXPIRED</events-to-fire-on>-->
+<!--                <events-to-fire-on>EVICTED</events-to-fire-on>-->
+<!--            </listener>-->
+<!--        </listeners>-->
+<!--        <resources>-->
+<!--            <heap unit="entries">2000</heap>-->
+<!--&lt;!&ndash;            <offheap unit="MB">10</offheap>&ndash;&gt;-->
+<!--            <disk persistent="true" unit="MB">1000</disk>-->
+<!--        </resources>-->
+<!--    </cache-template>-->
     <!-- CACHE TEMPLATES -->
 
 
