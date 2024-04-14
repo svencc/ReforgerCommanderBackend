@@ -12,7 +12,6 @@ import org.hibernate.stat.Statistics;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 
-import javax.cache.configuration.CompleteConfiguration;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -51,7 +50,6 @@ public class CacheStatisticsProvider {
                         .filter(Optional::isPresent)
                         .map(Optional::get)
                         .map(cache -> {
-                                    final CompleteConfiguration<Object, CacheStatisticsDto> completeConfiguration = cache.getConfiguration(CompleteConfiguration.class);
                                     final Set<Object> keys = Streams.of(cache.iterator()).map(entry -> entry.getKey().toString()).collect(Collectors.toSet());
                                     return CacheInfoDto.builder()
                                             .name(cache.getName())

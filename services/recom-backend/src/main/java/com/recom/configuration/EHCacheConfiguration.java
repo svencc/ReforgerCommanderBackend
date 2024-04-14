@@ -2,7 +2,12 @@ package com.recom.configuration;
 
 import com.recom.dto.cache.CacheStatisticsDto;
 import jakarta.validation.constraints.NotNull;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.ehcache.config.CacheConfiguration;
+import org.ehcache.config.builders.CacheConfigurationBuilder;
+import org.ehcache.config.builders.ResourcePoolsBuilder;
+import org.ehcache.jsr107.Eh107Configuration;
 import org.springframework.boot.autoconfigure.cache.JCacheManagerCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,12 +24,14 @@ public class EHCacheConfiguration {
 
     @NotNull
     private static final Duration DEFAULT_APPLICATION_CACHE_DURATION = javax.cache.expiry.Duration.ONE_HOUR;
+    @NotNull
+    private static final Integer DEFAULT_APPLICATION_CACHE_HEAP_SIZE = 100;
 
 
     @Bean
     @NotNull
     public JCacheManagerCustomizer ehcache3TojCacheManagerBridgeCustomizer() {
-        return this::addCaches;
+        return this::addEHCaches;
     }
 
     private void addCaches(@NotNull final CacheManager eh107CacheManager) {
@@ -41,6 +48,23 @@ public class EHCacheConfiguration {
         // final Eh107Configuration<Object, CacheStatisticsDto> eh107Configuration = cache.getConfiguration(Eh107Configuration.class);
         // final CacheRuntimeConfiguration<Object, CacheStatisticsDto> runtimeConfiguration = eh107Configuration.unwrap(CacheRuntimeConfiguration.class);
         // System.out.println("completeConfiguration: " + completeConfiguration);
+    }
+
+
+    private void addEHCaches(@NotNull final CacheManager eh107CacheManager) {
+        final Cache<Object, CacheStatisticsDto> myCache = eh107CacheManager.createCache("com.recom.service.cache.ApplicationCacheTester.testWithoutKey()", Eh107Configuration.fromEhcacheCacheConfiguration(applicationEHCacheConfiguration(Object.class, CacheStatisticsDto.class)));
+    }
+
+    @NonNull
+    private <KEY, VALUE> CacheConfiguration<KEY, VALUE> applicationEHCacheConfiguration(
+            @NotNull final Class<KEY> keyType,
+            @NotNull final Class<VALUE> valueType
+    ) {
+        return CacheConfigurationBuilder.newCacheConfigurationBuilder(
+                        keyType, valueType,
+                        ResourcePoolsBuilder.heap(DEFAULT_APPLICATION_CACHE_HEAP_SIZE)
+                )
+                .build();
     }
 
     @NotNull
