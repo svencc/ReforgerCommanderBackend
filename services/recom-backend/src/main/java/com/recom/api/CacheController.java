@@ -3,6 +3,7 @@ package com.recom.api;
 import com.recom.api.commons.HttpCommons;
 import com.recom.dto.cache.CacheStatisticsDto;
 import com.recom.event.event.sync.cache.CacheResetSyncEvent;
+import com.recom.service.cache.ApplicationCacheTester;
 import com.recom.service.cache.CacheStatisticsProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -23,6 +24,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @Tag(name = "Cache")
@@ -34,6 +37,8 @@ public class CacheController {
     private final ApplicationEventPublisher applicationEventPublisher;
     @NonNull
     private final CacheStatisticsProvider cacheStatisticsProvider;
+    @NonNull
+    private final ApplicationCacheTester applicationCacheTester;
 
 
     @Operation(
@@ -72,6 +77,29 @@ public class CacheController {
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
                 .body(cacheStatisticsProvider.provide());
+    }
+
+    @Operation(
+            summary = "Test application cache",
+            description = "just for test ...",
+            security = @SecurityRequirement(name = HttpCommons.BEARER_AUTHENTICATION_REQUIREMENT)
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = HttpCommons.OK_CODE, description = HttpCommons.OK),
+            @ApiResponse(responseCode = HttpCommons.UNAUTHORIZED_CODE, description = HttpCommons.UNAUTHORIZED, content = @Content())
+    })
+    @GetMapping(path = "/test-app-cache", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<CacheStatisticsDto>> testAppCache() {
+        log.debug("Requested GET /api/v1/cache/test-app-cache");
+
+        final CacheStatisticsDto testWithoutKey = applicationCacheTester.testWithoutKey();
+//        final CacheStatisticsDto testWithOneKey = applicationCacheTester.testWithOneKey("key1");
+//        final CacheStatisticsDto testWithMultipleKEys = applicationCacheTester.testWithMultipleKeys("key1", "key2");
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .cacheControl(CacheControl.noCache())
+                .body(List.of(testWithoutKey));
+//                .body(List.of(testWithoutKey, testWithOneKey, testWithMultipleKEys));
     }
 
 }

@@ -5,20 +5,26 @@ import com.recom.dto.cache.CacheStatisticsDto;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.stream.Streams;
 import org.hibernate.SessionFactory;
 import org.hibernate.stat.CacheRegionStatistics;
 import org.hibernate.stat.Statistics;
+import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import javax.cache.configuration.CompleteConfiguration;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class CacheStatisticsProvider {
 
+    @NonNull
+    private final CacheManager cacheManager;
+    @NonNull
+    private final javax.cache.CacheManager jCacheManager;
     @NonNull
     private final SessionFactory sessionFactory;
 
@@ -37,7 +43,26 @@ public class CacheStatisticsProvider {
                 })
                 .filter(Objects::nonNull)
                 .map(this::getCacheInfo)
-                .toList();
+                .collect(Collectors.toList());
+
+        caches.addAll(
+                Streams.of(jCacheManager.getCacheNames())
+                        .map(cacheName -> Optional.ofNullable(jCacheManager.getCache(cacheName)))
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .map(cache -> {
+                                    final CompleteConfiguration<Object, CacheStatisticsDto> completeConfiguration = cache.getConfiguration(CompleteConfiguration.class);
+                                    final Set<Object> keys = Streams.of(cache.iterator()).map(entry -> entry.getKey().toString()).collect(Collectors.toSet());
+                                    return CacheInfoDto.builder()
+                                            .name(cache.getName())
+                                            .keys(keys)
+                                            .size((long) keys.size())
+                                            .build();
+                                }
+                        )
+                        .toList()
+        );
+
 
         return CacheStatisticsDto.builder()
                 .caches(caches)

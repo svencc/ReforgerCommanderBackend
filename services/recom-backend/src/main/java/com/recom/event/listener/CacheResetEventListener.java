@@ -1,6 +1,5 @@
 package com.recom.event.listener;
 
-import com.recom.entity.Account;
 import com.recom.event.BaseRecomEventListener;
 import com.recom.event.event.async.cache.CacheResetAsyncEvent;
 import com.recom.event.event.sync.cache.CacheResetSyncEvent;
@@ -44,8 +43,6 @@ public class CacheResetEventListener extends BaseRecomEventListener {
         // Clear Hibernate Level 2 Entity Caches
         if (entityManagerFactory.getCache() != null) {
             entityManagerFactory.getCache().evictAll();
-            // entityManagerFactory.getCache().evictAll();
-            // entityManagerFactory.getCache().evict(Account.class);
         }
 
         // Clear DBCached Caches
