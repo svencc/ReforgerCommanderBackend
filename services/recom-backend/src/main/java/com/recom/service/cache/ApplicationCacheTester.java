@@ -2,14 +2,12 @@ package com.recom.service.cache;
 
 import com.recom.dto.cache.CacheInfoDto;
 import com.recom.dto.cache.CacheStatisticsDto;
-import jakarta.annotation.Nullable;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import javax.cache.annotation.CacheKey;
 import javax.cache.annotation.CacheResult;
 import java.util.List;
 

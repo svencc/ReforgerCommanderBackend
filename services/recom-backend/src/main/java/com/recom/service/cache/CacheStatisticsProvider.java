@@ -10,6 +10,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.stat.CacheRegionStatistics;
 import org.hibernate.stat.Statistics;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.jcache.JCacheCache;
+import org.springframework.cache.jcache.JCacheCacheManager;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
