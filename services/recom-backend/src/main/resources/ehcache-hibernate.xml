@@ -4,6 +4,7 @@
         xsi:schemaLocation="http://www.ehcache.org/v3 http://www.ehcache.org/schema/ehcache-core-3.10.xsd"
         xmlns:jsr107='http://www.ehcache.org/v3/jsr107'>
 
+    <!-- https://blog.coffeebeans.at/archives/1356 -->
 
 
     <!-- DEFAULTS -->
@@ -15,7 +16,7 @@
 
 
     <!-- Persistent cache directory -->
-    <persistence directory="${user.home}/RECOMBackend/ehcache"/>
+    <persistence directory="${user.home}/RECOMBackend/ehcache-hibernate"/>
     <!-- Persistent cache directory -->
 
 
@@ -27,6 +28,7 @@
         </resources>
     </cache-template>
     <cache-template name="entityCache">
+<!--        <expiry><none/></expiry>-->
         <expiry>
             <ttl unit="hours">876000</ttl>
         </expiry>
