@@ -9,9 +9,6 @@ import org.apache.commons.lang3.stream.Streams;
 import org.hibernate.SessionFactory;
 import org.hibernate.stat.CacheRegionStatistics;
 import org.hibernate.stat.Statistics;
-import org.springframework.cache.CacheManager;
-import org.springframework.cache.jcache.JCacheCache;
-import org.springframework.cache.jcache.JCacheCacheManager;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -22,8 +19,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CacheStatisticsProvider {
 
-    @NonNull
-    private final CacheManager cacheManager;
     @NonNull
     private final javax.cache.CacheManager jCacheManager;
     @NonNull
