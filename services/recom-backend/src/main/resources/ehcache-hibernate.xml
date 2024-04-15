@@ -30,7 +30,8 @@
     <cache-template name="entityCache">
 <!--        <expiry><none/></expiry>-->
         <expiry>
-            <ttl unit="hours">876000</ttl>
+<!--            <ttl unit="hours">876000</ttl>-->
+            <ttl unit="minutes">5</ttl>
         </expiry>
         <listeners>
             <listener>
@@ -43,9 +44,9 @@
             </listener>
         </listeners>
         <resources>
-            <heap unit="entries">1000</heap>
+            <heap unit="entries">200</heap>
             <!-- <offheap unit="MB">10</offheap> -->
-            <disk persistent="true" unit="MB">1000</disk>
+            <!-- <disk persistent="true" unit="MB">1000</disk> -->
         </resources>
     </cache-template>
     <!-- CACHE TEMPLATES -->
@@ -56,24 +57,78 @@
 
     <!-- ENTITIES -->
     <cache alias="com.recom.entity.Account" uses-template="entityCache">
+        <expiry>
+            <ttl unit="minutes">60</ttl>
+        </expiry>
+        <resources>
+            <heap>1000</heap>
+        </resources>
     </cache>
     <cache alias="com.recom.entity.map.MapDimensions" uses-template="entityCache">
+        <expiry>
+            <ttl unit="minutes">60</ttl>
+        </expiry>
+        <resources>
+            <heap>1</heap>
+        </resources>
     </cache>
     <cache alias="com.recom.entity.map.structure.ClassNameEntity" uses-template="entityCache">
+        <expiry>
+            <ttl unit="minutes">60</ttl>
+        </expiry>
+        <resources>
+            <heap>500</heap>
+        </resources>
     </cache>
     <cache alias="com.recom.entity.map.structure.MapDescriptorTypeEntity" uses-template="entityCache">
+        <expiry>
+            <ttl unit="minutes">60</ttl>
+        </expiry>
+        <resources>
+            <heap>500</heap>
+        </resources>
     </cache>
     <cache alias="com.recom.entity.map.GameMap" uses-template="entityCache">
+        <expiry>
+            <ttl unit="minutes">10</ttl>
+        </expiry>
+        <resources>
+            <heap>1</heap>
+        </resources>
     </cache>
     <cache alias="com.recom.entity.Configuration" uses-template="entityCache">
+        <expiry>
+            <ttl unit="minutes">60</ttl>
+        </expiry>
+        <resources>
+            <heap>200</heap>
+        </resources>
     </cache>
     <cache alias="com.recom.entity.Message" uses-template="entityCache">
+        <expiry>
+            <ttl unit="minutes">30</ttl>
+        </expiry>
+        <resources>
+            <heap>100</heap>
+        </resources>
     </cache>
     <cache alias="com.recom.entity.map.SquareKilometerStructureChunk" uses-template="entityCache">
+        <resources>
+            <heap>100</heap>
+        </resources>
     </cache>
     <cache alias="com.recom.entity.map.structure.MapStructureEntity" uses-template="entityCache">
+        <resources>
+            <heap>10000</heap>
+        </resources>
     </cache>
     <cache alias="com.recom.entity.map.SquareKilometerTopographyChunk" uses-template="entityCache">
+        <expiry>
+            <ttl unit="minutes">5</ttl>
+        </expiry>
+        <resources>
+            <heap>500</heap>
+        </resources>
     </cache>
     <cache alias="com.recom.entity.map.structure.ResourceNameEntity" uses-template="entityCache">
     </cache>
