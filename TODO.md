@@ -2,6 +2,8 @@
 
 # 1
 
+* spring actuator mbeans/jmx -> caches
+
 * Improve app cache handling!
   * Implement interface to provide a list of all App caches with key and value
   * this objects are scanned at startup and are used to create the caches
@@ -30,12 +32,6 @@
   * add menu
 * background entity layer?
 
-
-
-
-  * RAM issue; i guess all entities are loaded into memory; and never released?
-    * is hibernate responsible for this? hibernate l2 cache? get rid of it, or limit cache size or time to live
-  * -> eclipse store
 ------------------------------------------------------------
 
 # 1.5
