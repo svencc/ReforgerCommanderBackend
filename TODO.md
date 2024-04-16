@@ -2,12 +2,6 @@
 
 # 1
 
-* spring actuator mbeans/jmx -> caches
-
-* Improve app cache handling!
-  * Implement interface to provide a list of all App caches with key and value
-  * this objects are scanned at startup and are used to create the caches
-
 * Clustering Villages
   * add names to villages
   * add general map names
