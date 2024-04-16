@@ -2,13 +2,16 @@ package com.recom.api.commons;
 
 public class HttpCommons {
 
+    // SECURITY SCHEME
+    public static final String BEARER_AUTHENTICATION_REQUIREMENT = "BearerAuthentication";
+    public static final String BEARER_SCHEME = "bearer";
+    public static final String BEARER_FORMAT = "JWT";
+
+
     // 200er
     public static final String OK = "O.K.";
     public static final String OK_CODE = "200";
 
-    public static final String BEARER_AUTHENTICATION_REQUIREMENT = "BearerAuthentication";
-    public static final String BEARER_SCHEME = "bearer";
-    public static final String BEARER_FORMAT = "JWT";
 
     // 400er
     public static final String UNAUTHORIZED = "Unauthorized";
