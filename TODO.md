@@ -3,8 +3,10 @@
 # 1
 
 * Clustering Villages
+* Using Cluster-Scanline-D8-Algorithm for clustering rasterized data
   * add names to villages
   * add general map names
+
 * draw on pixel buffer
   * text
   * lines
