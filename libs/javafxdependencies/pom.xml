@@ -14,7 +14,7 @@
     <description>RECOM JavaFX Dependencies</description>
 
     <properties>
-        <javafx.version>22</javafx.version>
+        <javafx.version>22.0.1</javafx.version>
     </properties>
 
     <dependencies>
