@@ -90,7 +90,7 @@ public class MapExistsController {
         log.debug("Requested GET /api/v1/com.recom.dto.map/exists (JSON)");
 
         try {
-            final GameMap gameMap = assertionService.provideMap(mapExistsRequestDto.getMapName());
+            final GameMap gameMap = assertionService.provideMapOrExitWith404(mapExistsRequestDto.getMapName());
 
             executorService.submit(() -> {
                 try {

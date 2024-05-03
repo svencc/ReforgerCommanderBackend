@@ -80,7 +80,7 @@ public class MapRendererController {
     ) {
         log.debug("Requested POST /api/v1/map/renderer (JSON)");
 
-        final GameMap gameMap = assertionService.provideMap(mapRendererRequestDto.getMapName());
+        final GameMap gameMap = assertionService.provideMapOrExitWith404(mapRendererRequestDto.getMapName());
 
         return asyncCacheableRequestProcessor.processRequest(
                 MapRendererService.MAP_RENDERER_CACHE_NAME,

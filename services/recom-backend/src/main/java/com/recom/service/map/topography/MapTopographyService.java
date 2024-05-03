@@ -66,7 +66,7 @@ public class MapTopographyService {
 
 
     @Transactional(readOnly = true)
-    public byte[] provideHeightMapPNG(
+    public byte[] provideMapPNG(
             @NonNull final GameMap gameMap,
             @NonNull final Optional<MapComposerConfigurationDto> maybeMapComposerConfiguration
     ) {

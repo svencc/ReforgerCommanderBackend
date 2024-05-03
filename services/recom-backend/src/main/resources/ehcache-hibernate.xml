@@ -32,7 +32,7 @@
 <!--        <expiry><none/></expiry>-->
         <expiry>
 <!--            <ttl unit="hours">876000</ttl>-->
-            <ttl unit="minutes">5</ttl>
+            <ttl unit="minutes">10</ttl>
         </expiry>
         <listeners>
             <listener>

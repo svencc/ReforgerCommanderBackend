@@ -76,7 +76,7 @@ public class MapClustersController {
     ) {
         log.debug("Requested POST /api/v1/clusters (JSON)");
 
-        final GameMap gameMap = assertionService.provideMap(clusterRequestDto.getMapName());
+        final GameMap gameMap = assertionService.provideMapOrExitWith404(clusterRequestDto.getMapName());
 
         return asyncCacheableRequestProcessor.processRequest(
                 ClusteringService.CLUSTERINGSERVICE_GENERATECLUSTERS_CACHE,

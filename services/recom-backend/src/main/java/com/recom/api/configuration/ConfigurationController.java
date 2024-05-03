@@ -62,7 +62,7 @@ public class ConfigurationController {
         log.debug("Requested GET /api/v1/com.recom.dto.map/com.recom.configuration");
 
         final AtomicReference<GameMap> mapMeta = new AtomicReference<>();
-        maybeMapName.ifPresent((mapName) -> mapMeta.set(assertionService.provideMap(mapName)));
+        maybeMapName.ifPresent((mapName) -> mapMeta.set(assertionService.provideMapOrExitWith404(mapName)));
 
         return maybeMapName.map((final String mapName) -> ResponseEntity.status(HttpStatus.OK)
                         .cacheControl(CacheControl.noCache())
@@ -92,7 +92,7 @@ public class ConfigurationController {
     ) {
         log.debug("Requested POST /api/v1/com.recom.dto.map/com.recom.configuration");
 
-        final GameMap gameMap = assertionService.provideMap(mapName);
+        final GameMap gameMap = assertionService.provideMapOrExitWith404(mapName);
         configurationRESTManagementService.updateOverrides(gameMap, overrideList);
         applicationEventPublisher.publishEvent(new CacheResetAsyncEvent());
 

@@ -63,10 +63,10 @@ public class MapTopographyController {
         log.debug("Requested GET /api/v1/com.recom.dto.map/topography");
 
         try {
-            final GameMap gameMap = assertionService.provideMap(mapTopographyRequestDto.getMapName());
+            final GameMap gameMap = assertionService.provideMapOrExitWith404(mapTopographyRequestDto.getMapName());
             return ResponseEntity.status(HttpStatus.OK)
                     .cacheControl(CacheControl.noCache())
-                    .body(mapTopographyService.provideHeightMapPNG(gameMap, Optional.ofNullable(mapTopographyRequestDto.getMapComposerConfiguration())));
+                    .body(mapTopographyService.provideMapPNG(gameMap, Optional.ofNullable(mapTopographyRequestDto.getMapComposerConfiguration())));
         } catch (final HttpNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .cacheControl(CacheControl.noCache())
@@ -91,7 +91,7 @@ public class MapTopographyController {
     ) {
         log.debug("Requested GET /api/v1/com.recom.dto.map/topography/data");
 
-        final GameMap gameMap = assertionService.provideMap(mapTopographyRequestDto.getMapName());
+        final GameMap gameMap = assertionService.provideMapOrExitWith404(mapTopographyRequestDto.getMapName());
 
         final HeightMapDescriptorDto dto = HeightMapDescriptorMapper.INSTANCE.toDto(mapTopographyService.provideDEMDescriptor(gameMap), gameMap.getName());
         return ResponseEntity.status(HttpStatus.OK)

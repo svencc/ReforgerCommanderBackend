@@ -55,7 +55,7 @@ public class MapToolsMilitaryController {
             @NonNull final List<String> entityMatcherList
     ) {
         log.debug("Requested POST /api/v1/com.recom.configuration/com.recom.dto.map-tools/resources/military");
-        final GameMap gameMap = assertionService.provideMap(mapName);
+        final GameMap gameMap = assertionService.provideMapOrExitWith404(mapName);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())
@@ -80,7 +80,7 @@ public class MapToolsMilitaryController {
             @NonNull final List<String> entityMatcherList
     ) {
         log.debug("Requested DELETE /api/v1/com.recom.configuration/com.recom.dto.map-tools/resources/military");
-        final GameMap gameMap = assertionService.provideMap(mapName);
+        final GameMap gameMap = assertionService.provideMapOrExitWith404(mapName);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .cacheControl(CacheControl.noCache())

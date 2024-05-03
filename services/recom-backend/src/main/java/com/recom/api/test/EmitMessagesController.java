@@ -65,7 +65,7 @@ public class EmitMessagesController {
             @NonNull @Valid final MessageBusLongPollRequestDto messageBusLongPollRequestDto
     ) {
         log.debug("Requested POST /api/v1/test/emit-messages (JSON)");
-        final GameMap gameMap = assertionService.provideMap(messageBusLongPollRequestDto.getMapName());
+        final GameMap gameMap = assertionService.provideMapOrExitWith404(messageBusLongPollRequestDto.getMapName());
 
         messageBusService.sendMessage(MessageContainer.builder()
                 .gameMap(gameMap)

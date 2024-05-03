@@ -30,7 +30,7 @@ class AssertionServiceTest {
         when(gameMapService.provideGameMap(mapName)).thenReturn(Optional.of(gameMap));
 
         // Act and Assert
-        assertDoesNotThrow(() -> serviceUnderTest.provideMap(mapName));
+        assertDoesNotThrow(() -> serviceUnderTest.provideMapOrExitWith404(mapName));
     }
 
     @Test
@@ -41,7 +41,7 @@ class AssertionServiceTest {
 
         // Act and Assert
         HttpNotFoundException exception = assertThrows(HttpNotFoundException.class,
-                () -> serviceUnderTest.provideMap(mapName));
+                () -> serviceUnderTest.provideMapOrExitWith404(mapName));
 
         assertEquals("Map nonExistingMap does not exist", exception.getMessage());
     }

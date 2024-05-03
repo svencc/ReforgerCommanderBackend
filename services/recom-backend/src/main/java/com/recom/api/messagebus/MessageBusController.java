@@ -85,7 +85,7 @@ public class MessageBusController {
         } else {
             log.debug("Requested POST /api/v1/com.recom.dto.message-bus (JSON)");
         }
-        final GameMap gameMap = assertionService.provideMap(messageBusLongPollRequestDto.getMapName());
+        final GameMap gameMap = assertionService.provideMapOrExitWith404(messageBusLongPollRequestDto.getMapName());
 
         final ResponseBodyEmitter emitter;
         final Long sinceEpochMillis = Optional.ofNullable(messageBusLongPollRequestDto.getSinceEpochMilliseconds())

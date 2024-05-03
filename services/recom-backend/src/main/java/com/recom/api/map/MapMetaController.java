@@ -55,7 +55,7 @@ public class MapMetaController {
     ) {
         if (maybeMapName.isPresent()) {
             log.debug("Requested GET /api/v1/com.recom.dto.map/meta?mapName={}", maybeMapName.get());
-            final GameMap gameMap = assertionService.provideMap(maybeMapName.get());
+            final GameMap gameMap = assertionService.provideMapOrExitWith404(maybeMapName.get());
 
             return ResponseEntity.status(HttpStatus.OK)
                     .cacheControl(CacheControl.noCache())
