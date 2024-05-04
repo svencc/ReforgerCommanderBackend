@@ -22,14 +22,14 @@ public class BaseMapRasterizer implements MapLayerRasterizer {
     private final ARGBCalculator argbCalculator = new ARGBCalculator();
     @Getter
     @NonNull
-    private MapLayerRasterizerConfiguration mapLayerRasterizerConfiguration = MapLayerRasterizerConfiguration.builder()
+    private final MapLayerRasterizerConfiguration mapLayerRasterizerConfiguration = MapLayerRasterizerConfiguration.builder()
             .rasterizerName(getClass().getSimpleName())
             .layerOrder(LayerOrder.BASE_MAP)
             .build();
 
 
     @NonNull
-    public int[] rasterizeBaseMap(
+    private int[] rasterizeBaseMap(
             @NonNull final DEMDescriptor demDescriptor,
             @NonNull final MapDesignScheme mapScheme
     ) {

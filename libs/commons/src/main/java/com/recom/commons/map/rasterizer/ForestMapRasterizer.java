@@ -37,7 +37,7 @@ public class ForestMapRasterizer implements MapLayerRasterizer {
     @NonNull
     private final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
     @NonNull
-    private Optional<CompletableFuture<List<ForestItem>>> maybePreperationTask = Optional.empty();
+    private Optional<CompletableFuture<List<ForestItem>>> maybePreparationTask = Optional.empty();
 
 
     @NonNull
@@ -48,7 +48,7 @@ public class ForestMapRasterizer implements MapLayerRasterizer {
             .build();
 
     @NonNull
-    public int[] rasterizeForestMap(
+    private int[] rasterizeForestMap(
             @NonNull final DEMDescriptor demDescriptor,
             final int forestCellSize,
             @NonNull final SpacialIndex<ForestItem> spacialIndex,
@@ -76,10 +76,10 @@ public class ForestMapRasterizer implements MapLayerRasterizer {
 
     @Override
     public void prepareAsync(@NonNull final MapComposerWorkPackage workPackage) {
-        maybePreperationTask.ifPresent(listCompletableFuture -> listCompletableFuture.cancel(true));
+        maybePreparationTask.ifPresent(listCompletableFuture -> listCompletableFuture.cancel(true));
         mapComposer.getForestProvider().ifPresentOrElse(
-                forestProvider -> maybePreperationTask = Optional.of(provideForestInFuture(workPackage)),
-                () -> log.error("ForestMapRasterizer cant prepare data, because no forest provider is registered!")
+                forestProvider -> maybePreparationTask = Optional.of(provideForestInFuture(workPackage)),
+                () -> log.error("{} cant prepare data, because no forest provider is registered!", getClass().getSimpleName())
         );
     }
 
@@ -101,8 +101,8 @@ public class ForestMapRasterizer implements MapLayerRasterizer {
 
     @Override
     public void render(@NonNull final MapComposerWorkPackage workPackage) {
-        if (maybePreperationTask.isPresent()) {
-            final List<ForestItem> forestEntities = maybePreperationTask.get().join();
+        if (maybePreparationTask.isPresent()) {
+            final List<ForestItem> forestEntities = maybePreparationTask.get().join();
 
             final int mapWidthInMeter = workPackage.getMapComposerConfiguration().getDemDescriptor().getMapWidthInMeter();
             final int mapHeightInMeter = workPackage.getMapComposerConfiguration().getDemDescriptor().getMapHeightInMeter();

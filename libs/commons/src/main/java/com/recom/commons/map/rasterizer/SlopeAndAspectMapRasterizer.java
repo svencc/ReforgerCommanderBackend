@@ -19,7 +19,7 @@ public class SlopeAndAspectMapRasterizer implements MapLayerRasterizer {
 
     @Getter
     @NonNull
-    private MapLayerRasterizerConfiguration mapLayerRasterizerConfiguration = MapLayerRasterizerConfiguration.builder()
+    private final MapLayerRasterizerConfiguration mapLayerRasterizerConfiguration = MapLayerRasterizerConfiguration.builder()
             .rasterizerName(getClass().getSimpleName())
             .layerOrder(LayerOrder.SLOPE_AND_ASPECT_MAP)
             .sequentialCoreData(true)
@@ -27,7 +27,7 @@ public class SlopeAndAspectMapRasterizer implements MapLayerRasterizer {
 
 
     @NonNull
-    public SlopeAndAspectMap rasterizeSlopeAndAspectMap(@NonNull final DEMDescriptor demDescriptor) {
+    private SlopeAndAspectMap rasterizeSlopeAndAspectMap(@NonNull final DEMDescriptor demDescriptor) {
         final D8AlgorithmForSlopeAndAspectMap algorithmForSlopeAndAspect = new D8AlgorithmForSlopeAndAspectMap(demDescriptor.getStepSize().doubleValue());
         final SlopeAndAspect[][] slopeAndAspects = algorithmForSlopeAndAspect.generateSlopeAndAspectMap(demDescriptor.getDem());
 

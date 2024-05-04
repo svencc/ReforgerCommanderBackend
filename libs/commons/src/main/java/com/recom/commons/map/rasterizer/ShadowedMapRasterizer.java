@@ -21,14 +21,14 @@ import java.util.stream.IntStream;
 public class ShadowedMapRasterizer implements MapLayerRasterizer {
 
     @NonNull
-    private MapLayerRasterizerConfiguration mapLayerRasterizerConfiguration = MapLayerRasterizerConfiguration.builder()
+    private final MapLayerRasterizerConfiguration mapLayerRasterizerConfiguration = MapLayerRasterizerConfiguration.builder()
             .rasterizerName(getClass().getSimpleName())
             .layerOrder(LayerOrder.SHADOWED_MAP)
             .build();
 
 
     @NonNull
-    public int[] rasterizeShadowedMap(
+    private int[] rasterizeShadowedMap(
             @NonNull final DEMDescriptor demDescriptor,
             @NonNull final SlopeAndAspectMap slopeAndAspectMap,
             @NonNull final MapDesignScheme mapScheme

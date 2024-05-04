@@ -12,6 +12,7 @@ public class LayerOrder {
     public static int HEIGHT_MAP = 300;
     public static int FOREST_MAP = 600;
     public static int STRUCTURE_MAP = 500;
+    public static int STRUCTURE_CLUSTER_MAP = STRUCTURE_MAP + 5;
     public static int SHADOWED_MAP = 600;
     public static int CONTOUR_MAP = 1000;
 

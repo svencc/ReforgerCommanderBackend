@@ -18,6 +18,7 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -58,6 +59,7 @@ public class MapComposer {
         mapComposer.registerRenderer(new BaseMapRasterizer());
         mapComposer.registerRenderer(new ShadowedMapRasterizer());
         mapComposer.registerRenderer(new StructureMapRasterizer(mapComposer));
+        mapComposer.registerRenderer(new StructureClusterMapRasterizer(mapComposer));
         mapComposer.registerRenderer(new ForestMapRasterizer(mapComposer));
         mapComposer.registerRenderer(new ContourLineMapRasterizer());
 
@@ -74,7 +76,7 @@ public class MapComposer {
 
         prepareDataAsync(workPackage);
         renderCoreDataInSequence(workPackage);
-        renderDataInParallel(workPackage);
+        renderDataInParallelAndInBatches(workPackage);
 
         handleException(workPackage);
     }
@@ -89,25 +91,31 @@ public class MapComposer {
     }
 
     @NonNull
-    private void renderDataInParallel(@NonNull final MapComposerWorkPackage workPackage) {
-        mapLayerRasterizerPipeline
-                .stream()
-                .sorted(Comparator.comparingInt((final MapLayerRasterizer mapLayerRasterizer) -> mapLayerRasterizer.getMapLayerRasterizerConfiguration().getLayerOrder()))
-                .filter((final MapLayerRasterizer renderer) -> renderer.getMapLayerRasterizerConfiguration().isEnabled())
-                .filter((final MapLayerRasterizer renderer) -> !renderer.getMapLayerRasterizerConfiguration().isSequentialCoreData())
-                .map(renderer -> CompletableFuture.supplyAsync(() -> {
-                    try {
-                        renderer.render(workPackage);
-                    } catch (final Throwable t) {
-                        log.error("Failed to render data!", t);
-                        workPackage.getReport().logException(t);
-                    }
+    private void renderDataInParallelAndInBatches(@NonNull final MapComposerWorkPackage workPackage) {
+        mapLayerRasterizerPipeline.stream()
+                .collect(Collectors.groupingBy(rasterizer -> rasterizer.getMapLayerRasterizerConfiguration().getBatch()))
+                .entrySet().stream()
+                .sorted(Comparator.comparingInt(Map.Entry::getKey))
+                .forEach(batch -> {
+                    final List<MapLayerRasterizer> taskListOfBatch = batch.getValue();
+                    taskListOfBatch.stream()
+                            .sorted(Comparator.comparingInt((final MapLayerRasterizer mapLayerRasterizer) -> mapLayerRasterizer.getMapLayerRasterizerConfiguration().getLayerOrder()))
+                            .filter((final MapLayerRasterizer renderer) -> renderer.getMapLayerRasterizerConfiguration().isEnabled())
+                            .filter((final MapLayerRasterizer renderer) -> !renderer.getMapLayerRasterizerConfiguration().isSequentialCoreData())
+                            .map(renderer -> CompletableFuture.supplyAsync(() -> {
+                                try {
+                                    renderer.render(workPackage);
+                                } catch (final Throwable t) {
+                                    log.error("Failed to render data!", t);
+                                    workPackage.getReport().logException(t);
+                                }
 
-                    return workPackage;
-                }, executorService))
-                .toList().stream() // terminate task creation before joining
-                .map(CompletableFuture::join)
-                .reduce(workPackage, (wrkPackage, b) -> wrkPackage, (wrkPackage, b) -> wrkPackage);
+                                return workPackage;
+                            }, executorService))
+                            .toList().stream() // terminate task creation before joining
+                            .map(CompletableFuture::join)
+                            .reduce(workPackage, (wrkPackage, b) -> wrkPackage, (wrkPackage, b) -> wrkPackage);
+                });
     }
 
     @NonNull

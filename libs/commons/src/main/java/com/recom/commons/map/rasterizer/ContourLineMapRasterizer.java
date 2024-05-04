@@ -17,14 +17,14 @@ import java.util.stream.IntStream;
 public class ContourLineMapRasterizer implements MapLayerRasterizer {
 
     @NonNull
-    private MapLayerRasterizerConfiguration mapLayerRasterizerConfiguration = MapLayerRasterizerConfiguration.builder()
+    private final MapLayerRasterizerConfiguration mapLayerRasterizerConfiguration = MapLayerRasterizerConfiguration.builder()
             .rasterizerName(getClass().getSimpleName())
             .layerOrder(LayerOrder.CONTOUR_MAP)
             .build();
 
 
     @NonNull
-    public int[] rasterizeContourMap(
+    private int[] rasterizeContourMap(
             @NonNull final DEMDescriptor DEMDescriptor,
             @NonNull final MapDesignScheme mapScheme
     ) {

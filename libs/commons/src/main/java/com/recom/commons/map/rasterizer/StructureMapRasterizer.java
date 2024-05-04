@@ -1,6 +1,7 @@
 package com.recom.commons.map.rasterizer;
 
 import com.recom.commons.calculator.CoordinateConverter;
+import com.recom.commons.calculator.d8algorithm.D8AlgorithmForStructureClusterMap;
 import com.recom.commons.calculator.d8algorithm.D8AlgorithmForStructureMap;
 import com.recom.commons.map.MapComposer;
 import com.recom.commons.map.rasterizer.configuration.LayerOrder;
@@ -37,7 +38,7 @@ public class StructureMapRasterizer implements MapLayerRasterizer {
     @NonNull
     private final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
     @NonNull
-    private Optional<CompletableFuture<List<StructureItem>>> maybePreperationTask = Optional.empty();
+    private Optional<CompletableFuture<List<StructureItem>>> maybePreparationTask = Optional.empty();
 
 
     @NonNull
@@ -48,7 +49,7 @@ public class StructureMapRasterizer implements MapLayerRasterizer {
             .build();
 
     @NonNull
-    public int[] rasterizeStructureMap(
+    private int[] rasterizeStructureMap(
             @NonNull final DEMDescriptor demDescriptor,
             final int structureCellSize,
             @NonNull final SpacialIndex<StructureItem> spacialIndex,
@@ -69,6 +70,28 @@ public class StructureMapRasterizer implements MapLayerRasterizer {
         return pixelBuffer;
     }
 
+    @NonNull
+    private int[] rasterizeStructureClusterMap(
+            @NonNull final DEMDescriptor demDescriptor,
+            final int structureCellSize,
+            @NonNull final SpacialIndex<StructureItem> spacialIndex,
+            @NonNull final MapDesignScheme mapScheme
+    ) {
+        final D8AlgorithmForStructureClusterMap d8AlgorithmForStructureClusterMap = new D8AlgorithmForStructureClusterMap(structureCellSize);
+        final int[][] structureMap = d8AlgorithmForStructureClusterMap.generateStructureClusterMap(demDescriptor, spacialIndex, mapScheme);
+
+        final int width = demDescriptor.getDemWidth();
+        final int height = demDescriptor.getDemHeight();
+        final int[] pixelBuffer = new int[width * height];
+        IntStream.range(0, width).parallel().forEach(demX -> {
+            for (int demY = 0; demY < height; demY++) {
+                pixelBuffer[demX + demY * width] = structureMap[demX][demY];
+            }
+        });
+
+        return pixelBuffer;
+    }
+
     @Override
     public String getRasterizerName() {
         return getClass().getSimpleName();
@@ -76,10 +99,10 @@ public class StructureMapRasterizer implements MapLayerRasterizer {
 
     @Override
     public void prepareAsync(@NonNull final MapComposerWorkPackage workPackage) {
-        maybePreperationTask.ifPresent(listCompletableFuture -> listCompletableFuture.cancel(true));
+        maybePreparationTask.ifPresent(listCompletableFuture -> listCompletableFuture.cancel(true));
         mapComposer.getStructureProvider().ifPresentOrElse(
-                structureProvider -> maybePreperationTask = Optional.of(provideStructureInFuture(workPackage)),
-                () -> log.error("StructureMapRasterizer cant prepare data, because no structure provider is registered!")
+                structureProvider -> maybePreparationTask = Optional.of(provideStructureInFuture(workPackage)),
+                () -> log.error("{} cant prepare data, because no structure provider is registered!", getClass().getSimpleName())
         );
     }
 
@@ -101,8 +124,8 @@ public class StructureMapRasterizer implements MapLayerRasterizer {
 
     @Override
     public void render(@NonNull final MapComposerWorkPackage workPackage) {
-        if (maybePreperationTask.isPresent()) {
-            final List<StructureItem> structureEntities = maybePreperationTask.get().join();
+        if (maybePreparationTask.isPresent()) {
+            final List<StructureItem> structureEntities = maybePreparationTask.get().join();
 
             final int mapWidthInMeter = workPackage.getMapComposerConfiguration().getDemDescriptor().getMapWidthInMeter();
             final int mapHeightInMeter = workPackage.getMapComposerConfiguration().getDemDescriptor().getMapHeightInMeter();
@@ -111,6 +134,9 @@ public class StructureMapRasterizer implements MapLayerRasterizer {
             final SpacialIndex<StructureItem> spatialIndex = createStructureSpacialIndex(mapWidthInMeter, mapHeightInMeter, structureCellSizeInMeter, structureEntities);
 
             final int[] rawStructureMap = rasterizeStructureMap(workPackage.getMapComposerConfiguration().getDemDescriptor(), structureCellSizeInMeter, spatialIndex, workPackage.getMapComposerConfiguration().getMapDesignScheme());
+            // @TODO we have to do it this way!
+            final int[] rawStructureClusterMap = rasterizeStructureClusterMap(workPackage.getMapComposerConfiguration().getDemDescriptor(), structureCellSizeInMeter, spatialIndex, workPackage.getMapComposerConfiguration().getMapDesignScheme());
+
             workPackage.getPipelineArtifacts().addArtifact(this, rawStructureMap);
         } else {
             log.error("StructureMapRasterizer is not prepared, and prepareAsync was not called in advance!");

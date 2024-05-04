@@ -6,6 +6,7 @@ import com.recom.entity.map.GameMap;
 import com.recom.persistence.map.structure.MapStructurePersistenceLayer;
 import com.recom.service.configuration.ConfigurationDescriptorProvider;
 import com.recom.service.configuration.ConfigurationValueProvider;
+import jakarta.annotation.Nullable;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ForestProviderGenerator implements SpacialItemProviderGenerator<ForestProvidable> {
 
+    @Nullable
+    private List<ForestItem> cachedForestItems = null;
     @NonNull
     private final MapStructurePersistenceLayer mapStructurePersistenceLayer;
     @NonNull
@@ -27,13 +30,17 @@ public class ForestProviderGenerator implements SpacialItemProviderGenerator<For
         return () -> {
             final List<String> forestResources = configurationValueProvider.queryValue(gameMap, ConfigurationDescriptorProvider.CLUSTERING_FOREST_RESOURCES_LIST);
 
-            return mapStructurePersistenceLayer.projectStructureItemByMapNameAndResourceNameIn(gameMap, forestResources).parallelStream()
-                    .map(structureItem -> ForestItem.builder()
-                            .coordinateX(structureItem.getCoordinateX())
-                            .coordinateY(structureItem.getCoordinateY())
-                            .build()
-                    )
-                    .toList();
+            if (cachedForestItems == null) {
+                cachedForestItems = mapStructurePersistenceLayer.projectStructureItemByMapNameAndResourceNameIn(gameMap, forestResources).parallelStream()
+                        .map(structureItem -> ForestItem.builder()
+                                .coordinateX(structureItem.getCoordinateX())
+                                .coordinateY(structureItem.getCoordinateY())
+                                .build()
+                        )
+                        .toList();
+            }
+
+            return cachedForestItems;
         };
     }
 

@@ -21,7 +21,7 @@ import java.util.stream.IntStream;
 public class SlopeMapRasterizer implements MapLayerRasterizer {
 
     @NonNull
-    private MapLayerRasterizerConfiguration mapLayerRasterizerConfiguration = MapLayerRasterizerConfiguration.builder()
+    private final MapLayerRasterizerConfiguration mapLayerRasterizerConfiguration = MapLayerRasterizerConfiguration.builder()
             .rasterizerName(getClass().getSimpleName())
             .layerOrder(LayerOrder.SLOPE_MAP)
             .enabled(false)
@@ -29,7 +29,7 @@ public class SlopeMapRasterizer implements MapLayerRasterizer {
 
 
     @NonNull
-    public int[] rasterizeSlopeMap(
+    private int[] rasterizeSlopeMap(
             @NonNull final DEMDescriptor DEMDescriptor,
             @NonNull final MapDesignScheme mapScheme
     ) {

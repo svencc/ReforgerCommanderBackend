@@ -7,9 +7,9 @@ public class CoordinateConverter {
 
     public double threeDeeZToTwoDeeY(
             final double yCoordinate,
-            final double demHeightInMeter
+            final double mapHeightInMeter
     ) {
-        return (demHeightInMeter) - yCoordinate;
+        return (mapHeightInMeter) - yCoordinate;
     }
 
 }

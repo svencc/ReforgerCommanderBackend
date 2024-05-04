@@ -20,6 +20,8 @@ public class MapLayerRasterizerConfiguration {
     private boolean sequentialCoreData = false;
     @Builder.Default
     private int layerOrder = 0;
+    @Builder.Default
+    private int batch = 0;
 
     public void applyTo(@NonNull final MapLayerRasterizer renderer) {
         renderer.getMapLayerRasterizerConfiguration().setLayerOrder(layerOrder);

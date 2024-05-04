@@ -19,7 +19,7 @@ public class HeightMapRasterizer implements MapLayerRasterizer {
     private final DEMUpscaleAlgorithmBilinear interpolator;
     @Getter
     @NonNull
-    private MapLayerRasterizerConfiguration mapLayerRasterizerConfiguration = MapLayerRasterizerConfiguration.builder()
+    private final MapLayerRasterizerConfiguration mapLayerRasterizerConfiguration = MapLayerRasterizerConfiguration.builder()
             .rasterizerName(getClass().getSimpleName())
             .layerOrder(LayerOrder.HEIGHT_MAP)
             .visible(false)
