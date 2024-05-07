@@ -52,9 +52,9 @@ public class DEMInvertService {
         }
 
         return DEMDescriptor.builder()
-                .stepSize(BigDecimal.ONE)
-                .scanIterationsX(gameMap.getMapDimensions().getDimensionX().intValue())
-                .scanIterationsZ(gameMap.getMapDimensions().getDimensionZ().intValue())
+                .stepSize(BigDecimal.ONE) // guessing just one
+//                .scanIterationsX(gameMap.getMapDimensions().getDimensionX().intValue())
+//                .scanIterationsZ(gameMap.getMapDimensions().getDimensionZ().intValue())
                 .dem(heightMap)
                 .seaLevel(gameMap.getMapDimensions().getOceanBaseHeight().floatValue())
                 .maxHeight(maxHeight)

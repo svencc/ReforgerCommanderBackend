@@ -1,10 +1,7 @@
 package com.recom.commons.model;
 
 import com.recom.commons.math.Round;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 
@@ -15,9 +12,8 @@ import java.math.BigDecimal;
 public class DEMDescriptor implements Cloneable {
 
     // meta data
+    @Getter
     private BigDecimal stepSize;
-    private Integer scanIterationsX;
-    private Integer scanIterationsZ;
 
     // surface data
     private Float seaLevel;
@@ -41,20 +37,10 @@ public class DEMDescriptor implements Cloneable {
         return Round.halfUp(stepSize.multiply(BigDecimal.valueOf(getDemHeight())).intValue());
     }
 
-//    public Integer getStepSize() {
-//        return stepSize.intValue();
-//    }
-
-    public BigDecimal getStepSize() {
-        return stepSize;
-    }
-
     @Override
     public DEMDescriptor clone() {
         return DEMDescriptor.builder()
                 .stepSize(stepSize)
-                .scanIterationsX(scanIterationsX)
-                .scanIterationsZ(scanIterationsZ)
                 .seaLevel(seaLevel)
                 .maxWaterDepth(maxWaterDepth)
                 .maxHeight(maxHeight)

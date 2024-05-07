@@ -74,6 +74,7 @@ public class MapTopographyController {
         }
     }
 
+    @Deprecated
     @Operation(
             summary = "Gets com.recom.dto.map topography",
             description = "Return a list of measured height points and some meta.",

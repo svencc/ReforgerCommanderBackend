@@ -1,6 +1,7 @@
-package com.recom.commons.map.rasterizer;
+package com.recom.commons.map.rasterizer.batch0;
 
 import com.recom.commons.calculator.d8algorithm.D8AlgorithmForSlopeAndAspectMap;
+import com.recom.commons.map.rasterizer.configuration.BatchOrder;
 import com.recom.commons.map.rasterizer.configuration.LayerOrder;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRasterizer;
 import com.recom.commons.model.DEMDescriptor;
@@ -21,10 +22,9 @@ public class SlopeAndAspectMapRasterizer implements MapLayerRasterizer {
     @NonNull
     private final MapLayerRasterizerConfiguration mapLayerRasterizerConfiguration = MapLayerRasterizerConfiguration.builder()
             .rasterizerName(getClass().getSimpleName())
+            .batch(BatchOrder.BASIC_BATCH)
             .layerOrder(LayerOrder.SLOPE_AND_ASPECT_MAP)
-            .sequentialCoreData(true)
             .build();
-
 
     @NonNull
     private SlopeAndAspectMap rasterizeSlopeAndAspectMap(@NonNull final DEMDescriptor demDescriptor) {
@@ -39,11 +39,6 @@ public class SlopeAndAspectMapRasterizer implements MapLayerRasterizer {
     @Override
     public String getRasterizerName() {
         return getClass().getSimpleName();
-    }
-
-    @Override
-    public void prepareAsync(@NonNull final MapComposerWorkPackage workPackage) {
-        return;
     }
 
     @Override

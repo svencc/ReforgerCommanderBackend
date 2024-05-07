@@ -5,7 +5,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class LayerOrder {
 
+    public static int STRUCTURE_SPATIAL_INDEX = 99;
+    public static int FOREST_SPATIAL_INDEX = 99;
     public static int SLOPE_AND_ASPECT_MAP = 100;
+
     public static int SLOPE_MAP = 110;
     public static int LAND_MAP = 190;
     public static int BASE_MAP = 200;

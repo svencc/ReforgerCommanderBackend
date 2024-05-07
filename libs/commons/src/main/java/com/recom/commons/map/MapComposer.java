@@ -1,7 +1,10 @@
 package com.recom.commons.map;
 
 import com.recom.commons.calculator.ARGBCalculator;
-import com.recom.commons.map.rasterizer.*;
+import com.recom.commons.map.rasterizer.batch0.ForestSpatialIndexCreator;
+import com.recom.commons.map.rasterizer.batch0.SlopeAndAspectMapRasterizer;
+import com.recom.commons.map.rasterizer.batch0.StructureSpatialIndexCreator;
+import com.recom.commons.map.rasterizer.batch1.*;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRasterizer;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
 import com.recom.commons.model.maprendererpipeline.dataprovider.forest.ForestProvidable;
@@ -13,7 +16,6 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.MissingRequiredPropertiesException;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -51,15 +53,21 @@ public class MapComposer {
     public static MapComposer withDefaultConfiguration() {
         final MapComposer mapComposer = new MapComposer();
 
+        //batch0
         mapComposer.registerRenderer(new SlopeAndAspectMapRasterizer());
-        mapComposer.registerRenderer(new SlopeMapRasterizer()); // optional
+        mapComposer.registerRenderer(new StructureSpatialIndexCreator(mapComposer));
+        mapComposer.registerRenderer(new ForestSpatialIndexCreator(mapComposer));
 
+        //batch1
+        mapComposer.registerRenderer(new SlopeMapRasterizer());
+
+        //batch2
         mapComposer.registerRenderer(new HeightMapRasterizer());
         mapComposer.registerRenderer(new LandMapRasterizer());
         mapComposer.registerRenderer(new BaseMapRasterizer());
         mapComposer.registerRenderer(new ShadowedMapRasterizer());
         mapComposer.registerRenderer(new StructureMapRasterizer(mapComposer));
-        mapComposer.registerRenderer(new StructureClusterMapRasterizer(mapComposer));
+        mapComposer.registerRenderer(new StructureClusterRasterizer(mapComposer));
         mapComposer.registerRenderer(new ForestMapRasterizer(mapComposer));
         mapComposer.registerRenderer(new ContourLineMapRasterizer());
 
@@ -72,22 +80,19 @@ public class MapComposer {
 
     @NonNull
     public void execute(@NonNull final MapComposerWorkPackage workPackage) throws MissingRequiredPropertiesException {
+        assertDataProvidersAreRegistered();
         applyConfigurationToRasterizer(workPackage);
 
-        prepareDataAsync(workPackage);
-        renderCoreDataInSequence(workPackage);
         renderDataInParallelAndInBatches(workPackage);
 
         handleException(workPackage);
     }
 
-    private void prepareDataAsync(@NonNull final MapComposerWorkPackage workPackage) {
-        mapLayerRasterizerPipeline
-                .stream()
-                .sorted(Comparator.comparingInt((final MapLayerRasterizer mapLayerRasterizer) -> mapLayerRasterizer.getMapLayerRasterizerConfiguration().getLayerOrder()))
-                .filter((final MapLayerRasterizer renderer) -> renderer.getMapLayerRasterizerConfiguration().isEnabled())
-                .peek(renderer -> renderer.prepareAsync(workPackage))
-                .toList();
+    private void assertDataProvidersAreRegistered() {
+        if (forestProvider.isEmpty() || structureProvider.isEmpty()) {
+            log.error("No forest provider is registered!");
+            throw new IllegalStateException("Data providers are not registered!");
+        }
     }
 
     @NonNull
@@ -101,7 +106,6 @@ public class MapComposer {
                     taskListOfBatch.stream()
                             .sorted(Comparator.comparingInt((final MapLayerRasterizer mapLayerRasterizer) -> mapLayerRasterizer.getMapLayerRasterizerConfiguration().getLayerOrder()))
                             .filter((final MapLayerRasterizer renderer) -> renderer.getMapLayerRasterizerConfiguration().isEnabled())
-                            .filter((final MapLayerRasterizer renderer) -> !renderer.getMapLayerRasterizerConfiguration().isSequentialCoreData())
                             .map(renderer -> CompletableFuture.supplyAsync(() -> {
                                 try {
                                     renderer.render(workPackage);
@@ -116,24 +120,6 @@ public class MapComposer {
                             .map(CompletableFuture::join)
                             .reduce(workPackage, (wrkPackage, b) -> wrkPackage, (wrkPackage, b) -> wrkPackage);
                 });
-    }
-
-    @NonNull
-    private void renderCoreDataInSequence(@NonNull final MapComposerWorkPackage workPackage) {
-        mapLayerRasterizerPipeline
-                .stream()
-                .sorted(Comparator.comparingInt((final MapLayerRasterizer mapLayerRasterizer) -> mapLayerRasterizer.getMapLayerRasterizerConfiguration().getLayerOrder()))
-                .filter((final MapLayerRasterizer renderer) -> renderer.getMapLayerRasterizerConfiguration().isEnabled())
-                .filter((final MapLayerRasterizer renderer) -> renderer.getMapLayerRasterizerConfiguration().isSequentialCoreData())
-                .peek(renderer -> {
-                    try {
-                        renderer.render(workPackage);
-                    } catch (final IOException e) {
-                        log.error("Failed to render data!", e);
-                        workPackage.getReport().logException(e);
-                    }
-                })
-                .reduce(workPackage, (wrkPackage, b) -> wrkPackage, (wrkPackage, b) -> wrkPackage);
     }
 
     private void handleException(@NonNull final MapComposerWorkPackage workPackage) throws MissingRequiredPropertiesException {

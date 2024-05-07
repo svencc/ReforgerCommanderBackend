@@ -1,6 +1,6 @@
 package com.recom.commander.configuration;
 
-import com.recom.commons.map.rasterizer.HeightMapRasterizer;
+import com.recom.commons.map.rasterizer.batch1.HeightMapRasterizer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

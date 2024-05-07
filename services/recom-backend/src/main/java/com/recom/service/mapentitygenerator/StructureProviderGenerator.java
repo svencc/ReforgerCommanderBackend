@@ -9,38 +9,66 @@ import com.recom.service.configuration.ConfigurationValueProvider;
 import jakarta.annotation.Nullable;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Synchronized;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 @Service
 @RequiredArgsConstructor
 public class StructureProviderGenerator implements SpacialItemProviderGenerator<StructureProvidable> {
+    private static final Logger log = LoggerFactory.getLogger(StructureProviderGenerator.class); // @TODO: glaub SpacialItemProviderGenerator können wir einfach gegen ein CompleteableFuture tauschen!!!
 
     @Nullable
-    private List<StructureItem> cachedStructures = null;
+    private List<StructureItem> cachedStructureItems = null;
     @NonNull
     private final MapStructurePersistenceLayer mapStructurePersistenceLayer;
     @NonNull
     private final ConfigurationValueProvider configurationValueProvider;
+    @NonNull
+    private final List<CompletableFuture<List<StructureItem>>> generatedFutures = new ArrayList<>();
+    @Nullable
+    private Future<?> generator;
 
 
     @NonNull
-    public StructureProvidable generate(@NonNull final GameMap gameMap) {
+    @Synchronized
+    public StructureProvidable generateProvider(@NonNull final GameMap gameMap) {
         return () -> {
-            final List<String> structureResources = configurationValueProvider.queryValue(gameMap, ConfigurationDescriptorProvider.CLUSTERING_VILLAGE_RESOURCES_LIST);
+            if (cachedStructureItems == null && generator == null) {
+                final CompletableFuture<List<StructureItem>> future = new CompletableFuture<>();
+                generatedFutures.add(future);
 
-            if (cachedStructures == null) {
-                cachedStructures = mapStructurePersistenceLayer.projectStructureItemByMapNameAndResourceNameIn(gameMap, structureResources).parallelStream()
-                        .map(structureItem -> StructureItem.builder()
-                                .coordinateX(structureItem.getCoordinateX())
-                                .coordinateY(structureItem.getCoordinateY())
-                                .build()
-                        )
-                        .toList();
+                generator = Executors.newVirtualThreadPerTaskExecutor().submit(() -> {
+                    try {
+
+                    cachedStructureItems = mapStructurePersistenceLayer.projectStructureItemByMapNameAndResourceNameIn(gameMap, configurationValueProvider.queryValue(gameMap, ConfigurationDescriptorProvider.CLUSTERING_VILLAGE_RESOURCES_LIST)).parallelStream()
+                            .map(structureItem -> StructureItem.builder()
+                                    .coordinateX(structureItem.getCoordinateX())
+                                    .coordinateY(structureItem.getCoordinateY())
+                                    .build()
+                            )
+                            .toList();
+                    generatedFutures.forEach(localFuture -> localFuture.complete(cachedStructureItems));
+                    } catch (Throwable t) {
+                        t.printStackTrace();
+                        log.error("Error while generating structure items", t);
+                    }
+                });
+
+                return future;
+            } else {
+                final CompletableFuture<List<StructureItem>> future = new CompletableFuture<>();
+                future.complete(cachedStructureItems);
+
+                return future;
             }
-
-            return cachedStructures;
         };
     }
 

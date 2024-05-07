@@ -1,13 +1,14 @@
 package com.recom.commons.model.maprendererpipeline.dataprovider.structure;
 
-import com.recom.commons.model.maprendererpipeline.dataprovider.SpacialItemProvidable;
+import com.recom.commons.model.maprendererpipeline.dataprovider.SpacialItemsProvidable;
 import lombok.NonNull;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
-public interface StructureProvidable extends SpacialItemProvidable<StructureItem> {
+public interface StructureProvidable extends SpacialItemsProvidable<StructureItem> {
 
     @NonNull
-    List<StructureItem> provide();
+    CompletableFuture<List<StructureItem>> generateFuture();
 
 }

@@ -17,8 +17,6 @@ public class MapLayerRasterizerConfiguration {
     @Builder.Default
     private boolean visible = true;
     @Builder.Default
-    private boolean sequentialCoreData = false;
-    @Builder.Default
     private int layerOrder = 0;
     @Builder.Default
     private int batch = 0;

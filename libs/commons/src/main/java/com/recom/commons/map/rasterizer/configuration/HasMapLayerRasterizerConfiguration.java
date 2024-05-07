@@ -5,6 +5,7 @@ import lombok.NonNull;
 
 public interface HasMapLayerRasterizerConfiguration {
 
-    @NonNull MapLayerRasterizerConfiguration getMapLayerRasterizerConfiguration();
+    @NonNull
+    MapLayerRasterizerConfiguration getMapLayerRasterizerConfiguration();
 
 }

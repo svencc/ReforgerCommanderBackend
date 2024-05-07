@@ -1,6 +1,8 @@
-package com.recom.commons.map.rasterizer;
+package com.recom.commons.map.rasterizer.batch1;
 
 import com.recom.commons.calculator.d8algorithm.D8AlgorithmForShadedMap;
+import com.recom.commons.map.rasterizer.batch0.SlopeAndAspectMapRasterizer;
+import com.recom.commons.map.rasterizer.configuration.BatchOrder;
 import com.recom.commons.map.rasterizer.configuration.LayerOrder;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRasterizer;
 import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
@@ -23,6 +25,7 @@ public class ShadowedMapRasterizer implements MapLayerRasterizer {
     @NonNull
     private final MapLayerRasterizerConfiguration mapLayerRasterizerConfiguration = MapLayerRasterizerConfiguration.builder()
             .rasterizerName(getClass().getSimpleName())
+            .batch(BatchOrder.BASIC_BATCH)
             .layerOrder(LayerOrder.SHADOWED_MAP)
             .build();
 
@@ -52,11 +55,6 @@ public class ShadowedMapRasterizer implements MapLayerRasterizer {
     @Override
     public String getRasterizerName() {
         return getClass().getSimpleName();
-    }
-
-    @Override
-    public void prepareAsync(@NonNull final MapComposerWorkPackage workPackage) {
-        return;
     }
 
     @Override
