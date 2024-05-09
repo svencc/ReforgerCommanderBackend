@@ -42,7 +42,7 @@ public class StructureProviderGenerator implements SpacialItemProviderGenerator<
 
     @NonNull
     @Synchronized
-    public StructureProvidable generateProvider(@NonNull final GameMap gameMap) {
+    public StructureProvidable provideFutureGenerator(@NonNull final GameMap gameMap) {
         return () -> {
             if (!cachedForestItems.containsKey(gameMap.getName()) && !generator.containsKey(gameMap.getName())) {
                 final CompletableFuture<List<StructureItem>> future = new CompletableFuture<>();

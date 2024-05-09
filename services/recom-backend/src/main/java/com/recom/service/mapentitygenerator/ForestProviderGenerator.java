@@ -39,7 +39,7 @@ public class ForestProviderGenerator implements SpacialItemProviderGenerator<For
 
     @NonNull
     @Synchronized
-    public ForestProvidable generateProvider(@NonNull final GameMap gameMap) {
+    public ForestProvidable provideFutureGenerator(@NonNull final GameMap gameMap) {
         return () -> {
             if (!cachedForestItems.containsKey(gameMap.getName()) && !generator.containsKey(gameMap.getName())) {
                 final CompletableFuture<List<ForestItem>> future = new CompletableFuture<>();

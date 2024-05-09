@@ -6,7 +6,7 @@ import lombok.NonNull;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public interface  ForestProvidable extends SpacialItemsProvidable<ForestItem> {
+public interface ForestProvidable extends SpacialItemsProvidable<ForestItem> {
 
     @NonNull
     CompletableFuture<List<ForestItem>> generateFuture();

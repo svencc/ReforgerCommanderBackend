@@ -93,8 +93,8 @@ public class MapTopographyService {
 
             final MapComposerWorkPackage workPackage = provideMapComposerWorkPackage(demDescriptor, maybeMapComposerConfiguration);
 
-            mapComposer.registerForestProvider(forestProviderGenerator.generateProvider(gameMap));      // <<< @TODO hier mit dem caching überlegen
-            mapComposer.registerVillageProvider(structureProviderGenerator.generateProvider(gameMap));  // <<< @TODO hier mit dem caching überlegen
+            mapComposer.registerForestProvider(forestProviderGenerator.provideFutureGenerator(gameMap));
+            mapComposer.registerVillageProvider(structureProviderGenerator.provideFutureGenerator(gameMap));
             mapComposer.execute(workPackage);
 
             if (workPackage.getReport().isSuccess()) {

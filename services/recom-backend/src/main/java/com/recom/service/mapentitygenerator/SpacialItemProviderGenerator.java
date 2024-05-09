@@ -8,6 +8,6 @@ import lombok.NonNull;
 public interface SpacialItemProviderGenerator<T extends SpacialItemsProvidable<? extends SpacialItem>> {
 
     @NonNull
-    T generateProvider(@NonNull final GameMap gameMap);
+    T provideFutureGenerator(@NonNull final GameMap gameMap);
 
 }
