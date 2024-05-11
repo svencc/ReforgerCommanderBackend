@@ -61,7 +61,7 @@ public class StructureSpatialIndexCreator implements MapLayerRasterizer {
     }
 
     @NonNull
-    private SpacialIndex<StructureItem> createStructureSpacialIndex(
+    private SpacialIndex<StructureItem> createStructureSpacialIndex( //@ TODO sollte vielleicht ClusterIndex erstellen!?
             final int mapWidthInMeter,
             final int mapHeightInMeter,
             final int structureCellSizeInMeter,
@@ -69,8 +69,8 @@ public class StructureSpatialIndexCreator implements MapLayerRasterizer {
     ) {
         final SpacialIndex<StructureItem> spatialIndex = new SpacialIndex<>(mapWidthInMeter, mapHeightInMeter, structureCellSizeInMeter);
         structureEntities.forEach(structureItem -> {
-            final double x = structureItem.getCoordinateX().doubleValue();
-            final double y = coordinateConverter.threeDeeZToTwoDeeY(structureItem.getCoordinateY().doubleValue(), mapHeightInMeter);
+            final int x = structureItem.getCoordinateX().intValue();
+            final int y = coordinateConverter.threeDeeZToTwoDeeY(structureItem.getCoordinateY().intValue(), mapHeightInMeter);
             spatialIndex.put(x, y, structureItem);
         });
 

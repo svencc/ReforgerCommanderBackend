@@ -47,12 +47,12 @@ public class D8AlgorithmForForestMap {
             final int demY
     ) {
         final int forestCellSizeSquared = forestCellSizeInMeter * forestCellSizeInMeter;
-        double forestDensityThreshold = 1F / 100; // @TODO extract to conf
+        double forestDensityThreshold = 1F / 100; // @TODO extract to conf <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
         final double spacialX = demX * demDescriptor.getStepSize().doubleValue();
         final double spacialY = demY * demDescriptor.getStepSize().doubleValue();
 
-        final List<ForestItem> forestItemsInSpace = spacialIndex.getInSpace(spacialX, spacialY);
+        final List<ForestItem> forestItemsInSpace = spacialIndex.getItemsInSpace(spacialX, spacialY);
         final double treeDensity = forestItemsInSpace.size() / (double) forestCellSizeSquared;
 
         int surroundingForestNeighbourSpaces = 0;
@@ -63,7 +63,7 @@ public class D8AlgorithmForForestMap {
             if (adjacentNeighborSpatialX < 0 || adjacentNeighborSpatialX > demDescriptor.getMapWidthInMeter() || adjacentNeighborSpatialY < 0 || adjacentNeighborSpatialY > demDescriptor.getMapHeightInMeter()) {
                 continue;
             } else {
-                final List<ForestItem> forestItemsInNeighborCell = spacialIndex.getInSpace(adjacentNeighborSpatialX, adjacentNeighborSpatialY);
+                final List<ForestItem> forestItemsInNeighborCell = spacialIndex.getItemsInSpace(adjacentNeighborSpatialX, adjacentNeighborSpatialY);
 
                 double neighbourForestDensity;
                 if (!forestItemsInNeighborCell.isEmpty()) {

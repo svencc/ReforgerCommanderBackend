@@ -61,7 +61,7 @@ public class ForestSpatialIndexCreator implements MapLayerRasterizer {
     }
 
     @NonNull
-    private SpacialIndex<ForestItem> createForestSpacialIndex(
+    private SpacialIndex<ForestItem> createForestSpacialIndex( //@ TODO sollte vielleicht ClusterIndex erstellen!?
             final int mapWidthInMeter,
             final int mapHeightInMeter,
             final int forestCellSizeInMeter,
@@ -69,8 +69,8 @@ public class ForestSpatialIndexCreator implements MapLayerRasterizer {
     ) {
         final SpacialIndex<ForestItem> spatialIndex = new SpacialIndex<>(mapWidthInMeter, mapHeightInMeter, forestCellSizeInMeter);
         forestEntities.forEach(forestItem -> {
-            final double x = forestItem.getCoordinateX().doubleValue();
-            final double y = coordinateConverter.threeDeeZToTwoDeeY(forestItem.getCoordinateY().doubleValue(), mapHeightInMeter);
+            final int x = forestItem.getCoordinateX().intValue();
+            final int y = coordinateConverter.threeDeeZToTwoDeeY(forestItem.getCoordinateY().intValue(), mapHeightInMeter);
             spatialIndex.put(x, y, forestItem);
         });
 

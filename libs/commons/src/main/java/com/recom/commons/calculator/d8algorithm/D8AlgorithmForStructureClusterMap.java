@@ -4,6 +4,8 @@ package com.recom.commons.calculator.d8algorithm;
 import com.recom.commons.calculator.ARGBCalculator;
 import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
 import com.recom.commons.model.DEMDescriptor;
+import com.recom.commons.model.maprendererpipeline.dataprovider.ClusterIndex;
+import com.recom.commons.model.maprendererpipeline.dataprovider.structure.StructureItem;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -15,8 +17,9 @@ public class D8AlgorithmForStructureClusterMap {
 
 
     @NonNull
-    public int[][] generateStructureClusterMap(
+    public int[][] generateMap(
             @NonNull final DEMDescriptor demDescriptor,
+            @NonNull final ClusterIndex<StructureItem> clusterIndex,
             @NonNull final MapDesignScheme mapScheme
     ) {
         final int demWidth = demDescriptor.getDemWidth();

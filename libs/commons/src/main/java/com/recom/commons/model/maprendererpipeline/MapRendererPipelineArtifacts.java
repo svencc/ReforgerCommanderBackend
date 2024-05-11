@@ -6,9 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Builder
 @AllArgsConstructor
@@ -16,7 +16,7 @@ public class MapRendererPipelineArtifacts {
 
     @Getter
     @NonNull
-    private final Map<Class<? extends MapLayerRasterizer>, CreatedArtifact> artifacts = new HashMap<>();
+    private final Map<Class<? extends MapLayerRasterizer>, CreatedArtifact> artifacts = new ConcurrentHashMap<>();
 
 
     public void addArtifact(

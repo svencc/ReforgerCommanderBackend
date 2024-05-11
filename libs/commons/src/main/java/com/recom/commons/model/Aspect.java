@@ -1,10 +1,14 @@
 package com.recom.commons.model;
 
+import com.recom.commons.calculator.d8algorithm.D8AspectMatrix;
 import lombok.Getter;
 import lombok.NonNull;
 
+import java.util.stream.Stream;
+
 @Getter
 public enum Aspect {
+
 
     NORTH(0, 0),
     NORTH_EAST(1, 45),
@@ -17,6 +21,7 @@ public enum Aspect {
     NULL_ASPECT(8, -1);
 
 
+    private static Aspect[] iteratorValues;
     final int aspectValue;
     final int angle;
     final boolean isCardinal;
@@ -43,6 +48,25 @@ public enum Aspect {
             case NORTH_WEST -> SOUTH_EAST;
             default -> NULL_ASPECT;
         };
+    }
+
+    @NonNull
+    public D8Neighbour getNeighbour(
+            final int x,
+            final int y
+    ) {
+        return new D8Neighbour(x + D8AspectMatrix.directionXComponentMatrix[aspectValue], y + D8AspectMatrix.directionYComponentMatrix[aspectValue]);
+    }
+
+    @NonNull
+    public static Aspect[] iterateValues() {
+        if (Aspect.iteratorValues == null) {
+            Aspect.iteratorValues = Stream.of(Aspect.values())
+                    .filter(aspect -> aspect != NULL_ASPECT)
+                    .toArray(Aspect[]::new);
+        }
+
+        return Aspect.iteratorValues;
     }
 
 }

@@ -47,12 +47,12 @@ public class D8AlgorithmForStructureMap {
             final int demY
     ) {
         final int structureCellSizeSquared = structureCellSizeInMeter * structureCellSizeInMeter;
-        double structureDensityThreshold = 1F / 100; // @TODO extract to conf
+        double structureDensityThreshold = 1F / 100; // @TODO extract to conf <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
         final double spacialX = demX * demDescriptor.getStepSize().doubleValue();
         final double spacialY = demY * demDescriptor.getStepSize().doubleValue();
 
-        final List<StructureItem> structureItemsInSpace = spacialIndex.getInSpace(spacialX, spacialY);
+        final List<StructureItem> structureItemsInSpace = spacialIndex.getItemsInSpace(spacialX, spacialY);
         final double StructureDensity = structureItemsInSpace.size() / (double) structureCellSizeSquared;
 
         int surroundingStructureNeighbourSpaces = 0;
@@ -63,7 +63,7 @@ public class D8AlgorithmForStructureMap {
             if (adjacentNeighborSpatialX < 0 || adjacentNeighborSpatialX > demDescriptor.getMapWidthInMeter() || adjacentNeighborSpatialY < 0 || adjacentNeighborSpatialY > demDescriptor.getMapHeightInMeter()) {
                 continue;
             } else {
-                final List<StructureItem> structureItemsInNeighborCell = spacialIndex.getInSpace(adjacentNeighborSpatialX, adjacentNeighborSpatialY);
+                final List<StructureItem> structureItemsInNeighborCell = spacialIndex.getItemsInSpace(adjacentNeighborSpatialX, adjacentNeighborSpatialY);
 
                 double neighbourStructureDensity;
                 if (!structureItemsInNeighborCell.isEmpty()) {

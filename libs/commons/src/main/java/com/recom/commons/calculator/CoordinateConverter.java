@@ -12,4 +12,11 @@ public class CoordinateConverter {
         return (mapHeightInMeter) - yCoordinate;
     }
 
+    public int threeDeeZToTwoDeeY(
+            final int yCoordinate,
+            final int mapHeightInMeter
+    ) {
+        return (mapHeightInMeter) - yCoordinate;
+    }
+
 }
