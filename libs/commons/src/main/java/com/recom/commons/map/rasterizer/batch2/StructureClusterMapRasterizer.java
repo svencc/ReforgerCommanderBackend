@@ -1,7 +1,6 @@
 package com.recom.commons.map.rasterizer.batch2;
 
 import com.recom.commons.calculator.CoordinateConverter;
-import com.recom.commons.calculator.d8algorithm.structure.D8AlgorithmForStructureCluster;
 import com.recom.commons.calculator.d8algorithm.structure.D8AlgorithmForStructureClusterMap;
 import com.recom.commons.map.MapComposer;
 import com.recom.commons.map.rasterizer.batch0.StructureClusterCreator;
@@ -14,7 +13,6 @@ import com.recom.commons.model.maprendererpipeline.CreatedArtifact;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
 import com.recom.commons.model.maprendererpipeline.MapLayerRasterizerConfiguration;
 import com.recom.commons.model.maprendererpipeline.dataprovider.Cluster;
-import com.recom.commons.model.maprendererpipeline.dataprovider.SpacialIndex;
 import com.recom.commons.model.maprendererpipeline.dataprovider.structure.StructureItem;
 import lombok.Getter;
 import lombok.NonNull;
@@ -31,7 +29,7 @@ import java.util.stream.IntStream;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class StructureClusterRasterizer implements MapLayerRasterizer<int[]> {
+public class StructureClusterMapRasterizer implements MapLayerRasterizer<int[]> {
 
     @NonNull
     private final CoordinateConverter coordinateConverter = new CoordinateConverter();
@@ -55,11 +53,8 @@ public class StructureClusterRasterizer implements MapLayerRasterizer<int[]> {
             @NonNull final Cluster<StructureItem> structureCluster,
             @NonNull final MapDesignScheme mapScheme
     ) {
-        final D8AlgorithmForStructureCluster d8AlgorithmForStructureCluster = new D8AlgorithmForStructureCluster();
-        final Cluster<StructureItem> cluster = d8AlgorithmForStructureCluster.generateStructureClusters(structureCluster);
-
         final D8AlgorithmForStructureClusterMap d8AlgorithmForStructureClusterMap = new D8AlgorithmForStructureClusterMap();
-        final int[][] clusterMap = d8AlgorithmForStructureClusterMap.generateMap(demDescriptor, cluster, mapScheme);
+        final int[][] clusterMap = d8AlgorithmForStructureClusterMap.generateMap(demDescriptor, structureCluster, mapScheme);
 
         final int width = demDescriptor.getDemWidth();
         final int height = demDescriptor.getDemHeight();

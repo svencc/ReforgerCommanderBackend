@@ -67,7 +67,7 @@ public class MapComposer {
         mapComposer.registerRenderer(new BaseMapRasterizer());
         mapComposer.registerRenderer(new ShadowedMapRasterizer());
         mapComposer.registerRenderer(new StructureMapRasterizer(mapComposer));
-        mapComposer.registerRenderer(new StructureClusterRasterizer(mapComposer));
+        mapComposer.registerRenderer(new StructureClusterMapRasterizer(mapComposer));
         mapComposer.registerRenderer(new ForestMapRasterizer(mapComposer));
         mapComposer.registerRenderer(new ContourLineMapRasterizer());
 

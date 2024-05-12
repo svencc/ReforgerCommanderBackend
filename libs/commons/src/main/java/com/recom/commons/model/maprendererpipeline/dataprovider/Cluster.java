@@ -24,6 +24,7 @@ public class Cluster<T> implements IndexedSpace<T> {
     @NonNull
     private final Map<ClusterNode, Integer> reverseClusterLookupIndex = new HashMap<>();
 
+
     @Override
     public double getItemsPerSquareMeterThreshold() {
         return spacialIndex.getItemsPerSquareMeterThreshold();

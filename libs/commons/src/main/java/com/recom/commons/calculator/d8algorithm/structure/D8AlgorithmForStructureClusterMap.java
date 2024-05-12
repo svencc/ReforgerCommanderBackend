@@ -19,7 +19,7 @@ public class D8AlgorithmForStructureClusterMap {
     @NonNull
     public int[][] generateMap(
             @NonNull final DEMDescriptor demDescriptor,
-            @NonNull final Cluster<StructureItem> cluster,
+            @NonNull final Cluster<StructureItem> structureCluster,
             @NonNull final MapDesignScheme mapScheme
     ) {
         final int demWidth = demDescriptor.getDemWidth();
