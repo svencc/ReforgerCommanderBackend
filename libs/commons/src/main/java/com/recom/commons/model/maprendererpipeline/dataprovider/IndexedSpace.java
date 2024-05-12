@@ -17,6 +17,10 @@ public interface IndexedSpace<T> {
 
     double getCellSizeInMeter();
 
+    double getItemsPerSquareMeterThreshold();
+
+    double getCellSizeInSquareMeter();
+
 
     void put(
             final double spaceX,

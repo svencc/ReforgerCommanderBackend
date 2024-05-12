@@ -12,7 +12,7 @@ import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
-public class ClusterIndex<T> implements IndexedSpace<T> {
+public class Cluster<T> implements IndexedSpace<T> {
 
     @Getter
     @NonNull
@@ -24,13 +24,22 @@ public class ClusterIndex<T> implements IndexedSpace<T> {
     @NonNull
     private final Map<ClusterNode, Integer> reverseClusterLookupIndex = new HashMap<>();
 
+    @Override
+    public double getItemsPerSquareMeterThreshold() {
+        return spacialIndex.getItemsPerSquareMeterThreshold();
+    }
+
+    @Override
+    public double getCellSizeInSquareMeter() {
+        return spacialIndex.getCellSizeInSquareMeter();
+    }
 
     @NonNull
-    public static <U> ClusterIndex<U> from(@NonNull final SpacialIndex<U> spacialIndex
+    public static <U> Cluster<U> from(@NonNull final SpacialIndex<U> spacialIndex
     ) {
         final ClusterNode[][] nodeIndex = new ClusterNode[spacialIndex.getNrCellsWidth() + 1][spacialIndex.getNrCellsHeight() + 1];
 
-        return new ClusterIndex<U>(spacialIndex, nodeIndex);
+        return new Cluster<U>(spacialIndex, nodeIndex);
     }
 
     @NonNull

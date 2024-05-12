@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class ClusterNode {
 
-    //@TODO <<< was soll der Node?
+    //@TODO <<< was soll der Node? <<<
 
 }
 

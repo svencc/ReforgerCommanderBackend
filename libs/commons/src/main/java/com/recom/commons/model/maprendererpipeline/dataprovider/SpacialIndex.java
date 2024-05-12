@@ -27,6 +27,10 @@ public class SpacialIndex<T> implements IndexedSpace<T> {
     @Getter
     private final double itemsPerSquareMeterThreshold;
 
+    @Override
+    public double getCellSizeInSquareMeter() {
+        return cellSizeInMeter * cellSizeInMeter;
+    }
 
     @SuppressWarnings("unchecked")
     public SpacialIndex(
@@ -45,15 +49,6 @@ public class SpacialIndex<T> implements IndexedSpace<T> {
 
         this.index = (List<T>[][]) new List[nrCellsWidth + 1][nrCellsHeight + 1];
         preInitializeIndex();
-    }
-
-    @Deprecated
-    public SpacialIndex(
-            final int mapWidthInMeter,
-            final int mapHeightInMeter,
-            final double cellSizeInMeter
-    ) {
-        this(mapWidthInMeter, mapHeightInMeter, cellSizeInMeter, 0);
     }
 
     private void preInitializeIndex() {

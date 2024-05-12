@@ -19,20 +19,24 @@ public class MapRendererPipelineArtifacts {
     private final Map<Class<? extends MapLayerRasterizer>, CreatedArtifact> artifacts = new ConcurrentHashMap<>();
 
 
-    public void addArtifact(
-            @NonNull final MapLayerRasterizer creator,
-            @NonNull final Object artifact
+    public <T> void addArtifact(
+            @NonNull final MapLayerRasterizer<T> creator,
+            @NonNull final T artifactData
     ) {
-        final CreatedArtifact createdArtifact = CreatedArtifact.builder()
+        final CreatedArtifact<?> createdArtifact = CreatedArtifact.builder()
                 .creator(creator)
-                .data(artifact)
+                .data(artifactData)
                 .build();
 
         artifacts.put(creator.getClass(), createdArtifact);
     }
 
-    public <T> Optional<CreatedArtifact> getArtifactFrom(@NonNull final Class<? extends MapLayerRasterizer> rendererName) {
-        return Optional.ofNullable(artifacts.get(rendererName));
+    @NonNull
+    @SuppressWarnings("unchecked")
+    public <T> Optional<CreatedArtifact<T>> getArtifactFrom(@NonNull final Class<? extends MapLayerRasterizer<T>> rendererClass) {
+        final CreatedArtifact<T> artifact = artifacts.get(rendererClass);
+
+        return Optional.ofNullable(artifact);
     }
 
 }

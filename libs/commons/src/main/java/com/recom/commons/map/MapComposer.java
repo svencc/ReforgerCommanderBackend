@@ -1,10 +1,10 @@
 package com.recom.commons.map;
 
 import com.recom.commons.calculator.ARGBCalculator;
-import com.recom.commons.map.rasterizer.batch0.ForestSpatialIndexCreator;
-import com.recom.commons.map.rasterizer.batch0.SlopeAndAspectMapRasterizer;
-import com.recom.commons.map.rasterizer.batch0.StructureSpatialIndexCreator;
-import com.recom.commons.map.rasterizer.batch1.*;
+import com.recom.commons.map.rasterizer.batch0.ForestClusterCreator;
+import com.recom.commons.map.rasterizer.batch1.SlopeAndAspectMapRasterizer;
+import com.recom.commons.map.rasterizer.batch0.StructureClusterCreator;
+import com.recom.commons.map.rasterizer.batch2.*;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRasterizer;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
 import com.recom.commons.model.maprendererpipeline.dataprovider.forest.ForestProvidable;
@@ -55,8 +55,8 @@ public class MapComposer {
 
         //batch0
         mapComposer.registerRenderer(new SlopeAndAspectMapRasterizer());
-        mapComposer.registerRenderer(new StructureSpatialIndexCreator(mapComposer));
-        mapComposer.registerRenderer(new ForestSpatialIndexCreator(mapComposer));
+        mapComposer.registerRenderer(new StructureClusterCreator(mapComposer));
+        mapComposer.registerRenderer(new ForestClusterCreator(mapComposer));
 
         //batch1
         mapComposer.registerRenderer(new SlopeMapRasterizer());

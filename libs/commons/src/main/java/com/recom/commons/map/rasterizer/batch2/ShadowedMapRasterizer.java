@@ -1,7 +1,7 @@
-package com.recom.commons.map.rasterizer.batch1;
+package com.recom.commons.map.rasterizer.batch2;
 
 import com.recom.commons.calculator.d8algorithm.D8AlgorithmForShadedMap;
-import com.recom.commons.map.rasterizer.batch0.SlopeAndAspectMapRasterizer;
+import com.recom.commons.map.rasterizer.batch1.SlopeAndAspectMapRasterizer;
 import com.recom.commons.map.rasterizer.configuration.BatchOrder;
 import com.recom.commons.map.rasterizer.configuration.LayerOrder;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRasterizer;
@@ -15,12 +15,13 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 
 @Getter
 @Setter
-public class ShadowedMapRasterizer implements MapLayerRasterizer {
+public class ShadowedMapRasterizer implements MapLayerRasterizer<int[]> {
 
     @NonNull
     private final MapLayerRasterizerConfiguration mapLayerRasterizerConfiguration = MapLayerRasterizerConfiguration.builder()
@@ -59,8 +60,8 @@ public class ShadowedMapRasterizer implements MapLayerRasterizer {
 
     @Override
     public void render(@NonNull final MapComposerWorkPackage workPackage) {
-        workPackage.getPipelineArtifacts().getArtifactFrom(SlopeAndAspectMapRasterizer.class).ifPresent((final CreatedArtifact artifact) -> {
-            final Object artifactData = artifact.getData();
+        workPackage.getPipelineArtifacts().getArtifactFrom(SlopeAndAspectMapRasterizer.class).ifPresent((final CreatedArtifact<SlopeAndAspectMap> createdArtifact) -> {
+            final Object artifactData = createdArtifact.getData();
             if (artifactData instanceof SlopeAndAspectMap slopeAndAspectMap) {
                 final DEMDescriptor demDescriptor = workPackage.getMapComposerConfiguration().getDemDescriptor();
                 final MapDesignScheme mapDesignScheme = workPackage.getMapComposerConfiguration().getMapDesignScheme();
@@ -69,6 +70,12 @@ public class ShadowedMapRasterizer implements MapLayerRasterizer {
                 workPackage.getPipelineArtifacts().addArtifact(this, rawShadowedMap);
             }
         });
+    }
+
+    @NonNull
+    @Override
+    public Optional<int[]> findMyArtefactFromWorkPackage(@NonNull final MapComposerWorkPackage workPackage) {
+        return workPackage.getPipelineArtifacts().getArtifactFrom(getClass()).map(CreatedArtifact::getData);
     }
 
 }

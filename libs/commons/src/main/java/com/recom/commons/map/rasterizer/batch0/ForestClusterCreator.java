@@ -5,14 +5,17 @@ import com.recom.commons.map.MapComposer;
 import com.recom.commons.map.rasterizer.configuration.BatchOrder;
 import com.recom.commons.map.rasterizer.configuration.LayerOrder;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRasterizer;
+import com.recom.commons.model.maprendererpipeline.CreatedArtifact;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
 import com.recom.commons.model.maprendererpipeline.MapLayerRasterizerConfiguration;
+import com.recom.commons.model.maprendererpipeline.dataprovider.Cluster;
 import com.recom.commons.model.maprendererpipeline.dataprovider.SpacialIndex;
 import com.recom.commons.model.maprendererpipeline.dataprovider.forest.ForestItem;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -21,7 +24,7 @@ import java.util.concurrent.Executors;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class ForestSpatialIndexCreator implements MapLayerRasterizer {
+public class ForestClusterCreator implements MapLayerRasterizer<Cluster<ForestItem>> {
 
     @NonNull
     private final CoordinateConverter coordinateConverter = new CoordinateConverter();
@@ -55,26 +58,32 @@ public class ForestSpatialIndexCreator implements MapLayerRasterizer {
             final int mapHeightInMeter = workPackage.getMapComposerConfiguration().getDemDescriptor().getMapHeightInMeter();
             final int structureCellSizeInMeter = workPackage.getMapComposerConfiguration().getMapDesignScheme().getStructureCellSizeInMeter();
 
-            final SpacialIndex<ForestItem> spatialIndex = createForestSpacialIndex(mapWidthInMeter, mapHeightInMeter, structureCellSizeInMeter, structureEntities);
+            final Cluster<ForestItem> spatialIndex = createForestSpacialIndex(mapWidthInMeter, mapHeightInMeter, structureCellSizeInMeter, structureEntities);
             workPackage.getPipelineArtifacts().addArtifact(this, spatialIndex);
         }
     }
 
     @NonNull
-    private SpacialIndex<ForestItem> createForestSpacialIndex( //@ TODO sollte vielleicht ClusterIndex erstellen!?
+    private Cluster<ForestItem> createForestSpacialIndex(
             final int mapWidthInMeter,
             final int mapHeightInMeter,
             final int forestCellSizeInMeter,
             @NonNull final List<ForestItem> forestEntities
     ) {
-        final SpacialIndex<ForestItem> spatialIndex = new SpacialIndex<>(mapWidthInMeter, mapHeightInMeter, forestCellSizeInMeter);
+        final double forestDensityThreshold = 1F / 100; // @TODO extract to conf <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+        final SpacialIndex<ForestItem> spatialIndex = new SpacialIndex<>(mapWidthInMeter, mapHeightInMeter, forestCellSizeInMeter, forestDensityThreshold);
         forestEntities.forEach(forestItem -> {
             final int x = forestItem.getCoordinateX().intValue();
             final int y = coordinateConverter.threeDeeZToTwoDeeY(forestItem.getCoordinateY().intValue(), mapHeightInMeter);
             spatialIndex.put(x, y, forestItem);
         });
 
-        return spatialIndex;
+        return Cluster.from(spatialIndex);
+    }
+
+    @NonNull
+    public Optional<Cluster<ForestItem>> findMyArtefactFromWorkPackage(@NonNull final MapComposerWorkPackage workPackage) {
+        return workPackage.getPipelineArtifacts().getArtifactFrom(getClass()).map(CreatedArtifact::getData);
     }
 
 }

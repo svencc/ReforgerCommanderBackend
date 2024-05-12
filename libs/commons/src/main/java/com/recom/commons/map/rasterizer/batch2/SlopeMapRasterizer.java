@@ -1,4 +1,4 @@
-package com.recom.commons.map.rasterizer.batch1;
+package com.recom.commons.map.rasterizer.batch2;
 
 import com.recom.commons.calculator.d8algorithm.D8AlgorithmForSlopeAndAspectMap;
 import com.recom.commons.calculator.d8algorithm.D8AlgorithmForSlopeMap;
@@ -8,18 +8,20 @@ import com.recom.commons.map.rasterizer.configuration.MapLayerRasterizer;
 import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
 import com.recom.commons.model.DEMDescriptor;
 import com.recom.commons.model.SlopeAndAspect;
+import com.recom.commons.model.maprendererpipeline.CreatedArtifact;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
 import com.recom.commons.model.maprendererpipeline.MapLayerRasterizerConfiguration;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 
 @Getter
 @Setter
-public class SlopeMapRasterizer implements MapLayerRasterizer {
+public class SlopeMapRasterizer implements MapLayerRasterizer<int[]> {
 
     @NonNull
     private final MapLayerRasterizerConfiguration mapLayerRasterizerConfiguration = MapLayerRasterizerConfiguration.builder()
@@ -63,6 +65,12 @@ public class SlopeMapRasterizer implements MapLayerRasterizer {
     public void render(@NonNull final MapComposerWorkPackage workPackage) {
         final int[] rawSlopeMap = rasterizeSlopeMap(workPackage.getMapComposerConfiguration().getDemDescriptor(), workPackage.getMapComposerConfiguration().getMapDesignScheme());
         workPackage.getPipelineArtifacts().addArtifact(this, rawSlopeMap);
+    }
+
+    @NonNull
+    @Override
+    public Optional<int[]> findMyArtefactFromWorkPackage(@NonNull final MapComposerWorkPackage workPackage) {
+        return workPackage.getPipelineArtifacts().getArtifactFrom(getClass()).map(CreatedArtifact::getData);
     }
 
 }

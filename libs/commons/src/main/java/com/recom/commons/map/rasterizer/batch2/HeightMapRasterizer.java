@@ -1,20 +1,22 @@
-package com.recom.commons.map.rasterizer.batch1;
+package com.recom.commons.map.rasterizer.batch2;
 
 import com.recom.commons.map.rasterizer.configuration.BatchOrder;
 import com.recom.commons.map.rasterizer.configuration.LayerOrder;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRasterizer;
 import com.recom.commons.map.rasterizer.interpolation.DEMUpscaleAlgorithmBilinear;
 import com.recom.commons.model.DEMDescriptor;
+import com.recom.commons.model.maprendererpipeline.CreatedArtifact;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
 import com.recom.commons.model.maprendererpipeline.MapLayerRasterizerConfiguration;
 import lombok.Getter;
 import lombok.NonNull;
 
 import java.awt.*;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 
-public class HeightMapRasterizer implements MapLayerRasterizer {
+public class HeightMapRasterizer implements MapLayerRasterizer<int[]> {
 
     @NonNull
     private final DEMUpscaleAlgorithmBilinear interpolator;
@@ -89,6 +91,11 @@ public class HeightMapRasterizer implements MapLayerRasterizer {
     public void render(@NonNull final MapComposerWorkPackage workPackage) {
         final int[] rawHeightMap = rasterizeHeightMap(workPackage.getMapComposerConfiguration().getDemDescriptor());
         workPackage.getPipelineArtifacts().addArtifact(this, rawHeightMap);
+    }
+
+    @NonNull
+    public Optional<int[]> findMyArtefactFromWorkPackage(@NonNull final MapComposerWorkPackage workPackage) {
+        return workPackage.getPipelineArtifacts().getArtifactFrom(getClass()).map(CreatedArtifact::getData);
     }
 
 }

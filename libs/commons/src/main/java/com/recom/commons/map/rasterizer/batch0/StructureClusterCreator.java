@@ -5,14 +5,17 @@ import com.recom.commons.map.MapComposer;
 import com.recom.commons.map.rasterizer.configuration.BatchOrder;
 import com.recom.commons.map.rasterizer.configuration.LayerOrder;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRasterizer;
+import com.recom.commons.model.maprendererpipeline.CreatedArtifact;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
 import com.recom.commons.model.maprendererpipeline.MapLayerRasterizerConfiguration;
+import com.recom.commons.model.maprendererpipeline.dataprovider.Cluster;
 import com.recom.commons.model.maprendererpipeline.dataprovider.SpacialIndex;
 import com.recom.commons.model.maprendererpipeline.dataprovider.structure.StructureItem;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -21,7 +24,7 @@ import java.util.concurrent.Executors;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class StructureSpatialIndexCreator implements MapLayerRasterizer {
+public class StructureClusterCreator implements MapLayerRasterizer<Cluster<StructureItem>> {
 
     @NonNull
     private final CoordinateConverter coordinateConverter = new CoordinateConverter();
@@ -55,26 +58,32 @@ public class StructureSpatialIndexCreator implements MapLayerRasterizer {
             final int mapHeightInMeter = workPackage.getMapComposerConfiguration().getDemDescriptor().getMapHeightInMeter();
             final int structureCellSizeInMeter = workPackage.getMapComposerConfiguration().getMapDesignScheme().getStructureCellSizeInMeter();
 
-            final SpacialIndex<StructureItem> spatialIndex = createStructureSpacialIndex(mapWidthInMeter, mapHeightInMeter, structureCellSizeInMeter, structureEntities);
+            final Cluster<StructureItem> spatialIndex = createStructureSpacialIndex(mapWidthInMeter, mapHeightInMeter, structureCellSizeInMeter, structureEntities);
             workPackage.getPipelineArtifacts().addArtifact(this, spatialIndex);
         }
     }
 
     @NonNull
-    private SpacialIndex<StructureItem> createStructureSpacialIndex( //@ TODO sollte vielleicht ClusterIndex erstellen!?
+    private Cluster<StructureItem> createStructureSpacialIndex(
             final int mapWidthInMeter,
             final int mapHeightInMeter,
             final int structureCellSizeInMeter,
             @NonNull final List<StructureItem> structureEntities
     ) {
-        final SpacialIndex<StructureItem> spatialIndex = new SpacialIndex<>(mapWidthInMeter, mapHeightInMeter, structureCellSizeInMeter);
+        final double structureDensityThreshold = 1F / 100; // @TODO extract to conf <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+        final SpacialIndex<StructureItem> spatialIndex = new SpacialIndex<>(mapWidthInMeter, mapHeightInMeter, structureCellSizeInMeter, structureDensityThreshold);
         structureEntities.forEach(structureItem -> {
             final int x = structureItem.getCoordinateX().intValue();
             final int y = coordinateConverter.threeDeeZToTwoDeeY(structureItem.getCoordinateY().intValue(), mapHeightInMeter);
             spatialIndex.put(x, y, structureItem);
         });
 
-        return spatialIndex;
+        return Cluster.from(spatialIndex);
+    }
+
+    @NonNull
+    public Optional<Cluster<StructureItem>> findMyArtefactFromWorkPackage(@NonNull final MapComposerWorkPackage workPackage) {
+        return workPackage.getPipelineArtifacts().getArtifactFrom(getClass()).map(CreatedArtifact::getData);
     }
 
 }

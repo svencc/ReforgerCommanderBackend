@@ -8,7 +8,7 @@ import lombok.NonNull;
 
 @Builder
 @AllArgsConstructor
-public class CreatedArtifact {
+public class CreatedArtifact<T> {
 
     @Getter
     @NonNull
@@ -18,7 +18,7 @@ public class CreatedArtifact {
 
     
     @SuppressWarnings("unchecked")
-    public <T> T getData() {
+    public T getData() {
         return (T) data;
     }
 

@@ -1,4 +1,4 @@
-package com.recom.commons.map.rasterizer.batch1;
+package com.recom.commons.map.rasterizer.batch2;
 
 import com.recom.commons.calculator.ARGBCalculator;
 import com.recom.commons.calculator.ARGBColor;
@@ -7,17 +7,21 @@ import com.recom.commons.map.rasterizer.configuration.LayerOrder;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRasterizer;
 import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
 import com.recom.commons.model.DEMDescriptor;
+import com.recom.commons.model.maprendererpipeline.CreatedArtifact;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
 import com.recom.commons.model.maprendererpipeline.MapLayerRasterizerConfiguration;
+import com.recom.commons.model.maprendererpipeline.dataprovider.Cluster;
+import com.recom.commons.model.maprendererpipeline.dataprovider.forest.ForestItem;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 
 @NoArgsConstructor
-public class LandMapRasterizer implements MapLayerRasterizer {
+public class BaseMapRasterizer implements MapLayerRasterizer<int[]> {
 
     @NonNull
     private final ARGBCalculator argbCalculator = new ARGBCalculator();
@@ -26,8 +30,7 @@ public class LandMapRasterizer implements MapLayerRasterizer {
     private final MapLayerRasterizerConfiguration mapLayerRasterizerConfiguration = MapLayerRasterizerConfiguration.builder()
             .rasterizerName(getClass().getSimpleName())
             .batch(BatchOrder.BASIC_BATCH)
-            .layerOrder(LayerOrder.LAND_MAP)
-            .enabled(false)
+            .layerOrder(LayerOrder.BASE_MAP)
             .build();
 
 
@@ -59,7 +62,9 @@ public class LandMapRasterizer implements MapLayerRasterizer {
                     color = ARGBColor.ARGB(valueHowTransparentTheHeightmapIs, grayValue, grayValue, grayValue);
                     color = argbCalculator.blend(color, mapScheme.getBaseColorTerrain());
                 } else {
-                    color = 0xFF000000;
+                    // map depth to water color
+                    final float dynamicDepthUnit = (heightValue - demDescriptor.getSeaLevel()) / depthRange;
+                    color = argbCalculator.modifyBrightness(mapScheme.getBaseColorWater(), Math.abs(1 - dynamicDepthUnit));
                 }
 
                 imageBuffer[demX + demY * width] = color;
@@ -78,6 +83,11 @@ public class LandMapRasterizer implements MapLayerRasterizer {
     public void render(@NonNull final MapComposerWorkPackage workPackage) {
         final int[] rawBaseMap = rasterizeBaseMap(workPackage.getMapComposerConfiguration().getDemDescriptor(), workPackage.getMapComposerConfiguration().getMapDesignScheme());
         workPackage.getPipelineArtifacts().addArtifact(this, rawBaseMap);
+    }
+
+    @NonNull
+    public Optional<int[]> findMyArtefactFromWorkPackage(@NonNull final MapComposerWorkPackage workPackage) {
+        return workPackage.getPipelineArtifacts().getArtifactFrom(getClass()).map(CreatedArtifact::getData);
     }
 
 }
