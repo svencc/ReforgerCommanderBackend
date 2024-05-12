@@ -28,10 +28,12 @@ public class HeightMapDescriptorDto implements Serializable {
     @JsonProperty()
     private BigDecimal stepSize;
 
+    @Deprecated
     @Schema
     @JsonProperty()
-    private Integer scanIterationsX;
+    private Integer scnaIterationsX;
 
+    @Deprecated
     @Schema
     @JsonProperty()
     private Integer scanIterationsZ;

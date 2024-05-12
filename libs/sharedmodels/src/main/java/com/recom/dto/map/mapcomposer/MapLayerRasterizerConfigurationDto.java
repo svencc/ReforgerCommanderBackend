@@ -42,4 +42,9 @@ public class MapLayerRasterizerConfigurationDto {
     @JsonProperty()
     public Integer layerOrder;
 
+    @Nullable
+    @Schema
+    @JsonProperty()
+    public Integer batch;
+
 }

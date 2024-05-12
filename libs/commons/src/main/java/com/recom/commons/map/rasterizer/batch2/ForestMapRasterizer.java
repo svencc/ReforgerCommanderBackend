@@ -3,7 +3,7 @@ package com.recom.commons.map.rasterizer.batch2;
 import com.recom.commons.calculator.CoordinateConverter;
 import com.recom.commons.calculator.d8algorithm.forest.D8AlgorithmForForestMap;
 import com.recom.commons.map.MapComposer;
-import com.recom.commons.map.rasterizer.batch0.ForestClusterCreator;
+import com.recom.commons.map.rasterizer.batch0.CreatorForestData;
 import com.recom.commons.map.rasterizer.configuration.BatchOrder;
 import com.recom.commons.map.rasterizer.configuration.LayerOrder;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRasterizer;
@@ -13,7 +13,6 @@ import com.recom.commons.model.maprendererpipeline.CreatedArtifact;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
 import com.recom.commons.model.maprendererpipeline.MapLayerRasterizerConfiguration;
 import com.recom.commons.model.maprendererpipeline.dataprovider.Cluster;
-import com.recom.commons.model.maprendererpipeline.dataprovider.SpacialIndex;
 import com.recom.commons.model.maprendererpipeline.dataprovider.forest.ForestItem;
 import lombok.Getter;
 import lombok.NonNull;
@@ -43,11 +42,10 @@ public class ForestMapRasterizer implements MapLayerRasterizer<int[]> {
     @NonNull
     private Optional<CompletableFuture<List<ForestItem>>> maybePreparationTask = Optional.empty();
 
-
     @NonNull
     private MapLayerRasterizerConfiguration mapLayerRasterizerConfiguration = MapLayerRasterizerConfiguration.builder()
             .rasterizerName(getClass().getSimpleName())
-            .batch(BatchOrder.BASIC_BATCH)
+            .batch(BatchOrder.BATCH_2)
             .layerOrder(LayerOrder.FOREST_MAP)
             .visible(false)
             .build();
@@ -63,10 +61,10 @@ public class ForestMapRasterizer implements MapLayerRasterizer<int[]> {
 
         final int width = demDescriptor.getDemWidth();
         final int height = demDescriptor.getDemHeight();
-        final int[] pixelBuffer = new int[width * height];
-        IntStream.range(0, width).parallel().forEach(demX -> {
-            for (int demY = 0; demY < height; demY++) {
-                pixelBuffer[demX + demY * width] = forestMap[demX][demY];
+        final int[] pixelBuffer = new int[height * width];
+        IntStream.range(0, height).parallel().forEach(demY -> {
+            for (int demX = 0; demX < width; demX++) {
+                pixelBuffer[(demY * width) + demX] = forestMap[demY][demX];
             }
         });
 
@@ -80,8 +78,14 @@ public class ForestMapRasterizer implements MapLayerRasterizer<int[]> {
 
     @Override
     public void render(@NonNull final MapComposerWorkPackage workPackage) {
+        if (mapComposer.getForestProvider().isEmpty()) {
+            throw new IllegalStateException("ForestProvider is not present!");
+        }
+        mapComposer.getForestProvider().get().generateFuture().join(); // wait for the future to complete, so we can access the cluster data
+        // @TODO in waiter + getter auslagern auf mapComposer Level
+
         workPackage.getPipelineArtifacts().getArtifacts().entrySet().stream()
-                .filter(entry -> entry.getKey().equals(ForestClusterCreator.class))
+                .filter(entry -> entry.getKey().equals(CreatorForestData.class))
                 .findFirst()
                 .ifPresentOrElse(
                         (entry) -> {
@@ -91,7 +95,7 @@ public class ForestMapRasterizer implements MapLayerRasterizer<int[]> {
                             final int[] rawStructureMap = rasterizeForestMap(workPackage.getMapComposerConfiguration().getDemDescriptor(), forestCluster, workPackage.getMapComposerConfiguration().getMapDesignScheme());
                             workPackage.getPipelineArtifacts().addArtifact(this, rawStructureMap);
                         },
-                        () -> log.error("ForestSpatialIndexCreator was not found in pipeline artifacts!")
+                        () -> log.error("ForestClusterCreator was not found in pipeline artifacts!")
                 );
     }
 

@@ -47,14 +47,14 @@ public class SpacialIndex<T> implements IndexedSpace<T> {
         this.nrCellsWidth = (int) Math.ceil(mapWidthInMeter / cellSizeInMeter);
         this.nrCellsHeight = (int) Math.ceil(mapHeightInMeter / cellSizeInMeter);
 
-        this.index = (List<T>[][]) new List[nrCellsWidth + 1][nrCellsHeight + 1];
+        this.index = (List<T>[][]) new List[nrCellsHeight + 1][nrCellsWidth + 1];
         preInitializeIndex();
     }
 
     private void preInitializeIndex() {
-        for (int x = 0; x <= nrCellsWidth; x++) {
-            for (int y = 0; y <= nrCellsHeight; y++) {
-                this.index[x][y] = new ArrayList<T>();
+        for (int y = 0; y <= nrCellsHeight; y++) {
+            for (int x = 0; x <= nrCellsWidth; x++) {
+                this.index[y][x] = new ArrayList<T>();
             }
         }
     }
@@ -67,7 +67,7 @@ public class SpacialIndex<T> implements IndexedSpace<T> {
         if (isInRange(spaceX, spaceY)) {
             final int roundedCellX = Round.halfUp(spaceX / cellSizeInMeter);
             final int roundedCellY = Round.halfUp(spaceY / cellSizeInMeter);
-            index[roundedCellX][roundedCellY].add(value);
+            index[roundedCellY][roundedCellX].add(value);
         } else {
             log.warn("Trying to put value outside of map: x={}, y={} | discard value!", spaceX, spaceY);
         }
@@ -79,7 +79,7 @@ public class SpacialIndex<T> implements IndexedSpace<T> {
             final int cellY
     ) {
         if (isInCellRange(cellX, cellY)) {
-            return index[cellX][cellY];
+            return index[cellY][cellX];
         } else {
             log.warn("Trying to get value outside of map: x={}, y={}\nReturn empty list!", cellX, cellY);
             return new ArrayList<>();
@@ -98,7 +98,7 @@ public class SpacialIndex<T> implements IndexedSpace<T> {
             final int cellX = (int) (spaceX / cellSizeInMeter);
             final int cellY = (int) (spaceY / cellSizeInMeter);
 
-            return index[cellX][cellY];
+            return index[cellY][cellX];
         }
     }
 
@@ -116,9 +116,9 @@ public class SpacialIndex<T> implements IndexedSpace<T> {
     @Override
     public int countItemsInIndex() {
         int count = 0;
-        for (int x = 0; x < nrCellsWidth; x++) {
-            for (int y = 0; y < nrCellsHeight; y++) {
-                count += index[x][y].size();
+        for (int y = 0; y < nrCellsHeight; y++) {
+            for (int x = 0; x < nrCellsWidth; x++) {
+                count += index[y][x].size();
             }
         }
 
@@ -131,9 +131,9 @@ public class SpacialIndex<T> implements IndexedSpace<T> {
             final int cellY
     ) {
         if (isInCellRange(cellX, cellY)) {
-            final int amountItems = index[cellX][cellY].size();
-            final double size = cellSizeInMeter * cellSizeInMeter;
-            final double itemsPerSquareMeter = amountItems / size;
+            final int amountItems = index[cellY][cellX].size();
+            final double squaremeterSize = getCellSizeInSquareMeter();
+            final double itemsPerSquareMeter = amountItems / squaremeterSize;
 
             return itemsPerSquareMeter > itemsPerSquareMeterThreshold;
         } else {

@@ -27,8 +27,8 @@ public class RECOMUICommands {
 
     public void setUnscaledMap(@NonNull final RECOMMapComponent mapComponent) {
         mapComponent.maybeHeightMapDescriptor.ifPresent((final DEMDescriptor DEMDescriptor) -> {
-            final int mapWidth = DEMDescriptor.getDem().length;
-            final int mapHeight = DEMDescriptor.getDem()[0].length;
+            final int mapHeight = DEMDescriptor.getDem().length;
+            final int mapWidth = DEMDescriptor.getDem()[0].length;
 
             final int[] pixelBufferArray = mapComponent.heightmapRasterizer.rasterizeHeightMap(DEMDescriptor);
 
@@ -44,8 +44,8 @@ public class RECOMUICommands {
             final int originalMapHeight = DEMDescriptor.getDem().length;
             final int originalMapWidth = DEMDescriptor.getDem()[0].length;
 
-            final int scaledMapWidth = (int) ScalingTool.scaleDimension(originalMapWidth, mapComponent.mapScaleFactor.getScaleFactor());
             final int scaledMapHeight = (int) ScalingTool.scaleDimension(originalMapHeight, mapComponent.mapScaleFactor.getScaleFactor());
+            final int scaledMapWidth = (int) ScalingTool.scaleDimension(originalMapWidth, mapComponent.mapScaleFactor.getScaleFactor());
 
             final int[] newScaledPixelArray = mapComponent.heightmapRasterizer.rasterizeHeightMap(DEMDescriptor, mapComponent.mapScaleFactor.getScaleFactor());
 

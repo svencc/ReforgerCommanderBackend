@@ -24,7 +24,7 @@ import java.util.concurrent.Executors;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class ForestClusterCreator implements MapLayerRasterizer<Cluster<ForestItem>> {
+public class CreatorForestData implements MapLayerRasterizer<Cluster<ForestItem>> {
 
     @NonNull
     private final CoordinateConverter coordinateConverter = new CoordinateConverter();
@@ -33,11 +33,10 @@ public class ForestClusterCreator implements MapLayerRasterizer<Cluster<ForestIt
     @NonNull
     private final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
 
-
     @NonNull
     private MapLayerRasterizerConfiguration mapLayerRasterizerConfiguration = MapLayerRasterizerConfiguration.builder()
             .rasterizerName(getClass().getSimpleName())
-            .batch(BatchOrder.PREPARE_BATCH)
+            .batch(BatchOrder.BATCH_0)
             .layerOrder(LayerOrder.FOREST_SPATIAL_INDEX)
             .visible(false)
             .build();
@@ -59,7 +58,7 @@ public class ForestClusterCreator implements MapLayerRasterizer<Cluster<ForestIt
             final int structureCellSizeInMeter = workPackage.getMapComposerConfiguration().getMapDesignScheme().getStructureCellSizeInMeter();
 
             final Cluster<ForestItem> spatialIndex = createForestSpacialIndex(mapWidthInMeter, mapHeightInMeter, structureCellSizeInMeter, structureEntities);
-            workPackage.getPipelineArtifacts().addArtifact(this, spatialIndex);
+            workPackage.getPipelineArtifacts().addArtifact(this, spatialIndex);  // das muss ganz nach vorne; future generator!
         }
     }
 

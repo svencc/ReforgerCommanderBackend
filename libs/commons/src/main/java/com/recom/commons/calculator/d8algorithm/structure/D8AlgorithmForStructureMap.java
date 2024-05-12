@@ -6,7 +6,6 @@ import com.recom.commons.calculator.d8algorithm.D8AspectMatrix;
 import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
 import com.recom.commons.model.DEMDescriptor;
 import com.recom.commons.model.maprendererpipeline.dataprovider.Cluster;
-import com.recom.commons.model.maprendererpipeline.dataprovider.SpacialIndex;
 import com.recom.commons.model.maprendererpipeline.dataprovider.structure.StructureItem;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -29,10 +28,10 @@ public class D8AlgorithmForStructureMap {
         final int demWidth = demDescriptor.getDemWidth();
         final int demHeight = demDescriptor.getDemHeight();
 
-        final int[][] structureMap = new int[demWidth][demHeight];
-        for (int demX = 0; demX < demWidth; demX++) {
-            for (int demY = 0; demY < demHeight; demY++) {
-                structureMap[demX][demY] = calculateStructureFragment(demDescriptor, structureCluster, mapScheme, demX, demY);
+        final int[][] structureMap = new int[demHeight][demWidth];
+        for (int demY = 0; demY < demHeight; demY++) {
+            for (int demX = 0; demX < demWidth; demX++) {
+                structureMap[demY][demX] = calculateStructureFragment(demDescriptor, structureCluster, mapScheme, demX, demY);
             }
         }
 

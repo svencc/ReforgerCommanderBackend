@@ -39,9 +39,11 @@ class D8AlgorithmForSlopeAndAspectMapTest {
         final SlopeAndAspect[][] slopeAndAspectsToTest = algorithm.generateSlopeAndAspectMap(dem);
 
         // ASSERT
-        for (int x = 0; x < dem.length; x++) {
-            for (int y = 0; y < dem[0].length; y++) {
-                assertTrue((expectedMap[x][y].getSlope() - slopeAndAspectsToTest[x][y].getSlope()) < 0.05 && expectedMap[x][y].getAspect() == slopeAndAspectsToTest[x][y].getAspect(), getMessageDescription(x, y) + " Expected: " + expectedMap[x][y] + " Actual: " + slopeAndAspectsToTest[x][y]);
+        final int height = dem.length;
+        final int width = dem[0].length;
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                assertTrue((expectedMap[y][x].getSlope() - slopeAndAspectsToTest[y][x].getSlope()) < 0.05 && expectedMap[y][x].getAspect() == slopeAndAspectsToTest[y][x].getAspect(), getMessageDescription(x, y) + " Expected: " + expectedMap[y][x] + " Actual: " + slopeAndAspectsToTest[y][x]);
             }
         }
     }

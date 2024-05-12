@@ -21,8 +21,9 @@ public class MapLayerRasterizerConfiguration {
     @Builder.Default
     private int batch = 0;
 
-    public void applyTo(@NonNull final MapLayerRasterizer renderer) {
+    public void applyTo(@NonNull final MapLayerRasterizer<?> renderer) {
         renderer.getMapLayerRasterizerConfiguration().setLayerOrder(layerOrder);
+        renderer.getMapLayerRasterizerConfiguration().setBatch(batch);
         renderer.getMapLayerRasterizerConfiguration().setVisible(visible);
         renderer.getMapLayerRasterizerConfiguration().setEnabled(enabled);
     }

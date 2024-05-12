@@ -24,7 +24,7 @@ import java.util.concurrent.Executors;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class StructureClusterCreator implements MapLayerRasterizer<Cluster<StructureItem>> {
+public class CreatorStructureData implements MapLayerRasterizer<Cluster<StructureItem>> {
 
     @NonNull
     private final CoordinateConverter coordinateConverter = new CoordinateConverter();
@@ -33,11 +33,10 @@ public class StructureClusterCreator implements MapLayerRasterizer<Cluster<Struc
     @NonNull
     private final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
 
-
     @NonNull
     private MapLayerRasterizerConfiguration mapLayerRasterizerConfiguration = MapLayerRasterizerConfiguration.builder()
             .rasterizerName(getClass().getSimpleName())
-            .batch(BatchOrder.PREPARE_BATCH)
+            .batch(BatchOrder.BATCH_0)
             .layerOrder(LayerOrder.STRUCTURE_SPATIAL_INDEX)
             .visible(false)
             .build();
@@ -59,7 +58,7 @@ public class StructureClusterCreator implements MapLayerRasterizer<Cluster<Struc
             final int structureCellSizeInMeter = workPackage.getMapComposerConfiguration().getMapDesignScheme().getStructureCellSizeInMeter();
 
             final Cluster<StructureItem> spatialIndex = createStructureSpacialIndex(mapWidthInMeter, mapHeightInMeter, structureCellSizeInMeter, structureEntities);
-            workPackage.getPipelineArtifacts().addArtifact(this, spatialIndex);
+            workPackage.getPipelineArtifacts().addArtifact(this, spatialIndex); // das muss ganz nach vorne; future generator!
         }
     }
 

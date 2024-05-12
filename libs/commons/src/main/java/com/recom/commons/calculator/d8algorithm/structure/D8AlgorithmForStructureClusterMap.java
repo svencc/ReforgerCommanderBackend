@@ -25,10 +25,10 @@ public class D8AlgorithmForStructureClusterMap {
         final int demWidth = demDescriptor.getDemWidth();
         final int demHeight = demDescriptor.getDemHeight();
 
-        final int[][] structureMap = new int[demWidth][demHeight];
-        for (int demX = 0; demX < demWidth; demX++) {
-            for (int demY = 0; demY < demHeight; demY++) {
-                structureMap[demX][demY] = calculateStructureClusterFragment(demDescriptor, mapScheme, demX, demY);
+        final int[][] structureMap = new int[demHeight][demWidth];
+        for (int demY = 0; demY < demHeight; demY++) {
+            for (int demX = 0; demX < demWidth; demX++) {
+                structureMap[demY][demX] = calculateStructureClusterFragment(demDescriptor, mapScheme, demX, demY);
             }
         }
 

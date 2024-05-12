@@ -1,4 +1,4 @@
-package com.recom.commons.map.rasterizer.batch2;
+package com.recom.commons.map.rasterizer.batch1;
 
 import com.recom.commons.map.rasterizer.configuration.BatchOrder;
 import com.recom.commons.map.rasterizer.configuration.LayerOrder;
@@ -20,16 +20,16 @@ public class HeightMapRasterizer implements MapLayerRasterizer<int[]> {
 
     @NonNull
     private final DEMUpscaleAlgorithmBilinear interpolator;
+
     @Getter
     @NonNull
     private final MapLayerRasterizerConfiguration mapLayerRasterizerConfiguration = MapLayerRasterizerConfiguration.builder()
             .rasterizerName(getClass().getSimpleName())
-            .batch(BatchOrder.BASIC_BATCH)
+            .batch(BatchOrder.BATCH_1)
             .layerOrder(LayerOrder.HEIGHT_MAP)
             .visible(false)
             .enabled(false)
             .build();
-
 
     public HeightMapRasterizer() {
         interpolator = new DEMUpscaleAlgorithmBilinear();
@@ -51,16 +51,16 @@ public class HeightMapRasterizer implements MapLayerRasterizer<int[]> {
     public int[] rasterizeHeightMap(@NonNull final DEMDescriptor demDescriptor) {
         final int width = demDescriptor.getDemWidth();
         final int height = demDescriptor.getDemHeight();
-        final int[] imageBuffer = new int[width * height];
+        final int[] imageBuffer = new int[height * width];
 
         final float heightRange = demDescriptor.getMaxHeight() - demDescriptor.getSeaLevel();
         final float depthRange = demDescriptor.getMaxWaterDepth() - demDescriptor.getSeaLevel();
 
-        IntStream.range(0, width).parallel().forEach(demX -> {
-            for (int demY = 0; demY < height; demY++) {
-                final float heightValue = demDescriptor.getDem()[demX][demY];
-                Color color;
+        IntStream.range(0, height).parallel().forEach(coordinateY -> {
+            for (int coordinateX = 0; coordinateX < width; coordinateX++) {
+                final float heightValue = demDescriptor.getDem()[coordinateY][coordinateX];
 
+                final Color color;
                 if (heightValue >= demDescriptor.getSeaLevel()) {
                     // map height to color
                     final float dynamicHeightUnit = (heightValue - demDescriptor.getSeaLevel()) / heightRange;
@@ -75,7 +75,7 @@ public class HeightMapRasterizer implements MapLayerRasterizer<int[]> {
                     color = new Color((int) (blueValue * 0.77), (int) (192 * 0.94), blueValue);
                 }
 
-                imageBuffer[demX + demY * width] = color.getRGB();
+                imageBuffer[(coordinateY * width) + coordinateX] = color.getRGB();
             }
         });
 

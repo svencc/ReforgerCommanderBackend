@@ -21,11 +21,11 @@ public class DEMDescriptor implements Cloneable {
     private Float maxHeight;
     private float[][] dem;
 
-    public int getDemWidth() {
+    public int getDemHeight() {
         return dem.length;
     }
 
-    public int getDemHeight() {
+    public int getDemWidth() {
         return dem[0].length;
     }
 

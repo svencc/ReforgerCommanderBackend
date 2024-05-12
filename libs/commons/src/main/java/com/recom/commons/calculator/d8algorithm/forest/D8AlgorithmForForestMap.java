@@ -29,10 +29,10 @@ public class D8AlgorithmForForestMap {
         final int demWidth = demDescriptor.getDemWidth();
         final int demHeight = demDescriptor.getDemHeight();
 
-        final int[][] forestMap = new int[demWidth][demHeight];
-        for (int demX = 0; demX < demWidth; demX++) {
-            for (int demY = 0; demY < demHeight; demY++) {
-                forestMap[demX][demY] = calculateForestFragment(demDescriptor, forestCluster, mapScheme, demX, demY);
+        final int[][] forestMap = new int[demHeight][demWidth];
+        for (int demY = 0; demY < demHeight; demY++) {
+            for (int demX = 0; demX < demWidth; demX++) {
+                forestMap[demY][demX] = calculateForestFragment(demDescriptor, forestCluster, mapScheme, demX, demY);
             }
         }
 

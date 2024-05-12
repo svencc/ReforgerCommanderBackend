@@ -24,14 +24,14 @@ public class D8AlgorithmForSlopeAndAspectMap {
      */
     @NonNull
     public SlopeAndAspect[][] generateSlopeAndAspectMap(@NonNull final float[][] dem) {
-        final int demWidth = dem.length;
-        final int demHeight = dem[0].length;
-        final SlopeAndAspect[][] slopeAndAspects = new SlopeAndAspect[demWidth][demHeight];
+        final int demHeight = dem.length;
+        final int demWidth = dem[0].length;
+        final SlopeAndAspect[][] slopeAndAspects = new SlopeAndAspect[demHeight][demWidth];
 
         // Iterate through each cell in the DEM to calculate its slope and aspect.
-        IntStream.range(0, demWidth).parallel().forEach(demX -> {
-            for (int demY = 0; demY < demHeight; demY++) {
-                slopeAndAspects[demX][demY] = calculateSlopeAndAspect(dem, demX, demY);
+        IntStream.range(0, demHeight).parallel().forEach(coordinateY -> {
+            for (int coordinateX = 0; coordinateX < demWidth; coordinateX++) {
+                slopeAndAspects[coordinateY][coordinateX] = calculateSlopeAndAspect(dem, coordinateX, coordinateY);
             }
         });
 
@@ -43,31 +43,31 @@ public class D8AlgorithmForSlopeAndAspectMap {
      * It identifies the steepest slope among the 8 possible descent directions.
      *
      * @param dem  The digital elevation model (DEM) as a 2D array of elevation values.
-     * @param demX The X-coordinate (column) of the cell in the DEM.
-     * @param demY The Y-coordinate (row) of the cell in the DEM.
+     * @param coordinateX The X-coordinate (column) of the cell in the DEM.
+     * @param coordinateY The Y-coordinate (row) of the cell in the DEM.
      * @return The maximum slope from the given cell.
      */
     @NonNull
     private SlopeAndAspect calculateSlopeAndAspect(
             final float[][] dem,
-            final int demX,
-            final int demY
+            final int coordinateX,
+            final int coordinateY
     ) {
-        final int demWidth = dem.length;
-        final int demHeight = dem[0].length;
+        final int demHeight = dem.length;
+        final int demWidth = dem[0].length;
         Aspect aspect = Aspect.NULL_ASPECT; // Initialize the aspect to null.
         double maxSlope = 0;                // Initialize the maximum slope to 0.
         final double diagonalCellSize = Math.sqrt(2) * cellSize;
 
         for (int direction = 0; direction < 8; direction++) {
             final Aspect currentAspect = D8AspectMatrix.aspects[direction];
-            final int adjacentNeighborX = demX + D8AspectMatrix.directionXComponentMatrix[direction]; // Calculate the X-coordinate of the adjacent neighbor.
-            final int adjacentNeighborY = demY + D8AspectMatrix.directionYComponentMatrix[direction]; // Calculate the Y-coordinate of the adjacent neighbor.
+            final int adjacentNeighborX = coordinateX + D8AspectMatrix.directionXComponentMatrix[direction]; // Calculate the X-coordinate of the adjacent neighbor.
+            final int adjacentNeighborY = coordinateY + D8AspectMatrix.directionYComponentMatrix[direction]; // Calculate the Y-coordinate of the adjacent neighbor.
 
             // Prüfen, ob der neue Punkt innerhalb der Grenzen liegt
             if (adjacentNeighborX >= 0 && adjacentNeighborY >= 0 && adjacentNeighborX < demWidth) {
                 if (adjacentNeighborY < demHeight) {
-                    final double relativeDifference = dem[demX][demY] - dem[adjacentNeighborX][adjacentNeighborY];
+                    final double relativeDifference = dem[coordinateY][coordinateX] - dem[adjacentNeighborY][adjacentNeighborX];
                     final int differenceSign = Sign.of(relativeDifference);
                     final double absoluteDifference = Math.abs(relativeDifference);
                     // Elevation difference to the neighbor.

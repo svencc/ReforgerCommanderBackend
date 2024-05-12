@@ -1,7 +1,7 @@
 package com.recom.commons.map.rasterizer.batch2;
 
 import com.recom.commons.calculator.d8algorithm.D8AlgorithmForShadedMap;
-import com.recom.commons.map.rasterizer.batch1.SlopeAndAspectMapRasterizer;
+import com.recom.commons.map.rasterizer.batch0.SlopeAndAspectMapRasterizer;
 import com.recom.commons.map.rasterizer.configuration.BatchOrder;
 import com.recom.commons.map.rasterizer.configuration.LayerOrder;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRasterizer;
@@ -26,10 +26,9 @@ public class ShadowedMapRasterizer implements MapLayerRasterizer<int[]> {
     @NonNull
     private final MapLayerRasterizerConfiguration mapLayerRasterizerConfiguration = MapLayerRasterizerConfiguration.builder()
             .rasterizerName(getClass().getSimpleName())
-            .batch(BatchOrder.BASIC_BATCH)
+            .batch(BatchOrder.BATCH_2)
             .layerOrder(LayerOrder.SHADOWED_MAP)
             .build();
-
 
     @NonNull
     private int[] rasterizeShadowedMap(
@@ -43,10 +42,10 @@ public class ShadowedMapRasterizer implements MapLayerRasterizer<int[]> {
         final int width = demDescriptor.getDemWidth();
         final int height = demDescriptor.getDemHeight();
 
-        final int[] pixelBuffer = new int[width * height];
-        IntStream.range(0, width).parallel().forEach(demX -> {
-            for (int demY = 0; demY < height; demY++) {
-                pixelBuffer[demX + demY * width] = shadedMap[demX][demY];
+        final int[] pixelBuffer = new int[height * width];
+        IntStream.range(0, height).parallel().forEach(demY -> {
+            for (int demX = 0; demX < width; demX++) {
+                pixelBuffer[(demY * width) + demX] = shadedMap[demY][demX];
             }
         });
 

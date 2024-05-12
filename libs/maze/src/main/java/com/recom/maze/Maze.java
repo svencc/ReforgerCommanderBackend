@@ -85,14 +85,14 @@ public class Maze {
         MazeLocation goal = null;
         final Cell[][] grid = new Cell[numRows][numCols];
 
-        for (int r = 0; r < numRows; r++) {
+        for (int nthRow = 0; nthRow < numRows; nthRow++) {
             for (int c = 0; c < numCols; c++) {
-                final String symbol = rows[r].substring(c * 3, c * 3 + 3); // The 3-character sequence representing the cell type is: "[X]" or "[ ]" or "[S]" or "[G]"
+                final String symbol = rows[nthRow].substring(c * 3, c * 3 + 3); // The 3-character sequence representing the cell type is: "[X]" or "[ ]" or "[S]" or "[G]"
                 final Cell cell = Cell.fromSymbol(symbol);
-                grid[r][c] = cell;
+                grid[nthRow][c] = cell;
                 switch (cell) {
-                    case START -> start = MazeLocation.builder().row(r).column(c).build();
-                    case GOAL -> goal = MazeLocation.builder().row(r).column(c).build();
+                    case START -> start = MazeLocation.builder().row(nthRow).column(c).build();
+                    case GOAL -> goal = MazeLocation.builder().row(nthRow).column(c).build();
                 }
             }
         }

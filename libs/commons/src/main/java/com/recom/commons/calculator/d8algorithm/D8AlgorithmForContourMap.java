@@ -22,11 +22,13 @@ public class D8AlgorithmForContourMap {
             @NonNull final MapDesignScheme mapScheme
     ) {
         final float[][] dem = DEMDescriptor.getDem();
-        final int[][] contourMap = new int[dem.length][dem[0].length];
+        final int height = dem.length;
+        final int width = dem[0].length;
+        final int[][] contourMap = new int[height][width];
 
-        for (int x = 0; x < contourMap.length; x++) {
-            for (int y = 0; y < contourMap[0].length; y++) {
-                contourMap[x][y] = calculateContour(DEMDescriptor, x, y, mapScheme);
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                contourMap[y][x] = calculateContour(DEMDescriptor, x, y, mapScheme);
             }
         }
 
@@ -35,31 +37,31 @@ public class D8AlgorithmForContourMap {
 
     private int calculateContour(
             @NonNull final DEMDescriptor demDescriptor,
-            final int x,
-            final int y,
+            final int coordinateX,
+            final int coordinateY,
             @NonNull final MapDesignScheme mapScheme
     ) {
         final float[][] dem = demDescriptor.getDem();
+        final int demHeight = demDescriptor.getDemHeight();
         final int demWidth = demDescriptor.getDemWidth();
-        final int demHeigth = demDescriptor.getDemHeight();
         final List<ContourLineLayer> contourLayers = generateContourLineLayers(demDescriptor, mapScheme);
 
         for (final ContourLineLayer layer : contourLayers) {
             for (int direction = 0; direction < 4; direction++) {
-                final int adjacentNeighborX = x + D8AspectMatrix.directionXComponentMatrix[direction]; // Calculate the X-coordinate of the adjacent neighbor.
-                final int adjacentNeighborY = y + D8AspectMatrix.directionYComponentMatrix[direction]; // Calculate the Y-coordinate of the adjacent neighbor.
-                final int adjacentOppositeNeighborX = x + D8AspectMatrix.directionXComponentMatrix[direction + 3]; // Calculate the X-coordinate of the adjacent opposite neighbor.
-                final int adjacentOppositeNeighborY = y + D8AspectMatrix.directionYComponentMatrix[direction + 3]; // Calculate the Y-coordinate of the adjacent opposite neighbor.
+                final int adjacentNeighborX = coordinateX + D8AspectMatrix.directionXComponentMatrix[direction]; // Calculate the X-coordinate of the adjacent neighbor.
+                final int adjacentNeighborY = coordinateY + D8AspectMatrix.directionYComponentMatrix[direction]; // Calculate the Y-coordinate of the adjacent neighbor.
+                final int adjacentOppositeNeighborX = coordinateX + D8AspectMatrix.directionXComponentMatrix[direction + 3]; // Calculate the X-coordinate of the adjacent opposite neighbor.
+                final int adjacentOppositeNeighborY = coordinateY + D8AspectMatrix.directionYComponentMatrix[direction + 3]; // Calculate the Y-coordinate of the adjacent opposite neighbor.
 
                 // Check if the new point is within the bounds
-                if (adjacentNeighborX >= 0 && adjacentNeighborY >= 0 && adjacentNeighborX < demWidth && adjacentNeighborY < demHeigth
-                        && adjacentOppositeNeighborX >= 0 && adjacentOppositeNeighborY >= 0 && adjacentOppositeNeighborX < demWidth && adjacentOppositeNeighborY < demHeigth) {
-                    if (dem[adjacentNeighborX][adjacentNeighborY] > layer.getHeight()
-                            && dem[adjacentOppositeNeighborX][adjacentOppositeNeighborY] < layer.getHeight()
+                if (adjacentNeighborX >= 0 && adjacentNeighborY >= 0 && adjacentNeighborX < demWidth && adjacentNeighborY < demHeight
+                        && adjacentOppositeNeighborY >= 0 && adjacentOppositeNeighborX >= 0 && adjacentOppositeNeighborY < demHeight && adjacentOppositeNeighborX < demWidth) {
+                    if (dem[adjacentNeighborY][adjacentNeighborX] > layer.getHeight()
+                            && dem[adjacentOppositeNeighborY][adjacentOppositeNeighborX] < layer.getHeight()
                     ) {
                         return layer.getColor(mapScheme);
-                    } else if (dem[adjacentNeighborX][adjacentNeighborY] < layer.getHeight()
-                            && dem[adjacentOppositeNeighborX][adjacentOppositeNeighborY] > layer.getHeight()
+                    } else if (dem[adjacentNeighborY][adjacentNeighborX] < layer.getHeight()
+                            && dem[adjacentOppositeNeighborY][adjacentOppositeNeighborX] > layer.getHeight()
                     ) {
                         return layer.getColor(mapScheme);
                     }

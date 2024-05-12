@@ -90,14 +90,14 @@ public class MapTopographyScannerTransactionEventListener extends TransactionalM
         final ChunkCoordinate chunkCoordinate = ChunkHelper.extractChunkCoordinateFromSessionIdentifier(sessionIdentifier);
         final ChunkDimensions chunkDimensions = ChunkHelper.determineChunkDimensions(packages);
 
-        final float[][] chunkedDem = new float[chunkDimensions.x()][chunkDimensions.z()];
+        final float[][] chunkedDem = new float[chunkDimensions.z()][chunkDimensions.x()];
         packages.stream()
                 .flatMap((entityPackage) -> entityPackage.getEntities().stream())
                 .forEach((final MapTopographyDto packageDto) -> {
                     final int x = packageDto.getCoordinates().get(0).intValue() - (int) (chunkCoordinate.x() * 1000);
                     final float y = packageDto.getCoordinates().get(1).floatValue();
                     final int z = packageDto.getCoordinates().get(2).intValue() - (int) (chunkCoordinate.z() * 1000);
-                    chunkedDem[x][z] = y;
+                    chunkedDem[z][x] = y;
                 });
 
         final Optional<SquareKilometerTopographyChunk> maybeChunk = mapTopographyChunkPersistenceLayer.findByGameMapAndCoordinate(gameMap, chunkCoordinate);

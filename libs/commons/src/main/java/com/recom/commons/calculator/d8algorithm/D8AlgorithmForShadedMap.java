@@ -21,13 +21,13 @@ public class D8AlgorithmForShadedMap {
             @NonNull final SlopeAndAspect[][] slopeAndAspectMap,
             @NonNull final MapDesignScheme shadowingScheme
     ) {
-        final int mapWidth = slopeAndAspectMap.length;
-        final int mapHeight = slopeAndAspectMap[0].length;
-        final int[][] shadingMap = new int[mapWidth][mapHeight];
+        final int mapHeight = slopeAndAspectMap.length;
+        final int mapWidth = slopeAndAspectMap[0].length;
+        final int[][] shadingMap = new int[mapHeight][mapWidth];
 
-        for (int demX = 0; demX < mapWidth; demX++) {
-            for (int demY = 0; demY < mapHeight; demY++) {
-                shadingMap[demX][demY] = calculateShading(slopeAndAspectMap[demX][demY], shadowingScheme);
+        for (int demY = 0; demY < mapHeight; demY++) {
+            for (int demX = 0; demX < mapWidth; demX++) {
+                shadingMap[demY][demX] = calculateShading(slopeAndAspectMap[demY][demX], shadowingScheme);
             }
         }
 

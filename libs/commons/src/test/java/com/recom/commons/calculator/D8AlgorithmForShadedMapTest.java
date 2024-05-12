@@ -28,10 +28,12 @@ class D8AlgorithmForShadedMapTest {
         int[][] shadedMapToTest = shadedMapAlgorithm.generateShadedMap(slopeAndAspectsMap, mapScheme);
 
         // ASSERT
-        for (int x = 0; x < dem.length; x++) {
+        final int height = dem.length;
+        final int width = dem[0].length;
+        for (int coordinateY = 0; coordinateY < height; coordinateY++) {
             System.out.print("{");
-            for (int y = 0; y < dem[0].length; y++) {
-                System.out.print(shadedMapToTest[x][y] + ", ");
+            for (int coordinateX = 0; coordinateX < width; coordinateX++) {
+                System.out.print(shadedMapToTest[coordinateY][coordinateX] + ", ");
             }
             System.out.print("}");
             System.out.println();

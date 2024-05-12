@@ -1,10 +1,14 @@
 package com.recom.commons.map;
 
 import com.recom.commons.calculator.ARGBCalculator;
-import com.recom.commons.map.rasterizer.batch0.ForestClusterCreator;
-import com.recom.commons.map.rasterizer.batch1.SlopeAndAspectMapRasterizer;
-import com.recom.commons.map.rasterizer.batch0.StructureClusterCreator;
-import com.recom.commons.map.rasterizer.batch2.*;
+import com.recom.commons.map.rasterizer.batch0.CreatorForestData;
+import com.recom.commons.map.rasterizer.batch0.CreatorStructureData;
+import com.recom.commons.map.rasterizer.batch0.SlopeAndAspectMapRasterizer;
+import com.recom.commons.map.rasterizer.batch1.*;
+import com.recom.commons.map.rasterizer.batch2.ForestMapRasterizer;
+import com.recom.commons.map.rasterizer.batch2.ShadowedMapRasterizer;
+import com.recom.commons.map.rasterizer.batch2.StructureClusterMapRasterizer;
+import com.recom.commons.map.rasterizer.batch2.StructureMapRasterizer;
 import com.recom.commons.map.rasterizer.configuration.MapLayerRasterizer;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
 import com.recom.commons.model.maprendererpipeline.dataprovider.forest.ForestProvidable;
@@ -28,7 +32,7 @@ import java.util.stream.Collectors;
 public class MapComposer {
 
     @NonNull
-    private final List<MapLayerRasterizer> mapLayerRasterizerPipeline = new ArrayList<>();
+    private final List<MapLayerRasterizer<?>> mapLayerRasterizerPipeline = new ArrayList<>();
     @NonNull
     private final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
     @NonNull
@@ -55,8 +59,8 @@ public class MapComposer {
 
         //batch0
         mapComposer.registerRenderer(new SlopeAndAspectMapRasterizer());
-        mapComposer.registerRenderer(new StructureClusterCreator(mapComposer));
-        mapComposer.registerRenderer(new ForestClusterCreator(mapComposer));
+        mapComposer.registerRenderer(new CreatorStructureData(mapComposer));
+        mapComposer.registerRenderer(new CreatorForestData(mapComposer));
 
         //batch1
         mapComposer.registerRenderer(new SlopeMapRasterizer());
@@ -102,10 +106,10 @@ public class MapComposer {
                 .entrySet().stream()
                 .sorted(Comparator.comparingInt(Map.Entry::getKey))
                 .forEach(batch -> {
-                    final List<MapLayerRasterizer> taskListOfBatch = batch.getValue();
+                    final List<MapLayerRasterizer<?>> taskListOfBatch = batch.getValue();
                     taskListOfBatch.stream()
-                            .sorted(Comparator.comparingInt((final MapLayerRasterizer mapLayerRasterizer) -> mapLayerRasterizer.getMapLayerRasterizerConfiguration().getLayerOrder()))
-                            .filter((final MapLayerRasterizer renderer) -> renderer.getMapLayerRasterizerConfiguration().isEnabled())
+                            .sorted(Comparator.comparingInt((final MapLayerRasterizer<?> mapLayerRasterizer) -> mapLayerRasterizer.getMapLayerRasterizerConfiguration().getLayerOrder()))
+                            .filter((final MapLayerRasterizer<?> renderer) -> renderer.getMapLayerRasterizerConfiguration().isEnabled())
                             .map(renderer -> CompletableFuture.supplyAsync(() -> {
                                 try {
                                     renderer.render(workPackage);
@@ -133,13 +137,13 @@ public class MapComposer {
     }
 
     private void applyConfigurationToRasterizer(@NonNull final MapComposerWorkPackage workPackage) {
-        final Map<String, MapLayerRasterizer> indexedRasterizer = mapLayerRasterizerPipeline.stream()
+        final Map<String, MapLayerRasterizer<?>> indexedRasterizer = mapLayerRasterizerPipeline.stream()
                 .collect(HashMap::new, (map, rasterizer) -> map.put(rasterizer.getRasterizerName(), rasterizer), HashMap::putAll);
 
         workPackage.getMapComposerConfiguration().getRendererConfiguration().stream()
                 .filter(configuration -> indexedRasterizer.containsKey(configuration.getRasterizerName()))
                 .forEach(configuration -> {
-                    final MapLayerRasterizer mapLayerRasterizer = indexedRasterizer.get(configuration.getRasterizerName());
+                    final MapLayerRasterizer<?> mapLayerRasterizer = indexedRasterizer.get(configuration.getRasterizerName());
                     configuration.applyTo(mapLayerRasterizer);
                 });
     }
@@ -148,7 +152,7 @@ public class MapComposer {
     public int[] merge(@NonNull final MapComposerWorkPackage workPackage) {
         final int width = workPackage.getMapComposerConfiguration().getDemDescriptor().getDemWidth();
         final int height = workPackage.getMapComposerConfiguration().getDemDescriptor().getDemHeight();
-        final int[] pixelBuffer = new int[width * height];
+        final int[] pixelBuffer = new int[height * width];
         Arrays.fill(pixelBuffer, 0xff000000); // prefill with black
 
         return merge(workPackage, pixelBuffer);
@@ -163,7 +167,7 @@ public class MapComposer {
         return workPackage.getPipelineArtifacts().getArtifacts().entrySet().stream()
                 .sorted(Comparator.comparingInt((entry) -> entry.getValue().getCreator().getMapLayerRasterizerConfiguration().getLayerOrder()))
                 .filter(entry -> {
-                    final MapLayerRasterizer artifactCreator = entry.getValue().getCreator();
+                    final MapLayerRasterizer<?> artifactCreator = entry.getValue().getCreator();
                     return artifactCreator.getMapLayerRasterizerConfiguration().isEnabled()
                             && artifactCreator.getMapLayerRasterizerConfiguration().isVisible();
                 })

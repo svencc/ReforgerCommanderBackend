@@ -1,4 +1,4 @@
-package com.recom.commons.map.rasterizer.batch2;
+package com.recom.commons.map.rasterizer.batch1;
 
 import com.recom.commons.calculator.ARGBCalculator;
 import com.recom.commons.calculator.ARGBColor;
@@ -23,15 +23,15 @@ public class LandMapRasterizer implements MapLayerRasterizer<int[]> {
 
     @NonNull
     private final ARGBCalculator argbCalculator = new ARGBCalculator();
+
     @Getter
     @NonNull
     private final MapLayerRasterizerConfiguration mapLayerRasterizerConfiguration = MapLayerRasterizerConfiguration.builder()
             .rasterizerName(getClass().getSimpleName())
-            .batch(BatchOrder.BASIC_BATCH)
+            .batch(BatchOrder.BATCH_1)
             .layerOrder(LayerOrder.LAND_MAP)
             .enabled(false)
             .build();
-
 
     @NonNull
     private int[] rasterizeBaseMap(
@@ -40,31 +40,31 @@ public class LandMapRasterizer implements MapLayerRasterizer<int[]> {
     ) {
         final int width = demDescriptor.getDemWidth();
         final int height = demDescriptor.getDemHeight();
-        final int[] imageBuffer = new int[width * height];
+        final int[] imageBuffer = new int[height * width];
 
         final float heightRange = demDescriptor.getMaxHeight() - demDescriptor.getSeaLevel();
         final float depthRange = demDescriptor.getMaxWaterDepth() - demDescriptor.getSeaLevel();
 
-        IntStream.range(0, width).parallel().forEach(demX -> {
-            for (int demY = 0; demY < height; demY++) {
-                final float heightValue = demDescriptor.getDem()[demX][demY];
+        IntStream.range(0, height).parallel().forEach(demY -> {
+            for (int demX = 0; demX < width; demX++) {
+                final float heightValue = demDescriptor.getDem()[demY][demX];
                 int color;
 
                 if (heightValue > demDescriptor.getSeaLevel()) {
                     // map height to color
                     final float dynamicHeightUnit = (heightValue - demDescriptor.getSeaLevel()) / heightRange;
                     int maxHeightKeyValue = 255; // @TODO <<<< candidate for extraction into scheme
-                    int grayValue = (int) (maxHeightKeyValue * dynamicHeightUnit); // normalize to 0..255
-                    grayValue = Math.min(Math.max(grayValue, 0), 255); // ensure that the value is in the valid range
+                    int greyValue = (int) (maxHeightKeyValue * dynamicHeightUnit); // normalize to 0..255
+                    greyValue = Math.min(Math.max(greyValue, 0), 255); // ensure that the value is in the valid range
 
                     int valueHowTransparentTheHeightmapIs = 16; // @TODO <<<< candidate for extraction into scheme
-                    color = ARGBColor.ARGB(valueHowTransparentTheHeightmapIs, grayValue, grayValue, grayValue);
+                    color = ARGBColor.ARGB(valueHowTransparentTheHeightmapIs, greyValue, greyValue, greyValue);
                     color = argbCalculator.blend(color, mapScheme.getBaseColorTerrain());
                 } else {
                     color = 0xFF000000;
                 }
 
-                imageBuffer[demX + demY * width] = color;
+                imageBuffer[(demY * width) + demX] = color;
             }
         });
 

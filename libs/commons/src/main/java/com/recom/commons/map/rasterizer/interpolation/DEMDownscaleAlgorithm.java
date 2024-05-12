@@ -29,14 +29,14 @@ public class DEMDownscaleAlgorithm {
             @NonNull final float[][] input,
             final int pickNth
     ) {
-        final int originalWidth = input.length;
-        final int originalHeight = input[0].length;
+        final int originalHeight = input.length;
+        final int originalWidth = input[0].length;
         final int newWidth = (originalWidth + pickNth - 1) / pickNth;
         final int newHeight = (originalHeight + pickNth - 1) / pickNth;
-        final float[][] output = new float[newWidth][newHeight];
+        final float[][] output = new float[newHeight][newWidth];
 
-        for (int y = 0, newY = 0; y < originalWidth; y += pickNth, newY++) {
-            for (int x = 0, newX = 0; x < originalHeight; x += pickNth, newX++) {
+        for (int y = 0, newY = 0; y < originalHeight; y += pickNth, newY++) {
+            for (int x = 0, newX = 0; x < originalWidth; x += pickNth, newX++) {
                 output[newY][newX] = input[y][x];
             }
         }

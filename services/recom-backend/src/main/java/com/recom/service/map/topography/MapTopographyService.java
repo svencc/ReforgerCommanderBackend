@@ -4,6 +4,7 @@ import com.recom.commons.map.MapComposer;
 import com.recom.commons.map.PixelBufferMapperUtil;
 import com.recom.commons.map.rasterizer.interpolation.DEMDownscaleAlgorithm;
 import com.recom.commons.map.rasterizer.interpolation.DEMUpscaleAlgorithmBilinear;
+import com.recom.commons.map.rasterizer.interpolation.PixelScaler;
 import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignScheme;
 import com.recom.commons.map.rasterizer.mapdesignscheme.MapDesignSchemeImplementation;
 import com.recom.commons.map.rasterizer.mapdesignscheme.ReforgerMapDesignScheme;
@@ -51,6 +52,8 @@ public class MapTopographyService {
     private final MapComposer mapComposer;
     @NonNull
     private final DEMUpscaleAlgorithmBilinear demUpscaleAlgorithm;
+//    @NonNull
+//    private final PixelScaler pixelScaler;
     @NonNull
     private final DEMDownscaleAlgorithm demDownscaleAlgorithm;
     @NonNull
@@ -83,10 +86,12 @@ public class MapTopographyService {
             final BigDecimal scaleFactor = provideScaleFactor(maybeMapComposerConfiguration);
             if (scaleFactor.compareTo(BigDecimal.ONE) > 0) {
                 float[][] interpolatedDem = demUpscaleAlgorithm.scaleUp(demDescriptor, scaleFactor.intValue());
+//                float[][] interpolatedDem = pixelScaler.scale(demDescriptor, scaleFactor.intValue());
                 demDescriptor.setDem(interpolatedDem);
                 demDescriptor.setStepSize(stepSizeCalculator.calculateStepSize(demDescriptor, new BigDecimal(scaleFactor.intValue())));
             } else if (scaleFactor.compareTo(BigDecimal.ONE) < 0) {
                 float[][] downScaledDem = demDownscaleAlgorithm.scaleDown(demDescriptor, scaleFactor.multiply(new BigDecimal(100)).intValue());
+//                float[][] downScaledDem = pixelScaler.scale(demDescriptor, scaleFactor.intValue());
                 demDescriptor.setDem(downScaledDem);
                 demDescriptor.setStepSize(stepSizeCalculator.calculateStepSize(demDescriptor, scaleFactor));
             }
@@ -108,8 +113,8 @@ public class MapTopographyService {
             } else {
                 throw new HttpUnprocessableEntityException();
             }
-        } catch (Exception e) {
-            log.error(e.getMessage());
+        } catch (final Throwable t) {
+            log.error(t.getMessage(), t);
             throw new HttpUnprocessableEntityException();
         }
     }

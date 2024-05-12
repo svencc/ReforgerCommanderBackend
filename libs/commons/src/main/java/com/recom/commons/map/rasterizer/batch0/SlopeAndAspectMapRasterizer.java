@@ -1,4 +1,4 @@
-package com.recom.commons.map.rasterizer.batch1;
+package com.recom.commons.map.rasterizer.batch0;
 
 import com.recom.commons.calculator.d8algorithm.D8AlgorithmForSlopeAndAspectMap;
 import com.recom.commons.map.rasterizer.configuration.BatchOrder;
@@ -21,11 +21,10 @@ import java.util.Optional;
 @Setter
 public class SlopeAndAspectMapRasterizer implements MapLayerRasterizer<SlopeAndAspectMap> {
 
-    @Getter
     @NonNull
     private final MapLayerRasterizerConfiguration mapLayerRasterizerConfiguration = MapLayerRasterizerConfiguration.builder()
             .rasterizerName(getClass().getSimpleName())
-            .batch(BatchOrder.BASIC_BATCH)
+            .batch(BatchOrder.BATCH_0)
             .layerOrder(LayerOrder.SLOPE_AND_ASPECT_MAP)
             .build();
 

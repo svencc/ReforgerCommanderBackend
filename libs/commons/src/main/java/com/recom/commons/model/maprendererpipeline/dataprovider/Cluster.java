@@ -38,7 +38,7 @@ public class Cluster<T> implements IndexedSpace<T> {
     @NonNull
     public static <U> Cluster<U> from(@NonNull final SpacialIndex<U> spacialIndex
     ) {
-        final ClusterNode[][] nodeIndex = new ClusterNode[spacialIndex.getNrCellsWidth() + 1][spacialIndex.getNrCellsHeight() + 1];
+        final ClusterNode[][] nodeIndex = new ClusterNode[spacialIndex.getNrCellsHeight() + 1][spacialIndex.getNrCellsWidth() + 1];
 
         return new Cluster<U>(spacialIndex, nodeIndex);
     }
@@ -48,14 +48,14 @@ public class Cluster<T> implements IndexedSpace<T> {
             final int x,
             final int y
     ) {
-        return nodeIndex[x][y];
+        return nodeIndex[y][x];
     }
 
     public ClusterNode getNode(
             final long x,
             final long y
     ) {
-        return nodeIndex[(int) x][(int) y];
+        return nodeIndex[(int) y][(int) x];
     }
 
     @Override

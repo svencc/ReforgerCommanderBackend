@@ -1,4 +1,4 @@
-package com.recom.commons.map.rasterizer.batch2;
+package com.recom.commons.map.rasterizer.batch1;
 
 import com.recom.commons.calculator.ARGBCalculator;
 import com.recom.commons.calculator.ARGBColor;
@@ -10,8 +10,6 @@ import com.recom.commons.model.DEMDescriptor;
 import com.recom.commons.model.maprendererpipeline.CreatedArtifact;
 import com.recom.commons.model.maprendererpipeline.MapComposerWorkPackage;
 import com.recom.commons.model.maprendererpipeline.MapLayerRasterizerConfiguration;
-import com.recom.commons.model.maprendererpipeline.dataprovider.Cluster;
-import com.recom.commons.model.maprendererpipeline.dataprovider.forest.ForestItem;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -25,11 +23,12 @@ public class BaseMapRasterizer implements MapLayerRasterizer<int[]> {
 
     @NonNull
     private final ARGBCalculator argbCalculator = new ARGBCalculator();
+
     @Getter
     @NonNull
     private final MapLayerRasterizerConfiguration mapLayerRasterizerConfiguration = MapLayerRasterizerConfiguration.builder()
             .rasterizerName(getClass().getSimpleName())
-            .batch(BatchOrder.BASIC_BATCH)
+            .batch(BatchOrder.BATCH_1)
             .layerOrder(LayerOrder.BASE_MAP)
             .build();
 
@@ -41,14 +40,15 @@ public class BaseMapRasterizer implements MapLayerRasterizer<int[]> {
     ) {
         final int width = demDescriptor.getDemWidth();
         final int height = demDescriptor.getDemHeight();
-        final int[] imageBuffer = new int[width * height];
+        final int[] imageBuffer = new int[height * width];
 
         final float heightRange = demDescriptor.getMaxHeight() - demDescriptor.getSeaLevel();
         final float depthRange = demDescriptor.getMaxWaterDepth() - demDescriptor.getSeaLevel();
 
-        IntStream.range(0, width).parallel().forEach(demX -> {
-            for (int demY = 0; demY < height; demY++) {
-                final float heightValue = demDescriptor.getDem()[demX][demY];
+        final float[][] dem = demDescriptor.getDem();
+        IntStream.range(0, height).parallel().forEach(demY -> {
+            for (int demX = 0; demX < width; demX++) {
+                final float heightValue = dem[demY][demX];
                 int color;
 
                 if (heightValue > demDescriptor.getSeaLevel()) {
@@ -67,7 +67,12 @@ public class BaseMapRasterizer implements MapLayerRasterizer<int[]> {
                     color = argbCalculator.modifyBrightness(mapScheme.getBaseColorWater(), Math.abs(1 - dynamicDepthUnit));
                 }
 
-                imageBuffer[demX + demY * width] = color;
+                try {
+                    imageBuffer[(demY * width) + demX] = color;
+                } catch (Throwable e) {
+                    System.out.println("demY: " + demY + " demX: " + demX + " width: " + width + " height: " + height);
+                    throw e;
+                }
             }
         });
 

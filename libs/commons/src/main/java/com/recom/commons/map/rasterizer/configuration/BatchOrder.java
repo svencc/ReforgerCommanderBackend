@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BatchOrder {
 
-    public static int PREPARE_BATCH = 100;
-    public static int SLOPE_AND_ASPECT_BATCH = 200;
-    public static int BASIC_BATCH = 300;
-    
+    public static int BATCH_0 = 0;
+    public static int BATCH_1 = 100;
+    public static int BATCH_2 = 300;
+
 }

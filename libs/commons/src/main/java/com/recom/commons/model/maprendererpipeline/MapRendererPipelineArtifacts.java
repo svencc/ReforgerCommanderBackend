@@ -34,7 +34,7 @@ public class MapRendererPipelineArtifacts {
     @NonNull
     @SuppressWarnings("unchecked")
     public <T> Optional<CreatedArtifact<T>> getArtifactFrom(@NonNull final Class<? extends MapLayerRasterizer<T>> rendererClass) {
-        final CreatedArtifact<T> artifact = artifacts.get(rendererClass);
+        final CreatedArtifact<T> artifact = (CreatedArtifact<T>) artifacts.get(rendererClass);
 
         return Optional.ofNullable(artifact);
     }
