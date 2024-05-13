@@ -7,7 +7,6 @@ import lombok.NonNull;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @NoArgsConstructor
@@ -36,70 +35,31 @@ public class DEMUpscaleAlgorithmBilinear {
             @NonNull final float[][] input,
             final int scaleFactor
     ) {
-        final int originalHeight_ = input.length;
+        final int originalHeight = input.length;
         final int originalWidth = input[0].length;
-        final int newHeight_ = (int) (originalHeight_ * scaleFactor);
-        final int newWidth_ = (int) (originalWidth * scaleFactor);
-        final float[][] output = new float[newHeight_][newWidth_];
+        final int newHeight = originalHeight * scaleFactor;
+        final int newWidth = originalWidth * scaleFactor;
+        final float[][] output = new float[newHeight][newWidth];
 
+        IntStream.range(0, newHeight).parallel()
+                .mapToObj(y -> CompletableFuture.supplyAsync(() -> {
+                    for (int x = 0; x < newWidth; x++) {
+                        final float gy = ((float) y) / (newHeight - 1) * (originalHeight - 1);
+                        final float gx = ((float) x) / (newWidth - 1) * (originalWidth - 1);
+                        final int gyi = (int) gy;
+                        final int gxi = (int) gx;
 
-        IntStream.range(0, newHeight_).parallel()
-                .mapToObj(y_ -> CompletableFuture.supplyAsync(() -> {
-                    for (int x_ = 0; x_ < newWidth_; x_++) {
-                        final float gy_ = ((float) y_) / (newHeight_ - 1) * (originalHeight_ - 1);
-                        final float gx_ = ((float) x_) / (newWidth_ - 1) * (originalWidth - 1);
-                        final int gyi_ = (int) gy_;
-                        final int gxi_ = (int) gx_;
+                        final float c11 = input[gyi][gxi];
+                        final float c21 = gyi + 1 < originalHeight ? input[gyi + 1][gxi] : c11;
+                        final float c12 = gxi + 1 < originalWidth ? input[gyi][gxi + 1] : c11;
+                        final float c22 = (gyi + 1 < originalHeight && gxi + 1 < originalWidth) ? input[gyi + 1][gxi + 1] : c11;
 
-                        final float c11 = input[gyi_][gxi_];
-                        final float c21 = gyi_ + 1 < originalHeight_ ? input[gyi_ + 1][gxi_] : c11;
-                        final float c12 = gxi_ + 1 < originalWidth ? input[gyi_][gxi_ + 1] : c11;
-                        final float c22 = (gyi_ + 1 < originalHeight_ && gxi_ + 1 < originalWidth) ? input[gyi_ + 1][gxi_ + 1] : c11;
-
-                        output[y_][x_] = interpolate(c11, c21, c12, c22, gyi_, gyi_ + 1, gxi_, gxi_ + 1, gy_, gx_);
+                        output[y][x] = interpolate(c11, c21, c12, c22, gyi, gyi + 1, gxi, gxi + 1, gy, gx);
                     }
 
                     return Boolean.TRUE;
                 }, executorService))
-                .toList().stream() // terminate task creation before joining
-                .map(CompletableFuture::join)
-                .collect(Collectors.toList());
-
-
-        /*
-        IntStream.range(0, newHeight_).parallel().forEach(y_ -> {
-            for (int x_ = 0; x_ < newWidth_; x_++) {
-                final float gy_ = ((float) y_) / (newHeight_ - 1) * (originalHeight_ - 1);
-                final float gx_ = ((float) x_) / (newWidth_ - 1) * (originalWidth - 1);
-                final int gyi_ = (int) gy_;
-                final int gxi_ = (int) gx_;
-
-                final float c11 = input[gyi_][gxi_];
-                final float c21 = gyi_ + 1 < originalHeight_ ? input[gyi_ + 1][gxi_] : c11;
-                final float c12 = gxi_ + 1 < originalWidth ? input[gyi_][gxi_ + 1] : c11;
-                final float c22 = (gyi_ + 1 < originalHeight_ && gxi_ + 1 < originalWidth) ? input[gyi_ + 1][gxi_ + 1] : c11;
-
-                output[y_][x_] = interpolate(c11, c21, c12, c22, gyi_, gyi_ + 1, gxi_, gxi_ + 1, gy_, gx_);
-            }
-        });
-         */
-
-
-//        for (int y_ = 0; y_ < newHeight_; y_++) {
-//            for (int x_ = 0; x_ < newWidth_; x_++) {
-//                final float gy_ = ((float) y_) / (newHeight_ - 1) * (originalHeight_ - 1);
-//                final float gx_ = ((float) x_) / (newWidth_ - 1) * (originalWidth - 1);
-//                final int gyi_ = (int) gy_;
-//                final int gxi_ = (int) gx_;
-//
-//                final float c11 = input[gyi_][gxi_];
-//                final float c21 = gyi_ + 1 < originalHeight_ ? input[gyi_ + 1][gxi_] : c11;
-//                final float c12 = gxi_ + 1 < originalWidth ? input[gyi_][gxi_ + 1] : c11;
-//                final float c22 = (gyi_ + 1 < originalHeight_ && gxi_ + 1 < originalWidth) ? input[gyi_ + 1][gxi_ + 1] : c11;
-//
-//                output[y_][x_] = interpolate(c11, c21, c12, c22, gyi_, gyi_ + 1, gxi_, gxi_ + 1, gy_, gx_);
-//            }
-//        }
+                .forEach(CompletableFuture::join);
 
         return output;
     }
@@ -107,16 +67,16 @@ public class DEMUpscaleAlgorithmBilinear {
     private float interpolate(
             final float q11, final float q21,
             final float q12, final float q22,
-            final float y1_, final float y2_,
-            final float x1_, final float x2_,
-            final float y_, final float x_
+            final float y1, final float y2,
+            final float x1, final float x2,
+            final float y, final float x
     ) {
-        final float x2x1 = y2_ - y1_;
-        final float y2y1 = x2_ - x1_;
-        final float x2x = y2_ - y_;
-        final float y2y = x2_ - x_;
-        final float yy1 = x_ - x1_;
-        final float xx1 = y_ - y1_;
+        final float x2x1 = y2 - y1;
+        final float y2y1 = x2 - x1;
+        final float x2x = y2 - y;
+        final float y2y = x2 - x;
+        final float yy1 = x - x1;
+        final float xx1 = y - y1;
 
         return 1.0f / (x2x1 * y2y1) * (
                 q11 * x2x * y2y +
