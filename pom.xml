@@ -41,7 +41,7 @@
         <jib-maven-plugin.version>3.4.2</jib-maven-plugin.version>
 
         <!-- JWT -->
-        <nimbus-jose-jwt.version>9.39</nimbus-jose-jwt.version>
+        <nimbus-jose-jwt.version>9.40</nimbus-jose-jwt.version>
     </properties>
 
 </project>
