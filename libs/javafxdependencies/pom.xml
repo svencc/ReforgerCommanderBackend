@@ -14,7 +14,7 @@
     <description>RECOM JavaFX Dependencies</description>
 
     <properties>
-        <javafx.version>23</javafx.version>
+        <javafx.version>24-ea+5</javafx.version>
     </properties>
 
     <dependencies>
